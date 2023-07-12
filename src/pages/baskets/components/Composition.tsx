@@ -29,7 +29,7 @@ const Composition: React.FC<CompositionProps> = ({ composition, rates, info, bas
 
 	return (
 		<>
-			<div className='mt-4 mb-2 flex flex-row'>
+			<div className='mb-2 mt-4 flex flex-row'>
 				<div className='flex flex-row items-center justify-center'>
 					<Typography variant='h3' className='float-left mr-2 inline font-semibold'>
 						Allocation Breakdown

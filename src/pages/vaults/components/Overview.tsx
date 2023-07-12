@@ -7,7 +7,7 @@ import { decimate, getDisplayBalance } from '@/utils/numberFormat'
 import { useWeb3React } from '@web3-react/core'
 import { BigNumber } from 'ethers'
 import { formatUnits, parseUnits } from 'ethers/lib/utils'
-import { buildStyles, CircularProgressbarWithChildren } from 'react-circular-progressbar'
+import { CircularProgressbarWithChildren, buildStyles } from 'react-circular-progressbar'
 import 'react-circular-progressbar/dist/styles.css'
 import { isDesktop } from 'react-device-detect'
 
@@ -80,7 +80,7 @@ export const Overview = ({ vaultName }: { vaultName: string }) => {
 								<div className='max-w-[16.6666666667%] basis-[16.6666666667%]'>
 									<div className='relative left-1/2 h-[130px] w-[130px] -translate-x-1/2 rounded-full bg-primary-100'>
 										<div
-											className='absolute top-0 left-0 right-0 bottom-0 flex flex-col items-center justify-center rounded-full p-1'
+											className='absolute bottom-0 left-0 right-0 top-0 flex flex-col items-center justify-center rounded-full p-1'
 											style={{ marginTop: '15px' }}
 										>
 											<Typography variant='sm' className='text-text-200'>

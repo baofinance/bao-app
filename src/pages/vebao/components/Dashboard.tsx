@@ -151,7 +151,7 @@ export const Dashboard = () => {
 
 	return (
 		<div>
-			<Typography variant='xl' className='mt-4 mb-2 font-bold'>
+			<Typography variant='xl' className='mb-2 mt-4 font-bold'>
 				Voting Dashboard
 			</Typography>
 			<div className={`w-full justify-evenly gap-4 rounded border border-primary-300 bg-primary-100 bg-opacity-80 p-4`}>
@@ -464,7 +464,7 @@ export const Dashboard = () => {
 				{/* End of Voting Slider Section */}
 				<div className='m-4' />
 				{/* Start of BoostCalc Section */}
-				<Typography variant='xl' className='mt-4 mb-2 font-bold'>
+				<Typography variant='xl' className='mb-2 mt-4 font-bold'>
 					Boost Calculator
 				</Typography>
 				<div className='mt-4 grid grid-cols-6 gap-4'>

@@ -121,7 +121,7 @@ const BSTBL: React.FC = () => (
 		<Typography variant='xl' className='my-2'>
 			Fees
 		</Typography>
-		<ul className='ml-8 mb-4 list-disc font-light'>
+		<ul className='mb-4 ml-8 list-disc font-light'>
 			<li>Entry Fee: 0%</li>
 			<li>Streaming Fee: 0%</li>
 			<li>Redemption Fee: 0%</li>
@@ -153,7 +153,7 @@ const BSTBL: React.FC = () => (
 		<Typography variant='xl' className='my-2'>
 			Characteristics
 		</Typography>
-		<ul className='ml-8 mb-4 list-disc font-light'>
+		<ul className='mb-4 ml-8 list-disc font-light'>
 			<li>Be a stable token project available on the Ethereum blockchain.</li>
 			<li>Be in liquid markets and being used in different lending protocols.</li>
 			<li>The protocol must be running for 6 months before qulaifying to be included in the basket.</li>
@@ -218,7 +218,7 @@ const BETH: React.FC = () => (
 		<Typography variant='xl' className='my-2'>
 			Fees
 		</Typography>
-		<ul className='ml-8 mb-4 list-disc font-light'>
+		<ul className='mb-4 ml-8 list-disc font-light'>
 			<li>Entry Fee: 0%</li>
 			<li>Streaming Fee: 0.5%</li>
 			<li>Redemption Fee: 0%</li>
@@ -236,7 +236,7 @@ const BETH: React.FC = () => (
 		<Typography variant='xl' className='my-2'>
 			Characteristics
 		</Typography>
-		<ul className='ml-8 mb-4 list-disc font-light'>
+		<ul className='mb-4 ml-8 list-disc font-light'>
 			<li>Liquidity on ETH main net, with at least one supported pool allowing a $1m buy with less than 2% slippage.</li>
 			<li>Operating for 3+ months.</li>
 			<li>Chainlink price feed.</li>

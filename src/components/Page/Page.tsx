@@ -10,8 +10,8 @@ interface PageProps {
 
 const Page: React.FC<PropsWithChildren<PageProps>> = ({ children }) => (
 	<>
-		<div className='absolute top-[72px] left-0 h-[calc(100vh-72px)] w-full'>
-			<div className='top-0 left-0 min-h-[calc(100vh-72px)] align-middle'>
+		<div className='absolute left-0 top-[72px] h-[calc(100vh-72px)] w-full'>
+			<div className='left-0 top-0 min-h-[calc(100vh-72px)] align-middle'>
 				<div className='flex min-h-[calc(100vh-240px)] flex-col items-center'>
 					<Container>{children}</Container>
 				</div>

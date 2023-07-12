@@ -56,10 +56,10 @@ const Basket: NextPage<{
 	return basket ? (
 		<>
 			<NextSeo title={`${basketId} Basket`} description={`Mint or Redeem ${basketId}`} />
-			<div className='top-4 right-4 float-right mt-4 text-2xl hover:cursor-pointer'>
+			<div className='right-4 top-4 float-right mt-4 text-2xl hover:cursor-pointer'>
 				<Tooltipped content='View Contract on Etherscan' placement='bottom'>
 					<a
-						className='float-right mt-2 mr-3 align-middle text-xl hover:cursor-pointer'
+						className='float-right mr-3 mt-2 align-middle text-xl hover:cursor-pointer'
 						href={`https://etherscan.io/address/${basket.basketAddresses[1]}`}
 						target='_blank'
 						rel='noreferrer'
@@ -68,7 +68,7 @@ const Basket: NextPage<{
 					</a>
 				</Tooltipped>
 			</div>
-			<div className='mx-auto mt-6 mb-0 ml-7 box-border flex flex-col items-center'>
+			<div className='mx-auto mb-0 ml-7 mt-6 box-border flex flex-col items-center'>
 				<PageHeader icon={`/images/tokens/${basket.icon}`} title={basket.symbol} />
 				<Badge>
 					1 {basket.symbol} ={' '}

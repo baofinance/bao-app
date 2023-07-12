@@ -69,7 +69,7 @@ const LiquidSwap: React.FC = () => {
 					<div className='flex w-3/4 flex-col'>
 						<Card className={`mt-8 h-[300px]`}>
 							<Card.Body>
-								<div className='mt-2 mb-1 flex w-full items-center justify-end gap-1'>
+								<div className='mb-1 mt-2 flex w-full items-center justify-end gap-1'>
 									<Typography variant='sm' className='text-text-200'>
 										Wallet
 									</Typography>
@@ -141,7 +141,7 @@ const LiquidSwap: React.FC = () => {
 									<div className='max-w-[16.6666666667%] basis-[16.6666666667%]'>
 										<div className='relative left-1/2 h-[130px] w-[130px] -translate-x-1/2 rounded-full bg-primary-100'>
 											<div
-												className='absolute top-0 left-0 right-0 bottom-0 flex flex-col items-center justify-center rounded-full p-1'
+												className='absolute bottom-0 left-0 right-0 top-0 flex flex-col items-center justify-center rounded-full p-1'
 												style={{ marginTop: '15px' }}
 											>
 												<Typography variant='sm' className='text-text-200'>
