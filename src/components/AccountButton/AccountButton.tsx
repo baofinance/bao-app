@@ -49,7 +49,7 @@ const AccountButton: React.FC<AccountButtonProps> = () => {
 	const asset = assets.length ? assets.find(asset => asset[1] === selectedAsset) : assets.find(asset => asset[1] === 'ETH')
 
 	useEffect(() => {
-		const ensResolver = new ethers.providers.JsonRpcProvider(`${process.env.NEXT_PUBLIC_ALCHEMY_API_URL}`)
+		const ensResolver = new ethers.providers.JsonRpcProvider(`${process.env.ALCHEMY_API_URL}`)
 		if (!account) return
 		ensResolver.lookupAddress(account).then(_ens => {
 			if (_ens) setEns(_ens)
