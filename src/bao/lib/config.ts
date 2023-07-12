@@ -4,7 +4,7 @@ export default {
 	networkId: 1,
 	defaultRpc: {
 		chainId: '0x1',
-		rpcUrls: [process.env.ALCHEMY_API_URL],
+		rpcUrls: [process.env.NEXT_PUBLIC_ALCHEMY_API_URL],
 		blockExplorerUrls: ['https://etherscan.io'],
 		chainName: 'Ethereum Mainnet',
 		nativeCurrency: {
