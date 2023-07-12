@@ -6,7 +6,6 @@ build/
 .next
 out
 .env.local
-.vscode
 .env.production
+.vscode
 .vercel
-.env*.local

@@ -28,9 +28,6 @@ export default {
 		//Synths
 		baoUSD: '0x7945b0A6674b175695e5d1D08aE1e6F13744Abb0',
 		baoETH: '0xf4edfad26EE0D23B69CA93112eccE52704E0006f',
-		// NFTs
-		baoElder: '0x39c1f6e78c5200674c84c46dc5bf85ba9f6f630a',
-		baoSwap: '0x36e58282a053f888881cdaa4ba4f44dc7af15024',
 		//Baskets
 		bDEFI: '0x583cb488eF632c3A959Aa19EcF7991731a2F728e',
 		bSTBL: '0x5ee08f40b637417bcC9d2C51B62F4820ec9cF5D8',
@@ -52,11 +49,6 @@ export default {
 		Baov2: {
 			1: {
 				address: '0xCe391315b414D4c7555956120461D21808A69F3A',
-			},
-		},
-		Masterchef: {
-			1: {
-				address: '0xBD530a1c060DC600b951f16dc656E4EA451d1A2D',
 			},
 		},
 		Weth: {
@@ -546,91 +538,6 @@ export default {
 			},
 			desc: 'Liquid staked ETH basket',
 			swap: 'https://curve.fi/factory-crypto/61',
-		},
-	],
-	farms: [
-		// Active pools
-		{
-			pid: 0,
-			lpAddresses: {
-				1: '0x9973bb0fe5f8df5de730776df09e946c74254fb3',
-			},
-			tokenAddresses: {
-				1: '0x374cb8c27130e2c9e04f44303f3c8351b9de61c1',
-			},
-			tokenDecimals: 18,
-			name: 'BAO-ETH',
-			symbol: 'UNIV2',
-			type: 'Uniswap v2 LP',
-			tokenSymbol: 'BAO',
-			poolType: 'active',
-			iconA: '/images/tokens/BAO.png',
-			iconB: '/images/tokens/ETH.png',
-			refUrl: 'https://1inch.exchange/#/r/0x3bC3c8aF8CFe3dFC9bA1A57c7C3b653e3f6d6951/ETH/BAO',
-			pairUrl: 'https://app.uniswap.org/#/add/v2/0x374cb8c27130e2c9e04f44303f3c8351b9de61c1/ETH',
-		},
-		{
-			pid: 200,
-			lpAddresses: {
-				1: '0x0eee7f7319013df1f24f5eaf83004fcf9cf49245',
-			},
-			tokenAddresses: {
-				1: '0x374cb8c27130e2c9e04f44303f3c8351b9de61c1',
-			},
-			tokenDecimals: 18,
-			name: 'BAO-ETH',
-			symbol: 'SLP',
-			type: 'SushiSwap LP',
-			tokenSymbol: 'BAO',
-			poolType: 'active',
-			iconA: '/images/tokens/BAO.png',
-			iconB: '/images/tokens/ETH.png',
-			refUrl: 'https://1inch.exchange/#/r/0x3bC3c8aF8CFe3dFC9bA1A57c7C3b653e3f6d6951/ETH/BAO',
-			pairUrl: 'https://app.sushi.com/legacy/add/ETH/0x374CB8C27130E2c9E04F44303f3c8351B9De61C1?chainId=1',
-		},
-		{
-			pid: 201,
-			lpAddresses: {
-				1: '0x072b999fc3d82f9ea08b8adbb9d63a980ff2b14d',
-			},
-			tokenAddresses: {
-				1: '0x374cb8c27130e2c9e04f44303f3c8351b9de61c1',
-			},
-			tokenDecimals: 18,
-			name: 'BAO-USDC',
-			symbol: 'SLP',
-			type: 'SushiSwap LP',
-			tokenSymbol: 'BAO',
-			poolType: 'active',
-			iconA: '/images/tokens/BAO.png',
-			iconB: '/images/tokens/USDC.png',
-			refUrl: 'https://1inch.exchange/#/r/0x3bC3c8aF8CFe3dFC9bA1A57c7C3b653e3f6d6951/ETH/BAO',
-			pairUrl:
-				'https://app.sushi.com/legacy/add/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/0x374CB8C27130E2c9E04F44303f3c8351B9De61C1?chainId=1',
-		},
-	],
-	nfts: [
-		{
-			nid: 1,
-			address: {
-				1: '0x39c1f6e78c5200674c84c46dc5bf85ba9f6f630a',
-			},
-			name: 'Bao Elder NFT',
-			image: '/images/nft/baoelder.png',
-			whitelist: 'baoElderWL.ts',
-			opensea: 'BaoElder',
-			description: 'OG Bao Farmers',
-		},
-		{
-			nid: 2,
-			address: {
-				1: '0x36e58282a053f888881cdaa4ba4f44dc7af15024',
-			},
-			name: 'BaoSwap NFT',
-			image: '/images/nft/baoswap.png',
-			whitelist: 'baoSwapWL.ts',
-			opensea: 'BaoGnosis',
-			description: 'Users of Bao on Gnosis Chain',
 		},
 	],
 } as unknown as Config

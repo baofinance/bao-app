@@ -12,8 +12,6 @@ const supportedChainIds = [1]
 
 let network: NetworkConnector
 
-console.log('process.env.NEXT_PUBLIC_ALCHEMY_API_URL', process.env.NEXT_PUBLIC_ALCHEMY_API_URL)
-
 const RPC_URLS: { [chainId: number]: string } = {
 	1: process.env.NEXT_PUBLIC_ALCHEMY_API_URL,
 }
