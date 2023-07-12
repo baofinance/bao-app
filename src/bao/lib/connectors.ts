@@ -32,7 +32,7 @@ export const injected = new InjectedConnector({
 })
 
 export const walletConnect = new WalletConnectV2Connector({
-	projectId: '1ecf17999639b9fe3f94eed0ef97286b',
+	projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECTID,
 	rpcMap: RPC_URLS,
 	chains: [1],
 	showQrModal: true,
@@ -63,6 +63,6 @@ export const walletConnect = new WalletConnectV2Connector({
 
 export const coinbaseWallet = new WalletLinkConnector({
 	url: RPC_URLS[1],
-	appName: 'bao-ui',
+	appName: 'bao-app',
 	supportedChainIds: [1],
 })
