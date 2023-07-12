@@ -9,3 +9,4 @@ out
 .vscode
 .env.production
 .vercel
+.env*.local

@@ -12,8 +12,10 @@ const supportedChainIds = [1]
 
 let network: NetworkConnector
 
+console.log('process.env.NEXT_PUBLIC_ALCHEMY_API_URL', process.env.NEXT_PUBLIC_ALCHEMY_API_URL)
+
 const RPC_URLS: { [chainId: number]: string } = {
-	1: process.env.ALCHEMY_API_URL,
+	1: process.env.NEXT_PUBLIC_ALCHEMY_API_URL,
 }
 
 export const getNetworkConnector = (): NetworkConnector => {
@@ -32,7 +34,7 @@ export const injected = new InjectedConnector({
 })
 
 export const walletConnect = new WalletConnectV2Connector({
-	projectId: process.env.WALLETCONNECT_PROJECTID,
+	projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECTID,
 	rpcMap: RPC_URLS,
 	chains: [1],
 	showQrModal: true,
@@ -63,6 +65,6 @@ export const walletConnect = new WalletConnectV2Connector({
 
 export const coinbaseWallet = new WalletLinkConnector({
 	url: RPC_URLS[1],
-	appName: 'bao-ui',
+	appName: 'bao-app',
 	supportedChainIds: [1],
 })
