@@ -3,12 +3,12 @@ import { Chip } from '@material-tailwind/react/components/Chip'
 import classNames from 'classnames'
 
 interface BadgeProps {
-	children: string
+	children: any
 	color?: string
 	className?: string
 }
 
-const Badge: React.FC<BadgeProps> = ({ children = '', className = '', color }) => {
+const Badge: React.FC<BadgeProps> = ({ children, className = '', color }) => {
 	return (
 		<Chip
 			className={classNames(
