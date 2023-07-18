@@ -50,10 +50,10 @@ export const PositionList = ({
 						supplyBalances={supplyBalances}
 						borrowBalances={borrowBalances}
 						exchangeRates={exchangeRates}
-						key={vault.vaultAddress}
+						key={vault?.vaultAddress}
 					/>
 				))
-				.sort((a, b) => (a.props.vault.isSynth === true ? -1 : b.props.vault.isSynth === false ? 1 : 0))}
+				.sort((a, b) => (a.props.vault?.isSynth === true ? -1 : b.props.vault?.isSynth === false ? 1 : 0))}
 		</>
 	)
 }
@@ -70,31 +70,31 @@ const PositionListItem: React.FC<PositionListItemProps> = ({
 	const { account } = useWeb3React()
 
 	const suppliedUnderlying = useMemo(() => {
-		const supply = supplyBalances.find(balance => balance.address === vault.vaultAddress)
+		const supply = supplyBalances.find(balance => balance.address === vault?.vaultAddress)
 		if (supply === undefined) return BigNumber.from(0)
-		if (exchangeRates[vault.vaultAddress] === undefined) return BigNumber.from(0)
-		return decimate(supply.balance.mul(exchangeRates[vault.vaultAddress]))
-	}, [supplyBalances, exchangeRates, vault.vaultAddress])
+		if (exchangeRates[vault?.vaultAddress] === undefined) return BigNumber.from(0)
+		return decimate(supply.balance.mul(exchangeRates[vault?.vaultAddress]))
+	}, [supplyBalances, exchangeRates, vault?.vaultAddress])
 
 	const borrowed = useMemo(
-		() => vault && borrowBalances.find(balance => balance.address === vault.vaultAddress).balance,
+		() => vault && borrowBalances.find(balance => balance.address === vault?.vaultAddress).balance,
 		[borrowBalances, vault],
 	)
 
 	// FIXME: Causes crash
 	// const isInVault = useMemo(() => {
-	// 	return accountVaults && vault && accountVaults.find(_vault => _vault.vaultAddress === vault.vaultAddress)
+	// 	return accountVaults && vault && accountVaults.find(_vault => _vault?.vaultAddress === vault?.vaultAddress)
 	// }, [accountVaults, vault])
 
 	// const [isChecked, setIsChecked] = useState(!!isInVault)
 
 	const baskets = useBaskets()
 	const basket =
-		vault.isBasket === true && baskets && baskets.find(basket => basket.address.toLowerCase() === vault.underlyingAddress.toLowerCase())
+		vault?.isBasket === true && baskets && baskets.find(basket => basket.address.toLowerCase() === vault?.underlyingAddress.toLowerCase())
 
-	const composition = useComposition(vault.isBasket === true && basket && basket)
+	const composition = useComposition(vault?.isBasket === true && basket && basket)
 	const avgBasketAPY =
-		vault.isBasket && composition
+		vault?.isBasket && composition
 			? (composition
 					.sort((a, b) => (a.percentage.lt(b.percentage) ? 1 : -1))
 					.map(component => {
@@ -113,29 +113,31 @@ const PositionListItem: React.FC<PositionListItemProps> = ({
 				<div className='grid w-full grid-cols-12 items-center justify-center px-2'>
 					<div className='items-left col-span-3 m-auto text-start align-middle lg:ml-0'>
 						<Image
-							src={`/images/tokens/${vault.icon}`}
-							alt={`${vault.underlyingSymbol}`}
+							src={`/images/tokens/${vault?.icon}`}
+							alt={`${vault?.underlyingSymbol}`}
 							width={isDesktop ? 24 : 32}
 							height={isDesktop ? 24 : 32}
 							className='inline-block select-none'
 						/>
 						<span className='hidden text-left align-middle lg:inline-block'>
 							<Typography variant='lg' className='ml-2 font-bakbak leading-5'>
-								{vault.underlyingSymbol}
+								{vault?.underlyingSymbol}
 							</Typography>
 						</span>
 					</div>
 					<div className='col-span-3 mr-0 items-start'>
 						<Tooltipped
-							content={`$${getDisplayBalance((!vault.isSynth ? decimate(suppliedUnderlying) : decimate(borrowed)).mul(vault.price))}`}
-							key={vault.underlyingSymbol}
+							content={`$${getDisplayBalance(
+								vault ? (!vault.isSynth ? decimate(suppliedUnderlying) : decimate(borrowed).mul(vault.price)) : BigNumber.from(0),
+							)}`}
+							key={vault?.underlyingSymbol}
 							placement='top'
 							className='rounded-full bg-baoRed'
 						>
 							<Typography variant='lg' className='text-center font-bakbak leading-5'>
 								<span className='align-middle'>{`${getDisplayBalance(
-									!vault.isSynth ? suppliedUnderlying : borrowed,
-									vault.underlyingDecimals,
+									!vault?.isSynth ? suppliedUnderlying : borrowed,
+									vault?.underlyingDecimals,
 								)}`}</span>
 							</Typography>
 						</Tooltipped>
@@ -143,18 +145,18 @@ const PositionListItem: React.FC<PositionListItemProps> = ({
 					<div className='col-span-3 m-auto items-center justify-center'>
 						<Typography
 							variant='lg'
-							className={`font-bakbak text-lg leading-5 ${vault.isSynth ? `text-red` : avgBasketAPY > 0 && `text-green`}`}
+							className={`font-bakbak text-lg leading-5 ${vault?.isSynth ? `text-red` : avgBasketAPY > 0 && `text-green`}`}
 						>
-							{vault.isBasket && avgBasketAPY
+							{vault?.isBasket && avgBasketAPY
 								? getDisplayBalance(avgBasketAPY, 0, 2) + '%'
-								: vault.isSynth
-								? getDisplayBalance(vault.borrowApy, 18, 2) + '%'
+								: vault?.isSynth
+								? getDisplayBalance(vault?.borrowApy, 18, 2) + '%'
 								: '-'}
 						</Typography>
 					</div>
 
 					<div className='col-span-3 m-auto mr-0 w-full items-end'>
-						{!vault.isSynth ? (
+						{!vault?.isSynth ? (
 							<Button fullWidth size='xs' onClick={() => setShowWithdrawModal(true)} disabled={!account} className='text-sm lg:text-base'>
 								Withdraw
 							</Button>

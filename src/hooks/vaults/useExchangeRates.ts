@@ -26,7 +26,7 @@ export const useExchangeRates = (vaultName: string): ExchangeRates => {
 		async () => {
 			const tokenContracts = vaults?.map((vault: ActiveSupportedVault) => vault.vaultContract)
 			const multiCallContext = MultiCall.createCallContext(
-				tokenContracts.map(tokenContract => ({
+				tokenContracts?.map(tokenContract => ({
 					ref: tokenContract.address,
 					contract: tokenContract,
 					calls: [{ method: 'exchangeRateStored' }],
