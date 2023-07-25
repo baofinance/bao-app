@@ -288,6 +288,7 @@ export default {
 						1: '0x5ee08f40b637417bcC9d2C51B62F4820ec9cF5D8',
 					},
 					icon: 'bSTBL.png',
+					archived: true,
 					coingeckoId: 'dai',
 					underlyingDecimals: 18,
 					isBasket: true,

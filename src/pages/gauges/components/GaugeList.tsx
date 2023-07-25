@@ -1,5 +1,4 @@
 import { ActiveSupportedGauge } from '@/bao/lib/types'
-import { ListHeader } from '@/components/List'
 import { PageLoader } from '@/components/Loader'
 import Typography from '@/components/Typography'
 import usePrice from '@/hooks/base/usePrice'
@@ -16,8 +15,8 @@ import { BigNumber } from 'ethers'
 import { formatUnits } from 'ethers/lib/utils'
 import Image from 'next/future/image'
 import React, { useMemo, useState } from 'react'
-import GaugeModal from './Modals'
 import { isDesktop } from 'react-device-detect'
+import GaugeModal from './Modals'
 
 const GaugeList: React.FC = () => {
 	const gauges = useGauges()
@@ -134,7 +133,7 @@ const GaugeListItem: React.FC<GaugeListItemProps> = ({ gauge }) => {
 					</div>
 
 					<div className='mx-auto my-0 flex basis-1/3 items-center justify-center lg:basis-1/5'>
-						<Typography variant='base' className='ml-2 inline-block font-bakbak'>
+						<Typography variant='base' className={`ml-2 inline-block font-bakbak ${!isNaN(boost) && `rainbow`}`}>
 							{getDisplayBalance(isNaN(boost) ? rewardsAPR : parseFloat(rewardsAPR.toString()) * boost)}%
 						</Typography>
 					</div>

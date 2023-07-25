@@ -2,6 +2,7 @@ import Button from '@/components/Button'
 import { Icon } from '@/components/Icon'
 import Input from '@/components/Input'
 import { PendingTransaction } from '@/components/Loader/Loader'
+import Tooltipped from '@/components/Tooltipped'
 import Typography from '@/components/Typography'
 import useContract from '@/hooks/base/useContract'
 import usePrice from '@/hooks/base/usePrice'
@@ -521,6 +522,8 @@ export const Dashboard = () => {
 							/>
 						</div>
 					</div>
+				</div>
+				<div className='mt-4 grid grid-cols-8 gap-4'>
 					<div className='col-span-2'>
 						<Button onClick={calc}>Calculate</Button>
 					</div>
@@ -542,6 +545,16 @@ export const Dashboard = () => {
 								<Typography variant='lg' className='inline-block text-baoRed'>
 									x
 								</Typography>
+							</Typography>
+						</div>
+					</div>
+					<div className='col-span-2 h-12 text-center'>
+						<label className='font-bakbak text-sm text-baoRed'>
+							Boosted APR <Tooltipped content='Based on selected gauges current APR and calculated boost.' placement='top' />
+						</label>
+						<div className='flex w-full gap-2 rounded-md'>
+							<Typography variant='lg' className='inline-block w-full !text-center font-bakbak'>
+								{getDisplayBalance(parseFloat(currentAPR.toString()) * boost)}%
 							</Typography>
 						</div>
 					</div>
