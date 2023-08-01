@@ -18,7 +18,6 @@ import React, { useMemo, useState } from 'react'
 import { isDesktop } from 'react-device-detect'
 import GaugeModal from './Modals'
 import Tooltipped from '@/components/Tooltipped'
-import useStakeDaoYield from '@/hooks/gauges/useStakeDaoYield'
 
 const GaugeList: React.FC = () => {
 	const gauges = useGauges()
