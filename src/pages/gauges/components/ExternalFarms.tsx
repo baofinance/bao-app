@@ -11,8 +11,6 @@ const ExternalFarms: React.FC = () => {
 	const baoEthEthPool = useAuraPool('132')
 	const stakeDaoYield = useStakeDaoYield()
 
-	console.log(stakeDaoYield && stakeDaoYield)
-
 	return (
 		<>
 			<div className={`flex w-full flex-row px-2 py-3`}>
