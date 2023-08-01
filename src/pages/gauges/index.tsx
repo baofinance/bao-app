@@ -4,6 +4,7 @@ import { NextSeo } from 'next-seo'
 import React from 'react'
 import GaugeList from './components/GaugeList'
 import { Icon } from '@/components/Icon'
+import ExternalFarms from './components/ExternalFarms'
 
 const Gauges: React.FC = () => {
 	return (
@@ -29,6 +30,8 @@ const Gauges: React.FC = () => {
 				</div>
 				<div className='lg:col-span-3'>
 					<GaugeList />
+					<Typography className='p-4 text-center font-bakbak text-xl'>External Farms</Typography>
+					<ExternalFarms />
 				</div>
 			</div>
 		</>

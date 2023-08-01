@@ -38,15 +38,6 @@ const useGaugeTVL = (gauge: ActiveSupportedGauge) => {
 	const baoUSDlusdPrice = lusdPrice && lusdPrice
 	const baoETHethPrice = ethPrice && ethPrice
 
-	// console.log('baoUSD Price:', formatUnits(baoUSDPrice))
-	// console.log('bSTBL Price:', formatUnits(bSTBLPrice))
-	// console.log('bETH Price:', formatUnits(bETHPrice))
-	// console.log('baoETH Price:', formatUnits(baoETHPrice))
-	// console.log('bETH Price', formatUnits(bETHPrice))
-	// console.log('baoETH/ETH Price', formatUnits(baoETHethPrice))
-	// console.log('baoUSD/LUSD Price', formatUnits(baoUSDlusdPrice))
-	// console.log('bao Price:', formatUnits(baoPrice))
-
 	const poolTVL = useMemo(() => {
 		return (
 			poolInfo &&
@@ -152,9 +143,6 @@ const useGaugeTVL = (gauge: ActiveSupportedGauge) => {
 			// 		: gauge.symbol === 'bETH/baoETH-ETH'
 			// 		? setBaoETHethPrice(lpPrice)
 			// 		: null
-
-			console.log(`${gauge.symbol} Balance:`, gaugeBalance && formatUnits(gaugeBalance))
-			console.log(`${gauge.symbol} LP Price:`, lpPrice && formatUnits(lpPrice))
 
 			const gaugeTVL = lpPrice && lpPrice.mul(gaugeBalance)
 			const depositAmount = lpPrice && gaugeInfo && lpPrice.mul(gaugeInfo.balance)

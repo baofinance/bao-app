@@ -17,6 +17,8 @@ import Image from 'next/future/image'
 import React, { useMemo, useState } from 'react'
 import { isDesktop } from 'react-device-detect'
 import GaugeModal from './Modals'
+import Tooltipped from '@/components/Tooltipped'
+import useStakeDaoYield from '@/hooks/gauges/useStakeDaoYield'
 
 const GaugeList: React.FC = () => {
 	const gauges = useGauges()
@@ -24,16 +26,11 @@ const GaugeList: React.FC = () => {
 	return (
 		<>
 			<div className={`flex w-full flex-row px-2 py-3`}>
-				<Typography className='flex w-full basis-1/3 flex-col items-center px-4 pb-0 text-center font-bakbak text-base first:items-start last:items-end lg:basis-2/5 lg:text-lg'>
+				<Typography className='flex w-full basis-1/3 flex-col items-center px-4 pb-0 font-bakbak text-base first:items-start lg:basis-2/5 lg:text-lg'>
 					{isDesktop && 'Gauge'} Name
 				</Typography>
-				<Typography className='hidden w-full flex-col items-center px-4 pb-0 text-center font-bakbak text-base first:items-start last:items-end lg:flex lg:basis-1/5 lg:text-lg'>
-					Weight
-				</Typography>
-				<Typography className='flex w-full basis-1/3 flex-col items-center px-4 pb-0 text-center font-bakbak text-base first:items-start last:items-end lg:basis-1/5 lg:text-lg'>
-					APR
-				</Typography>
-				<Typography className='flex w-full basis-1/3 flex-col items-center px-4 pb-0 text-center font-bakbak text-base first:items-start last:items-end lg:basis-1/5 lg:text-lg'>
+				<Typography className='text-center font-bakbak text-base lg:basis-2/5 lg:text-lg'>APR</Typography>
+				<Typography className='flex w-full basis-1/3 flex-col items-center px-4 pb-0 font-bakbak text-base last:items-end lg:basis-1/5 lg:text-lg'>
 					TVL
 				</Typography>
 			</div>
@@ -126,16 +123,17 @@ const GaugeListItem: React.FC<GaugeListItemProps> = ({ gauge }) => {
 						</div>
 					</div>
 
-					<div className='mx-auto my-0 hidden items-center justify-center lg:flex lg:basis-1/5'>
-						<Typography variant='base' className='ml-2 inline-block font-bakbak'>
-							{getDisplayBalance(currentWeight.mul(100), 18, 2)}%
-						</Typography>
-					</div>
-
-					<div className='mx-auto my-0 flex basis-1/3 items-center justify-center lg:basis-1/5'>
-						<Typography variant='base' className={`ml-2 inline-block font-bakbak ${!isNaN(boost) && `rainbow`}`}>
-							{getDisplayBalance(isNaN(boost) ? rewardsAPR : parseFloat(rewardsAPR.toString()) * boost)}%
-						</Typography>
+					<div className='mx-auto my-0 flex basis-1/3 items-center justify-center lg:basis-2/5'>
+						<Tooltipped
+							content={`Max APR can be reached with a max boost of 2.5x. Your APR is: ${getDisplayBalance(
+								isNaN(boost) ? rewardsAPR : parseFloat(rewardsAPR.toString()) * boost,
+							)}%`}
+							placement='top'
+						>
+							<Typography variant='base' className={`ml-2 inline-block font-bakbak ${!isNaN(boost) && `rainbow`}`}>
+								{getDisplayBalance(rewardsAPR)}% ➝ {getDisplayBalance(parseFloat(rewardsAPR.toString()) * 2.5)}%
+							</Typography>
+						</Tooltipped>
 					</div>
 
 					<div className='mx-auto my-0 flex basis-1/3 flex-col items-end justify-center text-right lg:basis-1/5'>
