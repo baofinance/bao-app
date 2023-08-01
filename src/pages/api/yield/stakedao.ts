@@ -1,11 +1,11 @@
-import fetch from 'node-fetch'
+import { NextApiRequest, NextApiResponse } from 'next'
 
-export default async function handler(req, res) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
 	try {
 		const response = await fetch('https://lockers.stakedao.org/api/strategies/cache/balancer')
 		const data = await response.json()
 
-		const entry = data.find(entry => entry.key === 'b_baousd_lusd')
+		const entry = data.find((entry: { key: string }) => entry.key === 'b_baousd_lusd')
 
 		if (entry) {
 			const name = entry.name
