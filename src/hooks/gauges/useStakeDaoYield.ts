@@ -1,16 +1,20 @@
 import { useEffect, useState } from 'react'
 
+interface YieldData {
+	apr?: number
+	tvl?: number
+}
+
 export const useStakeDaoYield = () => {
-	const [apr, setApr] = useState(null)
-	const [tvl, setTvl] = useState(null)
+	const [apr, setApr] = useState<number | undefined>()
+	const [tvl, setTvl] = useState<number | undefined>()
 
 	useEffect(() => {
 		fetch('/api/yield/stakedao')
 			.then(response => response.json())
-			.then(data => {
-				const apr = data.apr
+			.then((data: YieldData) => {
+				const { apr, tvl } = data
 				setApr(apr)
-				const tvl = data.tvl
 				setTvl(tvl)
 			})
 			.catch(error => {
