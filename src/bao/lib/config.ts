@@ -146,6 +146,9 @@ export default {
 		curve: {
 			1: 'https://api.thegraph.com/subgraphs/name/messari/curve-finance-ethereum',
 		},
+		aura: {
+			1: 'https://data.aura.finance/graphql',
+		},
 	},
 	vaults: {
 		baoUSD: {
@@ -280,7 +283,7 @@ export default {
 				},
 				{
 					mid: 3,
-					symbol: 'bdbSTBL',
+					symbol: 'bdbSTBLArchived',
 					vaultAddresses: {
 						1: '0xb0f8Fe96b4880adBdEDE0dDF446bd1e7EF122C4e',
 					},
@@ -288,6 +291,22 @@ export default {
 						1: '0x5ee08f40b637417bcC9d2C51B62F4820ec9cF5D8',
 					},
 					icon: 'bSTBL.png',
+					archived: true,
+					coingeckoId: 'dai',
+					underlyingDecimals: 18,
+					isBasket: true,
+				},
+				{
+					mid: 5,
+					symbol: 'bdbSTBL',
+					vaultAddresses: {
+						1: '0x937982c5ea62bd6765bd5387e5c6b45e24cb4ff6',
+					},
+					underlyingAddresses: {
+						1: '0x5ee08f40b637417bcC9d2C51B62F4820ec9cF5D8',
+					},
+					icon: 'bSTBL.png',
+					archived: true,
 					coingeckoId: 'dai',
 					underlyingDecimals: 18,
 					isBasket: true,

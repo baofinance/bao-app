@@ -242,7 +242,7 @@ const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal 
 											// Seek to mint 98% of total val (use remaining 2% as slippage protection)
 											const inputVal = decimate(
 												BigNumber.from(mintOption === MintOption.DAI ? rates.dai : rates.eth).mul(parseUnits(e.currentTarget.value)),
-											).mul(parseUnits('1.02'))
+											).mul(parseUnits('1.0015'))
 											setSecondaryVal(e.currentTarget.value)
 											setVal(formatUnits(decimate(inputVal)))
 										}}
@@ -262,7 +262,7 @@ const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal 
 											}
 
 											// Seek to mint 98% of total val (use remaining 2% as slippage protection)
-											const maxVal = usedBal.mul(parseUnits('0.98')).div(usedRate)
+											const maxVal = usedBal.mul(parseUnits('0.9985')).div(usedRate)
 											setSecondaryVal(formatUnits(maxVal))
 											setVal(formatUnits(usedBal))
 										}}
