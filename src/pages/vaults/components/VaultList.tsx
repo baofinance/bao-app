@@ -78,13 +78,11 @@ export const VaultListItem: React.FC<VaultListProps> = ({ vaultName }: VaultList
 								<Loader />
 							)}
 						</div>
-						<div className='mx-auto my-0 flex w-full flex-col items-end justify-center'>
+						<div className='mx-auto my-0 flex w-full flex-col items-end justify-center text-right'>
 							<span className='inline-block'>
 								{synth ? (
 									<>
-										<Typography variant='base' className='m-0 font-bakbak leading-5'>
-											{getDisplayBalance(synth.borrowApy)}%
-										</Typography>
+										<Typography className='m-0 font-bakbak text-lg leading-5'>{getDisplayBalance(synth.borrowApy)}%</Typography>
 									</>
 								) : (
 									<Loader />
