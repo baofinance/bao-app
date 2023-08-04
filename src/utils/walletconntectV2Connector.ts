@@ -1,7 +1,7 @@
-import { ConnectorUpdate } from '@web3-react/types'
-import { AbstractConnector } from '@web3-react/abstract-connector'
 import type WalletConnectProvider from '@walletconnect/ethereum-provider'
 import { EthereumProviderOptions } from '@walletconnect/ethereum-provider/dist/types/EthereumProvider'
+import { AbstractConnector } from '@web3-react/abstract-connector'
+import { ConnectorUpdate } from '@web3-react/types'
 
 const RPC_URLS: { [chainId: number]: string } = {
 	1: process.env.NEXT_PUBLIC_ALCHEMY_API_URL,
@@ -70,7 +70,7 @@ export class WalletConnectV2Connector extends AbstractConnector {
 		}
 	}
 
-	getProvider = async (): Promise<any> => {
+	getProvider = async (): Promise<WalletConnectProvider | undefined> => {
 		if (!this.provider) {
 			throw new Error('Provider is undefined')
 		}
