@@ -18,13 +18,10 @@ const nextConfig = {
 	experimental: {
 		newNextLinkBehavior: true,
 		scrollRestoration: true,
-		images: {
-			allowFutureImage: true,
-			unoptimized: true,
-		},
 	},
 	images: {
 		deviceSizes: [640, 768, 1024, 1280, 1536, 1600],
+		unoptimized: true,
 	},
 	publicRuntimeConfig: {
 		breakpoints: screens,
