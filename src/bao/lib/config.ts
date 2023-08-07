@@ -531,6 +531,8 @@ export default {
 				aSUSD: '#1FC9A8',
 				aDAI: '#F5AC37',
 				aUSDC: '#2775CA',
+				DAI: '#F5AC37',
+				USDC: '#2775CA',
 			},
 			desc: 'Low risk stablecoin basket',
 			swap: 'https://curve.fi/factory-crypto/61',
