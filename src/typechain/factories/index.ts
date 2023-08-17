@@ -33,6 +33,7 @@ export { GaugePool__factory } from "./GaugePool__factory";
 export { LendingLogicKashi__factory } from "./LendingLogicKashi__factory";
 export { LendingRegistry__factory } from "./LendingRegistry__factory";
 export { Lens__factory } from "./Lens__factory";
+export { Lusd__factory } from "./Lusd__factory";
 export { Masterchef__factory } from "./Masterchef__factory";
 export { Minter__factory } from "./Minter__factory";
 export { Mkr__factory } from "./Mkr__factory";

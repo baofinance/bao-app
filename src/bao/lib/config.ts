@@ -25,6 +25,7 @@ export default {
 		DEAD: '0x000000000000000000000000000000000000dead',
 		CRV: '0xD533a949740bb3306d119CC777fa900bA034cd52',
 		MKR: '0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2',
+		LUSD: '0x5f98805A4E8be255a32880FDeC7F6728C6568bA0',
 		//Synths
 		baoUSD: '0x7945b0A6674b175695e5d1D08aE1e6F13744Abb0',
 		baoETH: '0xf4edfad26EE0D23B69CA93112eccE52704E0006f',
@@ -74,6 +75,11 @@ export default {
 		dai: {
 			1: {
 				address: '0x6B175474E89094C44Da98b954EedeAC495271d0F',
+			},
+		},
+		Lusd: {
+			1: {
+				address: '0x5f98805A4E8be255a32880FDeC7F6728C6568bA0',
 			},
 		},
 		// Baskets
@@ -155,7 +161,7 @@ export default {
 			vid: 1,
 			comptroller: '0x0Be1fdC1E87127c4fe7C05bAE6437e3cf90Bf8d8',
 			oracle: '0xEbdC2D2a203c17895Be0daCdf539eeFC710eaFd8',
-			stabilizer: '0x720282BB7e721634c95F0933636DE3171dc405de',
+			stabilizer: '0x93C825F8B1F420fB07412Bc4E588b59f4f340384',
 			markets: [
 				{
 					mid: 4,

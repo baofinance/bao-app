@@ -23,11 +23,11 @@ import { isDesktop } from 'react-device-detect'
 
 export const Ballast = () => {
 	const [selectedOption, setSelectedOption] = useState('baoUSD')
-	const [swapDirection, setSwapDirection] = useState(false) // false = DAI->baoUSD | true = baoUSD->DAI
+	const [swapDirection, setSwapDirection] = useState(false) // false = LUSD->baoUSD | true = baoUSD->LUSD
 	const [inputVal, setInputVal] = useState('')
 	const { account } = useWeb3React()
 	const wethBalance = useTokenBalance(Config.addressMap.WETH)
-	const daiBalance = useTokenBalance(Config.addressMap.DAI)
+	const lusdBalance = useTokenBalance(Config.addressMap.LUSD)
 	const baoUSDBalance = useTokenBalance(Config.addressMap.baoUSD)
 	const baoETHBalance = useTokenBalance(Config.addressMap.baoETH)
 	const ballastInfo = useBallastInfo(selectedOption)
@@ -46,9 +46,9 @@ export const Ballast = () => {
 						Balance:
 					</Typography>
 					<Typography variant='sm' className='font-bold'>
-						{selectedOption === 'baoUSD' ? `${getDisplayBalance(daiBalance)}` : `${getDisplayBalance(wethBalance)}`}
+						{selectedOption === 'baoUSD' ? `${getDisplayBalance(lusdBalance)}` : `${getDisplayBalance(wethBalance)}`}
 						{selectedOption === 'baoUSD' ? (
-							<Image className='z-10 ml-1 inline-block select-none' src='/images/tokens/DAI.png' alt='DAI' width={16} height={16} />
+							<Image className='z-10 ml-1 inline-block select-none' src='/images/tokens/LUSD.png' alt='LUSD' width={16} height={16} />
 						) : (
 							<Image className='z-10 ml-1 inline-block select-none' src='/images/tokens/WETH.png' alt='WETH' width={16} height={16} />
 						)}
@@ -64,7 +64,7 @@ export const Ballast = () => {
 				</div>
 			</div>
 			<Input
-				onSelectMax={() => setInputVal(formatEther(selectedOption === 'baoUSD' ? daiBalance : wethBalance).toString())}
+				onSelectMax={() => setInputVal(formatEther(selectedOption === 'baoUSD' ? lusdBalance : wethBalance).toString())}
 				onChange={(e: { currentTarget: { value: React.SetStateAction<string> } }) => setInputVal(e.currentTarget.value)}
 				// Fee calculation not ideal, fix.
 				value={
@@ -75,10 +75,10 @@ export const Ballast = () => {
 					<div className='flex flex-row items-center rounded-r-3xl bg-baoBlack pl-2 pr-4'>
 						<div className='flex w-6 justify-center'>
 							<Image
-								src={`/images/tokens/${selectedOption === 'baoUSD' ? 'DAI' : 'WETH'}.png`}
+								src={`/images/tokens/${selectedOption === 'baoUSD' ? 'LUSD' : 'WETH'}.png`}
 								height={32}
 								width={32}
-								alt={selectedOption === 'baoUSD' ? 'DAI' : 'WETH'}
+								alt={selectedOption === 'baoUSD' ? 'LUSD' : 'WETH'}
 							/>
 						</div>
 					</div>
@@ -282,7 +282,7 @@ export const Ballast = () => {
 						swapDirection={swapDirection}
 						inputVal={inputVal}
 						maxValues={{
-							buy: selectedOption === 'baoUSD' ? daiBalance : wethBalance,
+							buy: selectedOption === 'baoUSD' ? lusdBalance : wethBalance,
 							sell: selectedOption === 'baoUSD' ? baoUSDBalance : baoETHBalance,
 						}}
 						supplyCap={ballastInfo ? ballastInfo.supplyCap : BigNumber.from(0)}
