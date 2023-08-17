@@ -3,7 +3,7 @@ import useBao from '@/hooks/base/useBao'
 import { useBlockUpdater } from '@/hooks/base/useBlock'
 import useContract from '@/hooks/base/useContract'
 import { useTxReceiptUpdater } from '@/hooks/base/useTransactionProvider'
-import { Dai, Stabilizer, Weth } from '@/typechain/index'
+import { Dai, Lusd, Stabilizer, Weth } from '@/typechain/index'
 import { providerKey } from '@/utils/index'
 import Multicall from '@/utils/multicall'
 import { useQuery } from '@tanstack/react-query'
@@ -15,10 +15,10 @@ const useBallastInfo = (vaultName: string) => {
 	const bao = useBao()
 	const { library, account, chainId } = useWeb3React()
 	const ballast = useContract<Stabilizer>('Stabilizer', Config.vaults[vaultName].stabilizer)
-	const dai = useContract<Dai>('Dai', Config.contracts.Dai[chainId].address)
+	const lusd = useContract<Lusd>('Lusd', Config.contracts.Lusd[chainId].address)
 	const weth = useContract<Weth>('Weth', Config.contracts.Weth[chainId].address)
 
-	const enabled = !!bao && !!library && !!ballast && !!dai
+	const enabled = !!bao && !!library && !!ballast && !!lusd
 	const { data: ballastInfo, refetch } = useQuery(
 		['@/hooks/ballast/useBallastInfo', providerKey(library, account, chainId), { enabled }],
 		async () => {
@@ -29,8 +29,8 @@ const useBallastInfo = (vaultName: string) => {
 					calls: [{ method: 'supplyCap' }, { method: 'buyFee' }, { method: 'sellFee' }, { method: 'FEE_DENOMINATOR' }],
 				},
 				{
-					ref: 'DAI',
-					contract: dai,
+					ref: 'LUSD',
+					contract: lusd,
 					calls: [{ method: 'balanceOf', params: [ballast.address] }],
 				},
 				{
@@ -39,10 +39,10 @@ const useBallastInfo = (vaultName: string) => {
 					calls: [{ method: 'balanceOf', params: [ballast.address] }],
 				},
 			])
-			const { Ballast: ballastRes, DAI: daiRes, WETH: wethRes } = Multicall.parseCallResults(await bao.multicall.call(ballastQueries))
+			const { Ballast: ballastRes, LUSD: lusdRes, WETH: wethRes } = Multicall.parseCallResults(await bao.multicall.call(ballastQueries))
 
 			return {
-				reserves: vaultName === 'baoUSD' ? BigNumber.from(daiRes[0].values[0]) : BigNumber.from(wethRes[0].values[0]),
+				reserves: vaultName === 'baoUSD' ? BigNumber.from(lusdRes[0].values[0]) : BigNumber.from(wethRes[0].values[0]),
 				supplyCap: BigNumber.from(ballastRes[0].values[0]),
 				fees: {
 					buy: BigNumber.from(ballastRes[1].values[0]),
