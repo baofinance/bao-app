@@ -131,11 +131,16 @@ export default {
 				address: '0x235b30088E66d2D28F137b422B9349fBa51E0248',
 			},
 		},
-
 		// Balancer
 		BalancerVault: {
 			1: {
 				address: '0xBA12222222228d8Ba445958a75a0704d566BF2C8',
+			},
+		},
+		// B.Protocol
+		bbdbaoETH: {
+			1: {
+				address: '0x070B0223E244C94f3F77A993504d073DEB5386C6',
 			},
 		},
 	},
@@ -565,6 +570,25 @@ export default {
 			},
 			desc: 'Liquid staked ETH basket',
 			swap: 'https://curve.fi/factory-crypto/61',
+		},
+	],
+	backstops: [
+		{
+			gid: 1,
+			backstopAddresses: {
+				1: '0x070B0223E244C94f3F77A993504d073DEB5386C6',
+			},
+			vaultAddresses: {
+				1: '0xe853E5c1eDF8C51E81bAe81D742dd861dF596DE7',
+			},
+			tokenAddresses: {
+				1: '0xf4edfad26EE0D23B69CA93112eccE52704E0006f',
+			},
+			name: 'baoETH',
+			backstopSymbol: 'bbdbaoETH',
+			vaultSymbol: 'bdbaoETH',
+			type: 'B.Protocol',
+			icon: '/images/tokens/baoETH.png',
 		},
 	],
 } as unknown as Config

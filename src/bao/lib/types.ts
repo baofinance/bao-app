@@ -1,4 +1,5 @@
 import {
+	Bamm,
 	Cether,
 	Ctoken,
 	CurveLp,
@@ -14,24 +15,23 @@ import {
 } from '@/typechain/index'
 import { BigNumber } from 'ethers'
 
-export interface SupportedPool {
+export interface SupportedBackstop {
 	pid: number
-	lpAddresses: {
+	backstopAddresses: {
+		[network: number]: string
+	}
+	vaultAddresses: {
 		[network: number]: string
 	}
 	tokenAddresses: {
 		[network: number]: string
 	}
-	tokenDecimals: number
 	name: string
 	symbol: string
-	poolType: string
-	tokenSymbol: string
-	iconA: string
-	iconB: string
-	refUrl: string
-	pairUrl: string
+	backstopSymbol: string
+	vaultSymbol: string
 	type: string
+	icon: string
 }
 
 export interface SupportedGauge {
@@ -114,11 +114,13 @@ export interface SupportedVault {
 	minimumBorrow?: number
 }
 
-export interface FarmableSupportedPool extends SupportedPool {
-	lpAddress: string
+export interface ActiveSupportedBackstop extends SupportedBackstop {
+	backstopAddress: string
+	vaultAddress: string
 	tokenAddress: string
-	lpContract: Uni_v2_lp
-	tokenContract: Erc20
+	backstopContract: Bamm
+	vaultContract: Ctoken
+	tokenContract?: Erc20
 }
 
 export interface ActiveSupportedGauge extends SupportedGauge {
@@ -184,7 +186,7 @@ export interface Config {
 	llamaIds: AddressMapConfig
 	contracts: ContractsConfig
 	subgraphs: SubgraphConfig
-	farms: SupportedPool[]
+	backstops: SupportedBackstop[]
 	baskets: SupportedBasket[]
 	vaults: {
 		[vaultName: string]: {
