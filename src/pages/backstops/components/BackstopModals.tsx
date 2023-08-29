@@ -13,7 +13,7 @@ type BackstopModalProps = {
 }
 
 const BackstopModal: React.FC<BackstopModalProps> = ({ backstop, show, onHide }) => {
-	const operations = ['Stake', 'Unstake']
+	const operations = ['Deposit', 'Withdraw', 'Stake', 'Unstake']
 	const [operation, setOperation] = useState(operations[0])
 
 	const hideModal = useCallback(() => {
