@@ -9,6 +9,7 @@ import useAllowance from '@/hooks/base/useAllowance'
 import useBao from '@/hooks/base/useBao'
 import useTokenBalance from '@/hooks/base/useTokenBalance'
 import useTransactionHandler from '@/hooks/base/useTransactionHandler'
+import useTransactionProvider from '@/hooks/base/useTransactionProvider'
 import { useAccountLiquidity } from '@/hooks/vaults/useAccountLiquidity'
 import { useSupplyBalances } from '@/hooks/vaults/useBalances'
 import { useExchangeRates } from '@/hooks/vaults/useExchangeRates'
@@ -120,6 +121,7 @@ export const Withdraw: React.FC<WithdrawProps> = ({ backstop, onHide }) => {
 	const bao = useBao()
 	const [val, setVal] = useState('')
 	const { pendingTx, txHash, handleTx } = useTransactionHandler()
+	const { transactions } = useTransactionProvider()
 	const _vaults = useVaults(backstop.name)
 	const supplyBalances = useSupplyBalances(backstop.name)
 	const { exchangeRates } = useExchangeRates(backstop.name)

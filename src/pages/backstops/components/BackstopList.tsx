@@ -7,6 +7,9 @@ import Image from 'next/future/image'
 import React, { useState } from 'react'
 import { isDesktop } from 'react-device-detect'
 import BackstopModal from './BackstopModals'
+import useBackstopInfo from '@/hooks/backstops/useBackstopInfo'
+import useCollaterals from '@/hooks/backstops/useCollaterals'
+import { formatUnits } from 'ethers/lib/utils'
 
 const BackstopList: React.FC = () => {
 	const backstops = useBackstops()
@@ -44,6 +47,14 @@ interface BackstopListItemProps {
 const BackstopListItem: React.FC<BackstopListItemProps> = ({ backstop }) => {
 	const { account } = useWeb3React()
 	const [showBackstopModal, setShowBackstopModal] = useState(false)
+	const backstopInfo = useBackstopInfo(backstop)
+	const collaterals = useCollaterals(backstop)
+
+	console.log('userShares', backstopInfo?.userShares.toString())
+	console.log('totalSupply', backstopInfo?.totalSupply.toString())
+	console.log('collateralCount', backstopInfo?.collateralCount.toString())
+	console.log('collaterals', collaterals && collaterals)
+	console.log('collateralValue', backstopInfo?.collateralValue[0], backstopInfo?.collateralValue[1].toString())
 
 	return (
 		<>

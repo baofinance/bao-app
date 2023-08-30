@@ -71,10 +71,12 @@ const Vault: NextPage<{
 
 	const collateral = useMemo(() => {
 		if (!(_vaults && supplyBalances)) return
-		return _vaults.sort((a, b) => {
-			void a
-			return supplyBalances.find(balance => balance.address.toLowerCase() === b.vaultAddress.toLowerCase()).balance.gt(0) ? 1 : 0
-		})
+		return _vaults
+			.filter(vault => !vault.isSynth)
+			.sort((a, b) => {
+				void a
+				return supplyBalances.find(balance => balance.address.toLowerCase() === b.vaultAddress.toLowerCase()).balance.gt(0) ? 1 : 0
+			})
 	}, [_vaults, supplyBalances])
 
 	const userVaults = useMemo(() => {
