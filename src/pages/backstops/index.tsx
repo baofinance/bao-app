@@ -8,7 +8,7 @@ import BackstopList from './components/BackstopList'
 const Backstops: React.FC = () => {
 	return (
 		<>
-			<NextSeo title={'Gauges'} description={'Stake LP tokens to earn BAO.'} />
+			<NextSeo title={'Backstops'} description={`Ensure Bao Vaults' stability.`} />
 			<div className='grid gap-10 lg:grid-cols-5 lg:gap-24'>
 				<div className='w-full lg:col-span-2'>
 					<Typography variant='hero' className='stroke'>
@@ -17,8 +17,9 @@ const Backstops: React.FC = () => {
 					<div className='mt-4 flex gap-2'>
 						<Icon icon='lightbulb' className='m-0 h-6 w-6 flex-none' />
 						<Typography className='m-0 pr-1 text-base font-light tracking-tight lg:mb-4'>
-							Backstops are the first line of defense in maintaining system solvency. They achieve this by acting as the source of liquidity
-							to repay debt from liquidations.
+							Ensure Bao Vaults&apos; stability and access genuine &apos;real yield&apos;. Redirect MEV and bot profits directly to our
+							community via democratized liquidations. Repay at-risk positions with your deposits, while liquidation penalties from seized
+							collateral are swiftly converted to the deposited asset.
 						</Typography>
 					</div>
 					<div className='hidden lg:block'>
