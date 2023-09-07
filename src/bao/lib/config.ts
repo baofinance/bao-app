@@ -520,6 +520,26 @@ export default {
 			pairUrl: 'https://app.balancer.fi/#/ethereum/pool/0x0bbc7b78ff8453c40718e290b33f1d00ee67274e000000000000000000000563',
 			balancerPoolId: '0x0bbc7b78ff8453c40718e290b33f1d00ee67274e000000000000000000000563',
 		},
+		{
+			gid: 10,
+			gaugeAddresses: {
+				1: '0xA85708C65d9fC9478075686e25e08fd2914b99FF',
+			},
+			poolAddresses: {
+				1: '0x070B0223E244C94f3F77A993504d073DEB5386C6',
+			},
+			lpAddresses: {
+				1: '0x070B0223E244C94f3F77A993504d073DEB5386C6',
+			},
+			poolInfoAddresses: {
+				1: '0x070B0223E244C94f3F77A993504d073DEB5386C6',
+			},
+			name: 'baoETH Backstop',
+			symbol: 'bbdbaoETH',
+			type: 'BProtocol',
+			iconA: '/images/tokens/baoETH.png',
+			pairUrl: '/backstops',
+		},
 	],
 	baskets: [
 		{

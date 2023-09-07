@@ -102,7 +102,9 @@ const GaugeListItem: React.FC<GaugeListItemProps> = ({ gauge }) => {
 						<div className='mx-0 my-auto inline-block h-full items-center'>
 							<div className='mr-2 hidden lg:inline-block'>
 								<Image className='z-10 inline-block select-none' src={gauge.iconA} alt={gauge.symbol} width={24} height={24} />
-								<Image className='z-20 -ml-2 inline-block select-none' src={gauge.iconB} alt={gauge.symbol} width={24} height={24} />
+								{gauge.iconB && (
+									<Image className='z-20 -ml-2 inline-block select-none' src={gauge.iconB} alt={gauge.symbol} width={24} height={24} />
+								)}
 							</div>
 							<span className='inline-block text-left align-middle'>
 								<Typography variant='base' className='font-bakbak'>

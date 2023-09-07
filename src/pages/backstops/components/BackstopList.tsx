@@ -6,7 +6,7 @@ import { useWeb3React } from '@web3-react/core'
 import Image from 'next/future/image'
 import React, { useState } from 'react'
 import { isDesktop } from 'react-device-detect'
-import BackstopModal from './BackstopModals'
+import BackstopModal from './BackstopModal'
 import useBackstopInfo from '@/hooks/backstops/useBackstopInfo'
 import useCollaterals from '@/hooks/backstops/useCollaterals'
 import { formatUnits } from 'ethers/lib/utils'
@@ -75,7 +75,7 @@ const BackstopListItem: React.FC<BackstopListItemProps> = ({ backstop }) => {
 								</Typography>
 								<Typography className={`flex align-middle font-bakbak text-baoRed`}>
 									<Image
-										src={`/images/platforms/BProtocol.webp`}
+										src={`/images/platforms/BProtocol.png`}
 										height={16}
 										width={16}
 										alt={backstop.type}

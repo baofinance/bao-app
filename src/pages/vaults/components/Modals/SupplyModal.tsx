@@ -34,7 +34,6 @@ const SupplyModal = ({ asset, show, onHide, vaultName, val }: SupplyModalProps) 
 	const usdValue = val.mul(asset.price)
 	const operation = 'Supply'
 
-	console.log('asset', asset)
 	const hideModal = useCallback(() => {
 		onHide()
 	}, [onHide])

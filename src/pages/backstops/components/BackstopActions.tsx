@@ -32,7 +32,7 @@ export const Deposit: React.FC<DepositProps> = ({ backstop, max, onHide }) => {
 	const { pendingTx, txHash, handleTx } = useTransactionHandler()
 
 	const fullBalance = useMemo(() => {
-		return getFullDisplayBalance(max)
+		return getDisplayBalance(max)
 	}, [max])
 
 	const handleChange = useCallback(
@@ -115,61 +115,14 @@ export const Deposit: React.FC<DepositProps> = ({ backstop, max, onHide }) => {
 interface WithdrawProps {
 	backstop: ActiveSupportedBackstop
 	onHide: () => void
+	max: BigNumber
 }
 
-export const Withdraw: React.FC<WithdrawProps> = ({ backstop, onHide }) => {
+export const Withdraw: React.FC<WithdrawProps> = ({ backstop, onHide, max }) => {
 	const bao = useBao()
 	const [val, setVal] = useState('')
 	const { pendingTx, txHash, handleTx } = useTransactionHandler()
 	const { transactions } = useTransactionProvider()
-	const _vaults = useVaults(backstop.name)
-	const supplyBalances = useSupplyBalances(backstop.name)
-	const { exchangeRates } = useExchangeRates(backstop.name)
-	const accountLiquidity = useAccountLiquidity(backstop.name)
-
-	const synth = useMemo(() => {
-		if (!_vaults) return
-		return _vaults.find(vault => vault.isSynth)
-	}, [_vaults])
-
-	const supply = useMemo(
-		() =>
-			synth &&
-			supplyBalances &&
-			supplyBalances.find(balance => balance.address.toLowerCase() === synth?.vaultAddress.toLowerCase()) &&
-			synth &&
-			exchangeRates &&
-			exchangeRates[synth?.vaultAddress]
-				? decimate(
-						supplyBalances
-							.find(balance => balance.address.toLowerCase() === synth?.vaultAddress.toLowerCase())
-							.balance.mul(exchangeRates[synth?.vaultAddress]),
-				  )
-				: BigNumber.from(0),
-		[supplyBalances, exchangeRates, synth],
-	)
-
-	let _imfFactor = synth && synth.imfFactor
-	if (accountLiquidity) {
-		const _sqrt = sqrt(supply)
-		const num = exponentiate(parseUnits('1.1'))
-		const denom = synth ? decimate(synth?.imfFactor.mul(_sqrt).add(parseUnits('1'))) : 1
-		_imfFactor = num.div(denom)
-	}
-
-	let withdrawable = BigNumber.from(0)
-	if (synth && _imfFactor.gt(synth?.collateralFactor) && synth?.price.gt(0)) {
-		if (synth?.collateralFactor.mul(synth?.price).gt(0)) {
-			withdrawable =
-				accountLiquidity && exponentiate(accountLiquidity.usdBorrowable).div(decimate(synth?.collateralFactor.mul(synth?.price)))
-		} else {
-			withdrawable = accountLiquidity && exponentiate(accountLiquidity.usdBorrowable).div(decimate(_imfFactor).mul(synth?.price))
-		}
-	}
-
-	const max = () => {
-		return !(accountLiquidity && accountLiquidity.usdBorrowable) || withdrawable.gt(supply) ? supply : withdrawable
-	}
 
 	const handleChange = useCallback(
 		(e: React.FormEvent<HTMLInputElement>) => {
@@ -193,18 +146,18 @@ export const Withdraw: React.FC<WithdrawProps> = ({ backstop, onHide }) => {
 								Balance:
 							</Typography>
 							<Typography variant='sm' className='font-bold'>
-								{getDisplayBalance(max())} {backstop.name}
+								{getDisplayBalance(max)} {backstop.name}
 							</Typography>
 						</div>
 					</div>
-					<Input onSelectMax={() => setVal(formatUnits(max()))} onChange={handleChange} value={val} symbol={backstop.name} />
+					<Input onSelectMax={() => setVal(formatUnits(max))} onChange={handleChange} value={val} symbol={backstop.name} />
 				</div>
 			</Modal.Body>
 			<Modal.Actions>
 				<>
 					<Button
 						fullWidth
-						disabled={!val || !bao || isNaN(val as any) || parseFloat(val) > parseFloat(formatUnits(max()))}
+						disabled={!val || !bao || isNaN(val as any) || parseFloat(val) > parseFloat(formatUnits(max))}
 						onClick={() => {
 							handleTx(
 								backstop.vaultContract.redeemUnderlying(parseUnits(val).toString()),
@@ -227,15 +180,18 @@ interface StakeProps {
 	backstop: ActiveSupportedBackstop
 	max: BigNumber
 	onHide: () => void
+	exchangeRate: BigNumber
 }
 
-export const Stake: React.FC<StakeProps> = ({ backstop, max, onHide }) => {
+export const Stake: React.FC<StakeProps> = ({ backstop, max, onHide, exchangeRate }) => {
 	const [val, setVal] = useState('')
 	const { pendingTx, txHash, handleTx } = useTransactionHandler()
 
 	const fullBalance = useMemo(() => {
 		return getFullDisplayBalance(max)
 	}, [max])
+
+	const displayBalance = formatUnits(max.mul(exchangeRate))
 
 	const handleChange = useCallback(
 		(e: React.FormEvent<HTMLInputElement>) => {
@@ -265,7 +221,7 @@ export const Stake: React.FC<StakeProps> = ({ backstop, max, onHide }) => {
 								Balance:
 							</Typography>
 							<Typography variant='sm' className='font-bold'>
-								{fullBalance} {backstop.vaultSymbol}
+								{getDisplayBalance(displayBalance)} {backstop.name}
 							</Typography>
 						</div>
 					</div>
@@ -289,10 +245,10 @@ export const Stake: React.FC<StakeProps> = ({ backstop, max, onHide }) => {
 								onClick={async () => {
 									// TODO- give the user a notice that we're approving max uint and instruct them how to change this value.
 									const tx = backstop.vaultContract.approve(backstop.backstopAddress, ethers.constants.MaxUint256)
-									handleTx(tx, `${backstop.name} Backstop: Approve ${backstop.vaultSymbol}`)
+									handleTx(tx, `${backstop.name} Backstop: Approve ${backstop.name}`)
 								}}
 							>
-								Approve {backstop.vaultSymbol}
+								Approve {backstop.name}
 							</Button>
 						)}
 					</>
@@ -305,12 +261,12 @@ export const Stake: React.FC<StakeProps> = ({ backstop, max, onHide }) => {
 								const amount = parseUnits(val)
 								const depositTx = backstop.backstopContract['deposit(uint256)'](amount)
 
-								handleTx(depositTx, `${backstop.name} Backstop: Stake ${getDisplayBalance(amount)} ${backstop.symbol}`, () => onHide())
+								handleTx(depositTx, `${backstop.name} Backstop: Stake ${getDisplayBalance(amount)} ${backstop.name}`, () => onHide())
 							}}
 							pendingTx={pendingTx}
 							txHash={txHash}
 						>
-							Stake {backstop.vaultSymbol}
+							Stake {backstop.name}
 						</Button>
 					</>
 				)}
@@ -331,7 +287,7 @@ export const Unstake: React.FC<UnstakeProps> = ({ backstop, max, onHide }) => {
 	const { pendingTx, txHash, handleTx } = useTransactionHandler()
 
 	const fullBalance = useMemo(() => {
-		return getFullDisplayBalance(max)
+		return getDisplayBalance(max)
 	}, [max])
 
 	const handleChange = useCallback(
@@ -360,7 +316,7 @@ export const Unstake: React.FC<UnstakeProps> = ({ backstop, max, onHide }) => {
 								Balance:
 							</Typography>
 							<Typography variant='sm' className='font-bold'>
-								{fullBalance} {backstop.backstopSymbol}
+								{getDisplayBalance(max)} {backstop.backstopSymbol}
 							</Typography>
 						</div>
 					</div>
@@ -392,9 +348,11 @@ interface ActionProps {
 	onHide: () => void
 	backstop: ActiveSupportedBackstop
 	operation: string
+	max: BigNumber
+	exchangeRate: BigNumber
 }
 
-const Actions: React.FC<ActionProps> = ({ backstop, onHide, operation }) => {
+const Actions: React.FC<ActionProps> = ({ backstop, onHide, operation, max, exchangeRate }) => {
 	const tokenBalance = useTokenBalance(backstop?.tokenAddress)
 	const vaultBalance = useTokenBalance(backstop?.vaultAddress)
 	const backstopBalance = useTokenBalance(backstop?.backstopAddress)
@@ -402,8 +360,8 @@ const Actions: React.FC<ActionProps> = ({ backstop, onHide, operation }) => {
 	return (
 		<div>
 			{operation === 'Deposit' && <Deposit backstop={backstop} max={tokenBalance} onHide={onHide} />}
-			{operation === 'Withdraw' && <Withdraw backstop={backstop} onHide={onHide} />}
-			{operation === 'Stake' && <Stake backstop={backstop} max={vaultBalance} onHide={onHide} />}
+			{operation === 'Withdraw' && <Withdraw backstop={backstop} max={max} onHide={onHide} />}
+			{operation === 'Stake' && <Stake backstop={backstop} max={vaultBalance} onHide={onHide} exchangeRate={exchangeRate} />}
 			{operation === 'Unstake' && <Unstake backstop={backstop} max={backstopBalance} onHide={onHide} />}
 		</div>
 	)
