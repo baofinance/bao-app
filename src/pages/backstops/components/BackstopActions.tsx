@@ -1,4 +1,5 @@
 //import { useWeb3React } from '@web3-react/core'
+import { getUsdToShare } from '@/bao/lib/backstop'
 import { ActiveSupportedBackstop } from '@/bao/lib/types'
 import Button from '@/components/Button'
 import Input from '@/components/Input'
@@ -10,11 +11,7 @@ import useBao from '@/hooks/base/useBao'
 import useTokenBalance from '@/hooks/base/useTokenBalance'
 import useTransactionHandler from '@/hooks/base/useTransactionHandler'
 import useTransactionProvider from '@/hooks/base/useTransactionProvider'
-import { useAccountLiquidity } from '@/hooks/vaults/useAccountLiquidity'
-import { useSupplyBalances } from '@/hooks/vaults/useBalances'
-import { useExchangeRates } from '@/hooks/vaults/useExchangeRates'
-import { useVaults } from '@/hooks/vaults/useVaults'
-import { decimate, exponentiate, getDisplayBalance, getFullDisplayBalance, sqrt } from '@/utils/numberFormat'
+import { getDisplayBalance, getFullDisplayBalance } from '@/utils/numberFormat'
 import { faExternalLink } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { BigNumber, ethers } from 'ethers'
@@ -43,7 +40,7 @@ export const Deposit: React.FC<DepositProps> = ({ backstop, max, onHide }) => {
 	)
 
 	const handleSelectMax = useCallback(() => {
-		setVal(fullBalance)
+		setVal(formatUnits(max))
 	}, [fullBalance, setVal])
 
 	const allowance = useAllowance(backstop.tokenAddress, backstop.vaultAddress)
@@ -191,7 +188,7 @@ export const Stake: React.FC<StakeProps> = ({ backstop, max, onHide, exchangeRat
 		return getFullDisplayBalance(max)
 	}, [max])
 
-	const displayBalance = formatUnits(max.mul(exchangeRate))
+	const displayBalance = max
 
 	const handleChange = useCallback(
 		(e: React.FormEvent<HTMLInputElement>) => {
@@ -285,7 +282,9 @@ export const Unstake: React.FC<UnstakeProps> = ({ backstop, max, onHide }) => {
 	const bao = useBao()
 	const [val, setVal] = useState('')
 	const { pendingTx, txHash, handleTx } = useTransactionHandler()
+	const usdToShare = getUsdToShare(backstop, max)
 
+	console.log('usdToShare', formatUnits(usdToShare))
 	const fullBalance = useMemo(() => {
 		return getDisplayBalance(max)
 	}, [max])
@@ -298,8 +297,8 @@ export const Unstake: React.FC<UnstakeProps> = ({ backstop, max, onHide }) => {
 	)
 
 	const handleSelectMax = useCallback(() => {
-		setVal(fullBalance)
-	}, [fullBalance, setVal])
+		setVal(formatUnits(max))
+	}, [max])
 
 	const hideModal = useCallback(() => {
 		onHide()
@@ -316,18 +315,18 @@ export const Unstake: React.FC<UnstakeProps> = ({ backstop, max, onHide }) => {
 								Balance:
 							</Typography>
 							<Typography variant='sm' className='font-bold'>
-								{getDisplayBalance(max)} {backstop.backstopSymbol}
+								{fullBalance} {backstop.backstopSymbol}
 							</Typography>
 						</div>
 					</div>
-					<Input onSelectMax={handleSelectMax} onChange={handleChange} value={val} max={fullBalance} symbol={backstop.backstopSymbol} />
+					<Input onSelectMax={handleSelectMax} onChange={handleChange} value={val} symbol={backstop.backstopSymbol} />
 				</div>
 			</Modal.Body>
 			<Modal.Actions>
 				<>
 					<Button
 						fullWidth
-						disabled={!val || !bao || isNaN(val as any) || parseFloat(val) > parseFloat(fullBalance)}
+						disabled={!val || !bao || isNaN(val as any) || parseFloat(val) > parseFloat(formatUnits(max))}
 						onClick={async () => {
 							const amount = parseUnits(val, 18)
 							const withdrawTx = backstop.backstopContract['withdraw(uint256)'](amount)
