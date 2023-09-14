@@ -12,6 +12,7 @@ import { FC, Fragment, ReactNode } from 'react'
 import AccountButton from '../AccountButton'
 import Container from '../Container'
 import Nav from '../Nav'
+import Typography from '../Typography'
 
 export interface IconProps {
 	color?: string
@@ -57,19 +58,22 @@ const MobileNavLink: FC<MobileNavLinkProps> = ({ href, children, target, ...prop
 }
 
 const Header: FC = () => {
-	const baov1Balance = useTokenBalance(Config.addressMap.BAO)
+	//const tvl = useTVL();
 
 	return (
 		<header>
 			<nav>
 				<Container className='relative z-50 flex !max-w-full justify-between py-8'>
-					<div className='relative z-10 flex items-center gap-16'>
+					<div className='relative z-10 flex items-center gap-3'>
 						<Link href='/' aria-label='Home'>
 							<Logo className='h-10 w-auto' />
 						</Link>
+						{/* <h1 className='font-bakbak text-xl'>
+							TVL: {tvl}
+						</h1> */}
 					</div>
-					<div className='flex items-center gap-6'>
-						<div className='hidden gap-6 lg:flex'>
+					<div className='flex items-center gap-2'>
+						<div className='hidden gap-6 lg:flex mr-2'>
 							<Nav />
 						</div>
 						<AccountButton />
