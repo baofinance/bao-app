@@ -8,10 +8,29 @@ import { getDisplayBalance } from '@/utils/numberFormat'
 import { useWeb3React } from '@web3-react/core'
 import Image from 'next/future/image'
 import Link from 'next/link'
-import React, { useMemo } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { isDesktop } from 'react-device-detect'
 
 export const VaultList: React.FC = () => {
+	const [tick, setTick] = useState(0)
+	const _vaults = useVaults('baoUSD')
+
+	useEffect(() => {
+		const intervalId = setInterval(() => {
+			if (!isVaultListItemValid()) setTick(prevTick => prevTick + 1)
+		}, 1000) // Update every 1 seconds
+
+		const isVaultListItemValid = () => {
+			return _vaults
+		}
+
+		if (isVaultListItemValid()) {
+			clearInterval(intervalId)
+		}
+
+		return () => clearInterval(intervalId)
+	}, [tick])
+
 	return (
 		<>
 			<ListHeader headers={isDesktop ? ['Vault Name', 'Collateral Assets', 'Borrow vAPR'] : ['Name', 'Assets', 'vAPR']} />
