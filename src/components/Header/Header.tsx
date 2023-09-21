@@ -237,7 +237,7 @@ const Header: FC = () => {
 												</a>
 											)}
 										</Menu.Item>
-										<Menu.Item>
+										{/* <Menu.Item>
 											{({ active }) => (
 												<a
 													target='_blank'
@@ -252,7 +252,7 @@ const Header: FC = () => {
 													Immunefi <FontAwesomeIcon icon={faBug} />
 												</a>
 											)}
-										</Menu.Item>
+										</Menu.Item> */}
 										<Menu.Item>
 											{({ active }) => (
 												<a

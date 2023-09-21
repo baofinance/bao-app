@@ -1,6 +1,6 @@
 import { ActiveSupportedVault } from '@/bao/lib/types'
 import { ListHeader } from '@/components/List'
-import Loader from '@/components/Loader'
+import Loader, { PageLoader } from '@/components/Loader'
 import Tooltipped from '@/components/Tooltipped'
 import Typography from '@/components/Typography'
 import { useVaults } from '@/hooks/vaults/useVaults'
@@ -13,11 +13,12 @@ import { isDesktop } from 'react-device-detect'
 
 export const VaultList: React.FC = () => {
 	const [tick, setTick] = useState(0)
+	const [loading, setLoading] = useState(true)
 	const _vaults = useVaults('baoUSD')
 
 	useEffect(() => {
 		const intervalId = setInterval(() => {
-			if (!isVaultListItemValid()) setTick(prevTick => prevTick + 1)
+			setTick(prevTick => prevTick + 1)
 		}, 1000) // Update every 1 seconds
 
 		const isVaultListItemValid = () => {
@@ -25,6 +26,7 @@ export const VaultList: React.FC = () => {
 		}
 
 		if (isVaultListItemValid()) {
+			setLoading(false)
 			clearInterval(intervalId)
 		}
 
@@ -35,6 +37,7 @@ export const VaultList: React.FC = () => {
 		<>
 			<ListHeader headers={isDesktop ? ['Vault Name', 'Collateral Assets', 'Borrow vAPR'] : ['Name', 'Assets', 'vAPR']} />
 			<div className='flex flex-col gap-4'>
+				{loading && <PageLoader block />}
 				<VaultListItem vaultName={'baoUSD'} />
 				<VaultListItem vaultName={'baoETH'} />
 			</div>
