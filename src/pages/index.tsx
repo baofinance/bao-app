@@ -17,7 +17,7 @@ const Home: React.FC = () => {
 					<div className='mt-4 flex gap-2'>
 						{/* <Icon icon='lightbulb' className='m-0 h-6 w-6 flex-none' /> */}
 						<Typography className='m-0 pr-1 font-light text-base lg:mb-4'>
-							Gain exposure to an ever-increasing number of tokens and diversify your portfolio on one of Ethereum's most decentralized
+							Gain exposure to an ever-increasing number of tokens and diversify your portfolio on one of Ethereum&apos;s most decentralized
 							synthetic markets.
 						</Typography>
 					</div>

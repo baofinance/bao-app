@@ -45,6 +45,11 @@ module.exports = {
       {
         'endOfLine': 'auto',
       }
-    ]
+    ],
+    "rules": {
+    "no-unused-vars": "off",
+    "react/react-in-jsx-scope": "off"
+    // Add other rules you want to turn off
+  }
   },
 };
