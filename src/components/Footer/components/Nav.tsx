@@ -85,7 +85,7 @@ const Nav: React.FC = () => {
 					<FontAwesomeIcon icon={faGithub} />
 				</a>
 			</Tooltipped>
-			<Tooltipped content='Bug Bounty Program' placement='top'>
+			{/* <Tooltipped content='Bug Bounty Program' placement='top'>
 				<a
 					className='xs:pl-2 xs:pr-2 pl-3 pr-3 no-underline hover:text-baoRed'
 					target='_blank'
@@ -95,7 +95,7 @@ const Nav: React.FC = () => {
 				>
 					<FontAwesomeIcon icon={faBug} />
 				</a>
-			</Tooltipped>
+			</Tooltipped> */}
 		</div>
 	)
 }

@@ -7,7 +7,7 @@ import { Contract, Signer, utils } from "ethers";
 import type { Provider } from "@ethersproject/providers";
 import type { BalancerVault, BalancerVaultInterface } from "../BalancerVault";
 
-const _abi = [
+export const _abi = [
   {
     inputs: [
       {

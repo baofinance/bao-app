@@ -1,6 +1,6 @@
 import { ActiveSupportedVault } from '@/bao/lib/types'
 import { ListHeader } from '@/components/List'
-import Loader from '@/components/Loader'
+import Loader, { PageLoader } from '@/components/Loader'
 import Tooltipped from '@/components/Tooltipped'
 import Typography from '@/components/Typography'
 import { useVaults } from '@/hooks/vaults/useVaults'
@@ -8,14 +8,36 @@ import { getDisplayBalance } from '@/utils/numberFormat'
 import { useWeb3React } from '@web3-react/core'
 import Image from 'next/future/image'
 import Link from 'next/link'
-import React, { useMemo } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { isDesktop } from 'react-device-detect'
 
 export const VaultList: React.FC = () => {
+	const [tick, setTick] = useState(0)
+	const [loading, setLoading] = useState(true)
+	const _vaults = useVaults('baoUSD')
+
+	useEffect(() => {
+		const intervalId = setInterval(() => {
+			setTick(prevTick => prevTick + 1)
+		}, 1000) // Update every 1 seconds
+
+		const isVaultListItemValid = () => {
+			return _vaults
+		}
+
+		if (isVaultListItemValid()) {
+			setLoading(false)
+			clearInterval(intervalId)
+		}
+
+		return () => clearInterval(intervalId)
+	}, [tick])
+
 	return (
 		<>
 			<ListHeader headers={isDesktop ? ['Vault Name', 'Collateral Assets', 'Borrow vAPR'] : ['Name', 'Assets', 'vAPR']} />
 			<div className='flex flex-col gap-4'>
+				{loading && <PageLoader block />}
 				<VaultListItem vaultName={'baoUSD'} />
 				<VaultListItem vaultName={'baoETH'} />
 			</div>

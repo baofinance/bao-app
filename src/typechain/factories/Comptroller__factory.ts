@@ -7,7 +7,7 @@ import { Contract, Signer, utils } from "ethers";
 import type { Provider } from "@ethersproject/providers";
 import type { Comptroller, ComptrollerInterface } from "../Comptroller";
 
-const _abi = [
+export const _abi = [
   {
     inputs: [],
     payable: false,

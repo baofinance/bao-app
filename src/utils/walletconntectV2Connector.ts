@@ -1,7 +1,12 @@
 import type WalletConnectProvider from '@walletconnect/ethereum-provider'
 import { EthereumProviderOptions } from '@walletconnect/ethereum-provider/dist/types/EthereumProvider'
 import { AbstractConnector } from '@web3-react/abstract-connector'
-import { ConnectorUpdate } from '@web3-react/types'
+
+interface ConnectorUpdate {
+	provider?: any
+	chainId?: number
+	account?: null | string
+}
 
 const RPC_URLS: { [chainId: number]: string } = {
 	1: process.env.NEXT_PUBLIC_ALCHEMY_API_URL,
@@ -22,7 +27,7 @@ export class WalletConnectV2Connector extends AbstractConnector {
 		storage.removeRegExp(new RegExp('^wc@2:'))
 	}
 
-	activate = async (): Promise<ConnectorUpdate<string | number>> => {
+	activate = async (): Promise<ConnectorUpdate> => {
 		const provider = await import('@walletconnect/ethereum-provider').then(module => {
 			return module.default.init({
 				projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECTID,
