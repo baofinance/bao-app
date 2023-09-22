@@ -58,8 +58,6 @@ const MobileNavLink: FC<MobileNavLinkProps> = ({ href, children, target, ...prop
 }
 
 const Header: FC = () => {
-	//const tvl = useTVL();
-
 	return (
 		<header>
 			<nav>
@@ -127,7 +125,7 @@ const Header: FC = () => {
 														<MobileNavLink href='/vaults'>BORROW</MobileNavLink>
 														<MobileNavLink href='/ballast'>SWAP</MobileNavLink>
 														<MobileNavLink href='/baskets'>BASKETS</MobileNavLink>
-														<MobileNavLink href='/gauges'>EARN</MobileNavLink>
+														<MobileNavLink href='/gauges'>GAUGES</MobileNavLink>
 														<MobileNavLink href='/vebao'>STAKE</MobileNavLink>
 													</div>
 												</Popover.Panel>

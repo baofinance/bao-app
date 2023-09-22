@@ -149,6 +149,9 @@ dependencies:
   ethers:
     specifier: ^5
     version: 5.7.2
+  ethers-multicall:
+    specifier: ^0.2.3
+    version: 0.2.3(ethers@5.7.2)
   framer-motion:
     specifier: ^10.15.0
     version: 10.16.4(react-dom@18.2.0)(react@18.2.0)
@@ -7033,6 +7036,14 @@ packages:
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
+    dev: false
+
+  /ethers-multicall@0.2.3(ethers@5.7.2):
+    resolution: {integrity: sha512-RaWQuLy+HzeKOibptlc9RZ6j7bT1H6VnkdAKTHiLx2t/lpyfS2ckXHdQhhRbCaXNc1iu6CgoisgMejxKHg84tg==}
+    peerDependencies:
+      ethers: ^5.0.0
+    dependencies:
+      ethers: 5.7.2
     dev: false
 
   /ethers@5.7.2:
