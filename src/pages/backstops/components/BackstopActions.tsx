@@ -284,7 +284,7 @@ export const Unstake: React.FC<UnstakeProps> = ({ backstop, max, onHide }) => {
 	const { pendingTx, txHash, handleTx } = useTransactionHandler()
 	const usdToShare = getUsdToShare(backstop, max)
 
-	console.log('usdToShare', formatUnits(usdToShare))
+	// console.log('usdToShare', formatUnits(usdToShare))
 	const fullBalance = useMemo(() => {
 		return getDisplayBalance(max)
 	}, [max])

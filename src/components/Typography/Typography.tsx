@@ -4,7 +4,7 @@ import React, { FC, forwardRef } from 'react'
 
 import classNames from 'classnames'
 
-export type TypographyVariant = 'hero' | 'splash' | 'h1' | 'h2' | 'h3' | 'xl' | 'lg' | 'base' | 'p' | 'sm' | 'xs' | 'xxs' 
+export type TypographyVariant = 'hero' | 'splash' | 'h1' | 'h2' | 'h3' | 'xl' | 'lg' | 'base' | 'p' | 'sm' | 'xs' | 'xxs'
 
 const VARIANTS = {
 	hero: 'text-hero leading-[4rem] font-bakbak uppercase',
