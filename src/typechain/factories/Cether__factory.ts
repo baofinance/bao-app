@@ -7,7 +7,7 @@ import { Contract, Signer, utils } from "ethers";
 import type { Provider } from "@ethersproject/providers";
 import type { Cether, CetherInterface } from "../Cether";
 
-const _abi = [
+export const _abi = [
   {
     inputs: [
       {
