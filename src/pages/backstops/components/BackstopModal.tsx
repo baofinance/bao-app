@@ -28,7 +28,7 @@ const BackstopModal: React.FC<BackstopModalProps> = ({ backstop, show, onHide })
 	const { exchangeRates } = useExchangeRates(backstop.name)
 	const exchangeRate = exchangeRates && exchangeRates[backstop.vaultAddress]
 
-	console.log('exchangeRate', formatUnits(exchangeRate ? exchangeRate : BigNumber.from(0)))
+	// console.log('exchangeRate', formatUnits(exchangeRate ? exchangeRate : BigNumber.from(0)))
 	const accountLiquidity = useAccountLiquidity(backstop.name)
 
 	const synth = useMemo(() => {

@@ -47,7 +47,7 @@ module.exports = {
       }
     ],
     "no-unused-vars": 0,
-    "react/react-in-jsx-scope": 0
+    "react/react-in-jsx-scope": 0,
     // Add other rules you want to turn off
   },
 };

@@ -1,5 +1,4 @@
 //import { useWeb3React } from '@web3-react/core'
-import { getUsdToShare } from '@/bao/lib/backstop'
 import { ActiveSupportedBackstop } from '@/bao/lib/types'
 import Button from '@/components/Button'
 import Input from '@/components/Input'
@@ -282,7 +281,6 @@ export const Unstake: React.FC<UnstakeProps> = ({ backstop, max, onHide }) => {
 	const bao = useBao()
 	const [val, setVal] = useState('')
 	const { pendingTx, txHash, handleTx } = useTransactionHandler()
-	const usdToShare = getUsdToShare(backstop, max)
 
 	// console.log('usdToShare', formatUnits(usdToShare))
 	const fullBalance = useMemo(() => {

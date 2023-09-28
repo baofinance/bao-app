@@ -1,11 +1,7 @@
 import { ActiveSupportedBackstop } from '@/bao/lib/types'
 import { PageLoader } from '@/components/Loader'
 import Typography from '@/components/Typography'
-import useAssetDistribution from '@/hooks/backstops/useAssetDistribution'
-import useBackstopTVL from '@/hooks/backstops/useBackstopTVL'
-import useCollaterals from '@/hooks/backstops/useCollaterals'
-import useUserShareAndTotalSupply from '@/hooks/backstops/useUserShareAndTotalSupply'
-import useUserShareInUsd from '@/hooks/backstops/useUserShareInUsd'
+import { useBackstopTVL } from '@/hooks/backstops/useBackstopTVL'
 import useBackstops from '@/hooks/earn/useBackstops'
 import { useWeb3React } from '@web3-react/core'
 import Image from 'next/future/image'
@@ -50,16 +46,6 @@ const BackstopListItem: React.FC<BackstopListItemProps> = ({ backstop }) => {
 	const { library, account } = useWeb3React()
 	const [showBackstopModal, setShowBackstopModal] = useState(false)
 	const tvl = useBackstopTVL(backstop)
-	const userShareAndTotalSupply = useUserShareAndTotalSupply(backstop)
-	const userShareInUsd = useUserShareInUsd(backstop)
-	const assetDistribution = useAssetDistribution(backstop)
-	const collaterals = useCollaterals(backstop)
-
-	console.log('tvl', tvl)
-	console.log('userShareAndTotalSupply', userShareAndTotalSupply)
-	console.log('userShareInUsd', userShareInUsd)
-	console.log('assetDistribution', assetDistribution)
-	console.log('collaterals', collaterals)
 
 	return (
 		<>
@@ -96,7 +82,7 @@ const BackstopListItem: React.FC<BackstopListItemProps> = ({ backstop }) => {
 
 					<div className='mx-auto my-0 flex basis-1/3 flex-col items-end justify-center text-right lg:basis-1/5'>
 						<Typography variant='base' className='ml-2 inline-block font-bakbak'>
-							-
+							${tvl.tvl ? tvl.tvl.toFixed(2) : 0}
 						</Typography>
 					</div>
 				</div>
