@@ -67,7 +67,7 @@ const Composition: React.FC<CompositionProps> = ({ composition, rates, info, bas
 																		width={32}
 																		height={32}
 																		alt={component.symbol}
-																		className='inline'
+																		className='inline rounded-full'
 																	/>
 																</a>
 															</Tooltipped>

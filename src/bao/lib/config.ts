@@ -556,14 +556,14 @@ export default {
 			icon: 'bSTBL.png',
 			cgIds: {
 				'0x6b175474e89094c44da98b954eedeac495271d0f': 'dai',
-				'0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48': 'usd-coin',
+				'0x5f98805a4e8be255a32880fdec7f6728c6568ba0': 'liquity-usd',
 			},
 			pieColors: {
 				aSUSD: '#1FC9A8',
 				aDAI: '#F5AC37',
-				aUSDC: '#2775CA',
+				aLUSD: '#2775CA',
 				DAI: '#F5AC37',
-				USDC: '#2775CA',
+				LUSD: '#2775CA',
 			},
 			desc: 'Low risk stablecoin basket',
 			swap: 'https://curve.fi/factory-crypto/61',

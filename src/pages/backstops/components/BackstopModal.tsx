@@ -1,5 +1,5 @@
 import { ActiveSupportedBackstop } from '@/bao/lib/types'
-import { NavButtons } from '@/components/Button'
+import Button, { NavButtons } from '@/components/Button'
 import Modal from '@/components/Modal'
 import Typography from '@/components/Typography'
 import { useAccountLiquidity } from '@/hooks/vaults/useAccountLiquidity'
@@ -80,7 +80,7 @@ const BackstopModal: React.FC<BackstopModalProps> = ({ backstop, show, onHide })
 	}, [onHide])
 
 	return (
-		<Modal isOpen={show} onDismiss={hideModal}>
+		<Modal isOpen={show} onDismiss={hideModal} maxWidth='2xl'>
 			<Modal.Header
 				onClose={hideModal}
 				header={
@@ -92,10 +92,23 @@ const BackstopModal: React.FC<BackstopModalProps> = ({ backstop, show, onHide })
 					</>
 				}
 			/>
-			<Modal.Options>
-				<NavButtons options={operations} active={operation} onClick={setOperation} />
-			</Modal.Options>
-			<Actions backstop={backstop} onHide={onHide} operation={operation} max={max()} exchangeRate={exchangeRate} />
+			<div className='grid grid-cols-5 gap-4'>
+				<div className='col-span-3'>
+					<Modal.Options>
+						<NavButtons options={operations} active={operation} onClick={setOperation} />
+					</Modal.Options>
+					<Actions backstop={backstop} onHide={onHide} operation={operation} max={max()} exchangeRate={exchangeRate} />
+				</div>
+				<div className='col-span-2 border-r-1 border-baoWhite border-opacity-5 flex-row'>
+					<div>
+						<p className='text-sm'>1. Approve baoETH</p>
+					</div>
+
+					<p className='text-sm'>2. Deposit baoETH to Vault</p>
+					<p className='text-sm'>3. Approve bdbaoETH</p>
+					<p className='text-sm'>4. Stake bdbaoETH in Backstop</p>
+				</div>
+			</div>
 		</Modal>
 	)
 }
