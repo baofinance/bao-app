@@ -217,7 +217,7 @@ export const Stake: React.FC<StakeProps> = ({ backstop, max, onHide, exchangeRat
 								Balance:
 							</Typography>
 							<Typography variant='sm' className='font-bold'>
-								{getDisplayBalance(displayBalance)} {backstop.name}
+								{getDisplayBalance(displayBalance)} {backstop.vaultSymbol}
 							</Typography>
 						</div>
 					</div>
@@ -241,10 +241,10 @@ export const Stake: React.FC<StakeProps> = ({ backstop, max, onHide, exchangeRat
 								onClick={async () => {
 									// TODO- give the user a notice that we're approving max uint and instruct them how to change this value.
 									const tx = backstop.vaultContract.approve(backstop.backstopAddress, ethers.constants.MaxUint256)
-									handleTx(tx, `${backstop.name} Backstop: Approve ${backstop.name}`)
+									handleTx(tx, `${backstop.name} Backstop: Approve ${backstop.vaultSymbol}`)
 								}}
 							>
-								Approve {backstop.name}
+								Approve {backstop.vaultSymbol}
 							</Button>
 						)}
 					</>
@@ -257,12 +257,12 @@ export const Stake: React.FC<StakeProps> = ({ backstop, max, onHide, exchangeRat
 								const amount = parseUnits(val)
 								const depositTx = backstop.backstopContract['deposit(uint256)'](amount)
 
-								handleTx(depositTx, `${backstop.name} Backstop: Stake ${getDisplayBalance(amount)} ${backstop.name}`, () => onHide())
+								handleTx(depositTx, `${backstop.name} Backstop: Stake ${getDisplayBalance(amount)} ${backstop.vaultSymbol}`, () => onHide())
 							}}
 							pendingTx={pendingTx}
 							txHash={txHash}
 						>
-							Stake {backstop.name}
+							Stake {backstop.vaultSymbol}
 						</Button>
 					</>
 				)}
