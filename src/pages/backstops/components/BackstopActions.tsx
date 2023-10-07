@@ -21,9 +21,10 @@ interface DepositProps {
 	backstop: ActiveSupportedBackstop
 	max: BigNumber
 	onHide: () => void
+	setStep: (step: string) => void
 }
 
-export const Deposit: React.FC<DepositProps> = ({ backstop, max, onHide }) => {
+export const Deposit: React.FC<DepositProps> = ({ backstop, max, onHide, setStep }) => {
 	const [val, setVal] = useState('')
 	const { pendingTx, txHash, handleTx } = useTransactionHandler()
 
@@ -96,7 +97,9 @@ export const Deposit: React.FC<DepositProps> = ({ backstop, max, onHide }) => {
 							disabled={!val || isNaN(val as any) || parseUnits(val).gt(max)}
 							onClick={async () => {
 								const mintTx = backstop.vaultContract.mint(parseUnits(val), true)
-								handleTx(mintTx, `${backstop.name} Backstop: Deposit ${getDisplayBalance(val).toString()} ${backstop.name}`)
+								handleTx(mintTx, `${backstop.name} Backstop: Deposit ${getDisplayBalance(val).toString()} ${backstop.name}`, () =>
+									setStep('Stake'),
+								)
 							}}
 						>
 							Deposit {backstop.name}
@@ -112,6 +115,7 @@ interface WithdrawProps {
 	backstop: ActiveSupportedBackstop
 	onHide: () => void
 	max: BigNumber
+	setStep: (step: string) => void
 }
 
 export const Withdraw: React.FC<WithdrawProps> = ({ backstop, onHide, max }) => {
@@ -177,6 +181,7 @@ interface StakeProps {
 	max: BigNumber
 	onHide: () => void
 	exchangeRate: BigNumber
+	setStep: (step: string) => void
 }
 
 export const Stake: React.FC<StakeProps> = ({ backstop, max, onHide, exchangeRate }) => {
@@ -275,9 +280,10 @@ interface UnstakeProps {
 	backstop: ActiveSupportedBackstop
 	max: BigNumber
 	onHide: () => void
+	setStep: (step: string) => void
 }
 
-export const Unstake: React.FC<UnstakeProps> = ({ backstop, max, onHide }) => {
+export const Unstake: React.FC<UnstakeProps> = ({ backstop, max, onHide, setStep }) => {
 	const bao = useBao()
 	const [val, setVal] = useState('')
 	const { pendingTx, txHash, handleTx } = useTransactionHandler()
@@ -308,7 +314,7 @@ export const Unstake: React.FC<UnstakeProps> = ({ backstop, max, onHide }) => {
 			<Modal.Body className='h-[120px]'>
 				<div className='flex h-full flex-col items-center justify-center'>
 					<div className='flex w-full flex-row'>
-						<div className='float-right mb-1 flex w-full items-center justify-end gap-1'>
+						<div className={`float-right mb-1 flex w-full items-center justify-end gap-1 ${max.lte(0) && 'opacity-40'}`}>
 							<Typography variant='sm' className='font-bold text-baoRed'>
 								Balance:
 							</Typography>
@@ -317,7 +323,7 @@ export const Unstake: React.FC<UnstakeProps> = ({ backstop, max, onHide }) => {
 							</Typography>
 						</div>
 					</div>
-					<Input onSelectMax={handleSelectMax} onChange={handleChange} value={val} symbol={backstop.backstopSymbol} />
+					<Input onSelectMax={handleSelectMax} onChange={handleChange} value={val} symbol={backstop.backstopSymbol} disabled={max.lte(0)} />
 				</div>
 			</Modal.Body>
 			<Modal.Actions>
@@ -328,7 +334,9 @@ export const Unstake: React.FC<UnstakeProps> = ({ backstop, max, onHide }) => {
 						onClick={async () => {
 							const amount = parseUnits(val, 18)
 							const withdrawTx = backstop.backstopContract['withdraw(uint256)'](amount)
-							handleTx(withdrawTx, `${backstop.name} Backstop: Unstake ${formatUnits(amount)} ${backstop.symbol}`)
+							handleTx(withdrawTx, `${backstop.name} Backstop: Unstake ${formatUnits(amount)} ${backstop.symbol}`, () =>
+								setStep('Withdraw'),
+							)
 						}}
 						pendingTx={pendingTx}
 						txHash={txHash}
@@ -338,6 +346,80 @@ export const Unstake: React.FC<UnstakeProps> = ({ backstop, max, onHide }) => {
 				</>
 			</Modal.Actions>
 		</>
+	)
+}
+
+interface DepositAndStakeProps {
+	backstop: ActiveSupportedBackstop
+	tokenBalance: BigNumber
+	vaultBalance: BigNumber
+	exchangeRate: BigNumber
+	onHide: () => void
+}
+
+const DepositAndStake: React.FC<DepositAndStakeProps> = ({ backstop, onHide, vaultBalance, tokenBalance, exchangeRate }) => {
+	const [step, setStep] = useState('Deposit')
+	return (
+		<div>
+			<div className='flex justify-between rounded-full gap-2 px-4'>
+				<Button
+					size='sm'
+					fullWidth
+					className={`${step === 'Deposit' && '!bg-baoRed'} !border-none text-xs !h-8`}
+					onClick={() => setStep('Deposit')}
+				>
+					Step 1: Deposit in Vault
+				</Button>
+				<Button
+					size='sm'
+					fullWidth
+					className={`${step === 'Stake' && '!bg-baoRed'} !border-none text-xs !h-8`}
+					onClick={() => setStep('Stake')}
+					disabled={vaultBalance.lte(0)}
+				>
+					Step 2: Stake in Backstop
+				</Button>
+			</div>
+			{step === 'Deposit' && <Deposit backstop={backstop} max={tokenBalance} onHide={onHide} setStep={setStep} />}
+			{step === 'Stake' && <Stake backstop={backstop} max={vaultBalance} onHide={onHide} exchangeRate={exchangeRate} setStep={setStep} />}
+		</div>
+	)
+}
+
+interface UnstakeAndWithdrawProps {
+	backstop: ActiveSupportedBackstop
+	max: BigNumber
+	backstopBalance: BigNumber
+	onHide: () => void
+}
+
+const UnstakeAndWithdraw: React.FC<UnstakeAndWithdrawProps> = ({ backstop, onHide, max, backstopBalance }) => {
+	const [step, setStep] = useState('Unstake')
+	return (
+		<div>
+			<div className='flex justify-between rounded-full gap-2 px-4'>
+				<Button
+					size='sm'
+					fullWidth
+					className={`${step === 'Unstake' && '!bg-baoRed'} !border-none text-xs !h-8`}
+					onClick={() => setStep('Unstake')}
+					disabled={backstopBalance.lte(0)}
+				>
+					Step 1: Unstake from Backstop
+				</Button>
+				<Button
+					size='sm'
+					fullWidth
+					className={`${step === 'Withdraw' && '!bg-baoRed'} !border-none text-xs !h-8`}
+					onClick={() => setStep('Withdraw')}
+					disabled={max.lte(0)}
+				>
+					Step 2: Withdraw from Vault
+				</Button>
+			</div>
+			{step === 'Withdraw' && <Withdraw backstop={backstop} max={max} onHide={onHide} setStep={setStep} />}
+			{step === 'Unstake' && <Unstake backstop={backstop} max={backstopBalance} onHide={onHide} setStep={setStep} />}
+		</div>
 	)
 }
 
@@ -356,10 +438,16 @@ const Actions: React.FC<ActionProps> = ({ backstop, onHide, operation, max, exch
 
 	return (
 		<div>
-			{operation === 'Deposit' && <Deposit backstop={backstop} max={tokenBalance} onHide={onHide} />}
-			{operation === 'Withdraw' && <Withdraw backstop={backstop} max={max} onHide={onHide} />}
-			{operation === 'Stake' && <Stake backstop={backstop} max={vaultBalance} onHide={onHide} exchangeRate={exchangeRate} />}
-			{operation === 'Unstake' && <Unstake backstop={backstop} max={backstopBalance} onHide={onHide} />}
+			{operation === 'Deposit' && (
+				<DepositAndStake
+					backstop={backstop}
+					tokenBalance={tokenBalance}
+					vaultBalance={vaultBalance}
+					exchangeRate={exchangeRate}
+					onHide={onHide}
+				/>
+			)}
+			{operation === 'Withdraw' && <UnstakeAndWithdraw backstop={backstop} max={max} backstopBalance={backstopBalance} onHide={onHide} />}
 		</div>
 	)
 }
