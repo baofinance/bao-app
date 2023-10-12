@@ -13,9 +13,9 @@ import { BigNumber } from 'ethers'
 import { formatUnits } from 'ethers/lib/utils'
 import Image from 'next/future/image'
 import React, { useMemo, useState } from 'react'
+import { isDesktop } from 'react-device-detect'
 import RepayModal from './Modals/RepayModal'
 import WithdrawModal from './Modals/WithdrawModal'
-import { isDesktop } from 'react-device-detect'
 
 export const PositionList = ({
 	vaultName,
@@ -39,7 +39,7 @@ export const PositionList = ({
 			<Typography variant='xl' className='p-4 text-center font-bakbak'>
 				Open Positions
 			</Typography>
-			<ListHeader headers={['Asset', 'Deposit', 'vAPY', '']} className='mx-4 pb-0 text-center text-baoWhite/60' />
+			<ListHeader headers={['Asset', 'Amount', 'vAPY', '']} className='mx-4 pb-0 text-center text-baoWhite/60' />
 			{collateral
 				.map((vault: ActiveSupportedVault) => (
 					<PositionListItem

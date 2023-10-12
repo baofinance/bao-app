@@ -131,11 +131,16 @@ export default {
 				address: '0x235b30088E66d2D28F137b422B9349fBa51E0248',
 			},
 		},
-
 		// Balancer
 		BalancerVault: {
 			1: {
 				address: '0xBA12222222228d8Ba445958a75a0704d566BF2C8',
+			},
+		},
+		// B.Protocol
+		bbdbaoETH: {
+			1: {
+				address: '0x070B0223E244C94f3F77A993504d073DEB5386C6',
 			},
 		},
 	},
@@ -515,6 +520,26 @@ export default {
 			pairUrl: 'https://app.balancer.fi/#/ethereum/pool/0x0bbc7b78ff8453c40718e290b33f1d00ee67274e000000000000000000000563',
 			balancerPoolId: '0x0bbc7b78ff8453c40718e290b33f1d00ee67274e000000000000000000000563',
 		},
+		{
+			gid: 10,
+			gaugeAddresses: {
+				1: '0xA85708C65d9fC9478075686e25e08fd2914b99FF',
+			},
+			poolAddresses: {
+				1: '0x070B0223E244C94f3F77A993504d073DEB5386C6',
+			},
+			lpAddresses: {
+				1: '0x070B0223E244C94f3F77A993504d073DEB5386C6',
+			},
+			poolInfoAddresses: {
+				1: '0x070B0223E244C94f3F77A993504d073DEB5386C6',
+			},
+			name: 'baoETH Backstop',
+			symbol: 'bbdbaoETH',
+			type: 'BProtocol',
+			iconA: '/images/tokens/baoETH.png',
+			pairUrl: '/backstops',
+		},
 	],
 	baskets: [
 		{
@@ -531,14 +556,14 @@ export default {
 			icon: 'bSTBL.png',
 			cgIds: {
 				'0x6b175474e89094c44da98b954eedeac495271d0f': 'dai',
-				'0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48': 'usd-coin',
+				'0x5f98805a4e8be255a32880fdec7f6728c6568ba0': 'liquity-usd',
 			},
 			pieColors: {
 				aSUSD: '#1FC9A8',
 				aDAI: '#F5AC37',
-				aUSDC: '#2775CA',
+				aLUSD: '#2775CA',
 				DAI: '#F5AC37',
-				USDC: '#2775CA',
+				LUSD: '#2775CA',
 			},
 			desc: 'Low risk stablecoin basket',
 			swap: 'https://curve.fi/factory-crypto/61',
@@ -565,6 +590,25 @@ export default {
 			},
 			desc: 'Liquid staked ETH basket',
 			swap: 'https://curve.fi/factory-crypto/61',
+		},
+	],
+	backstops: [
+		{
+			gid: 1,
+			backstopAddresses: {
+				1: '0x070B0223E244C94f3F77A993504d073DEB5386C6',
+			},
+			vaultAddresses: {
+				1: '0xe853E5c1eDF8C51E81bAe81D742dd861dF596DE7',
+			},
+			tokenAddresses: {
+				1: '0xf4edfad26EE0D23B69CA93112eccE52704E0006f',
+			},
+			name: 'baoETH',
+			backstopSymbol: 'bbdbaoETH',
+			vaultSymbol: 'bdbaoETH',
+			type: 'B.Protocol',
+			icon: '/images/tokens/baoETH.png',
 		},
 	],
 } as unknown as Config

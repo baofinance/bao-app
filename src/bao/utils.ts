@@ -64,3 +64,11 @@ export const getOraclePrice = async (bao: Bao, priceOracle: Chainoracle): Promis
 
 	return price[1].values[1].mul(BigNumber.from(10).pow(price[0].values[0]))
 }
+
+export const getSymbol = (tokenContract: Contract) => {
+	if (tokenContract.address == '0x0000000000000000000000000000000000000000') {
+		// handel ETH
+		return 'ETH'
+	}
+	return tokenContract.symbol()
+}

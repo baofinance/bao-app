@@ -1,10 +1,11 @@
 import Button from '@/components/Button'
+import { Icon } from '@/components/Icon'
+import Tooltipped from '@/components/Tooltipped'
 import Typography from '@/components/Typography'
 import { NextSeo } from 'next-seo'
 import React from 'react'
-import GaugeList from './components/GaugeList'
-import { Icon } from '@/components/Icon'
 import ExternalFarms from './components/ExternalFarms'
+import GaugeList from './components/GaugeList'
 
 const Gauges: React.FC = () => {
 	return (
@@ -13,7 +14,7 @@ const Gauges: React.FC = () => {
 			<div className='grid gap-10 lg:grid-cols-5 lg:gap-24'>
 				<div className='w-full lg:col-span-2'>
 					<Typography variant='hero' className='stroke'>
-						Gauges
+						Earn
 					</Typography>
 					<div className='mt-4 flex gap-2'>
 						<Icon icon='lightbulb' className='m-0 h-6 w-6 flex-none' />
@@ -30,7 +31,13 @@ const Gauges: React.FC = () => {
 				</div>
 				<div className='lg:col-span-3'>
 					<GaugeList />
-					<Typography className='p-4 text-center font-bakbak text-xl'>External Farms</Typography>
+					<Typography variant='h3' className='pt-8 pb-2 text-center font-bakbak'>
+						External Farms{' '}
+						<Tooltipped
+							content='External Farms are pools that are incentivized by other projects. They are not part of the Bao ecosystem, but are included here
+							for convenience.'
+						/>
+					</Typography>
 					<ExternalFarms />
 				</div>
 			</div>

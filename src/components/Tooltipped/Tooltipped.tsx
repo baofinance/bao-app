@@ -26,7 +26,7 @@ const Tooltipped: React.FC<TooltippedProps> = ({ children, content, placement, c
 		>
 			{children || (
 				<span>
-					<FontAwesomeIcon icon={faQuestionCircle} className='text-baoWhite duration-200 hover:text-baoRed' />
+					<FontAwesomeIcon icon={faQuestionCircle} className='text-baoWhite duration-200 hover:text-baoRed text-base align-top' />
 				</span>
 			)}
 		</Tooltip>

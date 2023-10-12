@@ -21,7 +21,6 @@ export const usePrice = (coingeckoId: string) => {
 			refetchOnReconnect: false,
 			refetchInterval: 1000 * 60 * 5,
 			keepPreviousData: true,
-			placeholderData: BigNumber.from(0),
 		},
 	)
 

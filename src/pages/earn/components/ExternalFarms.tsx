@@ -3,8 +3,8 @@ import { getDisplayBalance } from '@/utils/numberFormat'
 import Image from 'next/future/image'
 import React from 'react'
 import { isDesktop } from 'react-device-detect'
-import useAuraPool from '@/hooks/gauges/useAuraPool'
-import { useStakeDaoYield } from '@/hooks/gauges/useStakeDaoYield'
+import useAuraPool from '@/hooks/earn/useAuraPool'
+import { useStakeDaoYield } from '@/hooks/earn/useStakeDaoYield'
 
 const ExternalFarms: React.FC = () => {
 	const baoUsdLusdPool = useAuraPool('93')
@@ -15,7 +15,7 @@ const ExternalFarms: React.FC = () => {
 		<>
 			<div className={`flex w-full flex-row px-2 py-3`}>
 				<Typography className='flex w-full basis-1/4 flex-col items-center px-4 pb-0 text-center font-bakbak text-base first:items-start last:items-end lg:basis-2/5 lg:text-lg'>
-					{isDesktop && 'Gauge'} Name
+					{isDesktop && 'Farm'} Name
 				</Typography>
 				<Typography className='hidden w-full basis-1/4 flex-col items-center px-4 pb-0 text-center font-bakbak text-base first:items-start last:items-end lg:flex lg:basis-1/5 lg:text-lg'>
 					Protocol

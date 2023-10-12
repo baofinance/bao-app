@@ -46,10 +46,8 @@ module.exports = {
         'endOfLine': 'auto',
       }
     ],
-    "rules": {
-    "no-unused-vars": "off",
-    "react/react-in-jsx-scope": "off"
+    "no-unused-vars": 0,
+    "react/react-in-jsx-scope": 0,
     // Add other rules you want to turn off
-  }
   },
 };

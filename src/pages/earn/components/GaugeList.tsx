@@ -2,11 +2,11 @@ import { ActiveSupportedGauge } from '@/bao/lib/types'
 import { PageLoader } from '@/components/Loader'
 import Typography from '@/components/Typography'
 import usePrice from '@/hooks/base/usePrice'
-import useGaugeInfo from '@/hooks/gauges/useGaugeInfo'
-import useGaugeTVL from '@/hooks/gauges/useGaugeTVL'
-import useGauges from '@/hooks/gauges/useGauges'
-import useMintable from '@/hooks/gauges/useMintable'
-import useRelativeWeight from '@/hooks/gauges/useRelativeWeight'
+import useGaugeInfo from '@/hooks/earn/useGaugeInfo'
+import useGaugeTVL from '@/hooks/earn/useGaugeTVL'
+import useGauges from '@/hooks/earn/useGauges'
+import useMintable from '@/hooks/earn/useMintable'
+import useRelativeWeight from '@/hooks/earn/useRelativeWeight'
 import useLockInfo from '@/hooks/vebao/useLockInfo'
 import useVeInfo from '@/hooks/vebao/useVeInfo'
 import { decimate, getDisplayBalance } from '@/utils/numberFormat'
@@ -102,7 +102,9 @@ const GaugeListItem: React.FC<GaugeListItemProps> = ({ gauge }) => {
 						<div className='mx-0 my-auto inline-block h-full items-center'>
 							<div className='mr-2 hidden lg:inline-block'>
 								<Image className='z-10 inline-block select-none' src={gauge.iconA} alt={gauge.symbol} width={24} height={24} />
-								<Image className='z-20 -ml-2 inline-block select-none' src={gauge.iconB} alt={gauge.symbol} width={24} height={24} />
+								{gauge.iconB && (
+									<Image className='z-20 -ml-2 inline-block select-none' src={gauge.iconB} alt={gauge.symbol} width={24} height={24} />
+								)}
 							</div>
 							<span className='inline-block text-left align-middle'>
 								<Typography variant='base' className='font-bakbak'>
