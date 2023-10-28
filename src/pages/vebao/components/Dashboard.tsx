@@ -28,7 +28,7 @@ import { BigNumber } from 'ethers'
 import { formatUnits } from 'ethers/lib/utils'
 import Image from 'next/future/image'
 import Slider from 'rc-slider'
-import React, { Fragment, useCallback, useState } from 'react'
+import React, { Fragment, useCallback, useEffect, useState } from 'react'
 
 export const Dashboard = () => {
 	const { account } = useWeb3React()
@@ -161,20 +161,24 @@ export const Dashboard = () => {
 														) : (
 															<div className='mx-0 my-auto inline-block h-full items-center'>
 																<div className='mr-2 inline-block'>
-																	<Image
-																		className='z-10 inline-block select-none'
-																		src={gauge.iconA}
-																		alt={gauge.symbol}
-																		width={24}
-																		height={24}
-																	/>
-																	<Image
-																		className='z-20 -ml-2 inline-block select-none'
-																		src={gauge.iconB}
-																		alt={gauge.symbol}
-																		width={24}
-																		height={24}
-																	/>
+																	{gauge.iconA && (
+																		<Image
+																			className='z-10 inline-block select-none'
+																			src={gauge.iconA}
+																			alt={gauge.symbol}
+																			width={24}
+																			height={24}
+																		/>
+																	)}
+																	{gauge.iconB && (
+																		<Image
+																			className='z-20 -ml-2 inline-block select-none'
+																			src={gauge.iconB}
+																			alt={gauge.symbol}
+																			width={24}
+																			height={24}
+																		/>
+																	)}
 																</div>
 																<span className='inline-block text-left align-middle'>
 																	<Typography className='font-bakbak'>{gauge.name}</Typography>
@@ -246,20 +250,24 @@ export const Dashboard = () => {
 															{({ selected, active }) => (
 																<div className='mx-0 my-auto inline-block h-full items-center'>
 																	<div className='mr-2 inline-block'>
-																		<Image
-																			className='z-10 inline-block select-none'
-																			src={gauge.iconA}
-																			alt={gauge.symbol}
-																			width={24}
-																			height={24}
-																		/>
-																		<Image
-																			className='z-20 -ml-2 inline-block select-none'
-																			src={gauge.iconB}
-																			alt={gauge.symbol}
-																			width={24}
-																			height={24}
-																		/>
+																		{gauge.iconA && (
+																			<Image
+																				className='z-10 inline-block select-none'
+																				src={gauge.iconA}
+																				alt={gauge.symbol}
+																				width={24}
+																				height={24}
+																			/>
+																		)}
+																		{gauge.iconB && (
+																			<Image
+																				className='z-20 -ml-2 inline-block select-none'
+																				src={gauge.iconB}
+																				alt={gauge.symbol}
+																				width={24}
+																				height={24}
+																			/>
+																		)}
 																	</div>
 																	<span className='inline-block text-left align-middle'>
 																		<Typography className='font-bakbak'>{gauge.name}</Typography>
@@ -371,7 +379,12 @@ export const Dashboard = () => {
 							</Typography>
 						</div>
 						<Typography variant='lg' className='ml-2 inline-block font-bakbak'>
-							{veInfo ? (parseFloat(formatUnits(veInfo.totalSupply)) * parseFloat(formatUnits(currentWeight))).toLocaleString() : '0'}
+							{veInfo
+								? (
+										parseFloat(formatUnits(veInfo.totalSupply)) *
+										parseFloat(formatUnits(typeof currentWeight == 'bigint' ? currentWeight : 0))
+								  ).toLocaleString()
+								: '0'}
 						</Typography>
 					</div>
 					<div className='col-span-1 mx-auto my-0 text-center'>
@@ -381,7 +394,7 @@ export const Dashboard = () => {
 							</Typography>
 						</div>
 						<Typography variant='lg' className='ml-2 inline-block font-bakbak'>
-							{getDisplayBalance(currentWeight.mul(100), 18, 2)}%
+							{getDisplayBalance(typeof currentWeight == 'bigint' ? currentWeight.mul(100) : 0, 18, 2)}%
 						</Typography>
 					</div>
 					<div className='col-span-1 mx-auto my-0 text-center'>
@@ -525,7 +538,7 @@ export const Dashboard = () => {
 				</div>
 				<div className='mt-4 grid grid-cols-8 gap-4'>
 					<div className='col-span-2'>
-						<Button onClick={calc}>Calculate</Button>
+						<Button onClick={calc}>Re-Calculate</Button>
 					</div>
 					<div className='col-span-2 justify-center text-center'>
 						<label className='font-bakbak text-sm text-baoRed'>veBAO</label>
