@@ -2,40 +2,38 @@ import useContract from '@/hooks/base/useContract'
 import type { GaugeController } from '@/typechain/index'
 import { useWeb3React } from '@web3-react/core'
 import { BigNumber } from 'ethers'
-import { providerKey } from '@/utils/index'
-import { useQuery } from '@tanstack/react-query'
-import { useTxReceiptUpdater } from '@/hooks/base/useTransactionProvider'
-import { useBlockUpdater } from '@/hooks/base/useBlock'
+import { readContract, fetchBlockNumber } from '@wagmi/core'
+import gaugeControllerABI from '../../../src/abi/GaugeControllerABI.json'
 
-const useRelativeWeight = (gaugeAddress: string) => {
-	const { library, account, chainId } = useWeb3React()
+const useRelativeWeight = async (gaugeAddress: string) => {
+	const { library } = useWeb3React()
+
 	const gaugeController = useContract<GaugeController>('GaugeController')
 
-	const enabled = !!library && !!gaugeController
-	const { data: weight, refetch } = useQuery(
-		['@/hooks/gauges/useRelativeWeight', providerKey(library, account, chainId), { enabled, gaugeAddress }],
-		async () => {
-			const block = await library.getBlock()
-			const currentWeight = await gaugeController['gauge_relative_weight(address,uint256)'](gaugeAddress, block.timestamp)
-			const futureWeight = await gaugeController['gauge_relative_weight(address,uint256)'](gaugeAddress, block.timestamp + 604800)
-			return { currentWeight, futureWeight }
-		},
-		{
-			enabled,
-			placeholderData: {
-				currentWeight: BigNumber.from(0),
-				futureWeight: BigNumber.from(0),
-			},
-		},
-	)
-
-	const _refetch = () => {
-		if (enabled) refetch()
+	if (!!library || !!gaugeController) {
+		return { 0: 2 }
 	}
-	useTxReceiptUpdater(_refetch)
-	useBlockUpdater(_refetch, 10)
 
-	return weight
+	const gaugeControllerContract = {
+		address: gaugeController.address as `0x${string}`,
+		abi: gaugeControllerABI,
+	}
+
+	const block = await fetchBlockNumber()
+
+	console.log(Number(block))
+
+	const currentWeight = await readContract({
+		...gaugeControllerContract,
+		functionName: 'gauge_relative_weight',
+		args: [gaugeAddress, Number(block)],
+	})
+	const futureWeight = await readContract({
+		...gaugeControllerContract,
+		functionName: 'gauge_relative_weight',
+		args: [gaugeAddress, Number(block) + 604800],
+	})
+	return { currentWeight, futureWeight }
 }
 
 export default useRelativeWeight
