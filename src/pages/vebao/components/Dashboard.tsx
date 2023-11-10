@@ -397,7 +397,7 @@ export const Dashboard = () => {
 							</Typography>
 						</div>
 						<Typography variant='lg' className='ml-2 inline-block font-bakbak'>
-							{getDisplayBalance(typeof currentWeight == 'bigint' ? currentWeight.mul(100) : 0, 18, 2)}%
+							{getDisplayBalance(typeof currentWeight == 'bigint' ? currentWeight * BigInt(100) : 0, 18, 2)}%
 						</Typography>
 					</div>
 					<div className='col-span-1 mx-auto my-0 text-center'>
