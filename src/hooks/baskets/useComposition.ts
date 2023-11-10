@@ -176,6 +176,8 @@ const _getStrategy = (symbol: string) => {
 		return 'AAVE'
 	} else if (symbol.endsWith('3')) {
 		return 'Sushi Bar'
+	} else if (symbol.endsWith('4')) {
+		return 'Yearn'
 	} else {
 		return 'Unknown'
 	}
@@ -191,6 +193,8 @@ const _getImageURL = (symbol: string) => {
 			return 'USDC'
 		case 'adai':
 			return 'DAI'
+		case 'yvLUSD':
+			return 'yvLUSD'
 
 		default:
 			return undefined

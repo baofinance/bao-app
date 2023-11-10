@@ -76,8 +76,11 @@ export const Dashboard = () => {
 	const mintable = useMintable()
 	const { currentWeight, futureWeight } = useRelativeWeight(gauge.gaugeAddress)
 	const rewardsValue = baoPrice ? baoPrice.mul(mintable) : BigNumber.from(0)
-	const currentAPR = gaugeTVL && gaugeTVL.gt(0) ? rewardsValue.mul(currentWeight).div(gaugeTVL).mul(100).toString() : BigNumber.from(0)
-	const futureAPR = gaugeTVL && gaugeTVL.gt(0) ? rewardsValue.mul(futureWeight).div(gaugeTVL).mul(100).toString() : BigNumber.from(0)
+	const currentAPR =
+		gaugeTVL && gaugeTVL.gt(0) && rewardsValue && currentWeight ? rewardsValue.mul(currentWeight).div(gaugeTVL).mul(100).toString() : '0'
+
+	const futureAPR =
+		gaugeTVL && gaugeTVL.gt(0) && rewardsValue && futureWeight ? rewardsValue.mul(futureWeight).div(gaugeTVL).mul(100).toString() : '0'
 
 	const userSlopes = useUserSlopes(gauge)
 	const [val, setVal] = useState<string | number>(

@@ -26,8 +26,6 @@ import React, { ReactNode, useEffect, useState } from 'react'
 import { WagmiConfig, createConfig, mainnet } from 'wagmi'
 import { createPublicClient, http } from 'viem'
 
-console.log('v2.1.1')
-
 function getLibrary(provider: any): Web3Provider {
 	const library = new Web3Provider(provider)
 	library.pollingInterval = 12000
@@ -113,13 +111,6 @@ function App({ Component, pageProps }: AppProps) {
 }
 
 const Providers: React.FC<ProvidersProps> = ({ children }: ProvidersProps) => {
-	const config = createConfig({
-		autoConnect: true,
-		publicClient: createPublicClient({
-			chain: mainnet,
-			transport: http(),
-		}),
-	})
 	return (
 		<QueryClientProvider client={queryClient}>
 			<Web3ReactProvider getLibrary={getLibrary}>
@@ -127,9 +118,7 @@ const Providers: React.FC<ProvidersProps> = ({ children }: ProvidersProps) => {
 					<Web3ReactManager>
 						<BaoProvider>
 							<TransactionProvider>
-								<VaultsProvider>
-									<WagmiConfig config={config}>{children}</WagmiConfig>
-								</VaultsProvider>
+								<VaultsProvider>{children}</VaultsProvider>
 							</TransactionProvider>
 						</BaoProvider>
 					</Web3ReactManager>
