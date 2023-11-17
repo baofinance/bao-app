@@ -2,2854 +2,2140 @@
 /* tslint:disable */
 /* eslint-disable */
 import type {
-  BaseContract,
-  BigNumber,
-  BigNumberish,
-  BytesLike,
-  CallOverrides,
-  ContractTransaction,
-  Overrides,
-  PopulatedTransaction,
-  Signer,
-  utils,
-} from "ethers";
-import type {
-  FunctionFragment,
-  Result,
-  EventFragment,
-} from "@ethersproject/abi";
-import type { Listener, Provider } from "@ethersproject/providers";
-import type {
-  TypedEventFilter,
-  TypedEvent,
-  TypedListener,
-  OnEvent,
-  PromiseOrValue,
-} from "./common";
+	BaseContract,
+	BigNumber,
+	BigNumberish,
+	BytesLike,
+	CallOverrides,
+	ContractTransaction,
+	Overrides,
+	PopulatedTransaction,
+	Signer,
+	utils,
+} from 'ethers'
+import type { FunctionFragment, Result, EventFragment } from '@ethersproject/abi'
+import type { Listener, Provider } from '@ethersproject/providers'
+import type { TypedEventFilter, TypedEvent, TypedListener, OnEvent, PromiseOrValue } from './common'
 
 export interface BammInterface extends utils.Interface {
-  functions: {
-    "A()": FunctionFragment;
-    "LUSD()": FunctionFragment;
-    "MAX_A()": FunctionFragment;
-    "MAX_CALLER_FEE()": FunctionFragment;
-    "MAX_FEE()": FunctionFragment;
-    "MIN_A()": FunctionFragment;
-    "PRECISION()": FunctionFragment;
-    "addCollateral(address,address)": FunctionFragment;
-    "allowance(address,address)": FunctionFragment;
-    "approve(address,uint256)": FunctionFragment;
-    "balanceOf(address)": FunctionFragment;
-    "cBorrow()": FunctionFragment;
-    "cTokens(address)": FunctionFragment;
-    "callerFee()": FunctionFragment;
-    "canLiquidate(address,address,uint256)": FunctionFragment;
-    "collateralCount()": FunctionFragment;
-    "collateralDecimals(address)": FunctionFragment;
-    "collaterals(uint256)": FunctionFragment;
-    "decimals()": FunctionFragment;
-    "deposit(uint256)": FunctionFragment;
-    "efficientWithdraw(uint256,address,bool,uint256)": FunctionFragment;
-    "fee()": FunctionFragment;
-    "feePool()": FunctionFragment;
-    "fetchPrice(address)": FunctionFragment;
-    "getCollateralValue()": FunctionFragment;
-    "getReturn(uint256,uint256,uint256,uint256)": FunctionFragment;
-    "getSumFixedPoint(uint256,uint256,uint256)": FunctionFragment;
-    "getSwapAmount(uint256,address)": FunctionFragment;
-    "isCETH()": FunctionFragment;
-    "isOwner()": FunctionFragment;
-    "liquidateBorrow(address,uint256,address)": FunctionFragment;
-    "lusdDecimals()": FunctionFragment;
-    "maxDiscount()": FunctionFragment;
-    "name()": FunctionFragment;
-    "owner()": FunctionFragment;
-    "priceAggregators(address)": FunctionFragment;
-    "removeCollateral(address)": FunctionFragment;
-    "setParams(uint256,uint256,uint256)": FunctionFragment;
-    "swap(uint256,address,uint256,address,bytes)": FunctionFragment;
-    "symbol()": FunctionFragment;
-    "totalSupply()": FunctionFragment;
-    "transfer(address,uint256)": FunctionFragment;
-    "transferFrom(address,address,uint256)": FunctionFragment;
-    "transferOwnership(address)": FunctionFragment;
-    "withdraw(uint256)": FunctionFragment;
-  };
+	functions: {
+		'A()': FunctionFragment
+		'LUSD()': FunctionFragment
+		'MAX_A()': FunctionFragment
+		'MAX_CALLER_FEE()': FunctionFragment
+		'MAX_FEE()': FunctionFragment
+		'MIN_A()': FunctionFragment
+		'PRECISION()': FunctionFragment
+		'addCollateral(address,address)': FunctionFragment
+		'allowance(address,address)': FunctionFragment
+		'approve(address,uint256)': FunctionFragment
+		'balanceOf(address)': FunctionFragment
+		'cBorrow()': FunctionFragment
+		'cTokens(address)': FunctionFragment
+		'callerFee()': FunctionFragment
+		'canLiquidate(address,address,uint256)': FunctionFragment
+		'collateralCount()': FunctionFragment
+		'collateralDecimals(address)': FunctionFragment
+		'collaterals(uint256)': FunctionFragment
+		'decimals()': FunctionFragment
+		'deposit(uint256)': FunctionFragment
+		'efficientWithdraw(uint256,address,bool,uint256)': FunctionFragment
+		'fee()': FunctionFragment
+		'feePool()': FunctionFragment
+		'fetchPrice(address)': FunctionFragment
+		'getCollateralValue()': FunctionFragment
+		'getReturn(uint256,uint256,uint256,uint256)': FunctionFragment
+		'getSumFixedPoint(uint256,uint256,uint256)': FunctionFragment
+		'getSwapAmount(uint256,address)': FunctionFragment
+		'isCETH()': FunctionFragment
+		'isOwner()': FunctionFragment
+		'liquidateBorrow(address,uint256,address)': FunctionFragment
+		'lusdDecimals()': FunctionFragment
+		'maxDiscount()': FunctionFragment
+		'name()': FunctionFragment
+		'owner()': FunctionFragment
+		'priceAggregators(address)': FunctionFragment
+		'removeCollateral(address)': FunctionFragment
+		'setParams(uint256,uint256,uint256)': FunctionFragment
+		'swap(uint256,address,uint256,address,bytes)': FunctionFragment
+		'symbol()': FunctionFragment
+		'totalSupply()': FunctionFragment
+		'transfer(address,uint256)': FunctionFragment
+		'transferFrom(address,address,uint256)': FunctionFragment
+		'transferOwnership(address)': FunctionFragment
+		'withdraw(uint256)': FunctionFragment
+	}
 
-  getFunction(
-    nameOrSignatureOrTopic:
-      | "A"
-      | "A()"
-      | "LUSD"
-      | "LUSD()"
-      | "MAX_A"
-      | "MAX_A()"
-      | "MAX_CALLER_FEE"
-      | "MAX_CALLER_FEE()"
-      | "MAX_FEE"
-      | "MAX_FEE()"
-      | "MIN_A"
-      | "MIN_A()"
-      | "PRECISION"
-      | "PRECISION()"
-      | "addCollateral"
-      | "addCollateral(address,address)"
-      | "allowance"
-      | "allowance(address,address)"
-      | "approve"
-      | "approve(address,uint256)"
-      | "balanceOf"
-      | "balanceOf(address)"
-      | "cBorrow"
-      | "cBorrow()"
-      | "cTokens"
-      | "cTokens(address)"
-      | "callerFee"
-      | "callerFee()"
-      | "canLiquidate"
-      | "canLiquidate(address,address,uint256)"
-      | "collateralCount"
-      | "collateralCount()"
-      | "collateralDecimals"
-      | "collateralDecimals(address)"
-      | "collaterals"
-      | "collaterals(uint256)"
-      | "decimals"
-      | "decimals()"
-      | "deposit"
-      | "deposit(uint256)"
-      | "efficientWithdraw"
-      | "efficientWithdraw(uint256,address,bool,uint256)"
-      | "fee"
-      | "fee()"
-      | "feePool"
-      | "feePool()"
-      | "fetchPrice"
-      | "fetchPrice(address)"
-      | "getCollateralValue"
-      | "getCollateralValue()"
-      | "getReturn"
-      | "getReturn(uint256,uint256,uint256,uint256)"
-      | "getSumFixedPoint"
-      | "getSumFixedPoint(uint256,uint256,uint256)"
-      | "getSwapAmount"
-      | "getSwapAmount(uint256,address)"
-      | "isCETH"
-      | "isCETH()"
-      | "isOwner"
-      | "isOwner()"
-      | "liquidateBorrow"
-      | "liquidateBorrow(address,uint256,address)"
-      | "lusdDecimals"
-      | "lusdDecimals()"
-      | "maxDiscount"
-      | "maxDiscount()"
-      | "name"
-      | "name()"
-      | "owner"
-      | "owner()"
-      | "priceAggregators"
-      | "priceAggregators(address)"
-      | "removeCollateral"
-      | "removeCollateral(address)"
-      | "setParams"
-      | "setParams(uint256,uint256,uint256)"
-      | "swap"
-      | "swap(uint256,address,uint256,address,bytes)"
-      | "symbol"
-      | "symbol()"
-      | "totalSupply"
-      | "totalSupply()"
-      | "transfer"
-      | "transfer(address,uint256)"
-      | "transferFrom"
-      | "transferFrom(address,address,uint256)"
-      | "transferOwnership"
-      | "transferOwnership(address)"
-      | "withdraw"
-      | "withdraw(uint256)"
-  ): FunctionFragment;
+	getFunction(
+		nameOrSignatureOrTopic:
+			| 'A'
+			| 'A()'
+			| 'LUSD'
+			| 'LUSD()'
+			| 'MAX_A'
+			| 'MAX_A()'
+			| 'MAX_CALLER_FEE'
+			| 'MAX_CALLER_FEE()'
+			| 'MAX_FEE'
+			| 'MAX_FEE()'
+			| 'MIN_A'
+			| 'MIN_A()'
+			| 'PRECISION'
+			| 'PRECISION()'
+			| 'addCollateral'
+			| 'addCollateral(address,address)'
+			| 'allowance'
+			| 'allowance(address,address)'
+			| 'approve'
+			| 'approve(address,uint256)'
+			| 'balanceOf'
+			| 'balanceOf(address)'
+			| 'cBorrow'
+			| 'cBorrow()'
+			| 'cTokens'
+			| 'cTokens(address)'
+			| 'callerFee'
+			| 'callerFee()'
+			| 'canLiquidate'
+			| 'canLiquidate(address,address,uint256)'
+			| 'collateralCount'
+			| 'collateralCount()'
+			| 'collateralDecimals'
+			| 'collateralDecimals(address)'
+			| 'collaterals'
+			| 'collaterals(uint256)'
+			| 'decimals'
+			| 'decimals()'
+			| 'deposit'
+			| 'deposit(uint256)'
+			| 'efficientWithdraw'
+			| 'efficientWithdraw(uint256,address,bool,uint256)'
+			| 'fee'
+			| 'fee()'
+			| 'feePool'
+			| 'feePool()'
+			| 'fetchPrice'
+			| 'fetchPrice(address)'
+			| 'getCollateralValue'
+			| 'getCollateralValue()'
+			| 'getReturn'
+			| 'getReturn(uint256,uint256,uint256,uint256)'
+			| 'getSumFixedPoint'
+			| 'getSumFixedPoint(uint256,uint256,uint256)'
+			| 'getSwapAmount'
+			| 'getSwapAmount(uint256,address)'
+			| 'isCETH'
+			| 'isCETH()'
+			| 'isOwner'
+			| 'isOwner()'
+			| 'liquidateBorrow'
+			| 'liquidateBorrow(address,uint256,address)'
+			| 'lusdDecimals'
+			| 'lusdDecimals()'
+			| 'maxDiscount'
+			| 'maxDiscount()'
+			| 'name'
+			| 'name()'
+			| 'owner'
+			| 'owner()'
+			| 'priceAggregators'
+			| 'priceAggregators(address)'
+			| 'removeCollateral'
+			| 'removeCollateral(address)'
+			| 'setParams'
+			| 'setParams(uint256,uint256,uint256)'
+			| 'swap'
+			| 'swap(uint256,address,uint256,address,bytes)'
+			| 'symbol'
+			| 'symbol()'
+			| 'totalSupply'
+			| 'totalSupply()'
+			| 'transfer'
+			| 'transfer(address,uint256)'
+			| 'transferFrom'
+			| 'transferFrom(address,address,uint256)'
+			| 'transferOwnership'
+			| 'transferOwnership(address)'
+			| 'withdraw'
+			| 'withdraw(uint256)',
+	): FunctionFragment
 
-  encodeFunctionData(functionFragment: "A", values?: undefined): string;
-  encodeFunctionData(functionFragment: "A()", values?: undefined): string;
-  encodeFunctionData(functionFragment: "LUSD", values?: undefined): string;
-  encodeFunctionData(functionFragment: "LUSD()", values?: undefined): string;
-  encodeFunctionData(functionFragment: "MAX_A", values?: undefined): string;
-  encodeFunctionData(functionFragment: "MAX_A()", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "MAX_CALLER_FEE",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "MAX_CALLER_FEE()",
-    values?: undefined
-  ): string;
-  encodeFunctionData(functionFragment: "MAX_FEE", values?: undefined): string;
-  encodeFunctionData(functionFragment: "MAX_FEE()", values?: undefined): string;
-  encodeFunctionData(functionFragment: "MIN_A", values?: undefined): string;
-  encodeFunctionData(functionFragment: "MIN_A()", values?: undefined): string;
-  encodeFunctionData(functionFragment: "PRECISION", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "PRECISION()",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "addCollateral",
-    values: [PromiseOrValue<string>, PromiseOrValue<string>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "addCollateral(address,address)",
-    values: [PromiseOrValue<string>, PromiseOrValue<string>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "allowance",
-    values: [PromiseOrValue<string>, PromiseOrValue<string>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "allowance(address,address)",
-    values: [PromiseOrValue<string>, PromiseOrValue<string>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "approve",
-    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "approve(address,uint256)",
-    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "balanceOf",
-    values: [PromiseOrValue<string>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "balanceOf(address)",
-    values: [PromiseOrValue<string>]
-  ): string;
-  encodeFunctionData(functionFragment: "cBorrow", values?: undefined): string;
-  encodeFunctionData(functionFragment: "cBorrow()", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "cTokens",
-    values: [PromiseOrValue<string>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "cTokens(address)",
-    values: [PromiseOrValue<string>]
-  ): string;
-  encodeFunctionData(functionFragment: "callerFee", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "callerFee()",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "canLiquidate",
-    values: [
-      PromiseOrValue<string>,
-      PromiseOrValue<string>,
-      PromiseOrValue<BigNumberish>
-    ]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "canLiquidate(address,address,uint256)",
-    values: [
-      PromiseOrValue<string>,
-      PromiseOrValue<string>,
-      PromiseOrValue<BigNumberish>
-    ]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "collateralCount",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "collateralCount()",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "collateralDecimals",
-    values: [PromiseOrValue<string>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "collateralDecimals(address)",
-    values: [PromiseOrValue<string>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "collaterals",
-    values: [PromiseOrValue<BigNumberish>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "collaterals(uint256)",
-    values: [PromiseOrValue<BigNumberish>]
-  ): string;
-  encodeFunctionData(functionFragment: "decimals", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "decimals()",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "deposit",
-    values: [PromiseOrValue<BigNumberish>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "deposit(uint256)",
-    values: [PromiseOrValue<BigNumberish>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "efficientWithdraw",
-    values: [
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<string>,
-      PromiseOrValue<boolean>,
-      PromiseOrValue<BigNumberish>
-    ]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "efficientWithdraw(uint256,address,bool,uint256)",
-    values: [
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<string>,
-      PromiseOrValue<boolean>,
-      PromiseOrValue<BigNumberish>
-    ]
-  ): string;
-  encodeFunctionData(functionFragment: "fee", values?: undefined): string;
-  encodeFunctionData(functionFragment: "fee()", values?: undefined): string;
-  encodeFunctionData(functionFragment: "feePool", values?: undefined): string;
-  encodeFunctionData(functionFragment: "feePool()", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "fetchPrice",
-    values: [PromiseOrValue<string>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "fetchPrice(address)",
-    values: [PromiseOrValue<string>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "getCollateralValue",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "getCollateralValue()",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "getReturn",
-    values: [
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>
-    ]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "getReturn(uint256,uint256,uint256,uint256)",
-    values: [
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>
-    ]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "getSumFixedPoint",
-    values: [
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>
-    ]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "getSumFixedPoint(uint256,uint256,uint256)",
-    values: [
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>
-    ]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "getSwapAmount",
-    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<string>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "getSwapAmount(uint256,address)",
-    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<string>]
-  ): string;
-  encodeFunctionData(functionFragment: "isCETH", values?: undefined): string;
-  encodeFunctionData(functionFragment: "isCETH()", values?: undefined): string;
-  encodeFunctionData(functionFragment: "isOwner", values?: undefined): string;
-  encodeFunctionData(functionFragment: "isOwner()", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "liquidateBorrow",
-    values: [
-      PromiseOrValue<string>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<string>
-    ]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "liquidateBorrow(address,uint256,address)",
-    values: [
-      PromiseOrValue<string>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<string>
-    ]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "lusdDecimals",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "lusdDecimals()",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "maxDiscount",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "maxDiscount()",
-    values?: undefined
-  ): string;
-  encodeFunctionData(functionFragment: "name", values?: undefined): string;
-  encodeFunctionData(functionFragment: "name()", values?: undefined): string;
-  encodeFunctionData(functionFragment: "owner", values?: undefined): string;
-  encodeFunctionData(functionFragment: "owner()", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "priceAggregators",
-    values: [PromiseOrValue<string>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "priceAggregators(address)",
-    values: [PromiseOrValue<string>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "removeCollateral",
-    values: [PromiseOrValue<string>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "removeCollateral(address)",
-    values: [PromiseOrValue<string>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "setParams",
-    values: [
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>
-    ]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "setParams(uint256,uint256,uint256)",
-    values: [
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>
-    ]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "swap",
-    values: [
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<string>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<string>,
-      PromiseOrValue<BytesLike>
-    ]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "swap(uint256,address,uint256,address,bytes)",
-    values: [
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<string>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<string>,
-      PromiseOrValue<BytesLike>
-    ]
-  ): string;
-  encodeFunctionData(functionFragment: "symbol", values?: undefined): string;
-  encodeFunctionData(functionFragment: "symbol()", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "totalSupply",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "totalSupply()",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "transfer",
-    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "transfer(address,uint256)",
-    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "transferFrom",
-    values: [
-      PromiseOrValue<string>,
-      PromiseOrValue<string>,
-      PromiseOrValue<BigNumberish>
-    ]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "transferFrom(address,address,uint256)",
-    values: [
-      PromiseOrValue<string>,
-      PromiseOrValue<string>,
-      PromiseOrValue<BigNumberish>
-    ]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "transferOwnership",
-    values: [PromiseOrValue<string>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "transferOwnership(address)",
-    values: [PromiseOrValue<string>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "withdraw",
-    values: [PromiseOrValue<BigNumberish>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "withdraw(uint256)",
-    values: [PromiseOrValue<BigNumberish>]
-  ): string;
+	encodeFunctionData(functionFragment: 'A', values?: undefined): string
+	encodeFunctionData(functionFragment: 'A()', values?: undefined): string
+	encodeFunctionData(functionFragment: 'LUSD', values?: undefined): string
+	encodeFunctionData(functionFragment: 'LUSD()', values?: undefined): string
+	encodeFunctionData(functionFragment: 'MAX_A', values?: undefined): string
+	encodeFunctionData(functionFragment: 'MAX_A()', values?: undefined): string
+	encodeFunctionData(functionFragment: 'MAX_CALLER_FEE', values?: undefined): string
+	encodeFunctionData(functionFragment: 'MAX_CALLER_FEE()', values?: undefined): string
+	encodeFunctionData(functionFragment: 'MAX_FEE', values?: undefined): string
+	encodeFunctionData(functionFragment: 'MAX_FEE()', values?: undefined): string
+	encodeFunctionData(functionFragment: 'MIN_A', values?: undefined): string
+	encodeFunctionData(functionFragment: 'MIN_A()', values?: undefined): string
+	encodeFunctionData(functionFragment: 'PRECISION', values?: undefined): string
+	encodeFunctionData(functionFragment: 'PRECISION()', values?: undefined): string
+	encodeFunctionData(functionFragment: 'addCollateral', values: [PromiseOrValue<string>, PromiseOrValue<string>]): string
+	encodeFunctionData(functionFragment: 'addCollateral(address,address)', values: [PromiseOrValue<string>, PromiseOrValue<string>]): string
+	encodeFunctionData(functionFragment: 'allowance', values: [PromiseOrValue<string>, PromiseOrValue<string>]): string
+	encodeFunctionData(functionFragment: 'allowance(address,address)', values: [PromiseOrValue<string>, PromiseOrValue<string>]): string
+	encodeFunctionData(functionFragment: 'approve', values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]): string
+	encodeFunctionData(functionFragment: 'approve(address,uint256)', values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]): string
+	encodeFunctionData(functionFragment: 'balanceOf', values: [PromiseOrValue<string>]): string
+	encodeFunctionData(functionFragment: 'balanceOf(address)', values: [PromiseOrValue<string>]): string
+	encodeFunctionData(functionFragment: 'cBorrow', values?: undefined): string
+	encodeFunctionData(functionFragment: 'cBorrow()', values?: undefined): string
+	encodeFunctionData(functionFragment: 'cTokens', values: [PromiseOrValue<string>]): string
+	encodeFunctionData(functionFragment: 'cTokens(address)', values: [PromiseOrValue<string>]): string
+	encodeFunctionData(functionFragment: 'callerFee', values?: undefined): string
+	encodeFunctionData(functionFragment: 'callerFee()', values?: undefined): string
+	encodeFunctionData(
+		functionFragment: 'canLiquidate',
+		values: [PromiseOrValue<string>, PromiseOrValue<string>, PromiseOrValue<BigNumberish>],
+	): string
+	encodeFunctionData(
+		functionFragment: 'canLiquidate(address,address,uint256)',
+		values: [PromiseOrValue<string>, PromiseOrValue<string>, PromiseOrValue<BigNumberish>],
+	): string
+	encodeFunctionData(functionFragment: 'collateralCount', values?: undefined): string
+	encodeFunctionData(functionFragment: 'collateralCount()', values?: undefined): string
+	encodeFunctionData(functionFragment: 'collateralDecimals', values: [PromiseOrValue<string>]): string
+	encodeFunctionData(functionFragment: 'collateralDecimals(address)', values: [PromiseOrValue<string>]): string
+	encodeFunctionData(functionFragment: 'collaterals', values: [PromiseOrValue<BigNumberish>]): string
+	encodeFunctionData(functionFragment: 'collaterals(uint256)', values: [PromiseOrValue<BigNumberish>]): string
+	encodeFunctionData(functionFragment: 'decimals', values?: undefined): string
+	encodeFunctionData(functionFragment: 'decimals()', values?: undefined): string
+	encodeFunctionData(functionFragment: 'deposit', values: [PromiseOrValue<BigNumberish>]): string
+	encodeFunctionData(functionFragment: 'deposit(uint256)', values: [PromiseOrValue<BigNumberish>]): string
+	encodeFunctionData(
+		functionFragment: 'efficientWithdraw',
+		values: [PromiseOrValue<BigNumberish>, PromiseOrValue<string>, PromiseOrValue<boolean>, PromiseOrValue<BigNumberish>],
+	): string
+	encodeFunctionData(
+		functionFragment: 'efficientWithdraw(uint256,address,bool,uint256)',
+		values: [PromiseOrValue<BigNumberish>, PromiseOrValue<string>, PromiseOrValue<boolean>, PromiseOrValue<BigNumberish>],
+	): string
+	encodeFunctionData(functionFragment: 'fee', values?: undefined): string
+	encodeFunctionData(functionFragment: 'fee()', values?: undefined): string
+	encodeFunctionData(functionFragment: 'feePool', values?: undefined): string
+	encodeFunctionData(functionFragment: 'feePool()', values?: undefined): string
+	encodeFunctionData(functionFragment: 'fetchPrice', values: [PromiseOrValue<string>]): string
+	encodeFunctionData(functionFragment: 'fetchPrice(address)', values: [PromiseOrValue<string>]): string
+	encodeFunctionData(functionFragment: 'getCollateralValue', values?: undefined): string
+	encodeFunctionData(functionFragment: 'getCollateralValue()', values?: undefined): string
+	encodeFunctionData(
+		functionFragment: 'getReturn',
+		values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>],
+	): string
+	encodeFunctionData(
+		functionFragment: 'getReturn(uint256,uint256,uint256,uint256)',
+		values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>],
+	): string
+	encodeFunctionData(
+		functionFragment: 'getSumFixedPoint',
+		values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>],
+	): string
+	encodeFunctionData(
+		functionFragment: 'getSumFixedPoint(uint256,uint256,uint256)',
+		values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>],
+	): string
+	encodeFunctionData(functionFragment: 'getSwapAmount', values: [PromiseOrValue<BigNumberish>, PromiseOrValue<string>]): string
+	encodeFunctionData(
+		functionFragment: 'getSwapAmount(uint256,address)',
+		values: [PromiseOrValue<BigNumberish>, PromiseOrValue<string>],
+	): string
+	encodeFunctionData(functionFragment: 'isCETH', values?: undefined): string
+	encodeFunctionData(functionFragment: 'isCETH()', values?: undefined): string
+	encodeFunctionData(functionFragment: 'isOwner', values?: undefined): string
+	encodeFunctionData(functionFragment: 'isOwner()', values?: undefined): string
+	encodeFunctionData(
+		functionFragment: 'liquidateBorrow',
+		values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>, PromiseOrValue<string>],
+	): string
+	encodeFunctionData(
+		functionFragment: 'liquidateBorrow(address,uint256,address)',
+		values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>, PromiseOrValue<string>],
+	): string
+	encodeFunctionData(functionFragment: 'lusdDecimals', values?: undefined): string
+	encodeFunctionData(functionFragment: 'lusdDecimals()', values?: undefined): string
+	encodeFunctionData(functionFragment: 'maxDiscount', values?: undefined): string
+	encodeFunctionData(functionFragment: 'maxDiscount()', values?: undefined): string
+	encodeFunctionData(functionFragment: 'name', values?: undefined): string
+	encodeFunctionData(functionFragment: 'name()', values?: undefined): string
+	encodeFunctionData(functionFragment: 'owner', values?: undefined): string
+	encodeFunctionData(functionFragment: 'owner()', values?: undefined): string
+	encodeFunctionData(functionFragment: 'priceAggregators', values: [PromiseOrValue<string>]): string
+	encodeFunctionData(functionFragment: 'priceAggregators(address)', values: [PromiseOrValue<string>]): string
+	encodeFunctionData(functionFragment: 'removeCollateral', values: [PromiseOrValue<string>]): string
+	encodeFunctionData(functionFragment: 'removeCollateral(address)', values: [PromiseOrValue<string>]): string
+	encodeFunctionData(
+		functionFragment: 'setParams',
+		values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>],
+	): string
+	encodeFunctionData(
+		functionFragment: 'setParams(uint256,uint256,uint256)',
+		values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>],
+	): string
+	encodeFunctionData(
+		functionFragment: 'swap',
+		values: [
+			PromiseOrValue<BigNumberish>,
+			PromiseOrValue<string>,
+			PromiseOrValue<BigNumberish>,
+			PromiseOrValue<string>,
+			PromiseOrValue<BytesLike>,
+		],
+	): string
+	encodeFunctionData(
+		functionFragment: 'swap(uint256,address,uint256,address,bytes)',
+		values: [
+			PromiseOrValue<BigNumberish>,
+			PromiseOrValue<string>,
+			PromiseOrValue<BigNumberish>,
+			PromiseOrValue<string>,
+			PromiseOrValue<BytesLike>,
+		],
+	): string
+	encodeFunctionData(functionFragment: 'symbol', values?: undefined): string
+	encodeFunctionData(functionFragment: 'symbol()', values?: undefined): string
+	encodeFunctionData(functionFragment: 'totalSupply', values?: undefined): string
+	encodeFunctionData(functionFragment: 'totalSupply()', values?: undefined): string
+	encodeFunctionData(functionFragment: 'transfer', values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]): string
+	encodeFunctionData(functionFragment: 'transfer(address,uint256)', values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]): string
+	encodeFunctionData(
+		functionFragment: 'transferFrom',
+		values: [PromiseOrValue<string>, PromiseOrValue<string>, PromiseOrValue<BigNumberish>],
+	): string
+	encodeFunctionData(
+		functionFragment: 'transferFrom(address,address,uint256)',
+		values: [PromiseOrValue<string>, PromiseOrValue<string>, PromiseOrValue<BigNumberish>],
+	): string
+	encodeFunctionData(functionFragment: 'transferOwnership', values: [PromiseOrValue<string>]): string
+	encodeFunctionData(functionFragment: 'transferOwnership(address)', values: [PromiseOrValue<string>]): string
+	encodeFunctionData(functionFragment: 'withdraw', values: [PromiseOrValue<BigNumberish>]): string
+	encodeFunctionData(functionFragment: 'withdraw(uint256)', values: [PromiseOrValue<BigNumberish>]): string
 
-  decodeFunctionResult(functionFragment: "A", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "A()", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "LUSD", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "LUSD()", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "MAX_A", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "MAX_A()", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "MAX_CALLER_FEE",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "MAX_CALLER_FEE()",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "MAX_FEE", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "MAX_FEE()", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "MIN_A", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "MIN_A()", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "PRECISION", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "PRECISION()",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "addCollateral",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "addCollateral(address,address)",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "allowance", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "allowance(address,address)",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "approve(address,uint256)",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "balanceOf(address)",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "cBorrow", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "cBorrow()", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "cTokens", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "cTokens(address)",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "callerFee", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "callerFee()",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "canLiquidate",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "canLiquidate(address,address,uint256)",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "collateralCount",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "collateralCount()",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "collateralDecimals",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "collateralDecimals(address)",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "collaterals",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "collaterals(uint256)",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "decimals", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "decimals()", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "deposit", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "deposit(uint256)",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "efficientWithdraw",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "efficientWithdraw(uint256,address,bool,uint256)",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "fee", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "fee()", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "feePool", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "feePool()", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "fetchPrice", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "fetchPrice(address)",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "getCollateralValue",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "getCollateralValue()",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "getReturn", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "getReturn(uint256,uint256,uint256,uint256)",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "getSumFixedPoint",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "getSumFixedPoint(uint256,uint256,uint256)",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "getSwapAmount",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "getSwapAmount(uint256,address)",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "isCETH", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "isCETH()", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "isOwner", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "isOwner()", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "liquidateBorrow",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "liquidateBorrow(address,uint256,address)",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "lusdDecimals",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "lusdDecimals()",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "maxDiscount",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "maxDiscount()",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "name()", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "owner()", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "priceAggregators",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "priceAggregators(address)",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "removeCollateral",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "removeCollateral(address)",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "setParams", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "setParams(uint256,uint256,uint256)",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "swap", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "swap(uint256,address,uint256,address,bytes)",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "symbol", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "symbol()", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "totalSupply",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "totalSupply()",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "transfer", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "transfer(address,uint256)",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "transferFrom",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "transferFrom(address,address,uint256)",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "transferOwnership",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "transferOwnership(address)",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "withdraw", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "withdraw(uint256)",
-    data: BytesLike
-  ): Result;
+	decodeFunctionResult(functionFragment: 'A', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'A()', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'LUSD', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'LUSD()', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'MAX_A', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'MAX_A()', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'MAX_CALLER_FEE', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'MAX_CALLER_FEE()', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'MAX_FEE', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'MAX_FEE()', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'MIN_A', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'MIN_A()', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'PRECISION', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'PRECISION()', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'addCollateral', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'addCollateral(address,address)', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'allowance', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'allowance(address,address)', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'approve', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'approve(address,uint256)', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'balanceOf', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'balanceOf(address)', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'cBorrow', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'cBorrow()', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'cTokens', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'cTokens(address)', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'callerFee', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'callerFee()', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'canLiquidate', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'canLiquidate(address,address,uint256)', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'collateralCount', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'collateralCount()', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'collateralDecimals', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'collateralDecimals(address)', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'collaterals', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'collaterals(uint256)', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'decimals', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'decimals()', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'deposit', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'deposit(uint256)', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'efficientWithdraw', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'efficientWithdraw(uint256,address,bool,uint256)', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'fee', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'fee()', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'feePool', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'feePool()', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'fetchPrice', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'fetchPrice(address)', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'getCollateralValue', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'getCollateralValue()', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'getReturn', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'getReturn(uint256,uint256,uint256,uint256)', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'getSumFixedPoint', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'getSumFixedPoint(uint256,uint256,uint256)', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'getSwapAmount', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'getSwapAmount(uint256,address)', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'isCETH', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'isCETH()', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'isOwner', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'isOwner()', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'liquidateBorrow', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'liquidateBorrow(address,uint256,address)', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'lusdDecimals', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'lusdDecimals()', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'maxDiscount', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'maxDiscount()', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'name', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'name()', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'owner', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'owner()', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'priceAggregators', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'priceAggregators(address)', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'removeCollateral', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'removeCollateral(address)', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'setParams', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'setParams(uint256,uint256,uint256)', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'swap', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'swap(uint256,address,uint256,address,bytes)', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'symbol', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'symbol()', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'totalSupply', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'totalSupply()', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'transfer', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'transfer(address,uint256)', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'transferFrom', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'transferFrom(address,address,uint256)', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'transferOwnership', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'transferOwnership(address)', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'withdraw', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'withdraw(uint256)', data: BytesLike): Result
 
-  events: {
-    "Approval(address,address,uint256)": EventFragment;
-    "OwnershipTransferred(address,address)": EventFragment;
-    "ParamsSet(uint256,uint256,uint256)": EventFragment;
-    "RebalanceSwap(address,uint256,address,uint256,uint256)": EventFragment;
-    "Transfer(address,address,uint256)": EventFragment;
-    "UserDeposit(address,uint256,uint256)": EventFragment;
-    "UserWithdraw(address,uint256,uint256)": EventFragment;
-  };
+	events: {
+		'Approval(address,address,uint256)': EventFragment
+		'OwnershipTransferred(address,address)': EventFragment
+		'ParamsSet(uint256,uint256,uint256)': EventFragment
+		'RebalanceSwap(address,uint256,address,uint256,uint256)': EventFragment
+		'Transfer(address,address,uint256)': EventFragment
+		'UserDeposit(address,uint256,uint256)': EventFragment
+		'UserWithdraw(address,uint256,uint256)': EventFragment
+	}
 
-  getEvent(nameOrSignatureOrTopic: "Approval"): EventFragment;
-  getEvent(
-    nameOrSignatureOrTopic: "Approval(address,address,uint256)"
-  ): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
-  getEvent(
-    nameOrSignatureOrTopic: "OwnershipTransferred(address,address)"
-  ): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "ParamsSet"): EventFragment;
-  getEvent(
-    nameOrSignatureOrTopic: "ParamsSet(uint256,uint256,uint256)"
-  ): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "RebalanceSwap"): EventFragment;
-  getEvent(
-    nameOrSignatureOrTopic: "RebalanceSwap(address,uint256,address,uint256,uint256)"
-  ): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "Transfer"): EventFragment;
-  getEvent(
-    nameOrSignatureOrTopic: "Transfer(address,address,uint256)"
-  ): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "UserDeposit"): EventFragment;
-  getEvent(
-    nameOrSignatureOrTopic: "UserDeposit(address,uint256,uint256)"
-  ): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "UserWithdraw"): EventFragment;
-  getEvent(
-    nameOrSignatureOrTopic: "UserWithdraw(address,uint256,uint256)"
-  ): EventFragment;
+	getEvent(nameOrSignatureOrTopic: 'Approval'): EventFragment
+	getEvent(nameOrSignatureOrTopic: 'Approval(address,address,uint256)'): EventFragment
+	getEvent(nameOrSignatureOrTopic: 'OwnershipTransferred'): EventFragment
+	getEvent(nameOrSignatureOrTopic: 'OwnershipTransferred(address,address)'): EventFragment
+	getEvent(nameOrSignatureOrTopic: 'ParamsSet'): EventFragment
+	getEvent(nameOrSignatureOrTopic: 'ParamsSet(uint256,uint256,uint256)'): EventFragment
+	getEvent(nameOrSignatureOrTopic: 'RebalanceSwap'): EventFragment
+	getEvent(nameOrSignatureOrTopic: 'RebalanceSwap(address,uint256,address,uint256,uint256)'): EventFragment
+	getEvent(nameOrSignatureOrTopic: 'Transfer'): EventFragment
+	getEvent(nameOrSignatureOrTopic: 'Transfer(address,address,uint256)'): EventFragment
+	getEvent(nameOrSignatureOrTopic: 'UserDeposit'): EventFragment
+	getEvent(nameOrSignatureOrTopic: 'UserDeposit(address,uint256,uint256)'): EventFragment
+	getEvent(nameOrSignatureOrTopic: 'UserWithdraw'): EventFragment
+	getEvent(nameOrSignatureOrTopic: 'UserWithdraw(address,uint256,uint256)'): EventFragment
 }
 
 export interface ApprovalEventObject {
-  tokenOwner: string;
-  spender: string;
-  tokens: BigNumber;
+	tokenOwner: string
+	spender: string
+	tokens: BigNumber
 }
-export type ApprovalEvent = TypedEvent<
-  [string, string, BigNumber],
-  ApprovalEventObject
->;
+export type ApprovalEvent = TypedEvent<[string, string, BigNumber], ApprovalEventObject>
 
-export type ApprovalEventFilter = TypedEventFilter<ApprovalEvent>;
+export type ApprovalEventFilter = TypedEventFilter<ApprovalEvent>
 
 export interface OwnershipTransferredEventObject {
-  previousOwner: string;
-  newOwner: string;
+	previousOwner: string
+	newOwner: string
 }
-export type OwnershipTransferredEvent = TypedEvent<
-  [string, string],
-  OwnershipTransferredEventObject
->;
+export type OwnershipTransferredEvent = TypedEvent<[string, string], OwnershipTransferredEventObject>
 
-export type OwnershipTransferredEventFilter =
-  TypedEventFilter<OwnershipTransferredEvent>;
+export type OwnershipTransferredEventFilter = TypedEventFilter<OwnershipTransferredEvent>
 
 export interface ParamsSetEventObject {
-  A: BigNumber;
-  fee: BigNumber;
-  callerFee: BigNumber;
+	A: BigNumber
+	fee: BigNumber
+	callerFee: BigNumber
 }
-export type ParamsSetEvent = TypedEvent<
-  [BigNumber, BigNumber, BigNumber],
-  ParamsSetEventObject
->;
+export type ParamsSetEvent = TypedEvent<[BigNumber, BigNumber, BigNumber], ParamsSetEventObject>
 
-export type ParamsSetEventFilter = TypedEventFilter<ParamsSetEvent>;
+export type ParamsSetEventFilter = TypedEventFilter<ParamsSetEvent>
 
 export interface RebalanceSwapEventObject {
-  user: string;
-  lusdAmount: BigNumber;
-  token: string;
-  tokenAmount: BigNumber;
-  timestamp: BigNumber;
+	user: string
+	lusdAmount: BigNumber
+	token: string
+	tokenAmount: BigNumber
+	timestamp: BigNumber
 }
-export type RebalanceSwapEvent = TypedEvent<
-  [string, BigNumber, string, BigNumber, BigNumber],
-  RebalanceSwapEventObject
->;
+export type RebalanceSwapEvent = TypedEvent<[string, BigNumber, string, BigNumber, BigNumber], RebalanceSwapEventObject>
 
-export type RebalanceSwapEventFilter = TypedEventFilter<RebalanceSwapEvent>;
+export type RebalanceSwapEventFilter = TypedEventFilter<RebalanceSwapEvent>
 
 export interface TransferEventObject {
-  from: string;
-  to: string;
-  tokens: BigNumber;
+	from: string
+	to: string
+	tokens: BigNumber
 }
-export type TransferEvent = TypedEvent<
-  [string, string, BigNumber],
-  TransferEventObject
->;
+export type TransferEvent = TypedEvent<[string, string, BigNumber], TransferEventObject>
 
-export type TransferEventFilter = TypedEventFilter<TransferEvent>;
+export type TransferEventFilter = TypedEventFilter<TransferEvent>
 
 export interface UserDepositEventObject {
-  user: string;
-  lusdAmount: BigNumber;
-  numShares: BigNumber;
+	user: string
+	lusdAmount: BigNumber
+	numShares: BigNumber
 }
-export type UserDepositEvent = TypedEvent<
-  [string, BigNumber, BigNumber],
-  UserDepositEventObject
->;
+export type UserDepositEvent = TypedEvent<[string, BigNumber, BigNumber], UserDepositEventObject>
 
-export type UserDepositEventFilter = TypedEventFilter<UserDepositEvent>;
+export type UserDepositEventFilter = TypedEventFilter<UserDepositEvent>
 
 export interface UserWithdrawEventObject {
-  user: string;
-  lusdAmount: BigNumber;
-  numShares: BigNumber;
+	user: string
+	lusdAmount: BigNumber
+	numShares: BigNumber
 }
-export type UserWithdrawEvent = TypedEvent<
-  [string, BigNumber, BigNumber],
-  UserWithdrawEventObject
->;
+export type UserWithdrawEvent = TypedEvent<[string, BigNumber, BigNumber], UserWithdrawEventObject>
 
-export type UserWithdrawEventFilter = TypedEventFilter<UserWithdrawEvent>;
+export type UserWithdrawEventFilter = TypedEventFilter<UserWithdrawEvent>
 
 export interface Bamm extends BaseContract {
-  contractName: "Bamm";
+	contractName: 'Bamm'
 
-  connect(signerOrProvider: Signer | Provider | string): this;
-  attach(addressOrName: string): this;
-  deployed(): Promise<this>;
+	connect(signerOrProvider: Signer | Provider | string): this
+	attach(addressOrName: string): this
+	deployed(): Promise<this>
 
-  interface: BammInterface;
+	interface: BammInterface
 
-  queryFilter<TEvent extends TypedEvent>(
-    event: TypedEventFilter<TEvent>,
-    fromBlockOrBlockhash?: string | number | undefined,
-    toBlock?: string | number | undefined
-  ): Promise<Array<TEvent>>;
+	queryFilter<TEvent extends TypedEvent>(
+		event: TypedEventFilter<TEvent>,
+		fromBlockOrBlockhash?: string | number | undefined,
+		toBlock?: string | number | undefined,
+	): Promise<Array<TEvent>>
 
-  listeners<TEvent extends TypedEvent>(
-    eventFilter?: TypedEventFilter<TEvent>
-  ): Array<TypedListener<TEvent>>;
-  listeners(eventName?: string): Array<Listener>;
-  removeAllListeners<TEvent extends TypedEvent>(
-    eventFilter: TypedEventFilter<TEvent>
-  ): this;
-  removeAllListeners(eventName?: string): this;
-  off: OnEvent<this>;
-  on: OnEvent<this>;
-  once: OnEvent<this>;
-  removeListener: OnEvent<this>;
+	listeners<TEvent extends TypedEvent>(eventFilter?: TypedEventFilter<TEvent>): Array<TypedListener<TEvent>>
+	listeners(eventName?: string): Array<Listener>
+	removeAllListeners<TEvent extends TypedEvent>(eventFilter: TypedEventFilter<TEvent>): this
+	removeAllListeners(eventName?: string): this
+	off: OnEvent<this>
+	on: OnEvent<this>
+	once: OnEvent<this>
+	removeListener: OnEvent<this>
 
-  functions: {
-    A(overrides?: CallOverrides): Promise<[BigNumber]>;
+	functions: {
+		A(overrides?: CallOverrides): Promise<[BigNumber]>
 
-    "A()"(overrides?: CallOverrides): Promise<[BigNumber]>;
+		'A()'(overrides?: CallOverrides): Promise<[BigNumber]>
 
-    LUSD(overrides?: CallOverrides): Promise<[string]>;
+		LUSD(overrides?: CallOverrides): Promise<[string]>
 
-    "LUSD()"(overrides?: CallOverrides): Promise<[string]>;
+		'LUSD()'(overrides?: CallOverrides): Promise<[string]>
 
-    MAX_A(overrides?: CallOverrides): Promise<[BigNumber]>;
+		MAX_A(overrides?: CallOverrides): Promise<[BigNumber]>
 
-    "MAX_A()"(overrides?: CallOverrides): Promise<[BigNumber]>;
+		'MAX_A()'(overrides?: CallOverrides): Promise<[BigNumber]>
 
-    MAX_CALLER_FEE(overrides?: CallOverrides): Promise<[BigNumber]>;
+		MAX_CALLER_FEE(overrides?: CallOverrides): Promise<[BigNumber]>
 
-    "MAX_CALLER_FEE()"(overrides?: CallOverrides): Promise<[BigNumber]>;
+		'MAX_CALLER_FEE()'(overrides?: CallOverrides): Promise<[BigNumber]>
 
-    MAX_FEE(overrides?: CallOverrides): Promise<[BigNumber]>;
+		MAX_FEE(overrides?: CallOverrides): Promise<[BigNumber]>
 
-    "MAX_FEE()"(overrides?: CallOverrides): Promise<[BigNumber]>;
+		'MAX_FEE()'(overrides?: CallOverrides): Promise<[BigNumber]>
 
-    MIN_A(overrides?: CallOverrides): Promise<[BigNumber]>;
+		MIN_A(overrides?: CallOverrides): Promise<[BigNumber]>
 
-    "MIN_A()"(overrides?: CallOverrides): Promise<[BigNumber]>;
+		'MIN_A()'(overrides?: CallOverrides): Promise<[BigNumber]>
 
-    PRECISION(overrides?: CallOverrides): Promise<[BigNumber]>;
+		PRECISION(overrides?: CallOverrides): Promise<[BigNumber]>
 
-    "PRECISION()"(overrides?: CallOverrides): Promise<[BigNumber]>;
+		'PRECISION()'(overrides?: CallOverrides): Promise<[BigNumber]>
 
-    addCollateral(
-      ctoken: PromiseOrValue<string>,
-      feed: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
+		addCollateral(
+			ctoken: PromiseOrValue<string>,
+			feed: PromiseOrValue<string>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<ContractTransaction>
 
-    "addCollateral(address,address)"(
-      ctoken: PromiseOrValue<string>,
-      feed: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
+		'addCollateral(address,address)'(
+			ctoken: PromiseOrValue<string>,
+			feed: PromiseOrValue<string>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<ContractTransaction>
 
-    allowance(
-      arg0: PromiseOrValue<string>,
-      arg1: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
+		allowance(arg0: PromiseOrValue<string>, arg1: PromiseOrValue<string>, overrides?: CallOverrides): Promise<[BigNumber]>
 
-    "allowance(address,address)"(
-      arg0: PromiseOrValue<string>,
-      arg1: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
+		'allowance(address,address)'(
+			arg0: PromiseOrValue<string>,
+			arg1: PromiseOrValue<string>,
+			overrides?: CallOverrides,
+		): Promise<[BigNumber]>
 
-    approve(
-      spender: PromiseOrValue<string>,
-      tokens: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
-    "approve(address,uint256)"(
-      spender: PromiseOrValue<string>,
-      tokens: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
+		approve(
+			spender: PromiseOrValue<string>,
+			tokens: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<ContractTransaction>
 
-    balanceOf(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
+		'approve(address,uint256)'(
+			spender: PromiseOrValue<string>,
+			tokens: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<ContractTransaction>
 
-    "balanceOf(address)"(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
+		balanceOf(arg0: PromiseOrValue<string>, overrides?: CallOverrides): Promise<[BigNumber]>
 
-    cBorrow(overrides?: CallOverrides): Promise<[string]>;
+		'balanceOf(address)'(arg0: PromiseOrValue<string>, overrides?: CallOverrides): Promise<[BigNumber]>
 
-    "cBorrow()"(overrides?: CallOverrides): Promise<[string]>;
-
-    cTokens(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<[boolean]>;
+		cBorrow(overrides?: CallOverrides): Promise<[string]>
 
-    "cTokens(address)"(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<[boolean]>;
+		'cBorrow()'(overrides?: CallOverrides): Promise<[string]>
 
-    callerFee(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    "callerFee()"(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    canLiquidate(
-      cTokenBorrowed: PromiseOrValue<string>,
-      cTokenCollateral: PromiseOrValue<string>,
-      repayAmount: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<[boolean]>;
-
-    "canLiquidate(address,address,uint256)"(
-      cTokenBorrowed: PromiseOrValue<string>,
-      cTokenCollateral: PromiseOrValue<string>,
-      repayAmount: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<[boolean]>;
-
-    collateralCount(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    "collateralCount()"(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    collateralDecimals(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
-
-    "collateralDecimals(address)"(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
-
-    collaterals(
-      arg0: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<[string]>;
-
-    "collaterals(uint256)"(
-      arg0: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<[string]>;
-
-    decimals(overrides?: CallOverrides): Promise<[number]>;
-
-    "decimals()"(overrides?: CallOverrides): Promise<[number]>;
-
-    deposit(
-      lusdAmount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
-    "deposit(uint256)"(
-      lusdAmount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
-    efficientWithdraw(
-      numShares: PromiseOrValue<BigNumberish>,
-      to: PromiseOrValue<string>,
-      withdrawCollateral: PromiseOrValue<boolean>,
-      minLusd: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
-    "efficientWithdraw(uint256,address,bool,uint256)"(
-      numShares: PromiseOrValue<BigNumberish>,
-      to: PromiseOrValue<string>,
-      withdrawCollateral: PromiseOrValue<boolean>,
-      minLusd: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
-    fee(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    "fee()"(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    feePool(overrides?: CallOverrides): Promise<[string]>;
-
-    "feePool()"(overrides?: CallOverrides): Promise<[string]>;
+		cTokens(arg0: PromiseOrValue<string>, overrides?: CallOverrides): Promise<[boolean]>
 
-    fetchPrice(
-      token: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
+		'cTokens(address)'(arg0: PromiseOrValue<string>, overrides?: CallOverrides): Promise<[boolean]>
 
-    "fetchPrice(address)"(
-      token: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
-
-    getCollateralValue(
-      overrides?: CallOverrides
-    ): Promise<[boolean, BigNumber] & { succ: boolean; value: BigNumber }>;
-
-    "getCollateralValue()"(
-      overrides?: CallOverrides
-    ): Promise<[boolean, BigNumber] & { succ: boolean; value: BigNumber }>;
-
-    getReturn(
-      xQty: PromiseOrValue<BigNumberish>,
-      xBalance: PromiseOrValue<BigNumberish>,
-      yBalance: PromiseOrValue<BigNumberish>,
-      A: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
-
-    "getReturn(uint256,uint256,uint256,uint256)"(
-      xQty: PromiseOrValue<BigNumberish>,
-      xBalance: PromiseOrValue<BigNumberish>,
-      yBalance: PromiseOrValue<BigNumberish>,
-      A: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
-
-    getSumFixedPoint(
-      x: PromiseOrValue<BigNumberish>,
-      y: PromiseOrValue<BigNumberish>,
-      A: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
-
-    "getSumFixedPoint(uint256,uint256,uint256)"(
-      x: PromiseOrValue<BigNumberish>,
-      y: PromiseOrValue<BigNumberish>,
-      A: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
-
-    getSwapAmount(
-      lusdQty: PromiseOrValue<BigNumberish>,
-      token: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber] & { tokenAmount: BigNumber }>;
-
-    "getSwapAmount(uint256,address)"(
-      lusdQty: PromiseOrValue<BigNumberish>,
-      token: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber] & { tokenAmount: BigNumber }>;
-
-    isCETH(overrides?: CallOverrides): Promise<[boolean]>;
-
-    "isCETH()"(overrides?: CallOverrides): Promise<[boolean]>;
-
-    isOwner(overrides?: CallOverrides): Promise<[boolean]>;
-
-    "isOwner()"(overrides?: CallOverrides): Promise<[boolean]>;
-
-    liquidateBorrow(
-      borrower: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
-      collateral: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
-    "liquidateBorrow(address,uint256,address)"(
-      borrower: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
-      collateral: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
-    lusdDecimals(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    "lusdDecimals()"(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    maxDiscount(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    "maxDiscount()"(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    name(overrides?: CallOverrides): Promise<[string]>;
-
-    "name()"(overrides?: CallOverrides): Promise<[string]>;
-
-    owner(overrides?: CallOverrides): Promise<[string]>;
-
-    "owner()"(overrides?: CallOverrides): Promise<[string]>;
-
-    priceAggregators(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<[string]>;
-
-    "priceAggregators(address)"(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<[string]>;
-
-    removeCollateral(
-      ctoken: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
-    "removeCollateral(address)"(
-      ctoken: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
-    setParams(
-      _A: PromiseOrValue<BigNumberish>,
-      _fee: PromiseOrValue<BigNumberish>,
-      _callerFee: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
-    "setParams(uint256,uint256,uint256)"(
-      _A: PromiseOrValue<BigNumberish>,
-      _fee: PromiseOrValue<BigNumberish>,
-      _callerFee: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
+		callerFee(overrides?: CallOverrides): Promise<[BigNumber]>
 
-    swap(
-      lusdAmount: PromiseOrValue<BigNumberish>,
-      returnToken: PromiseOrValue<string>,
-      minReturn: PromiseOrValue<BigNumberish>,
-      dest: PromiseOrValue<string>,
-      data: PromiseOrValue<BytesLike>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
+		'callerFee()'(overrides?: CallOverrides): Promise<[BigNumber]>
 
-    "swap(uint256,address,uint256,address,bytes)"(
-      lusdAmount: PromiseOrValue<BigNumberish>,
-      returnToken: PromiseOrValue<string>,
-      minReturn: PromiseOrValue<BigNumberish>,
-      dest: PromiseOrValue<string>,
-      data: PromiseOrValue<BytesLike>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
-    symbol(overrides?: CallOverrides): Promise<[string]>;
-
-    "symbol()"(overrides?: CallOverrides): Promise<[string]>;
-
-    totalSupply(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    "totalSupply()"(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    transfer(
-      to: PromiseOrValue<string>,
-      tokens: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
-    "transfer(address,uint256)"(
-      to: PromiseOrValue<string>,
-      tokens: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
-    transferFrom(
-      from: PromiseOrValue<string>,
-      to: PromiseOrValue<string>,
-      tokens: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
-    "transferFrom(address,address,uint256)"(
-      from: PromiseOrValue<string>,
-      to: PromiseOrValue<string>,
-      tokens: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
-    transferOwnership(
-      newOwner: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
-    "transferOwnership(address)"(
-      newOwner: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
-    withdraw(
-      numShares: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
-    "withdraw(uint256)"(
-      numShares: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-  };
-
-  A(overrides?: CallOverrides): Promise<BigNumber>;
-
-  "A()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-  LUSD(overrides?: CallOverrides): Promise<string>;
-
-  "LUSD()"(overrides?: CallOverrides): Promise<string>;
-
-  MAX_A(overrides?: CallOverrides): Promise<BigNumber>;
-
-  "MAX_A()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-  MAX_CALLER_FEE(overrides?: CallOverrides): Promise<BigNumber>;
-
-  "MAX_CALLER_FEE()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-  MAX_FEE(overrides?: CallOverrides): Promise<BigNumber>;
-
-  "MAX_FEE()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-  MIN_A(overrides?: CallOverrides): Promise<BigNumber>;
-
-  "MIN_A()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-  PRECISION(overrides?: CallOverrides): Promise<BigNumber>;
-
-  "PRECISION()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-  addCollateral(
-    ctoken: PromiseOrValue<string>,
-    feed: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
-  "addCollateral(address,address)"(
-    ctoken: PromiseOrValue<string>,
-    feed: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
-  allowance(
-    arg0: PromiseOrValue<string>,
-    arg1: PromiseOrValue<string>,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
-
-  "allowance(address,address)"(
-    arg0: PromiseOrValue<string>,
-    arg1: PromiseOrValue<string>,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
-
-  approve(
-    spender: PromiseOrValue<string>,
-    tokens: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
-  "approve(address,uint256)"(
-    spender: PromiseOrValue<string>,
-    tokens: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
-  balanceOf(
-    arg0: PromiseOrValue<string>,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
-
-  "balanceOf(address)"(
-    arg0: PromiseOrValue<string>,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
-
-  cBorrow(overrides?: CallOverrides): Promise<string>;
-
-  "cBorrow()"(overrides?: CallOverrides): Promise<string>;
-
-  cTokens(
-    arg0: PromiseOrValue<string>,
-    overrides?: CallOverrides
-  ): Promise<boolean>;
-
-  "cTokens(address)"(
-    arg0: PromiseOrValue<string>,
-    overrides?: CallOverrides
-  ): Promise<boolean>;
-
-  callerFee(overrides?: CallOverrides): Promise<BigNumber>;
-
-  "callerFee()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-  canLiquidate(
-    cTokenBorrowed: PromiseOrValue<string>,
-    cTokenCollateral: PromiseOrValue<string>,
-    repayAmount: PromiseOrValue<BigNumberish>,
-    overrides?: CallOverrides
-  ): Promise<boolean>;
-
-  "canLiquidate(address,address,uint256)"(
-    cTokenBorrowed: PromiseOrValue<string>,
-    cTokenCollateral: PromiseOrValue<string>,
-    repayAmount: PromiseOrValue<BigNumberish>,
-    overrides?: CallOverrides
-  ): Promise<boolean>;
-
-  collateralCount(overrides?: CallOverrides): Promise<BigNumber>;
-
-  "collateralCount()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-  collateralDecimals(
-    arg0: PromiseOrValue<string>,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
-
-  "collateralDecimals(address)"(
-    arg0: PromiseOrValue<string>,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
-
-  collaterals(
-    arg0: PromiseOrValue<BigNumberish>,
-    overrides?: CallOverrides
-  ): Promise<string>;
-
-  "collaterals(uint256)"(
-    arg0: PromiseOrValue<BigNumberish>,
-    overrides?: CallOverrides
-  ): Promise<string>;
-
-  decimals(overrides?: CallOverrides): Promise<number>;
-
-  "decimals()"(overrides?: CallOverrides): Promise<number>;
-
-  deposit(
-    lusdAmount: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
-  "deposit(uint256)"(
-    lusdAmount: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
-  efficientWithdraw(
-    numShares: PromiseOrValue<BigNumberish>,
-    to: PromiseOrValue<string>,
-    withdrawCollateral: PromiseOrValue<boolean>,
-    minLusd: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
-  "efficientWithdraw(uint256,address,bool,uint256)"(
-    numShares: PromiseOrValue<BigNumberish>,
-    to: PromiseOrValue<string>,
-    withdrawCollateral: PromiseOrValue<boolean>,
-    minLusd: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
-  fee(overrides?: CallOverrides): Promise<BigNumber>;
-
-  "fee()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-  feePool(overrides?: CallOverrides): Promise<string>;
-
-  "feePool()"(overrides?: CallOverrides): Promise<string>;
-
-  fetchPrice(
-    token: PromiseOrValue<string>,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
-
-  "fetchPrice(address)"(
-    token: PromiseOrValue<string>,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
-
-  getCollateralValue(
-    overrides?: CallOverrides
-  ): Promise<[boolean, BigNumber] & { succ: boolean; value: BigNumber }>;
-
-  "getCollateralValue()"(
-    overrides?: CallOverrides
-  ): Promise<[boolean, BigNumber] & { succ: boolean; value: BigNumber }>;
-
-  getReturn(
-    xQty: PromiseOrValue<BigNumberish>,
-    xBalance: PromiseOrValue<BigNumberish>,
-    yBalance: PromiseOrValue<BigNumberish>,
-    A: PromiseOrValue<BigNumberish>,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
-
-  "getReturn(uint256,uint256,uint256,uint256)"(
-    xQty: PromiseOrValue<BigNumberish>,
-    xBalance: PromiseOrValue<BigNumberish>,
-    yBalance: PromiseOrValue<BigNumberish>,
-    A: PromiseOrValue<BigNumberish>,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
-
-  getSumFixedPoint(
-    x: PromiseOrValue<BigNumberish>,
-    y: PromiseOrValue<BigNumberish>,
-    A: PromiseOrValue<BigNumberish>,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
-
-  "getSumFixedPoint(uint256,uint256,uint256)"(
-    x: PromiseOrValue<BigNumberish>,
-    y: PromiseOrValue<BigNumberish>,
-    A: PromiseOrValue<BigNumberish>,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
-
-  getSwapAmount(
-    lusdQty: PromiseOrValue<BigNumberish>,
-    token: PromiseOrValue<string>,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
-
-  "getSwapAmount(uint256,address)"(
-    lusdQty: PromiseOrValue<BigNumberish>,
-    token: PromiseOrValue<string>,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
-
-  isCETH(overrides?: CallOverrides): Promise<boolean>;
-
-  "isCETH()"(overrides?: CallOverrides): Promise<boolean>;
-
-  isOwner(overrides?: CallOverrides): Promise<boolean>;
-
-  "isOwner()"(overrides?: CallOverrides): Promise<boolean>;
-
-  liquidateBorrow(
-    borrower: PromiseOrValue<string>,
-    amount: PromiseOrValue<BigNumberish>,
-    collateral: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
-  "liquidateBorrow(address,uint256,address)"(
-    borrower: PromiseOrValue<string>,
-    amount: PromiseOrValue<BigNumberish>,
-    collateral: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
-  lusdDecimals(overrides?: CallOverrides): Promise<BigNumber>;
-
-  "lusdDecimals()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-  maxDiscount(overrides?: CallOverrides): Promise<BigNumber>;
-
-  "maxDiscount()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-  name(overrides?: CallOverrides): Promise<string>;
-
-  "name()"(overrides?: CallOverrides): Promise<string>;
-
-  owner(overrides?: CallOverrides): Promise<string>;
-
-  "owner()"(overrides?: CallOverrides): Promise<string>;
-
-  priceAggregators(
-    arg0: PromiseOrValue<string>,
-    overrides?: CallOverrides
-  ): Promise<string>;
-
-  "priceAggregators(address)"(
-    arg0: PromiseOrValue<string>,
-    overrides?: CallOverrides
-  ): Promise<string>;
-
-  removeCollateral(
-    ctoken: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
-  "removeCollateral(address)"(
-    ctoken: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
-  setParams(
-    _A: PromiseOrValue<BigNumberish>,
-    _fee: PromiseOrValue<BigNumberish>,
-    _callerFee: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
-  "setParams(uint256,uint256,uint256)"(
-    _A: PromiseOrValue<BigNumberish>,
-    _fee: PromiseOrValue<BigNumberish>,
-    _callerFee: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
-  swap(
-    lusdAmount: PromiseOrValue<BigNumberish>,
-    returnToken: PromiseOrValue<string>,
-    minReturn: PromiseOrValue<BigNumberish>,
-    dest: PromiseOrValue<string>,
-    data: PromiseOrValue<BytesLike>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
-  "swap(uint256,address,uint256,address,bytes)"(
-    lusdAmount: PromiseOrValue<BigNumberish>,
-    returnToken: PromiseOrValue<string>,
-    minReturn: PromiseOrValue<BigNumberish>,
-    dest: PromiseOrValue<string>,
-    data: PromiseOrValue<BytesLike>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
-  symbol(overrides?: CallOverrides): Promise<string>;
-
-  "symbol()"(overrides?: CallOverrides): Promise<string>;
-
-  totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
-
-  "totalSupply()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-  transfer(
-    to: PromiseOrValue<string>,
-    tokens: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
-  "transfer(address,uint256)"(
-    to: PromiseOrValue<string>,
-    tokens: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
-  transferFrom(
-    from: PromiseOrValue<string>,
-    to: PromiseOrValue<string>,
-    tokens: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
-  "transferFrom(address,address,uint256)"(
-    from: PromiseOrValue<string>,
-    to: PromiseOrValue<string>,
-    tokens: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
-  transferOwnership(
-    newOwner: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
-  "transferOwnership(address)"(
-    newOwner: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
-  withdraw(
-    numShares: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
-  "withdraw(uint256)"(
-    numShares: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
-  callStatic: {
-    A(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "A()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-    LUSD(overrides?: CallOverrides): Promise<string>;
-
-    "LUSD()"(overrides?: CallOverrides): Promise<string>;
-
-    MAX_A(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "MAX_A()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-    MAX_CALLER_FEE(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "MAX_CALLER_FEE()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-    MAX_FEE(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "MAX_FEE()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-    MIN_A(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "MIN_A()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-    PRECISION(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "PRECISION()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-    addCollateral(
-      ctoken: PromiseOrValue<string>,
-      feed: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    "addCollateral(address,address)"(
-      ctoken: PromiseOrValue<string>,
-      feed: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    allowance(
-      arg0: PromiseOrValue<string>,
-      arg1: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    "allowance(address,address)"(
-      arg0: PromiseOrValue<string>,
-      arg1: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    approve(
-      spender: PromiseOrValue<string>,
-      tokens: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
-
-    "approve(address,uint256)"(
-      spender: PromiseOrValue<string>,
-      tokens: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
-
-    balanceOf(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    "balanceOf(address)"(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    cBorrow(overrides?: CallOverrides): Promise<string>;
-
-    "cBorrow()"(overrides?: CallOverrides): Promise<string>;
-
-    cTokens(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
-
-    "cTokens(address)"(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
-
-    callerFee(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "callerFee()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-    canLiquidate(
-      cTokenBorrowed: PromiseOrValue<string>,
-      cTokenCollateral: PromiseOrValue<string>,
-      repayAmount: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
-
-    "canLiquidate(address,address,uint256)"(
-      cTokenBorrowed: PromiseOrValue<string>,
-      cTokenCollateral: PromiseOrValue<string>,
-      repayAmount: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
-
-    collateralCount(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "collateralCount()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-    collateralDecimals(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    "collateralDecimals(address)"(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    collaterals(
-      arg0: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<string>;
-
-    "collaterals(uint256)"(
-      arg0: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<string>;
-
-    decimals(overrides?: CallOverrides): Promise<number>;
-
-    "decimals()"(overrides?: CallOverrides): Promise<number>;
-
-    deposit(
-      lusdAmount: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    "deposit(uint256)"(
-      lusdAmount: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    efficientWithdraw(
-      numShares: PromiseOrValue<BigNumberish>,
-      to: PromiseOrValue<string>,
-      withdrawCollateral: PromiseOrValue<boolean>,
-      minLusd: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    "efficientWithdraw(uint256,address,bool,uint256)"(
-      numShares: PromiseOrValue<BigNumberish>,
-      to: PromiseOrValue<string>,
-      withdrawCollateral: PromiseOrValue<boolean>,
-      minLusd: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    fee(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "fee()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-    feePool(overrides?: CallOverrides): Promise<string>;
-
-    "feePool()"(overrides?: CallOverrides): Promise<string>;
-
-    fetchPrice(
-      token: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    "fetchPrice(address)"(
-      token: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    getCollateralValue(
-      overrides?: CallOverrides
-    ): Promise<[boolean, BigNumber] & { succ: boolean; value: BigNumber }>;
-
-    "getCollateralValue()"(
-      overrides?: CallOverrides
-    ): Promise<[boolean, BigNumber] & { succ: boolean; value: BigNumber }>;
-
-    getReturn(
-      xQty: PromiseOrValue<BigNumberish>,
-      xBalance: PromiseOrValue<BigNumberish>,
-      yBalance: PromiseOrValue<BigNumberish>,
-      A: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    "getReturn(uint256,uint256,uint256,uint256)"(
-      xQty: PromiseOrValue<BigNumberish>,
-      xBalance: PromiseOrValue<BigNumberish>,
-      yBalance: PromiseOrValue<BigNumberish>,
-      A: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    getSumFixedPoint(
-      x: PromiseOrValue<BigNumberish>,
-      y: PromiseOrValue<BigNumberish>,
-      A: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    "getSumFixedPoint(uint256,uint256,uint256)"(
-      x: PromiseOrValue<BigNumberish>,
-      y: PromiseOrValue<BigNumberish>,
-      A: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    getSwapAmount(
-      lusdQty: PromiseOrValue<BigNumberish>,
-      token: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    "getSwapAmount(uint256,address)"(
-      lusdQty: PromiseOrValue<BigNumberish>,
-      token: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    isCETH(overrides?: CallOverrides): Promise<boolean>;
-
-    "isCETH()"(overrides?: CallOverrides): Promise<boolean>;
-
-    isOwner(overrides?: CallOverrides): Promise<boolean>;
-
-    "isOwner()"(overrides?: CallOverrides): Promise<boolean>;
-
-    liquidateBorrow(
-      borrower: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
-      collateral: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    "liquidateBorrow(address,uint256,address)"(
-      borrower: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
-      collateral: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    lusdDecimals(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "lusdDecimals()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-    maxDiscount(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "maxDiscount()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-    name(overrides?: CallOverrides): Promise<string>;
-
-    "name()"(overrides?: CallOverrides): Promise<string>;
-
-    owner(overrides?: CallOverrides): Promise<string>;
-
-    "owner()"(overrides?: CallOverrides): Promise<string>;
-
-    priceAggregators(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<string>;
-
-    "priceAggregators(address)"(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<string>;
-
-    removeCollateral(
-      ctoken: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    "removeCollateral(address)"(
-      ctoken: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    setParams(
-      _A: PromiseOrValue<BigNumberish>,
-      _fee: PromiseOrValue<BigNumberish>,
-      _callerFee: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    "setParams(uint256,uint256,uint256)"(
-      _A: PromiseOrValue<BigNumberish>,
-      _fee: PromiseOrValue<BigNumberish>,
-      _callerFee: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    swap(
-      lusdAmount: PromiseOrValue<BigNumberish>,
-      returnToken: PromiseOrValue<string>,
-      minReturn: PromiseOrValue<BigNumberish>,
-      dest: PromiseOrValue<string>,
-      data: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    "swap(uint256,address,uint256,address,bytes)"(
-      lusdAmount: PromiseOrValue<BigNumberish>,
-      returnToken: PromiseOrValue<string>,
-      minReturn: PromiseOrValue<BigNumberish>,
-      dest: PromiseOrValue<string>,
-      data: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    symbol(overrides?: CallOverrides): Promise<string>;
-
-    "symbol()"(overrides?: CallOverrides): Promise<string>;
-
-    totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "totalSupply()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-    transfer(
-      to: PromiseOrValue<string>,
-      tokens: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
-
-    "transfer(address,uint256)"(
-      to: PromiseOrValue<string>,
-      tokens: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
-
-    transferFrom(
-      from: PromiseOrValue<string>,
-      to: PromiseOrValue<string>,
-      tokens: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
-
-    "transferFrom(address,address,uint256)"(
-      from: PromiseOrValue<string>,
-      to: PromiseOrValue<string>,
-      tokens: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
-
-    transferOwnership(
-      newOwner: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    "transferOwnership(address)"(
-      newOwner: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    withdraw(
-      numShares: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    "withdraw(uint256)"(
-      numShares: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<void>;
-  };
-
-  filters: {
-    "Approval(address,address,uint256)"(
-      tokenOwner?: PromiseOrValue<string> | null,
-      spender?: PromiseOrValue<string> | null,
-      tokens?: null
-    ): ApprovalEventFilter;
-    Approval(
-      tokenOwner?: PromiseOrValue<string> | null,
-      spender?: PromiseOrValue<string> | null,
-      tokens?: null
-    ): ApprovalEventFilter;
-
-    "OwnershipTransferred(address,address)"(
-      previousOwner?: PromiseOrValue<string> | null,
-      newOwner?: PromiseOrValue<string> | null
-    ): OwnershipTransferredEventFilter;
-    OwnershipTransferred(
-      previousOwner?: PromiseOrValue<string> | null,
-      newOwner?: PromiseOrValue<string> | null
-    ): OwnershipTransferredEventFilter;
-
-    "ParamsSet(uint256,uint256,uint256)"(
-      A?: null,
-      fee?: null,
-      callerFee?: null
-    ): ParamsSetEventFilter;
-    ParamsSet(A?: null, fee?: null, callerFee?: null): ParamsSetEventFilter;
-
-    "RebalanceSwap(address,uint256,address,uint256,uint256)"(
-      user?: PromiseOrValue<string> | null,
-      lusdAmount?: null,
-      token?: null,
-      tokenAmount?: null,
-      timestamp?: null
-    ): RebalanceSwapEventFilter;
-    RebalanceSwap(
-      user?: PromiseOrValue<string> | null,
-      lusdAmount?: null,
-      token?: null,
-      tokenAmount?: null,
-      timestamp?: null
-    ): RebalanceSwapEventFilter;
-
-    "Transfer(address,address,uint256)"(
-      from?: PromiseOrValue<string> | null,
-      to?: PromiseOrValue<string> | null,
-      tokens?: null
-    ): TransferEventFilter;
-    Transfer(
-      from?: PromiseOrValue<string> | null,
-      to?: PromiseOrValue<string> | null,
-      tokens?: null
-    ): TransferEventFilter;
-
-    "UserDeposit(address,uint256,uint256)"(
-      user?: PromiseOrValue<string> | null,
-      lusdAmount?: null,
-      numShares?: null
-    ): UserDepositEventFilter;
-    UserDeposit(
-      user?: PromiseOrValue<string> | null,
-      lusdAmount?: null,
-      numShares?: null
-    ): UserDepositEventFilter;
-
-    "UserWithdraw(address,uint256,uint256)"(
-      user?: PromiseOrValue<string> | null,
-      lusdAmount?: null,
-      numShares?: null
-    ): UserWithdrawEventFilter;
-    UserWithdraw(
-      user?: PromiseOrValue<string> | null,
-      lusdAmount?: null,
-      numShares?: null
-    ): UserWithdrawEventFilter;
-  };
-
-  estimateGas: {
-    A(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "A()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-    LUSD(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "LUSD()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-    MAX_A(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "MAX_A()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-    MAX_CALLER_FEE(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "MAX_CALLER_FEE()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-    MAX_FEE(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "MAX_FEE()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-    MIN_A(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "MIN_A()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-    PRECISION(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "PRECISION()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-    addCollateral(
-      ctoken: PromiseOrValue<string>,
-      feed: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    "addCollateral(address,address)"(
-      ctoken: PromiseOrValue<string>,
-      feed: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    allowance(
-      arg0: PromiseOrValue<string>,
-      arg1: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    "allowance(address,address)"(
-      arg0: PromiseOrValue<string>,
-      arg1: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    approve(
-      spender: PromiseOrValue<string>,
-      tokens: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    "approve(address,uint256)"(
-      spender: PromiseOrValue<string>,
-      tokens: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    balanceOf(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    "balanceOf(address)"(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    cBorrow(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "cBorrow()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-    cTokens(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    "cTokens(address)"(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    callerFee(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "callerFee()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-    canLiquidate(
-      cTokenBorrowed: PromiseOrValue<string>,
-      cTokenCollateral: PromiseOrValue<string>,
-      repayAmount: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    "canLiquidate(address,address,uint256)"(
-      cTokenBorrowed: PromiseOrValue<string>,
-      cTokenCollateral: PromiseOrValue<string>,
-      repayAmount: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    collateralCount(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "collateralCount()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-    collateralDecimals(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    "collateralDecimals(address)"(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    collaterals(
-      arg0: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    "collaterals(uint256)"(
-      arg0: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    decimals(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "decimals()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-    deposit(
-      lusdAmount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    "deposit(uint256)"(
-      lusdAmount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    efficientWithdraw(
-      numShares: PromiseOrValue<BigNumberish>,
-      to: PromiseOrValue<string>,
-      withdrawCollateral: PromiseOrValue<boolean>,
-      minLusd: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    "efficientWithdraw(uint256,address,bool,uint256)"(
-      numShares: PromiseOrValue<BigNumberish>,
-      to: PromiseOrValue<string>,
-      withdrawCollateral: PromiseOrValue<boolean>,
-      minLusd: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    fee(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "fee()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-    feePool(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "feePool()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-    fetchPrice(
-      token: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    "fetchPrice(address)"(
-      token: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    getCollateralValue(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "getCollateralValue()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-    getReturn(
-      xQty: PromiseOrValue<BigNumberish>,
-      xBalance: PromiseOrValue<BigNumberish>,
-      yBalance: PromiseOrValue<BigNumberish>,
-      A: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    "getReturn(uint256,uint256,uint256,uint256)"(
-      xQty: PromiseOrValue<BigNumberish>,
-      xBalance: PromiseOrValue<BigNumberish>,
-      yBalance: PromiseOrValue<BigNumberish>,
-      A: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    getSumFixedPoint(
-      x: PromiseOrValue<BigNumberish>,
-      y: PromiseOrValue<BigNumberish>,
-      A: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    "getSumFixedPoint(uint256,uint256,uint256)"(
-      x: PromiseOrValue<BigNumberish>,
-      y: PromiseOrValue<BigNumberish>,
-      A: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    getSwapAmount(
-      lusdQty: PromiseOrValue<BigNumberish>,
-      token: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    "getSwapAmount(uint256,address)"(
-      lusdQty: PromiseOrValue<BigNumberish>,
-      token: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    isCETH(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "isCETH()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-    isOwner(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "isOwner()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-    liquidateBorrow(
-      borrower: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
-      collateral: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    "liquidateBorrow(address,uint256,address)"(
-      borrower: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
-      collateral: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    lusdDecimals(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "lusdDecimals()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-    maxDiscount(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "maxDiscount()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-    name(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "name()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-    owner(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "owner()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-    priceAggregators(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    "priceAggregators(address)"(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    removeCollateral(
-      ctoken: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    "removeCollateral(address)"(
-      ctoken: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    setParams(
-      _A: PromiseOrValue<BigNumberish>,
-      _fee: PromiseOrValue<BigNumberish>,
-      _callerFee: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    "setParams(uint256,uint256,uint256)"(
-      _A: PromiseOrValue<BigNumberish>,
-      _fee: PromiseOrValue<BigNumberish>,
-      _callerFee: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    swap(
-      lusdAmount: PromiseOrValue<BigNumberish>,
-      returnToken: PromiseOrValue<string>,
-      minReturn: PromiseOrValue<BigNumberish>,
-      dest: PromiseOrValue<string>,
-      data: PromiseOrValue<BytesLike>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    "swap(uint256,address,uint256,address,bytes)"(
-      lusdAmount: PromiseOrValue<BigNumberish>,
-      returnToken: PromiseOrValue<string>,
-      minReturn: PromiseOrValue<BigNumberish>,
-      dest: PromiseOrValue<string>,
-      data: PromiseOrValue<BytesLike>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    symbol(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "symbol()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-    totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "totalSupply()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-    transfer(
-      to: PromiseOrValue<string>,
-      tokens: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    "transfer(address,uint256)"(
-      to: PromiseOrValue<string>,
-      tokens: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    transferFrom(
-      from: PromiseOrValue<string>,
-      to: PromiseOrValue<string>,
-      tokens: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    "transferFrom(address,address,uint256)"(
-      from: PromiseOrValue<string>,
-      to: PromiseOrValue<string>,
-      tokens: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    transferOwnership(
-      newOwner: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    "transferOwnership(address)"(
-      newOwner: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    withdraw(
-      numShares: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    "withdraw(uint256)"(
-      numShares: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-  };
-
-  populateTransaction: {
-    A(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "A()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    LUSD(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "LUSD()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    MAX_A(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "MAX_A()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    MAX_CALLER_FEE(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "MAX_CALLER_FEE()"(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    MAX_FEE(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "MAX_FEE()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    MIN_A(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "MIN_A()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    PRECISION(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "PRECISION()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    addCollateral(
-      ctoken: PromiseOrValue<string>,
-      feed: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    "addCollateral(address,address)"(
-      ctoken: PromiseOrValue<string>,
-      feed: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    allowance(
-      arg0: PromiseOrValue<string>,
-      arg1: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    "allowance(address,address)"(
-      arg0: PromiseOrValue<string>,
-      arg1: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    approve(
-      spender: PromiseOrValue<string>,
-      tokens: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    "approve(address,uint256)"(
-      spender: PromiseOrValue<string>,
-      tokens: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    balanceOf(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    "balanceOf(address)"(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    cBorrow(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "cBorrow()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    cTokens(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    "cTokens(address)"(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    callerFee(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "callerFee()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    canLiquidate(
-      cTokenBorrowed: PromiseOrValue<string>,
-      cTokenCollateral: PromiseOrValue<string>,
-      repayAmount: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    "canLiquidate(address,address,uint256)"(
-      cTokenBorrowed: PromiseOrValue<string>,
-      cTokenCollateral: PromiseOrValue<string>,
-      repayAmount: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    collateralCount(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "collateralCount()"(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    collateralDecimals(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    "collateralDecimals(address)"(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    collaterals(
-      arg0: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    "collaterals(uint256)"(
-      arg0: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    decimals(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "decimals()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    deposit(
-      lusdAmount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    "deposit(uint256)"(
-      lusdAmount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    efficientWithdraw(
-      numShares: PromiseOrValue<BigNumberish>,
-      to: PromiseOrValue<string>,
-      withdrawCollateral: PromiseOrValue<boolean>,
-      minLusd: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    "efficientWithdraw(uint256,address,bool,uint256)"(
-      numShares: PromiseOrValue<BigNumberish>,
-      to: PromiseOrValue<string>,
-      withdrawCollateral: PromiseOrValue<boolean>,
-      minLusd: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    fee(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "fee()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    feePool(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "feePool()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    fetchPrice(
-      token: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    "fetchPrice(address)"(
-      token: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    getCollateralValue(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    "getCollateralValue()"(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    getReturn(
-      xQty: PromiseOrValue<BigNumberish>,
-      xBalance: PromiseOrValue<BigNumberish>,
-      yBalance: PromiseOrValue<BigNumberish>,
-      A: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    "getReturn(uint256,uint256,uint256,uint256)"(
-      xQty: PromiseOrValue<BigNumberish>,
-      xBalance: PromiseOrValue<BigNumberish>,
-      yBalance: PromiseOrValue<BigNumberish>,
-      A: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    getSumFixedPoint(
-      x: PromiseOrValue<BigNumberish>,
-      y: PromiseOrValue<BigNumberish>,
-      A: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    "getSumFixedPoint(uint256,uint256,uint256)"(
-      x: PromiseOrValue<BigNumberish>,
-      y: PromiseOrValue<BigNumberish>,
-      A: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    getSwapAmount(
-      lusdQty: PromiseOrValue<BigNumberish>,
-      token: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    "getSwapAmount(uint256,address)"(
-      lusdQty: PromiseOrValue<BigNumberish>,
-      token: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    isCETH(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "isCETH()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    isOwner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "isOwner()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    liquidateBorrow(
-      borrower: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
-      collateral: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    "liquidateBorrow(address,uint256,address)"(
-      borrower: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
-      collateral: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    lusdDecimals(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "lusdDecimals()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    maxDiscount(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "maxDiscount()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    name(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "name()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "owner()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    priceAggregators(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    "priceAggregators(address)"(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    removeCollateral(
-      ctoken: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    "removeCollateral(address)"(
-      ctoken: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    setParams(
-      _A: PromiseOrValue<BigNumberish>,
-      _fee: PromiseOrValue<BigNumberish>,
-      _callerFee: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    "setParams(uint256,uint256,uint256)"(
-      _A: PromiseOrValue<BigNumberish>,
-      _fee: PromiseOrValue<BigNumberish>,
-      _callerFee: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    swap(
-      lusdAmount: PromiseOrValue<BigNumberish>,
-      returnToken: PromiseOrValue<string>,
-      minReturn: PromiseOrValue<BigNumberish>,
-      dest: PromiseOrValue<string>,
-      data: PromiseOrValue<BytesLike>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    "swap(uint256,address,uint256,address,bytes)"(
-      lusdAmount: PromiseOrValue<BigNumberish>,
-      returnToken: PromiseOrValue<string>,
-      minReturn: PromiseOrValue<BigNumberish>,
-      dest: PromiseOrValue<string>,
-      data: PromiseOrValue<BytesLike>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    symbol(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "symbol()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    totalSupply(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "totalSupply()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    transfer(
-      to: PromiseOrValue<string>,
-      tokens: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    "transfer(address,uint256)"(
-      to: PromiseOrValue<string>,
-      tokens: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    transferFrom(
-      from: PromiseOrValue<string>,
-      to: PromiseOrValue<string>,
-      tokens: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    "transferFrom(address,address,uint256)"(
-      from: PromiseOrValue<string>,
-      to: PromiseOrValue<string>,
-      tokens: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    transferOwnership(
-      newOwner: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    "transferOwnership(address)"(
-      newOwner: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    withdraw(
-      numShares: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    "withdraw(uint256)"(
-      numShares: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-  };
+		canLiquidate(
+			cTokenBorrowed: PromiseOrValue<string>,
+			cTokenCollateral: PromiseOrValue<string>,
+			repayAmount: PromiseOrValue<BigNumberish>,
+			overrides?: CallOverrides,
+		): Promise<[boolean]>
+
+		'canLiquidate(address,address,uint256)'(
+			cTokenBorrowed: PromiseOrValue<string>,
+			cTokenCollateral: PromiseOrValue<string>,
+			repayAmount: PromiseOrValue<BigNumberish>,
+			overrides?: CallOverrides,
+		): Promise<[boolean]>
+
+		collateralCount(overrides?: CallOverrides): Promise<[BigNumber]>
+
+		'collateralCount()'(overrides?: CallOverrides): Promise<[BigNumber]>
+
+		collateralDecimals(arg0: PromiseOrValue<string>, overrides?: CallOverrides): Promise<[BigNumber]>
+
+		'collateralDecimals(address)'(arg0: PromiseOrValue<string>, overrides?: CallOverrides): Promise<[BigNumber]>
+
+		collaterals(arg0: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<[string]>
+
+		'collaterals(uint256)'(arg0: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<[string]>
+
+		decimals(overrides?: CallOverrides): Promise<[number]>
+
+		'decimals()'(overrides?: CallOverrides): Promise<[number]>
+
+		deposit(
+			lusdAmount: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<ContractTransaction>
+
+		'deposit(uint256)'(
+			lusdAmount: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<ContractTransaction>
+
+		efficientWithdraw(
+			numShares: PromiseOrValue<BigNumberish>,
+			to: PromiseOrValue<string>,
+			withdrawCollateral: PromiseOrValue<boolean>,
+			minLusd: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<ContractTransaction>
+
+		'efficientWithdraw(uint256,address,bool,uint256)'(
+			numShares: PromiseOrValue<BigNumberish>,
+			to: PromiseOrValue<string>,
+			withdrawCollateral: PromiseOrValue<boolean>,
+			minLusd: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<ContractTransaction>
+
+		fee(overrides?: CallOverrides): Promise<[BigNumber]>
+
+		'fee()'(overrides?: CallOverrides): Promise<[BigNumber]>
+
+		feePool(overrides?: CallOverrides): Promise<[string]>
+
+		'feePool()'(overrides?: CallOverrides): Promise<[string]>
+
+		fetchPrice(token: PromiseOrValue<string>, overrides?: CallOverrides): Promise<[BigNumber]>
+
+		'fetchPrice(address)'(token: PromiseOrValue<string>, overrides?: CallOverrides): Promise<[BigNumber]>
+
+		getCollateralValue(overrides?: CallOverrides): Promise<[boolean, BigNumber] & { succ: boolean; value: BigNumber }>
+
+		'getCollateralValue()'(overrides?: CallOverrides): Promise<[boolean, BigNumber] & { succ: boolean; value: BigNumber }>
+
+		getReturn(
+			xQty: PromiseOrValue<BigNumberish>,
+			xBalance: PromiseOrValue<BigNumberish>,
+			yBalance: PromiseOrValue<BigNumberish>,
+			A: PromiseOrValue<BigNumberish>,
+			overrides?: CallOverrides,
+		): Promise<[BigNumber]>
+
+		'getReturn(uint256,uint256,uint256,uint256)'(
+			xQty: PromiseOrValue<BigNumberish>,
+			xBalance: PromiseOrValue<BigNumberish>,
+			yBalance: PromiseOrValue<BigNumberish>,
+			A: PromiseOrValue<BigNumberish>,
+			overrides?: CallOverrides,
+		): Promise<[BigNumber]>
+
+		getSumFixedPoint(
+			x: PromiseOrValue<BigNumberish>,
+			y: PromiseOrValue<BigNumberish>,
+			A: PromiseOrValue<BigNumberish>,
+			overrides?: CallOverrides,
+		): Promise<[BigNumber]>
+
+		'getSumFixedPoint(uint256,uint256,uint256)'(
+			x: PromiseOrValue<BigNumberish>,
+			y: PromiseOrValue<BigNumberish>,
+			A: PromiseOrValue<BigNumberish>,
+			overrides?: CallOverrides,
+		): Promise<[BigNumber]>
+
+		getSwapAmount(
+			lusdQty: PromiseOrValue<BigNumberish>,
+			token: PromiseOrValue<string>,
+			overrides?: CallOverrides,
+		): Promise<[BigNumber] & { tokenAmount: BigNumber }>
+
+		'getSwapAmount(uint256,address)'(
+			lusdQty: PromiseOrValue<BigNumberish>,
+			token: PromiseOrValue<string>,
+			overrides?: CallOverrides,
+		): Promise<[BigNumber] & { tokenAmount: BigNumber }>
+
+		isCETH(overrides?: CallOverrides): Promise<[boolean]>
+
+		'isCETH()'(overrides?: CallOverrides): Promise<[boolean]>
+
+		isOwner(overrides?: CallOverrides): Promise<[boolean]>
+
+		'isOwner()'(overrides?: CallOverrides): Promise<[boolean]>
+
+		liquidateBorrow(
+			borrower: PromiseOrValue<string>,
+			amount: PromiseOrValue<BigNumberish>,
+			collateral: PromiseOrValue<string>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<ContractTransaction>
+
+		'liquidateBorrow(address,uint256,address)'(
+			borrower: PromiseOrValue<string>,
+			amount: PromiseOrValue<BigNumberish>,
+			collateral: PromiseOrValue<string>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<ContractTransaction>
+
+		lusdDecimals(overrides?: CallOverrides): Promise<[BigNumber]>
+
+		'lusdDecimals()'(overrides?: CallOverrides): Promise<[BigNumber]>
+
+		maxDiscount(overrides?: CallOverrides): Promise<[BigNumber]>
+
+		'maxDiscount()'(overrides?: CallOverrides): Promise<[BigNumber]>
+
+		name(overrides?: CallOverrides): Promise<[string]>
+
+		'name()'(overrides?: CallOverrides): Promise<[string]>
+
+		owner(overrides?: CallOverrides): Promise<[string]>
+
+		'owner()'(overrides?: CallOverrides): Promise<[string]>
+
+		priceAggregators(arg0: PromiseOrValue<string>, overrides?: CallOverrides): Promise<[string]>
+
+		'priceAggregators(address)'(arg0: PromiseOrValue<string>, overrides?: CallOverrides): Promise<[string]>
+
+		removeCollateral(
+			ctoken: PromiseOrValue<string>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<ContractTransaction>
+
+		'removeCollateral(address)'(
+			ctoken: PromiseOrValue<string>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<ContractTransaction>
+
+		setParams(
+			_A: PromiseOrValue<BigNumberish>,
+			_fee: PromiseOrValue<BigNumberish>,
+			_callerFee: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<ContractTransaction>
+
+		'setParams(uint256,uint256,uint256)'(
+			_A: PromiseOrValue<BigNumberish>,
+			_fee: PromiseOrValue<BigNumberish>,
+			_callerFee: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<ContractTransaction>
+
+		swap(
+			lusdAmount: PromiseOrValue<BigNumberish>,
+			returnToken: PromiseOrValue<string>,
+			minReturn: PromiseOrValue<BigNumberish>,
+			dest: PromiseOrValue<string>,
+			data: PromiseOrValue<BytesLike>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<ContractTransaction>
+
+		'swap(uint256,address,uint256,address,bytes)'(
+			lusdAmount: PromiseOrValue<BigNumberish>,
+			returnToken: PromiseOrValue<string>,
+			minReturn: PromiseOrValue<BigNumberish>,
+			dest: PromiseOrValue<string>,
+			data: PromiseOrValue<BytesLike>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<ContractTransaction>
+
+		symbol(overrides?: CallOverrides): Promise<[string]>
+
+		'symbol()'(overrides?: CallOverrides): Promise<[string]>
+
+		totalSupply(overrides?: CallOverrides): Promise<[BigNumber]>
+
+		'totalSupply()'(overrides?: CallOverrides): Promise<[BigNumber]>
+
+		transfer(
+			to: PromiseOrValue<string>,
+			tokens: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<ContractTransaction>
+
+		'transfer(address,uint256)'(
+			to: PromiseOrValue<string>,
+			tokens: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<ContractTransaction>
+
+		transferFrom(
+			from: PromiseOrValue<string>,
+			to: PromiseOrValue<string>,
+			tokens: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<ContractTransaction>
+
+		'transferFrom(address,address,uint256)'(
+			from: PromiseOrValue<string>,
+			to: PromiseOrValue<string>,
+			tokens: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<ContractTransaction>
+
+		transferOwnership(
+			newOwner: PromiseOrValue<string>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<ContractTransaction>
+
+		'transferOwnership(address)'(
+			newOwner: PromiseOrValue<string>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<ContractTransaction>
+
+		withdraw(
+			numShares: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<ContractTransaction>
+
+		'withdraw(uint256)'(
+			numShares: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<ContractTransaction>
+	}
+
+	A(overrides?: CallOverrides): Promise<BigNumber>
+
+	'A()'(overrides?: CallOverrides): Promise<BigNumber>
+
+	LUSD(overrides?: CallOverrides): Promise<string>
+
+	'LUSD()'(overrides?: CallOverrides): Promise<string>
+
+	MAX_A(overrides?: CallOverrides): Promise<BigNumber>
+
+	'MAX_A()'(overrides?: CallOverrides): Promise<BigNumber>
+
+	MAX_CALLER_FEE(overrides?: CallOverrides): Promise<BigNumber>
+
+	'MAX_CALLER_FEE()'(overrides?: CallOverrides): Promise<BigNumber>
+
+	MAX_FEE(overrides?: CallOverrides): Promise<BigNumber>
+
+	'MAX_FEE()'(overrides?: CallOverrides): Promise<BigNumber>
+
+	MIN_A(overrides?: CallOverrides): Promise<BigNumber>
+
+	'MIN_A()'(overrides?: CallOverrides): Promise<BigNumber>
+
+	PRECISION(overrides?: CallOverrides): Promise<BigNumber>
+
+	'PRECISION()'(overrides?: CallOverrides): Promise<BigNumber>
+
+	addCollateral(
+		ctoken: PromiseOrValue<string>,
+		feed: PromiseOrValue<string>,
+		overrides?: Overrides & { from?: PromiseOrValue<string> },
+	): Promise<ContractTransaction>
+
+	'addCollateral(address,address)'(
+		ctoken: PromiseOrValue<string>,
+		feed: PromiseOrValue<string>,
+		overrides?: Overrides & { from?: PromiseOrValue<string> },
+	): Promise<ContractTransaction>
+
+	allowance(arg0: PromiseOrValue<string>, arg1: PromiseOrValue<string>, overrides?: CallOverrides): Promise<BigNumber>
+
+	'allowance(address,address)'(arg0: PromiseOrValue<string>, arg1: PromiseOrValue<string>, overrides?: CallOverrides): Promise<BigNumber>
+
+	approve(
+		spender: PromiseOrValue<string>,
+		tokens: PromiseOrValue<BigNumberish>,
+		overrides?: Overrides & { from?: PromiseOrValue<string> },
+	): Promise<ContractTransaction>
+
+	'approve(address,uint256)'(
+		spender: PromiseOrValue<string>,
+		tokens: PromiseOrValue<BigNumberish>,
+		overrides?: Overrides & { from?: PromiseOrValue<string> },
+	): Promise<ContractTransaction>
+
+	balanceOf(arg0: PromiseOrValue<string>, overrides?: CallOverrides): Promise<BigNumber>
+
+	'balanceOf(address)'(arg0: PromiseOrValue<string>, overrides?: CallOverrides): Promise<BigNumber>
+
+	cBorrow(overrides?: CallOverrides): Promise<string>
+
+	'cBorrow()'(overrides?: CallOverrides): Promise<string>
+
+	cTokens(arg0: PromiseOrValue<string>, overrides?: CallOverrides): Promise<boolean>
+
+	'cTokens(address)'(arg0: PromiseOrValue<string>, overrides?: CallOverrides): Promise<boolean>
+
+	callerFee(overrides?: CallOverrides): Promise<BigNumber>
+
+	'callerFee()'(overrides?: CallOverrides): Promise<BigNumber>
+
+	canLiquidate(
+		cTokenBorrowed: PromiseOrValue<string>,
+		cTokenCollateral: PromiseOrValue<string>,
+		repayAmount: PromiseOrValue<BigNumberish>,
+		overrides?: CallOverrides,
+	): Promise<boolean>
+
+	'canLiquidate(address,address,uint256)'(
+		cTokenBorrowed: PromiseOrValue<string>,
+		cTokenCollateral: PromiseOrValue<string>,
+		repayAmount: PromiseOrValue<BigNumberish>,
+		overrides?: CallOverrides,
+	): Promise<boolean>
+
+	collateralCount(overrides?: CallOverrides): Promise<BigNumber>
+
+	'collateralCount()'(overrides?: CallOverrides): Promise<BigNumber>
+
+	collateralDecimals(arg0: PromiseOrValue<string>, overrides?: CallOverrides): Promise<BigNumber>
+
+	'collateralDecimals(address)'(arg0: PromiseOrValue<string>, overrides?: CallOverrides): Promise<BigNumber>
+
+	collaterals(arg0: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<string>
+
+	'collaterals(uint256)'(arg0: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<string>
+
+	decimals(overrides?: CallOverrides): Promise<number>
+
+	'decimals()'(overrides?: CallOverrides): Promise<number>
+
+	deposit(lusdAmount: PromiseOrValue<BigNumberish>, overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<ContractTransaction>
+
+	'deposit(uint256)'(
+		lusdAmount: PromiseOrValue<BigNumberish>,
+		overrides?: Overrides & { from?: PromiseOrValue<string> },
+	): Promise<ContractTransaction>
+
+	efficientWithdraw(
+		numShares: PromiseOrValue<BigNumberish>,
+		to: PromiseOrValue<string>,
+		withdrawCollateral: PromiseOrValue<boolean>,
+		minLusd: PromiseOrValue<BigNumberish>,
+		overrides?: Overrides & { from?: PromiseOrValue<string> },
+	): Promise<ContractTransaction>
+
+	'efficientWithdraw(uint256,address,bool,uint256)'(
+		numShares: PromiseOrValue<BigNumberish>,
+		to: PromiseOrValue<string>,
+		withdrawCollateral: PromiseOrValue<boolean>,
+		minLusd: PromiseOrValue<BigNumberish>,
+		overrides?: Overrides & { from?: PromiseOrValue<string> },
+	): Promise<ContractTransaction>
+
+	fee(overrides?: CallOverrides): Promise<BigNumber>
+
+	'fee()'(overrides?: CallOverrides): Promise<BigNumber>
+
+	feePool(overrides?: CallOverrides): Promise<string>
+
+	'feePool()'(overrides?: CallOverrides): Promise<string>
+
+	fetchPrice(token: PromiseOrValue<string>, overrides?: CallOverrides): Promise<BigNumber>
+
+	'fetchPrice(address)'(token: PromiseOrValue<string>, overrides?: CallOverrides): Promise<BigNumber>
+
+	getCollateralValue(overrides?: CallOverrides): Promise<[boolean, BigNumber] & { succ: boolean; value: BigNumber }>
+
+	'getCollateralValue()'(overrides?: CallOverrides): Promise<[boolean, BigNumber] & { succ: boolean; value: BigNumber }>
+
+	getReturn(
+		xQty: PromiseOrValue<BigNumberish>,
+		xBalance: PromiseOrValue<BigNumberish>,
+		yBalance: PromiseOrValue<BigNumberish>,
+		A: PromiseOrValue<BigNumberish>,
+		overrides?: CallOverrides,
+	): Promise<BigNumber>
+
+	'getReturn(uint256,uint256,uint256,uint256)'(
+		xQty: PromiseOrValue<BigNumberish>,
+		xBalance: PromiseOrValue<BigNumberish>,
+		yBalance: PromiseOrValue<BigNumberish>,
+		A: PromiseOrValue<BigNumberish>,
+		overrides?: CallOverrides,
+	): Promise<BigNumber>
+
+	getSumFixedPoint(
+		x: PromiseOrValue<BigNumberish>,
+		y: PromiseOrValue<BigNumberish>,
+		A: PromiseOrValue<BigNumberish>,
+		overrides?: CallOverrides,
+	): Promise<BigNumber>
+
+	'getSumFixedPoint(uint256,uint256,uint256)'(
+		x: PromiseOrValue<BigNumberish>,
+		y: PromiseOrValue<BigNumberish>,
+		A: PromiseOrValue<BigNumberish>,
+		overrides?: CallOverrides,
+	): Promise<BigNumber>
+
+	getSwapAmount(lusdQty: PromiseOrValue<BigNumberish>, token: PromiseOrValue<string>, overrides?: CallOverrides): Promise<BigNumber>
+
+	'getSwapAmount(uint256,address)'(
+		lusdQty: PromiseOrValue<BigNumberish>,
+		token: PromiseOrValue<string>,
+		overrides?: CallOverrides,
+	): Promise<BigNumber>
+
+	isCETH(overrides?: CallOverrides): Promise<boolean>
+
+	'isCETH()'(overrides?: CallOverrides): Promise<boolean>
+
+	isOwner(overrides?: CallOverrides): Promise<boolean>
+
+	'isOwner()'(overrides?: CallOverrides): Promise<boolean>
+
+	liquidateBorrow(
+		borrower: PromiseOrValue<string>,
+		amount: PromiseOrValue<BigNumberish>,
+		collateral: PromiseOrValue<string>,
+		overrides?: Overrides & { from?: PromiseOrValue<string> },
+	): Promise<ContractTransaction>
+
+	'liquidateBorrow(address,uint256,address)'(
+		borrower: PromiseOrValue<string>,
+		amount: PromiseOrValue<BigNumberish>,
+		collateral: PromiseOrValue<string>,
+		overrides?: Overrides & { from?: PromiseOrValue<string> },
+	): Promise<ContractTransaction>
+
+	lusdDecimals(overrides?: CallOverrides): Promise<BigNumber>
+
+	'lusdDecimals()'(overrides?: CallOverrides): Promise<BigNumber>
+
+	maxDiscount(overrides?: CallOverrides): Promise<BigNumber>
+
+	'maxDiscount()'(overrides?: CallOverrides): Promise<BigNumber>
+
+	name(overrides?: CallOverrides): Promise<string>
+
+	'name()'(overrides?: CallOverrides): Promise<string>
+
+	owner(overrides?: CallOverrides): Promise<string>
+
+	'owner()'(overrides?: CallOverrides): Promise<string>
+
+	priceAggregators(arg0: PromiseOrValue<string>, overrides?: CallOverrides): Promise<string>
+
+	'priceAggregators(address)'(arg0: PromiseOrValue<string>, overrides?: CallOverrides): Promise<string>
+
+	removeCollateral(ctoken: PromiseOrValue<string>, overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<ContractTransaction>
+
+	'removeCollateral(address)'(
+		ctoken: PromiseOrValue<string>,
+		overrides?: Overrides & { from?: PromiseOrValue<string> },
+	): Promise<ContractTransaction>
+
+	setParams(
+		_A: PromiseOrValue<BigNumberish>,
+		_fee: PromiseOrValue<BigNumberish>,
+		_callerFee: PromiseOrValue<BigNumberish>,
+		overrides?: Overrides & { from?: PromiseOrValue<string> },
+	): Promise<ContractTransaction>
+
+	'setParams(uint256,uint256,uint256)'(
+		_A: PromiseOrValue<BigNumberish>,
+		_fee: PromiseOrValue<BigNumberish>,
+		_callerFee: PromiseOrValue<BigNumberish>,
+		overrides?: Overrides & { from?: PromiseOrValue<string> },
+	): Promise<ContractTransaction>
+
+	swap(
+		lusdAmount: PromiseOrValue<BigNumberish>,
+		returnToken: PromiseOrValue<string>,
+		minReturn: PromiseOrValue<BigNumberish>,
+		dest: PromiseOrValue<string>,
+		data: PromiseOrValue<BytesLike>,
+		overrides?: Overrides & { from?: PromiseOrValue<string> },
+	): Promise<ContractTransaction>
+
+	'swap(uint256,address,uint256,address,bytes)'(
+		lusdAmount: PromiseOrValue<BigNumberish>,
+		returnToken: PromiseOrValue<string>,
+		minReturn: PromiseOrValue<BigNumberish>,
+		dest: PromiseOrValue<string>,
+		data: PromiseOrValue<BytesLike>,
+		overrides?: Overrides & { from?: PromiseOrValue<string> },
+	): Promise<ContractTransaction>
+
+	symbol(overrides?: CallOverrides): Promise<string>
+
+	'symbol()'(overrides?: CallOverrides): Promise<string>
+
+	totalSupply(overrides?: CallOverrides): Promise<BigNumber>
+
+	'totalSupply()'(overrides?: CallOverrides): Promise<BigNumber>
+
+	transfer(
+		to: PromiseOrValue<string>,
+		tokens: PromiseOrValue<BigNumberish>,
+		overrides?: Overrides & { from?: PromiseOrValue<string> },
+	): Promise<ContractTransaction>
+
+	'transfer(address,uint256)'(
+		to: PromiseOrValue<string>,
+		tokens: PromiseOrValue<BigNumberish>,
+		overrides?: Overrides & { from?: PromiseOrValue<string> },
+	): Promise<ContractTransaction>
+
+	transferFrom(
+		from: PromiseOrValue<string>,
+		to: PromiseOrValue<string>,
+		tokens: PromiseOrValue<BigNumberish>,
+		overrides?: Overrides & { from?: PromiseOrValue<string> },
+	): Promise<ContractTransaction>
+
+	'transferFrom(address,address,uint256)'(
+		from: PromiseOrValue<string>,
+		to: PromiseOrValue<string>,
+		tokens: PromiseOrValue<BigNumberish>,
+		overrides?: Overrides & { from?: PromiseOrValue<string> },
+	): Promise<ContractTransaction>
+
+	transferOwnership(
+		newOwner: PromiseOrValue<string>,
+		overrides?: Overrides & { from?: PromiseOrValue<string> },
+	): Promise<ContractTransaction>
+
+	'transferOwnership(address)'(
+		newOwner: PromiseOrValue<string>,
+		overrides?: Overrides & { from?: PromiseOrValue<string> },
+	): Promise<ContractTransaction>
+
+	withdraw(numShares: PromiseOrValue<BigNumberish>, overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<ContractTransaction>
+
+	'withdraw(uint256)'(
+		numShares: PromiseOrValue<BigNumberish>,
+		overrides?: Overrides & { from?: PromiseOrValue<string> },
+	): Promise<ContractTransaction>
+
+	callStatic: {
+		A(overrides?: CallOverrides): Promise<BigNumber>
+
+		'A()'(overrides?: CallOverrides): Promise<BigNumber>
+
+		LUSD(overrides?: CallOverrides): Promise<string>
+
+		'LUSD()'(overrides?: CallOverrides): Promise<string>
+
+		MAX_A(overrides?: CallOverrides): Promise<BigNumber>
+
+		'MAX_A()'(overrides?: CallOverrides): Promise<BigNumber>
+
+		MAX_CALLER_FEE(overrides?: CallOverrides): Promise<BigNumber>
+
+		'MAX_CALLER_FEE()'(overrides?: CallOverrides): Promise<BigNumber>
+
+		MAX_FEE(overrides?: CallOverrides): Promise<BigNumber>
+
+		'MAX_FEE()'(overrides?: CallOverrides): Promise<BigNumber>
+
+		MIN_A(overrides?: CallOverrides): Promise<BigNumber>
+
+		'MIN_A()'(overrides?: CallOverrides): Promise<BigNumber>
+
+		PRECISION(overrides?: CallOverrides): Promise<BigNumber>
+
+		'PRECISION()'(overrides?: CallOverrides): Promise<BigNumber>
+
+		addCollateral(ctoken: PromiseOrValue<string>, feed: PromiseOrValue<string>, overrides?: CallOverrides): Promise<void>
+
+		'addCollateral(address,address)'(ctoken: PromiseOrValue<string>, feed: PromiseOrValue<string>, overrides?: CallOverrides): Promise<void>
+
+		allowance(arg0: PromiseOrValue<string>, arg1: PromiseOrValue<string>, overrides?: CallOverrides): Promise<BigNumber>
+
+		'allowance(address,address)'(arg0: PromiseOrValue<string>, arg1: PromiseOrValue<string>, overrides?: CallOverrides): Promise<BigNumber>
+
+		approve(spender: PromiseOrValue<string>, tokens: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<boolean>
+
+		'approve(address,uint256)'(
+			spender: PromiseOrValue<string>,
+			tokens: PromiseOrValue<BigNumberish>,
+			overrides?: CallOverrides,
+		): Promise<boolean>
+
+		balanceOf(arg0: PromiseOrValue<string>, overrides?: CallOverrides): Promise<BigNumber>
+
+		'balanceOf(address)'(arg0: PromiseOrValue<string>, overrides?: CallOverrides): Promise<BigNumber>
+
+		cBorrow(overrides?: CallOverrides): Promise<string>
+
+		'cBorrow()'(overrides?: CallOverrides): Promise<string>
+
+		cTokens(arg0: PromiseOrValue<string>, overrides?: CallOverrides): Promise<boolean>
+
+		'cTokens(address)'(arg0: PromiseOrValue<string>, overrides?: CallOverrides): Promise<boolean>
+
+		callerFee(overrides?: CallOverrides): Promise<BigNumber>
+
+		'callerFee()'(overrides?: CallOverrides): Promise<BigNumber>
+
+		canLiquidate(
+			cTokenBorrowed: PromiseOrValue<string>,
+			cTokenCollateral: PromiseOrValue<string>,
+			repayAmount: PromiseOrValue<BigNumberish>,
+			overrides?: CallOverrides,
+		): Promise<boolean>
+
+		'canLiquidate(address,address,uint256)'(
+			cTokenBorrowed: PromiseOrValue<string>,
+			cTokenCollateral: PromiseOrValue<string>,
+			repayAmount: PromiseOrValue<BigNumberish>,
+			overrides?: CallOverrides,
+		): Promise<boolean>
+
+		collateralCount(overrides?: CallOverrides): Promise<BigNumber>
+
+		'collateralCount()'(overrides?: CallOverrides): Promise<BigNumber>
+
+		collateralDecimals(arg0: PromiseOrValue<string>, overrides?: CallOverrides): Promise<BigNumber>
+
+		'collateralDecimals(address)'(arg0: PromiseOrValue<string>, overrides?: CallOverrides): Promise<BigNumber>
+
+		collaterals(arg0: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<string>
+
+		'collaterals(uint256)'(arg0: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<string>
+
+		decimals(overrides?: CallOverrides): Promise<number>
+
+		'decimals()'(overrides?: CallOverrides): Promise<number>
+
+		deposit(lusdAmount: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<void>
+
+		'deposit(uint256)'(lusdAmount: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<void>
+
+		efficientWithdraw(
+			numShares: PromiseOrValue<BigNumberish>,
+			to: PromiseOrValue<string>,
+			withdrawCollateral: PromiseOrValue<boolean>,
+			minLusd: PromiseOrValue<BigNumberish>,
+			overrides?: CallOverrides,
+		): Promise<void>
+
+		'efficientWithdraw(uint256,address,bool,uint256)'(
+			numShares: PromiseOrValue<BigNumberish>,
+			to: PromiseOrValue<string>,
+			withdrawCollateral: PromiseOrValue<boolean>,
+			minLusd: PromiseOrValue<BigNumberish>,
+			overrides?: CallOverrides,
+		): Promise<void>
+
+		fee(overrides?: CallOverrides): Promise<BigNumber>
+
+		'fee()'(overrides?: CallOverrides): Promise<BigNumber>
+
+		feePool(overrides?: CallOverrides): Promise<string>
+
+		'feePool()'(overrides?: CallOverrides): Promise<string>
+
+		fetchPrice(token: PromiseOrValue<string>, overrides?: CallOverrides): Promise<BigNumber>
+
+		'fetchPrice(address)'(token: PromiseOrValue<string>, overrides?: CallOverrides): Promise<BigNumber>
+
+		getCollateralValue(overrides?: CallOverrides): Promise<[boolean, BigNumber] & { succ: boolean; value: BigNumber }>
+
+		'getCollateralValue()'(overrides?: CallOverrides): Promise<[boolean, BigNumber] & { succ: boolean; value: BigNumber }>
+
+		getReturn(
+			xQty: PromiseOrValue<BigNumberish>,
+			xBalance: PromiseOrValue<BigNumberish>,
+			yBalance: PromiseOrValue<BigNumberish>,
+			A: PromiseOrValue<BigNumberish>,
+			overrides?: CallOverrides,
+		): Promise<BigNumber>
+
+		'getReturn(uint256,uint256,uint256,uint256)'(
+			xQty: PromiseOrValue<BigNumberish>,
+			xBalance: PromiseOrValue<BigNumberish>,
+			yBalance: PromiseOrValue<BigNumberish>,
+			A: PromiseOrValue<BigNumberish>,
+			overrides?: CallOverrides,
+		): Promise<BigNumber>
+
+		getSumFixedPoint(
+			x: PromiseOrValue<BigNumberish>,
+			y: PromiseOrValue<BigNumberish>,
+			A: PromiseOrValue<BigNumberish>,
+			overrides?: CallOverrides,
+		): Promise<BigNumber>
+
+		'getSumFixedPoint(uint256,uint256,uint256)'(
+			x: PromiseOrValue<BigNumberish>,
+			y: PromiseOrValue<BigNumberish>,
+			A: PromiseOrValue<BigNumberish>,
+			overrides?: CallOverrides,
+		): Promise<BigNumber>
+
+		getSwapAmount(lusdQty: PromiseOrValue<BigNumberish>, token: PromiseOrValue<string>, overrides?: CallOverrides): Promise<BigNumber>
+
+		'getSwapAmount(uint256,address)'(
+			lusdQty: PromiseOrValue<BigNumberish>,
+			token: PromiseOrValue<string>,
+			overrides?: CallOverrides,
+		): Promise<BigNumber>
+
+		isCETH(overrides?: CallOverrides): Promise<boolean>
+
+		'isCETH()'(overrides?: CallOverrides): Promise<boolean>
+
+		isOwner(overrides?: CallOverrides): Promise<boolean>
+
+		'isOwner()'(overrides?: CallOverrides): Promise<boolean>
+
+		liquidateBorrow(
+			borrower: PromiseOrValue<string>,
+			amount: PromiseOrValue<BigNumberish>,
+			collateral: PromiseOrValue<string>,
+			overrides?: CallOverrides,
+		): Promise<BigNumber>
+
+		'liquidateBorrow(address,uint256,address)'(
+			borrower: PromiseOrValue<string>,
+			amount: PromiseOrValue<BigNumberish>,
+			collateral: PromiseOrValue<string>,
+			overrides?: CallOverrides,
+		): Promise<BigNumber>
+
+		lusdDecimals(overrides?: CallOverrides): Promise<BigNumber>
+
+		'lusdDecimals()'(overrides?: CallOverrides): Promise<BigNumber>
+
+		maxDiscount(overrides?: CallOverrides): Promise<BigNumber>
+
+		'maxDiscount()'(overrides?: CallOverrides): Promise<BigNumber>
+
+		name(overrides?: CallOverrides): Promise<string>
+
+		'name()'(overrides?: CallOverrides): Promise<string>
+
+		owner(overrides?: CallOverrides): Promise<string>
+
+		'owner()'(overrides?: CallOverrides): Promise<string>
+
+		priceAggregators(arg0: PromiseOrValue<string>, overrides?: CallOverrides): Promise<string>
+
+		'priceAggregators(address)'(arg0: PromiseOrValue<string>, overrides?: CallOverrides): Promise<string>
+
+		removeCollateral(ctoken: PromiseOrValue<string>, overrides?: CallOverrides): Promise<void>
+
+		'removeCollateral(address)'(ctoken: PromiseOrValue<string>, overrides?: CallOverrides): Promise<void>
+
+		setParams(
+			_A: PromiseOrValue<BigNumberish>,
+			_fee: PromiseOrValue<BigNumberish>,
+			_callerFee: PromiseOrValue<BigNumberish>,
+			overrides?: CallOverrides,
+		): Promise<void>
+
+		'setParams(uint256,uint256,uint256)'(
+			_A: PromiseOrValue<BigNumberish>,
+			_fee: PromiseOrValue<BigNumberish>,
+			_callerFee: PromiseOrValue<BigNumberish>,
+			overrides?: CallOverrides,
+		): Promise<void>
+
+		swap(
+			lusdAmount: PromiseOrValue<BigNumberish>,
+			returnToken: PromiseOrValue<string>,
+			minReturn: PromiseOrValue<BigNumberish>,
+			dest: PromiseOrValue<string>,
+			data: PromiseOrValue<BytesLike>,
+			overrides?: CallOverrides,
+		): Promise<BigNumber>
+
+		'swap(uint256,address,uint256,address,bytes)'(
+			lusdAmount: PromiseOrValue<BigNumberish>,
+			returnToken: PromiseOrValue<string>,
+			minReturn: PromiseOrValue<BigNumberish>,
+			dest: PromiseOrValue<string>,
+			data: PromiseOrValue<BytesLike>,
+			overrides?: CallOverrides,
+		): Promise<BigNumber>
+
+		symbol(overrides?: CallOverrides): Promise<string>
+
+		'symbol()'(overrides?: CallOverrides): Promise<string>
+
+		totalSupply(overrides?: CallOverrides): Promise<BigNumber>
+
+		'totalSupply()'(overrides?: CallOverrides): Promise<BigNumber>
+
+		transfer(to: PromiseOrValue<string>, tokens: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<boolean>
+
+		'transfer(address,uint256)'(
+			to: PromiseOrValue<string>,
+			tokens: PromiseOrValue<BigNumberish>,
+			overrides?: CallOverrides,
+		): Promise<boolean>
+
+		transferFrom(
+			from: PromiseOrValue<string>,
+			to: PromiseOrValue<string>,
+			tokens: PromiseOrValue<BigNumberish>,
+			overrides?: CallOverrides,
+		): Promise<boolean>
+
+		'transferFrom(address,address,uint256)'(
+			from: PromiseOrValue<string>,
+			to: PromiseOrValue<string>,
+			tokens: PromiseOrValue<BigNumberish>,
+			overrides?: CallOverrides,
+		): Promise<boolean>
+
+		transferOwnership(newOwner: PromiseOrValue<string>, overrides?: CallOverrides): Promise<void>
+
+		'transferOwnership(address)'(newOwner: PromiseOrValue<string>, overrides?: CallOverrides): Promise<void>
+
+		withdraw(numShares: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<void>
+
+		'withdraw(uint256)'(numShares: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<void>
+	}
+
+	filters: {
+		'Approval(address,address,uint256)'(
+			tokenOwner?: PromiseOrValue<string> | null,
+			spender?: PromiseOrValue<string> | null,
+			tokens?: null,
+		): ApprovalEventFilter
+		Approval(tokenOwner?: PromiseOrValue<string> | null, spender?: PromiseOrValue<string> | null, tokens?: null): ApprovalEventFilter
+
+		'OwnershipTransferred(address,address)'(
+			previousOwner?: PromiseOrValue<string> | null,
+			newOwner?: PromiseOrValue<string> | null,
+		): OwnershipTransferredEventFilter
+		OwnershipTransferred(
+			previousOwner?: PromiseOrValue<string> | null,
+			newOwner?: PromiseOrValue<string> | null,
+		): OwnershipTransferredEventFilter
+
+		'ParamsSet(uint256,uint256,uint256)'(A?: null, fee?: null, callerFee?: null): ParamsSetEventFilter
+		ParamsSet(A?: null, fee?: null, callerFee?: null): ParamsSetEventFilter
+
+		'RebalanceSwap(address,uint256,address,uint256,uint256)'(
+			user?: PromiseOrValue<string> | null,
+			lusdAmount?: null,
+			token?: null,
+			tokenAmount?: null,
+			timestamp?: null,
+		): RebalanceSwapEventFilter
+		RebalanceSwap(
+			user?: PromiseOrValue<string> | null,
+			lusdAmount?: null,
+			token?: null,
+			tokenAmount?: null,
+			timestamp?: null,
+		): RebalanceSwapEventFilter
+
+		'Transfer(address,address,uint256)'(
+			from?: PromiseOrValue<string> | null,
+			to?: PromiseOrValue<string> | null,
+			tokens?: null,
+		): TransferEventFilter
+		Transfer(from?: PromiseOrValue<string> | null, to?: PromiseOrValue<string> | null, tokens?: null): TransferEventFilter
+
+		'UserDeposit(address,uint256,uint256)'(
+			user?: PromiseOrValue<string> | null,
+			lusdAmount?: null,
+			numShares?: null,
+		): UserDepositEventFilter
+		UserDeposit(user?: PromiseOrValue<string> | null, lusdAmount?: null, numShares?: null): UserDepositEventFilter
+
+		'UserWithdraw(address,uint256,uint256)'(
+			user?: PromiseOrValue<string> | null,
+			lusdAmount?: null,
+			numShares?: null,
+		): UserWithdrawEventFilter
+		UserWithdraw(user?: PromiseOrValue<string> | null, lusdAmount?: null, numShares?: null): UserWithdrawEventFilter
+	}
+
+	estimateGas: {
+		A(overrides?: CallOverrides): Promise<BigNumber>
+
+		'A()'(overrides?: CallOverrides): Promise<BigNumber>
+
+		LUSD(overrides?: CallOverrides): Promise<BigNumber>
+
+		'LUSD()'(overrides?: CallOverrides): Promise<BigNumber>
+
+		MAX_A(overrides?: CallOverrides): Promise<BigNumber>
+
+		'MAX_A()'(overrides?: CallOverrides): Promise<BigNumber>
+
+		MAX_CALLER_FEE(overrides?: CallOverrides): Promise<BigNumber>
+
+		'MAX_CALLER_FEE()'(overrides?: CallOverrides): Promise<BigNumber>
+
+		MAX_FEE(overrides?: CallOverrides): Promise<BigNumber>
+
+		'MAX_FEE()'(overrides?: CallOverrides): Promise<BigNumber>
+
+		MIN_A(overrides?: CallOverrides): Promise<BigNumber>
+
+		'MIN_A()'(overrides?: CallOverrides): Promise<BigNumber>
+
+		PRECISION(overrides?: CallOverrides): Promise<BigNumber>
+
+		'PRECISION()'(overrides?: CallOverrides): Promise<BigNumber>
+
+		addCollateral(
+			ctoken: PromiseOrValue<string>,
+			feed: PromiseOrValue<string>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<BigNumber>
+
+		'addCollateral(address,address)'(
+			ctoken: PromiseOrValue<string>,
+			feed: PromiseOrValue<string>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<BigNumber>
+
+		allowance(arg0: PromiseOrValue<string>, arg1: PromiseOrValue<string>, overrides?: CallOverrides): Promise<BigNumber>
+
+		'allowance(address,address)'(arg0: PromiseOrValue<string>, arg1: PromiseOrValue<string>, overrides?: CallOverrides): Promise<BigNumber>
+
+		approve(
+			spender: PromiseOrValue<string>,
+			tokens: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<BigNumber>
+
+		'approve(address,uint256)'(
+			spender: PromiseOrValue<string>,
+			tokens: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<BigNumber>
+
+		balanceOf(arg0: PromiseOrValue<string>, overrides?: CallOverrides): Promise<BigNumber>
+
+		'balanceOf(address)'(arg0: PromiseOrValue<string>, overrides?: CallOverrides): Promise<BigNumber>
+
+		cBorrow(overrides?: CallOverrides): Promise<BigNumber>
+
+		'cBorrow()'(overrides?: CallOverrides): Promise<BigNumber>
+
+		cTokens(arg0: PromiseOrValue<string>, overrides?: CallOverrides): Promise<BigNumber>
+
+		'cTokens(address)'(arg0: PromiseOrValue<string>, overrides?: CallOverrides): Promise<BigNumber>
+
+		callerFee(overrides?: CallOverrides): Promise<BigNumber>
+
+		'callerFee()'(overrides?: CallOverrides): Promise<BigNumber>
+
+		canLiquidate(
+			cTokenBorrowed: PromiseOrValue<string>,
+			cTokenCollateral: PromiseOrValue<string>,
+			repayAmount: PromiseOrValue<BigNumberish>,
+			overrides?: CallOverrides,
+		): Promise<BigNumber>
+
+		'canLiquidate(address,address,uint256)'(
+			cTokenBorrowed: PromiseOrValue<string>,
+			cTokenCollateral: PromiseOrValue<string>,
+			repayAmount: PromiseOrValue<BigNumberish>,
+			overrides?: CallOverrides,
+		): Promise<BigNumber>
+
+		collateralCount(overrides?: CallOverrides): Promise<BigNumber>
+
+		'collateralCount()'(overrides?: CallOverrides): Promise<BigNumber>
+
+		collateralDecimals(arg0: PromiseOrValue<string>, overrides?: CallOverrides): Promise<BigNumber>
+
+		'collateralDecimals(address)'(arg0: PromiseOrValue<string>, overrides?: CallOverrides): Promise<BigNumber>
+
+		collaterals(arg0: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<BigNumber>
+
+		'collaterals(uint256)'(arg0: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<BigNumber>
+
+		decimals(overrides?: CallOverrides): Promise<BigNumber>
+
+		'decimals()'(overrides?: CallOverrides): Promise<BigNumber>
+
+		deposit(lusdAmount: PromiseOrValue<BigNumberish>, overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<BigNumber>
+
+		'deposit(uint256)'(
+			lusdAmount: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<BigNumber>
+
+		efficientWithdraw(
+			numShares: PromiseOrValue<BigNumberish>,
+			to: PromiseOrValue<string>,
+			withdrawCollateral: PromiseOrValue<boolean>,
+			minLusd: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<BigNumber>
+
+		'efficientWithdraw(uint256,address,bool,uint256)'(
+			numShares: PromiseOrValue<BigNumberish>,
+			to: PromiseOrValue<string>,
+			withdrawCollateral: PromiseOrValue<boolean>,
+			minLusd: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<BigNumber>
+
+		fee(overrides?: CallOverrides): Promise<BigNumber>
+
+		'fee()'(overrides?: CallOverrides): Promise<BigNumber>
+
+		feePool(overrides?: CallOverrides): Promise<BigNumber>
+
+		'feePool()'(overrides?: CallOverrides): Promise<BigNumber>
+
+		fetchPrice(token: PromiseOrValue<string>, overrides?: CallOverrides): Promise<BigNumber>
+
+		'fetchPrice(address)'(token: PromiseOrValue<string>, overrides?: CallOverrides): Promise<BigNumber>
+
+		getCollateralValue(overrides?: CallOverrides): Promise<BigNumber>
+
+		'getCollateralValue()'(overrides?: CallOverrides): Promise<BigNumber>
+
+		getReturn(
+			xQty: PromiseOrValue<BigNumberish>,
+			xBalance: PromiseOrValue<BigNumberish>,
+			yBalance: PromiseOrValue<BigNumberish>,
+			A: PromiseOrValue<BigNumberish>,
+			overrides?: CallOverrides,
+		): Promise<BigNumber>
+
+		'getReturn(uint256,uint256,uint256,uint256)'(
+			xQty: PromiseOrValue<BigNumberish>,
+			xBalance: PromiseOrValue<BigNumberish>,
+			yBalance: PromiseOrValue<BigNumberish>,
+			A: PromiseOrValue<BigNumberish>,
+			overrides?: CallOverrides,
+		): Promise<BigNumber>
+
+		getSumFixedPoint(
+			x: PromiseOrValue<BigNumberish>,
+			y: PromiseOrValue<BigNumberish>,
+			A: PromiseOrValue<BigNumberish>,
+			overrides?: CallOverrides,
+		): Promise<BigNumber>
+
+		'getSumFixedPoint(uint256,uint256,uint256)'(
+			x: PromiseOrValue<BigNumberish>,
+			y: PromiseOrValue<BigNumberish>,
+			A: PromiseOrValue<BigNumberish>,
+			overrides?: CallOverrides,
+		): Promise<BigNumber>
+
+		getSwapAmount(lusdQty: PromiseOrValue<BigNumberish>, token: PromiseOrValue<string>, overrides?: CallOverrides): Promise<BigNumber>
+
+		'getSwapAmount(uint256,address)'(
+			lusdQty: PromiseOrValue<BigNumberish>,
+			token: PromiseOrValue<string>,
+			overrides?: CallOverrides,
+		): Promise<BigNumber>
+
+		isCETH(overrides?: CallOverrides): Promise<BigNumber>
+
+		'isCETH()'(overrides?: CallOverrides): Promise<BigNumber>
+
+		isOwner(overrides?: CallOverrides): Promise<BigNumber>
+
+		'isOwner()'(overrides?: CallOverrides): Promise<BigNumber>
+
+		liquidateBorrow(
+			borrower: PromiseOrValue<string>,
+			amount: PromiseOrValue<BigNumberish>,
+			collateral: PromiseOrValue<string>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<BigNumber>
+
+		'liquidateBorrow(address,uint256,address)'(
+			borrower: PromiseOrValue<string>,
+			amount: PromiseOrValue<BigNumberish>,
+			collateral: PromiseOrValue<string>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<BigNumber>
+
+		lusdDecimals(overrides?: CallOverrides): Promise<BigNumber>
+
+		'lusdDecimals()'(overrides?: CallOverrides): Promise<BigNumber>
+
+		maxDiscount(overrides?: CallOverrides): Promise<BigNumber>
+
+		'maxDiscount()'(overrides?: CallOverrides): Promise<BigNumber>
+
+		name(overrides?: CallOverrides): Promise<BigNumber>
+
+		'name()'(overrides?: CallOverrides): Promise<BigNumber>
+
+		owner(overrides?: CallOverrides): Promise<BigNumber>
+
+		'owner()'(overrides?: CallOverrides): Promise<BigNumber>
+
+		priceAggregators(arg0: PromiseOrValue<string>, overrides?: CallOverrides): Promise<BigNumber>
+
+		'priceAggregators(address)'(arg0: PromiseOrValue<string>, overrides?: CallOverrides): Promise<BigNumber>
+
+		removeCollateral(ctoken: PromiseOrValue<string>, overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<BigNumber>
+
+		'removeCollateral(address)'(
+			ctoken: PromiseOrValue<string>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<BigNumber>
+
+		setParams(
+			_A: PromiseOrValue<BigNumberish>,
+			_fee: PromiseOrValue<BigNumberish>,
+			_callerFee: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<BigNumber>
+
+		'setParams(uint256,uint256,uint256)'(
+			_A: PromiseOrValue<BigNumberish>,
+			_fee: PromiseOrValue<BigNumberish>,
+			_callerFee: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<BigNumber>
+
+		swap(
+			lusdAmount: PromiseOrValue<BigNumberish>,
+			returnToken: PromiseOrValue<string>,
+			minReturn: PromiseOrValue<BigNumberish>,
+			dest: PromiseOrValue<string>,
+			data: PromiseOrValue<BytesLike>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<BigNumber>
+
+		'swap(uint256,address,uint256,address,bytes)'(
+			lusdAmount: PromiseOrValue<BigNumberish>,
+			returnToken: PromiseOrValue<string>,
+			minReturn: PromiseOrValue<BigNumberish>,
+			dest: PromiseOrValue<string>,
+			data: PromiseOrValue<BytesLike>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<BigNumber>
+
+		symbol(overrides?: CallOverrides): Promise<BigNumber>
+
+		'symbol()'(overrides?: CallOverrides): Promise<BigNumber>
+
+		totalSupply(overrides?: CallOverrides): Promise<BigNumber>
+
+		'totalSupply()'(overrides?: CallOverrides): Promise<BigNumber>
+
+		transfer(
+			to: PromiseOrValue<string>,
+			tokens: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<BigNumber>
+
+		'transfer(address,uint256)'(
+			to: PromiseOrValue<string>,
+			tokens: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<BigNumber>
+
+		transferFrom(
+			from: PromiseOrValue<string>,
+			to: PromiseOrValue<string>,
+			tokens: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<BigNumber>
+
+		'transferFrom(address,address,uint256)'(
+			from: PromiseOrValue<string>,
+			to: PromiseOrValue<string>,
+			tokens: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<BigNumber>
+
+		transferOwnership(newOwner: PromiseOrValue<string>, overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<BigNumber>
+
+		'transferOwnership(address)'(
+			newOwner: PromiseOrValue<string>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<BigNumber>
+
+		withdraw(numShares: PromiseOrValue<BigNumberish>, overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<BigNumber>
+
+		'withdraw(uint256)'(
+			numShares: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<BigNumber>
+	}
+
+	populateTransaction: {
+		A(overrides?: CallOverrides): Promise<PopulatedTransaction>
+
+		'A()'(overrides?: CallOverrides): Promise<PopulatedTransaction>
+
+		LUSD(overrides?: CallOverrides): Promise<PopulatedTransaction>
+
+		'LUSD()'(overrides?: CallOverrides): Promise<PopulatedTransaction>
+
+		MAX_A(overrides?: CallOverrides): Promise<PopulatedTransaction>
+
+		'MAX_A()'(overrides?: CallOverrides): Promise<PopulatedTransaction>
+
+		MAX_CALLER_FEE(overrides?: CallOverrides): Promise<PopulatedTransaction>
+
+		'MAX_CALLER_FEE()'(overrides?: CallOverrides): Promise<PopulatedTransaction>
+
+		MAX_FEE(overrides?: CallOverrides): Promise<PopulatedTransaction>
+
+		'MAX_FEE()'(overrides?: CallOverrides): Promise<PopulatedTransaction>
+
+		MIN_A(overrides?: CallOverrides): Promise<PopulatedTransaction>
+
+		'MIN_A()'(overrides?: CallOverrides): Promise<PopulatedTransaction>
+
+		PRECISION(overrides?: CallOverrides): Promise<PopulatedTransaction>
+
+		'PRECISION()'(overrides?: CallOverrides): Promise<PopulatedTransaction>
+
+		addCollateral(
+			ctoken: PromiseOrValue<string>,
+			feed: PromiseOrValue<string>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<PopulatedTransaction>
+
+		'addCollateral(address,address)'(
+			ctoken: PromiseOrValue<string>,
+			feed: PromiseOrValue<string>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<PopulatedTransaction>
+
+		allowance(arg0: PromiseOrValue<string>, arg1: PromiseOrValue<string>, overrides?: CallOverrides): Promise<PopulatedTransaction>
+
+		'allowance(address,address)'(
+			arg0: PromiseOrValue<string>,
+			arg1: PromiseOrValue<string>,
+			overrides?: CallOverrides,
+		): Promise<PopulatedTransaction>
+
+		approve(
+			spender: PromiseOrValue<string>,
+			tokens: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<PopulatedTransaction>
+
+		'approve(address,uint256)'(
+			spender: PromiseOrValue<string>,
+			tokens: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<PopulatedTransaction>
+
+		balanceOf(arg0: PromiseOrValue<string>, overrides?: CallOverrides): Promise<PopulatedTransaction>
+
+		'balanceOf(address)'(arg0: PromiseOrValue<string>, overrides?: CallOverrides): Promise<PopulatedTransaction>
+
+		cBorrow(overrides?: CallOverrides): Promise<PopulatedTransaction>
+
+		'cBorrow()'(overrides?: CallOverrides): Promise<PopulatedTransaction>
+
+		cTokens(arg0: PromiseOrValue<string>, overrides?: CallOverrides): Promise<PopulatedTransaction>
+
+		'cTokens(address)'(arg0: PromiseOrValue<string>, overrides?: CallOverrides): Promise<PopulatedTransaction>
+
+		callerFee(overrides?: CallOverrides): Promise<PopulatedTransaction>
+
+		'callerFee()'(overrides?: CallOverrides): Promise<PopulatedTransaction>
+
+		canLiquidate(
+			cTokenBorrowed: PromiseOrValue<string>,
+			cTokenCollateral: PromiseOrValue<string>,
+			repayAmount: PromiseOrValue<BigNumberish>,
+			overrides?: CallOverrides,
+		): Promise<PopulatedTransaction>
+
+		'canLiquidate(address,address,uint256)'(
+			cTokenBorrowed: PromiseOrValue<string>,
+			cTokenCollateral: PromiseOrValue<string>,
+			repayAmount: PromiseOrValue<BigNumberish>,
+			overrides?: CallOverrides,
+		): Promise<PopulatedTransaction>
+
+		collateralCount(overrides?: CallOverrides): Promise<PopulatedTransaction>
+
+		'collateralCount()'(overrides?: CallOverrides): Promise<PopulatedTransaction>
+
+		collateralDecimals(arg0: PromiseOrValue<string>, overrides?: CallOverrides): Promise<PopulatedTransaction>
+
+		'collateralDecimals(address)'(arg0: PromiseOrValue<string>, overrides?: CallOverrides): Promise<PopulatedTransaction>
+
+		collaterals(arg0: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<PopulatedTransaction>
+
+		'collaterals(uint256)'(arg0: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<PopulatedTransaction>
+
+		decimals(overrides?: CallOverrides): Promise<PopulatedTransaction>
+
+		'decimals()'(overrides?: CallOverrides): Promise<PopulatedTransaction>
+
+		deposit(
+			lusdAmount: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<PopulatedTransaction>
+
+		'deposit(uint256)'(
+			lusdAmount: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<PopulatedTransaction>
+
+		efficientWithdraw(
+			numShares: PromiseOrValue<BigNumberish>,
+			to: PromiseOrValue<string>,
+			withdrawCollateral: PromiseOrValue<boolean>,
+			minLusd: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<PopulatedTransaction>
+
+		'efficientWithdraw(uint256,address,bool,uint256)'(
+			numShares: PromiseOrValue<BigNumberish>,
+			to: PromiseOrValue<string>,
+			withdrawCollateral: PromiseOrValue<boolean>,
+			minLusd: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<PopulatedTransaction>
+
+		fee(overrides?: CallOverrides): Promise<PopulatedTransaction>
+
+		'fee()'(overrides?: CallOverrides): Promise<PopulatedTransaction>
+
+		feePool(overrides?: CallOverrides): Promise<PopulatedTransaction>
+
+		'feePool()'(overrides?: CallOverrides): Promise<PopulatedTransaction>
+
+		fetchPrice(token: PromiseOrValue<string>, overrides?: CallOverrides): Promise<PopulatedTransaction>
+
+		'fetchPrice(address)'(token: PromiseOrValue<string>, overrides?: CallOverrides): Promise<PopulatedTransaction>
+
+		getCollateralValue(overrides?: CallOverrides): Promise<PopulatedTransaction>
+
+		'getCollateralValue()'(overrides?: CallOverrides): Promise<PopulatedTransaction>
+
+		getReturn(
+			xQty: PromiseOrValue<BigNumberish>,
+			xBalance: PromiseOrValue<BigNumberish>,
+			yBalance: PromiseOrValue<BigNumberish>,
+			A: PromiseOrValue<BigNumberish>,
+			overrides?: CallOverrides,
+		): Promise<PopulatedTransaction>
+
+		'getReturn(uint256,uint256,uint256,uint256)'(
+			xQty: PromiseOrValue<BigNumberish>,
+			xBalance: PromiseOrValue<BigNumberish>,
+			yBalance: PromiseOrValue<BigNumberish>,
+			A: PromiseOrValue<BigNumberish>,
+			overrides?: CallOverrides,
+		): Promise<PopulatedTransaction>
+
+		getSumFixedPoint(
+			x: PromiseOrValue<BigNumberish>,
+			y: PromiseOrValue<BigNumberish>,
+			A: PromiseOrValue<BigNumberish>,
+			overrides?: CallOverrides,
+		): Promise<PopulatedTransaction>
+
+		'getSumFixedPoint(uint256,uint256,uint256)'(
+			x: PromiseOrValue<BigNumberish>,
+			y: PromiseOrValue<BigNumberish>,
+			A: PromiseOrValue<BigNumberish>,
+			overrides?: CallOverrides,
+		): Promise<PopulatedTransaction>
+
+		getSwapAmount(
+			lusdQty: PromiseOrValue<BigNumberish>,
+			token: PromiseOrValue<string>,
+			overrides?: CallOverrides,
+		): Promise<PopulatedTransaction>
+
+		'getSwapAmount(uint256,address)'(
+			lusdQty: PromiseOrValue<BigNumberish>,
+			token: PromiseOrValue<string>,
+			overrides?: CallOverrides,
+		): Promise<PopulatedTransaction>
+
+		isCETH(overrides?: CallOverrides): Promise<PopulatedTransaction>
+
+		'isCETH()'(overrides?: CallOverrides): Promise<PopulatedTransaction>
+
+		isOwner(overrides?: CallOverrides): Promise<PopulatedTransaction>
+
+		'isOwner()'(overrides?: CallOverrides): Promise<PopulatedTransaction>
+
+		liquidateBorrow(
+			borrower: PromiseOrValue<string>,
+			amount: PromiseOrValue<BigNumberish>,
+			collateral: PromiseOrValue<string>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<PopulatedTransaction>
+
+		'liquidateBorrow(address,uint256,address)'(
+			borrower: PromiseOrValue<string>,
+			amount: PromiseOrValue<BigNumberish>,
+			collateral: PromiseOrValue<string>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<PopulatedTransaction>
+
+		lusdDecimals(overrides?: CallOverrides): Promise<PopulatedTransaction>
+
+		'lusdDecimals()'(overrides?: CallOverrides): Promise<PopulatedTransaction>
+
+		maxDiscount(overrides?: CallOverrides): Promise<PopulatedTransaction>
+
+		'maxDiscount()'(overrides?: CallOverrides): Promise<PopulatedTransaction>
+
+		name(overrides?: CallOverrides): Promise<PopulatedTransaction>
+
+		'name()'(overrides?: CallOverrides): Promise<PopulatedTransaction>
+
+		owner(overrides?: CallOverrides): Promise<PopulatedTransaction>
+
+		'owner()'(overrides?: CallOverrides): Promise<PopulatedTransaction>
+
+		priceAggregators(arg0: PromiseOrValue<string>, overrides?: CallOverrides): Promise<PopulatedTransaction>
+
+		'priceAggregators(address)'(arg0: PromiseOrValue<string>, overrides?: CallOverrides): Promise<PopulatedTransaction>
+
+		removeCollateral(
+			ctoken: PromiseOrValue<string>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<PopulatedTransaction>
+
+		'removeCollateral(address)'(
+			ctoken: PromiseOrValue<string>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<PopulatedTransaction>
+
+		setParams(
+			_A: PromiseOrValue<BigNumberish>,
+			_fee: PromiseOrValue<BigNumberish>,
+			_callerFee: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<PopulatedTransaction>
+
+		'setParams(uint256,uint256,uint256)'(
+			_A: PromiseOrValue<BigNumberish>,
+			_fee: PromiseOrValue<BigNumberish>,
+			_callerFee: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<PopulatedTransaction>
+
+		swap(
+			lusdAmount: PromiseOrValue<BigNumberish>,
+			returnToken: PromiseOrValue<string>,
+			minReturn: PromiseOrValue<BigNumberish>,
+			dest: PromiseOrValue<string>,
+			data: PromiseOrValue<BytesLike>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<PopulatedTransaction>
+
+		'swap(uint256,address,uint256,address,bytes)'(
+			lusdAmount: PromiseOrValue<BigNumberish>,
+			returnToken: PromiseOrValue<string>,
+			minReturn: PromiseOrValue<BigNumberish>,
+			dest: PromiseOrValue<string>,
+			data: PromiseOrValue<BytesLike>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<PopulatedTransaction>
+
+		symbol(overrides?: CallOverrides): Promise<PopulatedTransaction>
+
+		'symbol()'(overrides?: CallOverrides): Promise<PopulatedTransaction>
+
+		totalSupply(overrides?: CallOverrides): Promise<PopulatedTransaction>
+
+		'totalSupply()'(overrides?: CallOverrides): Promise<PopulatedTransaction>
+
+		transfer(
+			to: PromiseOrValue<string>,
+			tokens: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<PopulatedTransaction>
+
+		'transfer(address,uint256)'(
+			to: PromiseOrValue<string>,
+			tokens: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<PopulatedTransaction>
+
+		transferFrom(
+			from: PromiseOrValue<string>,
+			to: PromiseOrValue<string>,
+			tokens: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<PopulatedTransaction>
+
+		'transferFrom(address,address,uint256)'(
+			from: PromiseOrValue<string>,
+			to: PromiseOrValue<string>,
+			tokens: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<PopulatedTransaction>
+
+		transferOwnership(
+			newOwner: PromiseOrValue<string>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<PopulatedTransaction>
+
+		'transferOwnership(address)'(
+			newOwner: PromiseOrValue<string>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<PopulatedTransaction>
+
+		withdraw(
+			numShares: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<PopulatedTransaction>
+
+		'withdraw(uint256)'(
+			numShares: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<PopulatedTransaction>
+	}
 }
