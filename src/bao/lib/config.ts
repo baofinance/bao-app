@@ -564,6 +564,7 @@ export default {
 				aLUSD: '#2775CA',
 				DAI: '#F5AC37',
 				LUSD: '#2775CA',
+				yvLUSD: '#2775CA',
 			},
 			desc: 'Low risk stablecoin basket',
 			swap: 'https://curve.fi/factory-crypto/61',

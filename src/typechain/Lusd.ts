@@ -2,1699 +2,1309 @@
 /* tslint:disable */
 /* eslint-disable */
 import type {
-  BaseContract,
-  BigNumber,
-  BigNumberish,
-  BytesLike,
-  CallOverrides,
-  ContractTransaction,
-  Overrides,
-  PopulatedTransaction,
-  Signer,
-  utils,
-} from "ethers";
-import type {
-  FunctionFragment,
-  Result,
-  EventFragment,
-} from "@ethersproject/abi";
-import type { Listener, Provider } from "@ethersproject/providers";
-import type {
-  TypedEventFilter,
-  TypedEvent,
-  TypedListener,
-  OnEvent,
-  PromiseOrValue,
-} from "./common";
+	BaseContract,
+	BigNumber,
+	BigNumberish,
+	BytesLike,
+	CallOverrides,
+	ContractTransaction,
+	Overrides,
+	PopulatedTransaction,
+	Signer,
+	utils,
+} from 'ethers'
+import type { FunctionFragment, Result, EventFragment } from '@ethersproject/abi'
+import type { Listener, Provider } from '@ethersproject/providers'
+import type { TypedEventFilter, TypedEvent, TypedListener, OnEvent, PromiseOrValue } from './common'
 
 export interface LusdInterface extends utils.Interface {
-  functions: {
-    "allowance(address,address)": FunctionFragment;
-    "approve(address,uint256)": FunctionFragment;
-    "balanceOf(address)": FunctionFragment;
-    "borrowerOperationsAddress()": FunctionFragment;
-    "burn(address,uint256)": FunctionFragment;
-    "decimals()": FunctionFragment;
-    "decreaseAllowance(address,uint256)": FunctionFragment;
-    "domainSeparator()": FunctionFragment;
-    "increaseAllowance(address,uint256)": FunctionFragment;
-    "mint(address,uint256)": FunctionFragment;
-    "name()": FunctionFragment;
-    "nonces(address)": FunctionFragment;
-    "permit(address,address,uint256,uint256,uint8,bytes32,bytes32)": FunctionFragment;
-    "permitTypeHash()": FunctionFragment;
-    "returnFromPool(address,address,uint256)": FunctionFragment;
-    "sendToPool(address,address,uint256)": FunctionFragment;
-    "stabilityPoolAddress()": FunctionFragment;
-    "symbol()": FunctionFragment;
-    "totalSupply()": FunctionFragment;
-    "transfer(address,uint256)": FunctionFragment;
-    "transferFrom(address,address,uint256)": FunctionFragment;
-    "troveManagerAddress()": FunctionFragment;
-    "version()": FunctionFragment;
-  };
+	functions: {
+		'allowance(address,address)': FunctionFragment
+		'approve(address,uint256)': FunctionFragment
+		'balanceOf(address)': FunctionFragment
+		'borrowerOperationsAddress()': FunctionFragment
+		'burn(address,uint256)': FunctionFragment
+		'decimals()': FunctionFragment
+		'decreaseAllowance(address,uint256)': FunctionFragment
+		'domainSeparator()': FunctionFragment
+		'increaseAllowance(address,uint256)': FunctionFragment
+		'mint(address,uint256)': FunctionFragment
+		'name()': FunctionFragment
+		'nonces(address)': FunctionFragment
+		'permit(address,address,uint256,uint256,uint8,bytes32,bytes32)': FunctionFragment
+		'permitTypeHash()': FunctionFragment
+		'returnFromPool(address,address,uint256)': FunctionFragment
+		'sendToPool(address,address,uint256)': FunctionFragment
+		'stabilityPoolAddress()': FunctionFragment
+		'symbol()': FunctionFragment
+		'totalSupply()': FunctionFragment
+		'transfer(address,uint256)': FunctionFragment
+		'transferFrom(address,address,uint256)': FunctionFragment
+		'troveManagerAddress()': FunctionFragment
+		'version()': FunctionFragment
+	}
 
-  getFunction(
-    nameOrSignatureOrTopic:
-      | "allowance"
-      | "allowance(address,address)"
-      | "approve"
-      | "approve(address,uint256)"
-      | "balanceOf"
-      | "balanceOf(address)"
-      | "borrowerOperationsAddress"
-      | "borrowerOperationsAddress()"
-      | "burn"
-      | "burn(address,uint256)"
-      | "decimals"
-      | "decimals()"
-      | "decreaseAllowance"
-      | "decreaseAllowance(address,uint256)"
-      | "domainSeparator"
-      | "domainSeparator()"
-      | "increaseAllowance"
-      | "increaseAllowance(address,uint256)"
-      | "mint"
-      | "mint(address,uint256)"
-      | "name"
-      | "name()"
-      | "nonces"
-      | "nonces(address)"
-      | "permit"
-      | "permit(address,address,uint256,uint256,uint8,bytes32,bytes32)"
-      | "permitTypeHash"
-      | "permitTypeHash()"
-      | "returnFromPool"
-      | "returnFromPool(address,address,uint256)"
-      | "sendToPool"
-      | "sendToPool(address,address,uint256)"
-      | "stabilityPoolAddress"
-      | "stabilityPoolAddress()"
-      | "symbol"
-      | "symbol()"
-      | "totalSupply"
-      | "totalSupply()"
-      | "transfer"
-      | "transfer(address,uint256)"
-      | "transferFrom"
-      | "transferFrom(address,address,uint256)"
-      | "troveManagerAddress"
-      | "troveManagerAddress()"
-      | "version"
-      | "version()"
-  ): FunctionFragment;
+	getFunction(
+		nameOrSignatureOrTopic:
+			| 'allowance'
+			| 'allowance(address,address)'
+			| 'approve'
+			| 'approve(address,uint256)'
+			| 'balanceOf'
+			| 'balanceOf(address)'
+			| 'borrowerOperationsAddress'
+			| 'borrowerOperationsAddress()'
+			| 'burn'
+			| 'burn(address,uint256)'
+			| 'decimals'
+			| 'decimals()'
+			| 'decreaseAllowance'
+			| 'decreaseAllowance(address,uint256)'
+			| 'domainSeparator'
+			| 'domainSeparator()'
+			| 'increaseAllowance'
+			| 'increaseAllowance(address,uint256)'
+			| 'mint'
+			| 'mint(address,uint256)'
+			| 'name'
+			| 'name()'
+			| 'nonces'
+			| 'nonces(address)'
+			| 'permit'
+			| 'permit(address,address,uint256,uint256,uint8,bytes32,bytes32)'
+			| 'permitTypeHash'
+			| 'permitTypeHash()'
+			| 'returnFromPool'
+			| 'returnFromPool(address,address,uint256)'
+			| 'sendToPool'
+			| 'sendToPool(address,address,uint256)'
+			| 'stabilityPoolAddress'
+			| 'stabilityPoolAddress()'
+			| 'symbol'
+			| 'symbol()'
+			| 'totalSupply'
+			| 'totalSupply()'
+			| 'transfer'
+			| 'transfer(address,uint256)'
+			| 'transferFrom'
+			| 'transferFrom(address,address,uint256)'
+			| 'troveManagerAddress'
+			| 'troveManagerAddress()'
+			| 'version'
+			| 'version()',
+	): FunctionFragment
 
-  encodeFunctionData(
-    functionFragment: "allowance",
-    values: [PromiseOrValue<string>, PromiseOrValue<string>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "allowance(address,address)",
-    values: [PromiseOrValue<string>, PromiseOrValue<string>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "approve",
-    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "approve(address,uint256)",
-    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "balanceOf",
-    values: [PromiseOrValue<string>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "balanceOf(address)",
-    values: [PromiseOrValue<string>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "borrowerOperationsAddress",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "borrowerOperationsAddress()",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "burn",
-    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "burn(address,uint256)",
-    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
-  ): string;
-  encodeFunctionData(functionFragment: "decimals", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "decimals()",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "decreaseAllowance",
-    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "decreaseAllowance(address,uint256)",
-    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "domainSeparator",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "domainSeparator()",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "increaseAllowance",
-    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "increaseAllowance(address,uint256)",
-    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "mint",
-    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "mint(address,uint256)",
-    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
-  ): string;
-  encodeFunctionData(functionFragment: "name", values?: undefined): string;
-  encodeFunctionData(functionFragment: "name()", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "nonces",
-    values: [PromiseOrValue<string>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "nonces(address)",
-    values: [PromiseOrValue<string>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "permit",
-    values: [
-      PromiseOrValue<string>,
-      PromiseOrValue<string>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BytesLike>,
-      PromiseOrValue<BytesLike>
-    ]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "permit(address,address,uint256,uint256,uint8,bytes32,bytes32)",
-    values: [
-      PromiseOrValue<string>,
-      PromiseOrValue<string>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BytesLike>,
-      PromiseOrValue<BytesLike>
-    ]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "permitTypeHash",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "permitTypeHash()",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "returnFromPool",
-    values: [
-      PromiseOrValue<string>,
-      PromiseOrValue<string>,
-      PromiseOrValue<BigNumberish>
-    ]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "returnFromPool(address,address,uint256)",
-    values: [
-      PromiseOrValue<string>,
-      PromiseOrValue<string>,
-      PromiseOrValue<BigNumberish>
-    ]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "sendToPool",
-    values: [
-      PromiseOrValue<string>,
-      PromiseOrValue<string>,
-      PromiseOrValue<BigNumberish>
-    ]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "sendToPool(address,address,uint256)",
-    values: [
-      PromiseOrValue<string>,
-      PromiseOrValue<string>,
-      PromiseOrValue<BigNumberish>
-    ]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "stabilityPoolAddress",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "stabilityPoolAddress()",
-    values?: undefined
-  ): string;
-  encodeFunctionData(functionFragment: "symbol", values?: undefined): string;
-  encodeFunctionData(functionFragment: "symbol()", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "totalSupply",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "totalSupply()",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "transfer",
-    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "transfer(address,uint256)",
-    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "transferFrom",
-    values: [
-      PromiseOrValue<string>,
-      PromiseOrValue<string>,
-      PromiseOrValue<BigNumberish>
-    ]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "transferFrom(address,address,uint256)",
-    values: [
-      PromiseOrValue<string>,
-      PromiseOrValue<string>,
-      PromiseOrValue<BigNumberish>
-    ]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "troveManagerAddress",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "troveManagerAddress()",
-    values?: undefined
-  ): string;
-  encodeFunctionData(functionFragment: "version", values?: undefined): string;
-  encodeFunctionData(functionFragment: "version()", values?: undefined): string;
+	encodeFunctionData(functionFragment: 'allowance', values: [PromiseOrValue<string>, PromiseOrValue<string>]): string
+	encodeFunctionData(functionFragment: 'allowance(address,address)', values: [PromiseOrValue<string>, PromiseOrValue<string>]): string
+	encodeFunctionData(functionFragment: 'approve', values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]): string
+	encodeFunctionData(functionFragment: 'approve(address,uint256)', values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]): string
+	encodeFunctionData(functionFragment: 'balanceOf', values: [PromiseOrValue<string>]): string
+	encodeFunctionData(functionFragment: 'balanceOf(address)', values: [PromiseOrValue<string>]): string
+	encodeFunctionData(functionFragment: 'borrowerOperationsAddress', values?: undefined): string
+	encodeFunctionData(functionFragment: 'borrowerOperationsAddress()', values?: undefined): string
+	encodeFunctionData(functionFragment: 'burn', values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]): string
+	encodeFunctionData(functionFragment: 'burn(address,uint256)', values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]): string
+	encodeFunctionData(functionFragment: 'decimals', values?: undefined): string
+	encodeFunctionData(functionFragment: 'decimals()', values?: undefined): string
+	encodeFunctionData(functionFragment: 'decreaseAllowance', values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]): string
+	encodeFunctionData(
+		functionFragment: 'decreaseAllowance(address,uint256)',
+		values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>],
+	): string
+	encodeFunctionData(functionFragment: 'domainSeparator', values?: undefined): string
+	encodeFunctionData(functionFragment: 'domainSeparator()', values?: undefined): string
+	encodeFunctionData(functionFragment: 'increaseAllowance', values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]): string
+	encodeFunctionData(
+		functionFragment: 'increaseAllowance(address,uint256)',
+		values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>],
+	): string
+	encodeFunctionData(functionFragment: 'mint', values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]): string
+	encodeFunctionData(functionFragment: 'mint(address,uint256)', values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]): string
+	encodeFunctionData(functionFragment: 'name', values?: undefined): string
+	encodeFunctionData(functionFragment: 'name()', values?: undefined): string
+	encodeFunctionData(functionFragment: 'nonces', values: [PromiseOrValue<string>]): string
+	encodeFunctionData(functionFragment: 'nonces(address)', values: [PromiseOrValue<string>]): string
+	encodeFunctionData(
+		functionFragment: 'permit',
+		values: [
+			PromiseOrValue<string>,
+			PromiseOrValue<string>,
+			PromiseOrValue<BigNumberish>,
+			PromiseOrValue<BigNumberish>,
+			PromiseOrValue<BigNumberish>,
+			PromiseOrValue<BytesLike>,
+			PromiseOrValue<BytesLike>,
+		],
+	): string
+	encodeFunctionData(
+		functionFragment: 'permit(address,address,uint256,uint256,uint8,bytes32,bytes32)',
+		values: [
+			PromiseOrValue<string>,
+			PromiseOrValue<string>,
+			PromiseOrValue<BigNumberish>,
+			PromiseOrValue<BigNumberish>,
+			PromiseOrValue<BigNumberish>,
+			PromiseOrValue<BytesLike>,
+			PromiseOrValue<BytesLike>,
+		],
+	): string
+	encodeFunctionData(functionFragment: 'permitTypeHash', values?: undefined): string
+	encodeFunctionData(functionFragment: 'permitTypeHash()', values?: undefined): string
+	encodeFunctionData(
+		functionFragment: 'returnFromPool',
+		values: [PromiseOrValue<string>, PromiseOrValue<string>, PromiseOrValue<BigNumberish>],
+	): string
+	encodeFunctionData(
+		functionFragment: 'returnFromPool(address,address,uint256)',
+		values: [PromiseOrValue<string>, PromiseOrValue<string>, PromiseOrValue<BigNumberish>],
+	): string
+	encodeFunctionData(
+		functionFragment: 'sendToPool',
+		values: [PromiseOrValue<string>, PromiseOrValue<string>, PromiseOrValue<BigNumberish>],
+	): string
+	encodeFunctionData(
+		functionFragment: 'sendToPool(address,address,uint256)',
+		values: [PromiseOrValue<string>, PromiseOrValue<string>, PromiseOrValue<BigNumberish>],
+	): string
+	encodeFunctionData(functionFragment: 'stabilityPoolAddress', values?: undefined): string
+	encodeFunctionData(functionFragment: 'stabilityPoolAddress()', values?: undefined): string
+	encodeFunctionData(functionFragment: 'symbol', values?: undefined): string
+	encodeFunctionData(functionFragment: 'symbol()', values?: undefined): string
+	encodeFunctionData(functionFragment: 'totalSupply', values?: undefined): string
+	encodeFunctionData(functionFragment: 'totalSupply()', values?: undefined): string
+	encodeFunctionData(functionFragment: 'transfer', values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]): string
+	encodeFunctionData(functionFragment: 'transfer(address,uint256)', values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]): string
+	encodeFunctionData(
+		functionFragment: 'transferFrom',
+		values: [PromiseOrValue<string>, PromiseOrValue<string>, PromiseOrValue<BigNumberish>],
+	): string
+	encodeFunctionData(
+		functionFragment: 'transferFrom(address,address,uint256)',
+		values: [PromiseOrValue<string>, PromiseOrValue<string>, PromiseOrValue<BigNumberish>],
+	): string
+	encodeFunctionData(functionFragment: 'troveManagerAddress', values?: undefined): string
+	encodeFunctionData(functionFragment: 'troveManagerAddress()', values?: undefined): string
+	encodeFunctionData(functionFragment: 'version', values?: undefined): string
+	encodeFunctionData(functionFragment: 'version()', values?: undefined): string
 
-  decodeFunctionResult(functionFragment: "allowance", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "allowance(address,address)",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "approve(address,uint256)",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "balanceOf(address)",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "borrowerOperationsAddress",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "borrowerOperationsAddress()",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "burn", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "burn(address,uint256)",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "decimals", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "decimals()", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "decreaseAllowance",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "decreaseAllowance(address,uint256)",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "domainSeparator",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "domainSeparator()",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "increaseAllowance",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "increaseAllowance(address,uint256)",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "mint", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "mint(address,uint256)",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "name()", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "nonces", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "nonces(address)",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "permit", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "permit(address,address,uint256,uint256,uint8,bytes32,bytes32)",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "permitTypeHash",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "permitTypeHash()",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "returnFromPool",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "returnFromPool(address,address,uint256)",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "sendToPool", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "sendToPool(address,address,uint256)",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "stabilityPoolAddress",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "stabilityPoolAddress()",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "symbol", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "symbol()", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "totalSupply",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "totalSupply()",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "transfer", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "transfer(address,uint256)",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "transferFrom",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "transferFrom(address,address,uint256)",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "troveManagerAddress",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "troveManagerAddress()",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "version", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "version()", data: BytesLike): Result;
+	decodeFunctionResult(functionFragment: 'allowance', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'allowance(address,address)', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'approve', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'approve(address,uint256)', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'balanceOf', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'balanceOf(address)', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'borrowerOperationsAddress', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'borrowerOperationsAddress()', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'burn', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'burn(address,uint256)', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'decimals', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'decimals()', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'decreaseAllowance', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'decreaseAllowance(address,uint256)', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'domainSeparator', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'domainSeparator()', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'increaseAllowance', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'increaseAllowance(address,uint256)', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'mint', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'mint(address,uint256)', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'name', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'name()', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'nonces', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'nonces(address)', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'permit', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'permit(address,address,uint256,uint256,uint8,bytes32,bytes32)', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'permitTypeHash', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'permitTypeHash()', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'returnFromPool', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'returnFromPool(address,address,uint256)', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'sendToPool', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'sendToPool(address,address,uint256)', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'stabilityPoolAddress', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'stabilityPoolAddress()', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'symbol', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'symbol()', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'totalSupply', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'totalSupply()', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'transfer', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'transfer(address,uint256)', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'transferFrom', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'transferFrom(address,address,uint256)', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'troveManagerAddress', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'troveManagerAddress()', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'version', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'version()', data: BytesLike): Result
 
-  events: {
-    "Approval(address,address,uint256)": EventFragment;
-    "BorrowerOperationsAddressChanged(address)": EventFragment;
-    "LUSDTokenBalanceUpdated(address,uint256)": EventFragment;
-    "StabilityPoolAddressChanged(address)": EventFragment;
-    "Transfer(address,address,uint256)": EventFragment;
-    "TroveManagerAddressChanged(address)": EventFragment;
-  };
+	events: {
+		'Approval(address,address,uint256)': EventFragment
+		'BorrowerOperationsAddressChanged(address)': EventFragment
+		'LUSDTokenBalanceUpdated(address,uint256)': EventFragment
+		'StabilityPoolAddressChanged(address)': EventFragment
+		'Transfer(address,address,uint256)': EventFragment
+		'TroveManagerAddressChanged(address)': EventFragment
+	}
 
-  getEvent(nameOrSignatureOrTopic: "Approval"): EventFragment;
-  getEvent(
-    nameOrSignatureOrTopic: "Approval(address,address,uint256)"
-  ): EventFragment;
-  getEvent(
-    nameOrSignatureOrTopic: "BorrowerOperationsAddressChanged"
-  ): EventFragment;
-  getEvent(
-    nameOrSignatureOrTopic: "BorrowerOperationsAddressChanged(address)"
-  ): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "LUSDTokenBalanceUpdated"): EventFragment;
-  getEvent(
-    nameOrSignatureOrTopic: "LUSDTokenBalanceUpdated(address,uint256)"
-  ): EventFragment;
-  getEvent(
-    nameOrSignatureOrTopic: "StabilityPoolAddressChanged"
-  ): EventFragment;
-  getEvent(
-    nameOrSignatureOrTopic: "StabilityPoolAddressChanged(address)"
-  ): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "Transfer"): EventFragment;
-  getEvent(
-    nameOrSignatureOrTopic: "Transfer(address,address,uint256)"
-  ): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "TroveManagerAddressChanged"): EventFragment;
-  getEvent(
-    nameOrSignatureOrTopic: "TroveManagerAddressChanged(address)"
-  ): EventFragment;
+	getEvent(nameOrSignatureOrTopic: 'Approval'): EventFragment
+	getEvent(nameOrSignatureOrTopic: 'Approval(address,address,uint256)'): EventFragment
+	getEvent(nameOrSignatureOrTopic: 'BorrowerOperationsAddressChanged'): EventFragment
+	getEvent(nameOrSignatureOrTopic: 'BorrowerOperationsAddressChanged(address)'): EventFragment
+	getEvent(nameOrSignatureOrTopic: 'LUSDTokenBalanceUpdated'): EventFragment
+	getEvent(nameOrSignatureOrTopic: 'LUSDTokenBalanceUpdated(address,uint256)'): EventFragment
+	getEvent(nameOrSignatureOrTopic: 'StabilityPoolAddressChanged'): EventFragment
+	getEvent(nameOrSignatureOrTopic: 'StabilityPoolAddressChanged(address)'): EventFragment
+	getEvent(nameOrSignatureOrTopic: 'Transfer'): EventFragment
+	getEvent(nameOrSignatureOrTopic: 'Transfer(address,address,uint256)'): EventFragment
+	getEvent(nameOrSignatureOrTopic: 'TroveManagerAddressChanged'): EventFragment
+	getEvent(nameOrSignatureOrTopic: 'TroveManagerAddressChanged(address)'): EventFragment
 }
 
 export interface ApprovalEventObject {
-  owner: string;
-  spender: string;
-  value: BigNumber;
+	owner: string
+	spender: string
+	value: BigNumber
 }
-export type ApprovalEvent = TypedEvent<
-  [string, string, BigNumber],
-  ApprovalEventObject
->;
+export type ApprovalEvent = TypedEvent<[string, string, BigNumber], ApprovalEventObject>
 
-export type ApprovalEventFilter = TypedEventFilter<ApprovalEvent>;
+export type ApprovalEventFilter = TypedEventFilter<ApprovalEvent>
 
 export interface BorrowerOperationsAddressChangedEventObject {
-  _newBorrowerOperationsAddress: string;
+	_newBorrowerOperationsAddress: string
 }
-export type BorrowerOperationsAddressChangedEvent = TypedEvent<
-  [string],
-  BorrowerOperationsAddressChangedEventObject
->;
+export type BorrowerOperationsAddressChangedEvent = TypedEvent<[string], BorrowerOperationsAddressChangedEventObject>
 
-export type BorrowerOperationsAddressChangedEventFilter =
-  TypedEventFilter<BorrowerOperationsAddressChangedEvent>;
+export type BorrowerOperationsAddressChangedEventFilter = TypedEventFilter<BorrowerOperationsAddressChangedEvent>
 
 export interface LUSDTokenBalanceUpdatedEventObject {
-  _user: string;
-  _amount: BigNumber;
+	_user: string
+	_amount: BigNumber
 }
-export type LUSDTokenBalanceUpdatedEvent = TypedEvent<
-  [string, BigNumber],
-  LUSDTokenBalanceUpdatedEventObject
->;
+export type LUSDTokenBalanceUpdatedEvent = TypedEvent<[string, BigNumber], LUSDTokenBalanceUpdatedEventObject>
 
-export type LUSDTokenBalanceUpdatedEventFilter =
-  TypedEventFilter<LUSDTokenBalanceUpdatedEvent>;
+export type LUSDTokenBalanceUpdatedEventFilter = TypedEventFilter<LUSDTokenBalanceUpdatedEvent>
 
 export interface StabilityPoolAddressChangedEventObject {
-  _newStabilityPoolAddress: string;
+	_newStabilityPoolAddress: string
 }
-export type StabilityPoolAddressChangedEvent = TypedEvent<
-  [string],
-  StabilityPoolAddressChangedEventObject
->;
+export type StabilityPoolAddressChangedEvent = TypedEvent<[string], StabilityPoolAddressChangedEventObject>
 
-export type StabilityPoolAddressChangedEventFilter =
-  TypedEventFilter<StabilityPoolAddressChangedEvent>;
+export type StabilityPoolAddressChangedEventFilter = TypedEventFilter<StabilityPoolAddressChangedEvent>
 
 export interface TransferEventObject {
-  from: string;
-  to: string;
-  value: BigNumber;
+	from: string
+	to: string
+	value: BigNumber
 }
-export type TransferEvent = TypedEvent<
-  [string, string, BigNumber],
-  TransferEventObject
->;
+export type TransferEvent = TypedEvent<[string, string, BigNumber], TransferEventObject>
 
-export type TransferEventFilter = TypedEventFilter<TransferEvent>;
+export type TransferEventFilter = TypedEventFilter<TransferEvent>
 
 export interface TroveManagerAddressChangedEventObject {
-  _troveManagerAddress: string;
+	_troveManagerAddress: string
 }
-export type TroveManagerAddressChangedEvent = TypedEvent<
-  [string],
-  TroveManagerAddressChangedEventObject
->;
+export type TroveManagerAddressChangedEvent = TypedEvent<[string], TroveManagerAddressChangedEventObject>
 
-export type TroveManagerAddressChangedEventFilter =
-  TypedEventFilter<TroveManagerAddressChangedEvent>;
+export type TroveManagerAddressChangedEventFilter = TypedEventFilter<TroveManagerAddressChangedEvent>
 
 export interface Lusd extends BaseContract {
-  contractName: "Lusd";
-
-  connect(signerOrProvider: Signer | Provider | string): this;
-  attach(addressOrName: string): this;
-  deployed(): Promise<this>;
-
-  interface: LusdInterface;
-
-  queryFilter<TEvent extends TypedEvent>(
-    event: TypedEventFilter<TEvent>,
-    fromBlockOrBlockhash?: string | number | undefined,
-    toBlock?: string | number | undefined
-  ): Promise<Array<TEvent>>;
-
-  listeners<TEvent extends TypedEvent>(
-    eventFilter?: TypedEventFilter<TEvent>
-  ): Array<TypedListener<TEvent>>;
-  listeners(eventName?: string): Array<Listener>;
-  removeAllListeners<TEvent extends TypedEvent>(
-    eventFilter: TypedEventFilter<TEvent>
-  ): this;
-  removeAllListeners(eventName?: string): this;
-  off: OnEvent<this>;
-  on: OnEvent<this>;
-  once: OnEvent<this>;
-  removeListener: OnEvent<this>;
-
-  functions: {
-    allowance(
-      owner: PromiseOrValue<string>,
-      spender: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
-
-    "allowance(address,address)"(
-      owner: PromiseOrValue<string>,
-      spender: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
-
-    approve(
-      spender: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
-    "approve(address,uint256)"(
-      spender: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
-    balanceOf(
-      account: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
-
-    "balanceOf(address)"(
-      account: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
-
-    borrowerOperationsAddress(overrides?: CallOverrides): Promise<[string]>;
-
-    "borrowerOperationsAddress()"(overrides?: CallOverrides): Promise<[string]>;
-
-    burn(
-      _account: PromiseOrValue<string>,
-      _amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
-    "burn(address,uint256)"(
-      _account: PromiseOrValue<string>,
-      _amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
-    decimals(overrides?: CallOverrides): Promise<[number]>;
-
-    "decimals()"(overrides?: CallOverrides): Promise<[number]>;
-
-    decreaseAllowance(
-      spender: PromiseOrValue<string>,
-      subtractedValue: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
-    "decreaseAllowance(address,uint256)"(
-      spender: PromiseOrValue<string>,
-      subtractedValue: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
-    domainSeparator(overrides?: CallOverrides): Promise<[string]>;
-
-    "domainSeparator()"(overrides?: CallOverrides): Promise<[string]>;
-
-    increaseAllowance(
-      spender: PromiseOrValue<string>,
-      addedValue: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
-    "increaseAllowance(address,uint256)"(
-      spender: PromiseOrValue<string>,
-      addedValue: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
-    mint(
-      _account: PromiseOrValue<string>,
-      _amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
-    "mint(address,uint256)"(
-      _account: PromiseOrValue<string>,
-      _amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
-    name(overrides?: CallOverrides): Promise<[string]>;
-
-    "name()"(overrides?: CallOverrides): Promise<[string]>;
-
-    nonces(
-      owner: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
-
-    "nonces(address)"(
-      owner: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
-
-    permit(
-      owner: PromiseOrValue<string>,
-      spender: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
-      deadline: PromiseOrValue<BigNumberish>,
-      v: PromiseOrValue<BigNumberish>,
-      r: PromiseOrValue<BytesLike>,
-      s: PromiseOrValue<BytesLike>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
-    "permit(address,address,uint256,uint256,uint8,bytes32,bytes32)"(
-      owner: PromiseOrValue<string>,
-      spender: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
-      deadline: PromiseOrValue<BigNumberish>,
-      v: PromiseOrValue<BigNumberish>,
-      r: PromiseOrValue<BytesLike>,
-      s: PromiseOrValue<BytesLike>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
-    permitTypeHash(overrides?: CallOverrides): Promise<[string]>;
-
-    "permitTypeHash()"(overrides?: CallOverrides): Promise<[string]>;
-
-    returnFromPool(
-      _poolAddress: PromiseOrValue<string>,
-      _receiver: PromiseOrValue<string>,
-      _amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
-    "returnFromPool(address,address,uint256)"(
-      _poolAddress: PromiseOrValue<string>,
-      _receiver: PromiseOrValue<string>,
-      _amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
-    sendToPool(
-      _sender: PromiseOrValue<string>,
-      _poolAddress: PromiseOrValue<string>,
-      _amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
-    "sendToPool(address,address,uint256)"(
-      _sender: PromiseOrValue<string>,
-      _poolAddress: PromiseOrValue<string>,
-      _amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
-    stabilityPoolAddress(overrides?: CallOverrides): Promise<[string]>;
-
-    "stabilityPoolAddress()"(overrides?: CallOverrides): Promise<[string]>;
-
-    symbol(overrides?: CallOverrides): Promise<[string]>;
-
-    "symbol()"(overrides?: CallOverrides): Promise<[string]>;
-
-    totalSupply(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    "totalSupply()"(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    transfer(
-      recipient: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
-    "transfer(address,uint256)"(
-      recipient: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
-    transferFrom(
-      sender: PromiseOrValue<string>,
-      recipient: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
-    "transferFrom(address,address,uint256)"(
-      sender: PromiseOrValue<string>,
-      recipient: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
-    troveManagerAddress(overrides?: CallOverrides): Promise<[string]>;
-
-    "troveManagerAddress()"(overrides?: CallOverrides): Promise<[string]>;
-
-    version(overrides?: CallOverrides): Promise<[string]>;
-
-    "version()"(overrides?: CallOverrides): Promise<[string]>;
-  };
-
-  allowance(
-    owner: PromiseOrValue<string>,
-    spender: PromiseOrValue<string>,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
-
-  "allowance(address,address)"(
-    owner: PromiseOrValue<string>,
-    spender: PromiseOrValue<string>,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
-
-  approve(
-    spender: PromiseOrValue<string>,
-    amount: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
-  "approve(address,uint256)"(
-    spender: PromiseOrValue<string>,
-    amount: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
-  balanceOf(
-    account: PromiseOrValue<string>,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
-
-  "balanceOf(address)"(
-    account: PromiseOrValue<string>,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
-
-  borrowerOperationsAddress(overrides?: CallOverrides): Promise<string>;
-
-  "borrowerOperationsAddress()"(overrides?: CallOverrides): Promise<string>;
-
-  burn(
-    _account: PromiseOrValue<string>,
-    _amount: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
-  "burn(address,uint256)"(
-    _account: PromiseOrValue<string>,
-    _amount: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
-  decimals(overrides?: CallOverrides): Promise<number>;
-
-  "decimals()"(overrides?: CallOverrides): Promise<number>;
-
-  decreaseAllowance(
-    spender: PromiseOrValue<string>,
-    subtractedValue: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
-  "decreaseAllowance(address,uint256)"(
-    spender: PromiseOrValue<string>,
-    subtractedValue: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
-  domainSeparator(overrides?: CallOverrides): Promise<string>;
-
-  "domainSeparator()"(overrides?: CallOverrides): Promise<string>;
-
-  increaseAllowance(
-    spender: PromiseOrValue<string>,
-    addedValue: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
-  "increaseAllowance(address,uint256)"(
-    spender: PromiseOrValue<string>,
-    addedValue: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
-  mint(
-    _account: PromiseOrValue<string>,
-    _amount: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
-  "mint(address,uint256)"(
-    _account: PromiseOrValue<string>,
-    _amount: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
-  name(overrides?: CallOverrides): Promise<string>;
-
-  "name()"(overrides?: CallOverrides): Promise<string>;
-
-  nonces(
-    owner: PromiseOrValue<string>,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
-
-  "nonces(address)"(
-    owner: PromiseOrValue<string>,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
-
-  permit(
-    owner: PromiseOrValue<string>,
-    spender: PromiseOrValue<string>,
-    amount: PromiseOrValue<BigNumberish>,
-    deadline: PromiseOrValue<BigNumberish>,
-    v: PromiseOrValue<BigNumberish>,
-    r: PromiseOrValue<BytesLike>,
-    s: PromiseOrValue<BytesLike>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
-  "permit(address,address,uint256,uint256,uint8,bytes32,bytes32)"(
-    owner: PromiseOrValue<string>,
-    spender: PromiseOrValue<string>,
-    amount: PromiseOrValue<BigNumberish>,
-    deadline: PromiseOrValue<BigNumberish>,
-    v: PromiseOrValue<BigNumberish>,
-    r: PromiseOrValue<BytesLike>,
-    s: PromiseOrValue<BytesLike>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
-  permitTypeHash(overrides?: CallOverrides): Promise<string>;
-
-  "permitTypeHash()"(overrides?: CallOverrides): Promise<string>;
-
-  returnFromPool(
-    _poolAddress: PromiseOrValue<string>,
-    _receiver: PromiseOrValue<string>,
-    _amount: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
-  "returnFromPool(address,address,uint256)"(
-    _poolAddress: PromiseOrValue<string>,
-    _receiver: PromiseOrValue<string>,
-    _amount: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
-  sendToPool(
-    _sender: PromiseOrValue<string>,
-    _poolAddress: PromiseOrValue<string>,
-    _amount: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
-  "sendToPool(address,address,uint256)"(
-    _sender: PromiseOrValue<string>,
-    _poolAddress: PromiseOrValue<string>,
-    _amount: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
-  stabilityPoolAddress(overrides?: CallOverrides): Promise<string>;
-
-  "stabilityPoolAddress()"(overrides?: CallOverrides): Promise<string>;
-
-  symbol(overrides?: CallOverrides): Promise<string>;
-
-  "symbol()"(overrides?: CallOverrides): Promise<string>;
-
-  totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
-
-  "totalSupply()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-  transfer(
-    recipient: PromiseOrValue<string>,
-    amount: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
-  "transfer(address,uint256)"(
-    recipient: PromiseOrValue<string>,
-    amount: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
-  transferFrom(
-    sender: PromiseOrValue<string>,
-    recipient: PromiseOrValue<string>,
-    amount: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
-  "transferFrom(address,address,uint256)"(
-    sender: PromiseOrValue<string>,
-    recipient: PromiseOrValue<string>,
-    amount: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
-  troveManagerAddress(overrides?: CallOverrides): Promise<string>;
-
-  "troveManagerAddress()"(overrides?: CallOverrides): Promise<string>;
-
-  version(overrides?: CallOverrides): Promise<string>;
-
-  "version()"(overrides?: CallOverrides): Promise<string>;
-
-  callStatic: {
-    allowance(
-      owner: PromiseOrValue<string>,
-      spender: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    "allowance(address,address)"(
-      owner: PromiseOrValue<string>,
-      spender: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    approve(
-      spender: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
-
-    "approve(address,uint256)"(
-      spender: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
-
-    balanceOf(
-      account: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    "balanceOf(address)"(
-      account: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    borrowerOperationsAddress(overrides?: CallOverrides): Promise<string>;
-
-    "borrowerOperationsAddress()"(overrides?: CallOverrides): Promise<string>;
-
-    burn(
-      _account: PromiseOrValue<string>,
-      _amount: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    "burn(address,uint256)"(
-      _account: PromiseOrValue<string>,
-      _amount: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    decimals(overrides?: CallOverrides): Promise<number>;
-
-    "decimals()"(overrides?: CallOverrides): Promise<number>;
-
-    decreaseAllowance(
-      spender: PromiseOrValue<string>,
-      subtractedValue: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
-
-    "decreaseAllowance(address,uint256)"(
-      spender: PromiseOrValue<string>,
-      subtractedValue: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
-
-    domainSeparator(overrides?: CallOverrides): Promise<string>;
-
-    "domainSeparator()"(overrides?: CallOverrides): Promise<string>;
-
-    increaseAllowance(
-      spender: PromiseOrValue<string>,
-      addedValue: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
-
-    "increaseAllowance(address,uint256)"(
-      spender: PromiseOrValue<string>,
-      addedValue: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
-
-    mint(
-      _account: PromiseOrValue<string>,
-      _amount: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    "mint(address,uint256)"(
-      _account: PromiseOrValue<string>,
-      _amount: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    name(overrides?: CallOverrides): Promise<string>;
-
-    "name()"(overrides?: CallOverrides): Promise<string>;
-
-    nonces(
-      owner: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    "nonces(address)"(
-      owner: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    permit(
-      owner: PromiseOrValue<string>,
-      spender: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
-      deadline: PromiseOrValue<BigNumberish>,
-      v: PromiseOrValue<BigNumberish>,
-      r: PromiseOrValue<BytesLike>,
-      s: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    "permit(address,address,uint256,uint256,uint8,bytes32,bytes32)"(
-      owner: PromiseOrValue<string>,
-      spender: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
-      deadline: PromiseOrValue<BigNumberish>,
-      v: PromiseOrValue<BigNumberish>,
-      r: PromiseOrValue<BytesLike>,
-      s: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    permitTypeHash(overrides?: CallOverrides): Promise<string>;
-
-    "permitTypeHash()"(overrides?: CallOverrides): Promise<string>;
-
-    returnFromPool(
-      _poolAddress: PromiseOrValue<string>,
-      _receiver: PromiseOrValue<string>,
-      _amount: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    "returnFromPool(address,address,uint256)"(
-      _poolAddress: PromiseOrValue<string>,
-      _receiver: PromiseOrValue<string>,
-      _amount: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    sendToPool(
-      _sender: PromiseOrValue<string>,
-      _poolAddress: PromiseOrValue<string>,
-      _amount: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    "sendToPool(address,address,uint256)"(
-      _sender: PromiseOrValue<string>,
-      _poolAddress: PromiseOrValue<string>,
-      _amount: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    stabilityPoolAddress(overrides?: CallOverrides): Promise<string>;
-
-    "stabilityPoolAddress()"(overrides?: CallOverrides): Promise<string>;
-
-    symbol(overrides?: CallOverrides): Promise<string>;
-
-    "symbol()"(overrides?: CallOverrides): Promise<string>;
-
-    totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "totalSupply()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-    transfer(
-      recipient: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
-
-    "transfer(address,uint256)"(
-      recipient: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
-
-    transferFrom(
-      sender: PromiseOrValue<string>,
-      recipient: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
-
-    "transferFrom(address,address,uint256)"(
-      sender: PromiseOrValue<string>,
-      recipient: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
-
-    troveManagerAddress(overrides?: CallOverrides): Promise<string>;
-
-    "troveManagerAddress()"(overrides?: CallOverrides): Promise<string>;
-
-    version(overrides?: CallOverrides): Promise<string>;
-
-    "version()"(overrides?: CallOverrides): Promise<string>;
-  };
-
-  filters: {
-    "Approval(address,address,uint256)"(
-      owner?: PromiseOrValue<string> | null,
-      spender?: PromiseOrValue<string> | null,
-      value?: null
-    ): ApprovalEventFilter;
-    Approval(
-      owner?: PromiseOrValue<string> | null,
-      spender?: PromiseOrValue<string> | null,
-      value?: null
-    ): ApprovalEventFilter;
-
-    "BorrowerOperationsAddressChanged(address)"(
-      _newBorrowerOperationsAddress?: null
-    ): BorrowerOperationsAddressChangedEventFilter;
-    BorrowerOperationsAddressChanged(
-      _newBorrowerOperationsAddress?: null
-    ): BorrowerOperationsAddressChangedEventFilter;
-
-    "LUSDTokenBalanceUpdated(address,uint256)"(
-      _user?: null,
-      _amount?: null
-    ): LUSDTokenBalanceUpdatedEventFilter;
-    LUSDTokenBalanceUpdated(
-      _user?: null,
-      _amount?: null
-    ): LUSDTokenBalanceUpdatedEventFilter;
-
-    "StabilityPoolAddressChanged(address)"(
-      _newStabilityPoolAddress?: null
-    ): StabilityPoolAddressChangedEventFilter;
-    StabilityPoolAddressChanged(
-      _newStabilityPoolAddress?: null
-    ): StabilityPoolAddressChangedEventFilter;
-
-    "Transfer(address,address,uint256)"(
-      from?: PromiseOrValue<string> | null,
-      to?: PromiseOrValue<string> | null,
-      value?: null
-    ): TransferEventFilter;
-    Transfer(
-      from?: PromiseOrValue<string> | null,
-      to?: PromiseOrValue<string> | null,
-      value?: null
-    ): TransferEventFilter;
-
-    "TroveManagerAddressChanged(address)"(
-      _troveManagerAddress?: null
-    ): TroveManagerAddressChangedEventFilter;
-    TroveManagerAddressChanged(
-      _troveManagerAddress?: null
-    ): TroveManagerAddressChangedEventFilter;
-  };
-
-  estimateGas: {
-    allowance(
-      owner: PromiseOrValue<string>,
-      spender: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    "allowance(address,address)"(
-      owner: PromiseOrValue<string>,
-      spender: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    approve(
-      spender: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    "approve(address,uint256)"(
-      spender: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    balanceOf(
-      account: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    "balanceOf(address)"(
-      account: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    borrowerOperationsAddress(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "borrowerOperationsAddress()"(
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    burn(
-      _account: PromiseOrValue<string>,
-      _amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    "burn(address,uint256)"(
-      _account: PromiseOrValue<string>,
-      _amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    decimals(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "decimals()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-    decreaseAllowance(
-      spender: PromiseOrValue<string>,
-      subtractedValue: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    "decreaseAllowance(address,uint256)"(
-      spender: PromiseOrValue<string>,
-      subtractedValue: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    domainSeparator(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "domainSeparator()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-    increaseAllowance(
-      spender: PromiseOrValue<string>,
-      addedValue: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    "increaseAllowance(address,uint256)"(
-      spender: PromiseOrValue<string>,
-      addedValue: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    mint(
-      _account: PromiseOrValue<string>,
-      _amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    "mint(address,uint256)"(
-      _account: PromiseOrValue<string>,
-      _amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    name(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "name()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-    nonces(
-      owner: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    "nonces(address)"(
-      owner: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    permit(
-      owner: PromiseOrValue<string>,
-      spender: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
-      deadline: PromiseOrValue<BigNumberish>,
-      v: PromiseOrValue<BigNumberish>,
-      r: PromiseOrValue<BytesLike>,
-      s: PromiseOrValue<BytesLike>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    "permit(address,address,uint256,uint256,uint8,bytes32,bytes32)"(
-      owner: PromiseOrValue<string>,
-      spender: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
-      deadline: PromiseOrValue<BigNumberish>,
-      v: PromiseOrValue<BigNumberish>,
-      r: PromiseOrValue<BytesLike>,
-      s: PromiseOrValue<BytesLike>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    permitTypeHash(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "permitTypeHash()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-    returnFromPool(
-      _poolAddress: PromiseOrValue<string>,
-      _receiver: PromiseOrValue<string>,
-      _amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    "returnFromPool(address,address,uint256)"(
-      _poolAddress: PromiseOrValue<string>,
-      _receiver: PromiseOrValue<string>,
-      _amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    sendToPool(
-      _sender: PromiseOrValue<string>,
-      _poolAddress: PromiseOrValue<string>,
-      _amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    "sendToPool(address,address,uint256)"(
-      _sender: PromiseOrValue<string>,
-      _poolAddress: PromiseOrValue<string>,
-      _amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    stabilityPoolAddress(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "stabilityPoolAddress()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-    symbol(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "symbol()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-    totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "totalSupply()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-    transfer(
-      recipient: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    "transfer(address,uint256)"(
-      recipient: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    transferFrom(
-      sender: PromiseOrValue<string>,
-      recipient: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    "transferFrom(address,address,uint256)"(
-      sender: PromiseOrValue<string>,
-      recipient: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    troveManagerAddress(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "troveManagerAddress()"(overrides?: CallOverrides): Promise<BigNumber>;
-
-    version(overrides?: CallOverrides): Promise<BigNumber>;
-
-    "version()"(overrides?: CallOverrides): Promise<BigNumber>;
-  };
-
-  populateTransaction: {
-    allowance(
-      owner: PromiseOrValue<string>,
-      spender: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    "allowance(address,address)"(
-      owner: PromiseOrValue<string>,
-      spender: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    approve(
-      spender: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    "approve(address,uint256)"(
-      spender: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    balanceOf(
-      account: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    "balanceOf(address)"(
-      account: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    borrowerOperationsAddress(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    "borrowerOperationsAddress()"(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    burn(
-      _account: PromiseOrValue<string>,
-      _amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    "burn(address,uint256)"(
-      _account: PromiseOrValue<string>,
-      _amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    decimals(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "decimals()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    decreaseAllowance(
-      spender: PromiseOrValue<string>,
-      subtractedValue: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    "decreaseAllowance(address,uint256)"(
-      spender: PromiseOrValue<string>,
-      subtractedValue: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    domainSeparator(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "domainSeparator()"(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    increaseAllowance(
-      spender: PromiseOrValue<string>,
-      addedValue: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    "increaseAllowance(address,uint256)"(
-      spender: PromiseOrValue<string>,
-      addedValue: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    mint(
-      _account: PromiseOrValue<string>,
-      _amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    "mint(address,uint256)"(
-      _account: PromiseOrValue<string>,
-      _amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    name(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "name()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    nonces(
-      owner: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    "nonces(address)"(
-      owner: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    permit(
-      owner: PromiseOrValue<string>,
-      spender: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
-      deadline: PromiseOrValue<BigNumberish>,
-      v: PromiseOrValue<BigNumberish>,
-      r: PromiseOrValue<BytesLike>,
-      s: PromiseOrValue<BytesLike>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    "permit(address,address,uint256,uint256,uint8,bytes32,bytes32)"(
-      owner: PromiseOrValue<string>,
-      spender: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
-      deadline: PromiseOrValue<BigNumberish>,
-      v: PromiseOrValue<BigNumberish>,
-      r: PromiseOrValue<BytesLike>,
-      s: PromiseOrValue<BytesLike>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    permitTypeHash(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "permitTypeHash()"(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    returnFromPool(
-      _poolAddress: PromiseOrValue<string>,
-      _receiver: PromiseOrValue<string>,
-      _amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    "returnFromPool(address,address,uint256)"(
-      _poolAddress: PromiseOrValue<string>,
-      _receiver: PromiseOrValue<string>,
-      _amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    sendToPool(
-      _sender: PromiseOrValue<string>,
-      _poolAddress: PromiseOrValue<string>,
-      _amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    "sendToPool(address,address,uint256)"(
-      _sender: PromiseOrValue<string>,
-      _poolAddress: PromiseOrValue<string>,
-      _amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    stabilityPoolAddress(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    "stabilityPoolAddress()"(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    symbol(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "symbol()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    totalSupply(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "totalSupply()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    transfer(
-      recipient: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    "transfer(address,uint256)"(
-      recipient: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    transferFrom(
-      sender: PromiseOrValue<string>,
-      recipient: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    "transferFrom(address,address,uint256)"(
-      sender: PromiseOrValue<string>,
-      recipient: PromiseOrValue<string>,
-      amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    troveManagerAddress(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    "troveManagerAddress()"(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    version(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    "version()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-  };
+	contractName: 'Lusd'
+
+	connect(signerOrProvider: Signer | Provider | string): this
+	attach(addressOrName: string): this
+	deployed(): Promise<this>
+
+	interface: LusdInterface
+
+	queryFilter<TEvent extends TypedEvent>(
+		event: TypedEventFilter<TEvent>,
+		fromBlockOrBlockhash?: string | number | undefined,
+		toBlock?: string | number | undefined,
+	): Promise<Array<TEvent>>
+
+	listeners<TEvent extends TypedEvent>(eventFilter?: TypedEventFilter<TEvent>): Array<TypedListener<TEvent>>
+	listeners(eventName?: string): Array<Listener>
+	removeAllListeners<TEvent extends TypedEvent>(eventFilter: TypedEventFilter<TEvent>): this
+	removeAllListeners(eventName?: string): this
+	off: OnEvent<this>
+	on: OnEvent<this>
+	once: OnEvent<this>
+	removeListener: OnEvent<this>
+
+	functions: {
+		allowance(owner: PromiseOrValue<string>, spender: PromiseOrValue<string>, overrides?: CallOverrides): Promise<[BigNumber]>
+
+		'allowance(address,address)'(
+			owner: PromiseOrValue<string>,
+			spender: PromiseOrValue<string>,
+			overrides?: CallOverrides,
+		): Promise<[BigNumber]>
+
+		approve(
+			spender: PromiseOrValue<string>,
+			amount: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<ContractTransaction>
+
+		'approve(address,uint256)'(
+			spender: PromiseOrValue<string>,
+			amount: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<ContractTransaction>
+
+		balanceOf(account: PromiseOrValue<string>, overrides?: CallOverrides): Promise<[BigNumber]>
+
+		'balanceOf(address)'(account: PromiseOrValue<string>, overrides?: CallOverrides): Promise<[BigNumber]>
+
+		borrowerOperationsAddress(overrides?: CallOverrides): Promise<[string]>
+
+		'borrowerOperationsAddress()'(overrides?: CallOverrides): Promise<[string]>
+
+		burn(
+			_account: PromiseOrValue<string>,
+			_amount: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<ContractTransaction>
+
+		'burn(address,uint256)'(
+			_account: PromiseOrValue<string>,
+			_amount: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<ContractTransaction>
+
+		decimals(overrides?: CallOverrides): Promise<[number]>
+
+		'decimals()'(overrides?: CallOverrides): Promise<[number]>
+
+		decreaseAllowance(
+			spender: PromiseOrValue<string>,
+			subtractedValue: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<ContractTransaction>
+
+		'decreaseAllowance(address,uint256)'(
+			spender: PromiseOrValue<string>,
+			subtractedValue: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<ContractTransaction>
+
+		domainSeparator(overrides?: CallOverrides): Promise<[string]>
+
+		'domainSeparator()'(overrides?: CallOverrides): Promise<[string]>
+
+		increaseAllowance(
+			spender: PromiseOrValue<string>,
+			addedValue: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<ContractTransaction>
+
+		'increaseAllowance(address,uint256)'(
+			spender: PromiseOrValue<string>,
+			addedValue: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<ContractTransaction>
+
+		mint(
+			_account: PromiseOrValue<string>,
+			_amount: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<ContractTransaction>
+
+		'mint(address,uint256)'(
+			_account: PromiseOrValue<string>,
+			_amount: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<ContractTransaction>
+
+		name(overrides?: CallOverrides): Promise<[string]>
+
+		'name()'(overrides?: CallOverrides): Promise<[string]>
+
+		nonces(owner: PromiseOrValue<string>, overrides?: CallOverrides): Promise<[BigNumber]>
+
+		'nonces(address)'(owner: PromiseOrValue<string>, overrides?: CallOverrides): Promise<[BigNumber]>
+
+		permit(
+			owner: PromiseOrValue<string>,
+			spender: PromiseOrValue<string>,
+			amount: PromiseOrValue<BigNumberish>,
+			deadline: PromiseOrValue<BigNumberish>,
+			v: PromiseOrValue<BigNumberish>,
+			r: PromiseOrValue<BytesLike>,
+			s: PromiseOrValue<BytesLike>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<ContractTransaction>
+
+		'permit(address,address,uint256,uint256,uint8,bytes32,bytes32)'(
+			owner: PromiseOrValue<string>,
+			spender: PromiseOrValue<string>,
+			amount: PromiseOrValue<BigNumberish>,
+			deadline: PromiseOrValue<BigNumberish>,
+			v: PromiseOrValue<BigNumberish>,
+			r: PromiseOrValue<BytesLike>,
+			s: PromiseOrValue<BytesLike>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<ContractTransaction>
+
+		permitTypeHash(overrides?: CallOverrides): Promise<[string]>
+
+		'permitTypeHash()'(overrides?: CallOverrides): Promise<[string]>
+
+		returnFromPool(
+			_poolAddress: PromiseOrValue<string>,
+			_receiver: PromiseOrValue<string>,
+			_amount: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<ContractTransaction>
+
+		'returnFromPool(address,address,uint256)'(
+			_poolAddress: PromiseOrValue<string>,
+			_receiver: PromiseOrValue<string>,
+			_amount: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<ContractTransaction>
+
+		sendToPool(
+			_sender: PromiseOrValue<string>,
+			_poolAddress: PromiseOrValue<string>,
+			_amount: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<ContractTransaction>
+
+		'sendToPool(address,address,uint256)'(
+			_sender: PromiseOrValue<string>,
+			_poolAddress: PromiseOrValue<string>,
+			_amount: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<ContractTransaction>
+
+		stabilityPoolAddress(overrides?: CallOverrides): Promise<[string]>
+
+		'stabilityPoolAddress()'(overrides?: CallOverrides): Promise<[string]>
+
+		symbol(overrides?: CallOverrides): Promise<[string]>
+
+		'symbol()'(overrides?: CallOverrides): Promise<[string]>
+
+		totalSupply(overrides?: CallOverrides): Promise<[BigNumber]>
+
+		'totalSupply()'(overrides?: CallOverrides): Promise<[BigNumber]>
+
+		transfer(
+			recipient: PromiseOrValue<string>,
+			amount: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<ContractTransaction>
+
+		'transfer(address,uint256)'(
+			recipient: PromiseOrValue<string>,
+			amount: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<ContractTransaction>
+
+		transferFrom(
+			sender: PromiseOrValue<string>,
+			recipient: PromiseOrValue<string>,
+			amount: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<ContractTransaction>
+
+		'transferFrom(address,address,uint256)'(
+			sender: PromiseOrValue<string>,
+			recipient: PromiseOrValue<string>,
+			amount: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<ContractTransaction>
+
+		troveManagerAddress(overrides?: CallOverrides): Promise<[string]>
+
+		'troveManagerAddress()'(overrides?: CallOverrides): Promise<[string]>
+
+		version(overrides?: CallOverrides): Promise<[string]>
+
+		'version()'(overrides?: CallOverrides): Promise<[string]>
+	}
+
+	allowance(owner: PromiseOrValue<string>, spender: PromiseOrValue<string>, overrides?: CallOverrides): Promise<BigNumber>
+
+	'allowance(address,address)'(
+		owner: PromiseOrValue<string>,
+		spender: PromiseOrValue<string>,
+		overrides?: CallOverrides,
+	): Promise<BigNumber>
+
+	approve(
+		spender: PromiseOrValue<string>,
+		amount: PromiseOrValue<BigNumberish>,
+		overrides?: Overrides & { from?: PromiseOrValue<string> },
+	): Promise<ContractTransaction>
+
+	'approve(address,uint256)'(
+		spender: PromiseOrValue<string>,
+		amount: PromiseOrValue<BigNumberish>,
+		overrides?: Overrides & { from?: PromiseOrValue<string> },
+	): Promise<ContractTransaction>
+
+	balanceOf(account: PromiseOrValue<string>, overrides?: CallOverrides): Promise<BigNumber>
+
+	'balanceOf(address)'(account: PromiseOrValue<string>, overrides?: CallOverrides): Promise<BigNumber>
+
+	borrowerOperationsAddress(overrides?: CallOverrides): Promise<string>
+
+	'borrowerOperationsAddress()'(overrides?: CallOverrides): Promise<string>
+
+	burn(
+		_account: PromiseOrValue<string>,
+		_amount: PromiseOrValue<BigNumberish>,
+		overrides?: Overrides & { from?: PromiseOrValue<string> },
+	): Promise<ContractTransaction>
+
+	'burn(address,uint256)'(
+		_account: PromiseOrValue<string>,
+		_amount: PromiseOrValue<BigNumberish>,
+		overrides?: Overrides & { from?: PromiseOrValue<string> },
+	): Promise<ContractTransaction>
+
+	decimals(overrides?: CallOverrides): Promise<number>
+
+	'decimals()'(overrides?: CallOverrides): Promise<number>
+
+	decreaseAllowance(
+		spender: PromiseOrValue<string>,
+		subtractedValue: PromiseOrValue<BigNumberish>,
+		overrides?: Overrides & { from?: PromiseOrValue<string> },
+	): Promise<ContractTransaction>
+
+	'decreaseAllowance(address,uint256)'(
+		spender: PromiseOrValue<string>,
+		subtractedValue: PromiseOrValue<BigNumberish>,
+		overrides?: Overrides & { from?: PromiseOrValue<string> },
+	): Promise<ContractTransaction>
+
+	domainSeparator(overrides?: CallOverrides): Promise<string>
+
+	'domainSeparator()'(overrides?: CallOverrides): Promise<string>
+
+	increaseAllowance(
+		spender: PromiseOrValue<string>,
+		addedValue: PromiseOrValue<BigNumberish>,
+		overrides?: Overrides & { from?: PromiseOrValue<string> },
+	): Promise<ContractTransaction>
+
+	'increaseAllowance(address,uint256)'(
+		spender: PromiseOrValue<string>,
+		addedValue: PromiseOrValue<BigNumberish>,
+		overrides?: Overrides & { from?: PromiseOrValue<string> },
+	): Promise<ContractTransaction>
+
+	mint(
+		_account: PromiseOrValue<string>,
+		_amount: PromiseOrValue<BigNumberish>,
+		overrides?: Overrides & { from?: PromiseOrValue<string> },
+	): Promise<ContractTransaction>
+
+	'mint(address,uint256)'(
+		_account: PromiseOrValue<string>,
+		_amount: PromiseOrValue<BigNumberish>,
+		overrides?: Overrides & { from?: PromiseOrValue<string> },
+	): Promise<ContractTransaction>
+
+	name(overrides?: CallOverrides): Promise<string>
+
+	'name()'(overrides?: CallOverrides): Promise<string>
+
+	nonces(owner: PromiseOrValue<string>, overrides?: CallOverrides): Promise<BigNumber>
+
+	'nonces(address)'(owner: PromiseOrValue<string>, overrides?: CallOverrides): Promise<BigNumber>
+
+	permit(
+		owner: PromiseOrValue<string>,
+		spender: PromiseOrValue<string>,
+		amount: PromiseOrValue<BigNumberish>,
+		deadline: PromiseOrValue<BigNumberish>,
+		v: PromiseOrValue<BigNumberish>,
+		r: PromiseOrValue<BytesLike>,
+		s: PromiseOrValue<BytesLike>,
+		overrides?: Overrides & { from?: PromiseOrValue<string> },
+	): Promise<ContractTransaction>
+
+	'permit(address,address,uint256,uint256,uint8,bytes32,bytes32)'(
+		owner: PromiseOrValue<string>,
+		spender: PromiseOrValue<string>,
+		amount: PromiseOrValue<BigNumberish>,
+		deadline: PromiseOrValue<BigNumberish>,
+		v: PromiseOrValue<BigNumberish>,
+		r: PromiseOrValue<BytesLike>,
+		s: PromiseOrValue<BytesLike>,
+		overrides?: Overrides & { from?: PromiseOrValue<string> },
+	): Promise<ContractTransaction>
+
+	permitTypeHash(overrides?: CallOverrides): Promise<string>
+
+	'permitTypeHash()'(overrides?: CallOverrides): Promise<string>
+
+	returnFromPool(
+		_poolAddress: PromiseOrValue<string>,
+		_receiver: PromiseOrValue<string>,
+		_amount: PromiseOrValue<BigNumberish>,
+		overrides?: Overrides & { from?: PromiseOrValue<string> },
+	): Promise<ContractTransaction>
+
+	'returnFromPool(address,address,uint256)'(
+		_poolAddress: PromiseOrValue<string>,
+		_receiver: PromiseOrValue<string>,
+		_amount: PromiseOrValue<BigNumberish>,
+		overrides?: Overrides & { from?: PromiseOrValue<string> },
+	): Promise<ContractTransaction>
+
+	sendToPool(
+		_sender: PromiseOrValue<string>,
+		_poolAddress: PromiseOrValue<string>,
+		_amount: PromiseOrValue<BigNumberish>,
+		overrides?: Overrides & { from?: PromiseOrValue<string> },
+	): Promise<ContractTransaction>
+
+	'sendToPool(address,address,uint256)'(
+		_sender: PromiseOrValue<string>,
+		_poolAddress: PromiseOrValue<string>,
+		_amount: PromiseOrValue<BigNumberish>,
+		overrides?: Overrides & { from?: PromiseOrValue<string> },
+	): Promise<ContractTransaction>
+
+	stabilityPoolAddress(overrides?: CallOverrides): Promise<string>
+
+	'stabilityPoolAddress()'(overrides?: CallOverrides): Promise<string>
+
+	symbol(overrides?: CallOverrides): Promise<string>
+
+	'symbol()'(overrides?: CallOverrides): Promise<string>
+
+	totalSupply(overrides?: CallOverrides): Promise<BigNumber>
+
+	'totalSupply()'(overrides?: CallOverrides): Promise<BigNumber>
+
+	transfer(
+		recipient: PromiseOrValue<string>,
+		amount: PromiseOrValue<BigNumberish>,
+		overrides?: Overrides & { from?: PromiseOrValue<string> },
+	): Promise<ContractTransaction>
+
+	'transfer(address,uint256)'(
+		recipient: PromiseOrValue<string>,
+		amount: PromiseOrValue<BigNumberish>,
+		overrides?: Overrides & { from?: PromiseOrValue<string> },
+	): Promise<ContractTransaction>
+
+	transferFrom(
+		sender: PromiseOrValue<string>,
+		recipient: PromiseOrValue<string>,
+		amount: PromiseOrValue<BigNumberish>,
+		overrides?: Overrides & { from?: PromiseOrValue<string> },
+	): Promise<ContractTransaction>
+
+	'transferFrom(address,address,uint256)'(
+		sender: PromiseOrValue<string>,
+		recipient: PromiseOrValue<string>,
+		amount: PromiseOrValue<BigNumberish>,
+		overrides?: Overrides & { from?: PromiseOrValue<string> },
+	): Promise<ContractTransaction>
+
+	troveManagerAddress(overrides?: CallOverrides): Promise<string>
+
+	'troveManagerAddress()'(overrides?: CallOverrides): Promise<string>
+
+	version(overrides?: CallOverrides): Promise<string>
+
+	'version()'(overrides?: CallOverrides): Promise<string>
+
+	callStatic: {
+		allowance(owner: PromiseOrValue<string>, spender: PromiseOrValue<string>, overrides?: CallOverrides): Promise<BigNumber>
+
+		'allowance(address,address)'(
+			owner: PromiseOrValue<string>,
+			spender: PromiseOrValue<string>,
+			overrides?: CallOverrides,
+		): Promise<BigNumber>
+
+		approve(spender: PromiseOrValue<string>, amount: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<boolean>
+
+		'approve(address,uint256)'(
+			spender: PromiseOrValue<string>,
+			amount: PromiseOrValue<BigNumberish>,
+			overrides?: CallOverrides,
+		): Promise<boolean>
+
+		balanceOf(account: PromiseOrValue<string>, overrides?: CallOverrides): Promise<BigNumber>
+
+		'balanceOf(address)'(account: PromiseOrValue<string>, overrides?: CallOverrides): Promise<BigNumber>
+
+		borrowerOperationsAddress(overrides?: CallOverrides): Promise<string>
+
+		'borrowerOperationsAddress()'(overrides?: CallOverrides): Promise<string>
+
+		burn(_account: PromiseOrValue<string>, _amount: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<void>
+
+		'burn(address,uint256)'(
+			_account: PromiseOrValue<string>,
+			_amount: PromiseOrValue<BigNumberish>,
+			overrides?: CallOverrides,
+		): Promise<void>
+
+		decimals(overrides?: CallOverrides): Promise<number>
+
+		'decimals()'(overrides?: CallOverrides): Promise<number>
+
+		decreaseAllowance(
+			spender: PromiseOrValue<string>,
+			subtractedValue: PromiseOrValue<BigNumberish>,
+			overrides?: CallOverrides,
+		): Promise<boolean>
+
+		'decreaseAllowance(address,uint256)'(
+			spender: PromiseOrValue<string>,
+			subtractedValue: PromiseOrValue<BigNumberish>,
+			overrides?: CallOverrides,
+		): Promise<boolean>
+
+		domainSeparator(overrides?: CallOverrides): Promise<string>
+
+		'domainSeparator()'(overrides?: CallOverrides): Promise<string>
+
+		increaseAllowance(
+			spender: PromiseOrValue<string>,
+			addedValue: PromiseOrValue<BigNumberish>,
+			overrides?: CallOverrides,
+		): Promise<boolean>
+
+		'increaseAllowance(address,uint256)'(
+			spender: PromiseOrValue<string>,
+			addedValue: PromiseOrValue<BigNumberish>,
+			overrides?: CallOverrides,
+		): Promise<boolean>
+
+		mint(_account: PromiseOrValue<string>, _amount: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<void>
+
+		'mint(address,uint256)'(
+			_account: PromiseOrValue<string>,
+			_amount: PromiseOrValue<BigNumberish>,
+			overrides?: CallOverrides,
+		): Promise<void>
+
+		name(overrides?: CallOverrides): Promise<string>
+
+		'name()'(overrides?: CallOverrides): Promise<string>
+
+		nonces(owner: PromiseOrValue<string>, overrides?: CallOverrides): Promise<BigNumber>
+
+		'nonces(address)'(owner: PromiseOrValue<string>, overrides?: CallOverrides): Promise<BigNumber>
+
+		permit(
+			owner: PromiseOrValue<string>,
+			spender: PromiseOrValue<string>,
+			amount: PromiseOrValue<BigNumberish>,
+			deadline: PromiseOrValue<BigNumberish>,
+			v: PromiseOrValue<BigNumberish>,
+			r: PromiseOrValue<BytesLike>,
+			s: PromiseOrValue<BytesLike>,
+			overrides?: CallOverrides,
+		): Promise<void>
+
+		'permit(address,address,uint256,uint256,uint8,bytes32,bytes32)'(
+			owner: PromiseOrValue<string>,
+			spender: PromiseOrValue<string>,
+			amount: PromiseOrValue<BigNumberish>,
+			deadline: PromiseOrValue<BigNumberish>,
+			v: PromiseOrValue<BigNumberish>,
+			r: PromiseOrValue<BytesLike>,
+			s: PromiseOrValue<BytesLike>,
+			overrides?: CallOverrides,
+		): Promise<void>
+
+		permitTypeHash(overrides?: CallOverrides): Promise<string>
+
+		'permitTypeHash()'(overrides?: CallOverrides): Promise<string>
+
+		returnFromPool(
+			_poolAddress: PromiseOrValue<string>,
+			_receiver: PromiseOrValue<string>,
+			_amount: PromiseOrValue<BigNumberish>,
+			overrides?: CallOverrides,
+		): Promise<void>
+
+		'returnFromPool(address,address,uint256)'(
+			_poolAddress: PromiseOrValue<string>,
+			_receiver: PromiseOrValue<string>,
+			_amount: PromiseOrValue<BigNumberish>,
+			overrides?: CallOverrides,
+		): Promise<void>
+
+		sendToPool(
+			_sender: PromiseOrValue<string>,
+			_poolAddress: PromiseOrValue<string>,
+			_amount: PromiseOrValue<BigNumberish>,
+			overrides?: CallOverrides,
+		): Promise<void>
+
+		'sendToPool(address,address,uint256)'(
+			_sender: PromiseOrValue<string>,
+			_poolAddress: PromiseOrValue<string>,
+			_amount: PromiseOrValue<BigNumberish>,
+			overrides?: CallOverrides,
+		): Promise<void>
+
+		stabilityPoolAddress(overrides?: CallOverrides): Promise<string>
+
+		'stabilityPoolAddress()'(overrides?: CallOverrides): Promise<string>
+
+		symbol(overrides?: CallOverrides): Promise<string>
+
+		'symbol()'(overrides?: CallOverrides): Promise<string>
+
+		totalSupply(overrides?: CallOverrides): Promise<BigNumber>
+
+		'totalSupply()'(overrides?: CallOverrides): Promise<BigNumber>
+
+		transfer(recipient: PromiseOrValue<string>, amount: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<boolean>
+
+		'transfer(address,uint256)'(
+			recipient: PromiseOrValue<string>,
+			amount: PromiseOrValue<BigNumberish>,
+			overrides?: CallOverrides,
+		): Promise<boolean>
+
+		transferFrom(
+			sender: PromiseOrValue<string>,
+			recipient: PromiseOrValue<string>,
+			amount: PromiseOrValue<BigNumberish>,
+			overrides?: CallOverrides,
+		): Promise<boolean>
+
+		'transferFrom(address,address,uint256)'(
+			sender: PromiseOrValue<string>,
+			recipient: PromiseOrValue<string>,
+			amount: PromiseOrValue<BigNumberish>,
+			overrides?: CallOverrides,
+		): Promise<boolean>
+
+		troveManagerAddress(overrides?: CallOverrides): Promise<string>
+
+		'troveManagerAddress()'(overrides?: CallOverrides): Promise<string>
+
+		version(overrides?: CallOverrides): Promise<string>
+
+		'version()'(overrides?: CallOverrides): Promise<string>
+	}
+
+	filters: {
+		'Approval(address,address,uint256)'(
+			owner?: PromiseOrValue<string> | null,
+			spender?: PromiseOrValue<string> | null,
+			value?: null,
+		): ApprovalEventFilter
+		Approval(owner?: PromiseOrValue<string> | null, spender?: PromiseOrValue<string> | null, value?: null): ApprovalEventFilter
+
+		'BorrowerOperationsAddressChanged(address)'(_newBorrowerOperationsAddress?: null): BorrowerOperationsAddressChangedEventFilter
+		BorrowerOperationsAddressChanged(_newBorrowerOperationsAddress?: null): BorrowerOperationsAddressChangedEventFilter
+
+		'LUSDTokenBalanceUpdated(address,uint256)'(_user?: null, _amount?: null): LUSDTokenBalanceUpdatedEventFilter
+		LUSDTokenBalanceUpdated(_user?: null, _amount?: null): LUSDTokenBalanceUpdatedEventFilter
+
+		'StabilityPoolAddressChanged(address)'(_newStabilityPoolAddress?: null): StabilityPoolAddressChangedEventFilter
+		StabilityPoolAddressChanged(_newStabilityPoolAddress?: null): StabilityPoolAddressChangedEventFilter
+
+		'Transfer(address,address,uint256)'(
+			from?: PromiseOrValue<string> | null,
+			to?: PromiseOrValue<string> | null,
+			value?: null,
+		): TransferEventFilter
+		Transfer(from?: PromiseOrValue<string> | null, to?: PromiseOrValue<string> | null, value?: null): TransferEventFilter
+
+		'TroveManagerAddressChanged(address)'(_troveManagerAddress?: null): TroveManagerAddressChangedEventFilter
+		TroveManagerAddressChanged(_troveManagerAddress?: null): TroveManagerAddressChangedEventFilter
+	}
+
+	estimateGas: {
+		allowance(owner: PromiseOrValue<string>, spender: PromiseOrValue<string>, overrides?: CallOverrides): Promise<BigNumber>
+
+		'allowance(address,address)'(
+			owner: PromiseOrValue<string>,
+			spender: PromiseOrValue<string>,
+			overrides?: CallOverrides,
+		): Promise<BigNumber>
+
+		approve(
+			spender: PromiseOrValue<string>,
+			amount: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<BigNumber>
+
+		'approve(address,uint256)'(
+			spender: PromiseOrValue<string>,
+			amount: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<BigNumber>
+
+		balanceOf(account: PromiseOrValue<string>, overrides?: CallOverrides): Promise<BigNumber>
+
+		'balanceOf(address)'(account: PromiseOrValue<string>, overrides?: CallOverrides): Promise<BigNumber>
+
+		borrowerOperationsAddress(overrides?: CallOverrides): Promise<BigNumber>
+
+		'borrowerOperationsAddress()'(overrides?: CallOverrides): Promise<BigNumber>
+
+		burn(
+			_account: PromiseOrValue<string>,
+			_amount: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<BigNumber>
+
+		'burn(address,uint256)'(
+			_account: PromiseOrValue<string>,
+			_amount: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<BigNumber>
+
+		decimals(overrides?: CallOverrides): Promise<BigNumber>
+
+		'decimals()'(overrides?: CallOverrides): Promise<BigNumber>
+
+		decreaseAllowance(
+			spender: PromiseOrValue<string>,
+			subtractedValue: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<BigNumber>
+
+		'decreaseAllowance(address,uint256)'(
+			spender: PromiseOrValue<string>,
+			subtractedValue: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<BigNumber>
+
+		domainSeparator(overrides?: CallOverrides): Promise<BigNumber>
+
+		'domainSeparator()'(overrides?: CallOverrides): Promise<BigNumber>
+
+		increaseAllowance(
+			spender: PromiseOrValue<string>,
+			addedValue: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<BigNumber>
+
+		'increaseAllowance(address,uint256)'(
+			spender: PromiseOrValue<string>,
+			addedValue: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<BigNumber>
+
+		mint(
+			_account: PromiseOrValue<string>,
+			_amount: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<BigNumber>
+
+		'mint(address,uint256)'(
+			_account: PromiseOrValue<string>,
+			_amount: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<BigNumber>
+
+		name(overrides?: CallOverrides): Promise<BigNumber>
+
+		'name()'(overrides?: CallOverrides): Promise<BigNumber>
+
+		nonces(owner: PromiseOrValue<string>, overrides?: CallOverrides): Promise<BigNumber>
+
+		'nonces(address)'(owner: PromiseOrValue<string>, overrides?: CallOverrides): Promise<BigNumber>
+
+		permit(
+			owner: PromiseOrValue<string>,
+			spender: PromiseOrValue<string>,
+			amount: PromiseOrValue<BigNumberish>,
+			deadline: PromiseOrValue<BigNumberish>,
+			v: PromiseOrValue<BigNumberish>,
+			r: PromiseOrValue<BytesLike>,
+			s: PromiseOrValue<BytesLike>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<BigNumber>
+
+		'permit(address,address,uint256,uint256,uint8,bytes32,bytes32)'(
+			owner: PromiseOrValue<string>,
+			spender: PromiseOrValue<string>,
+			amount: PromiseOrValue<BigNumberish>,
+			deadline: PromiseOrValue<BigNumberish>,
+			v: PromiseOrValue<BigNumberish>,
+			r: PromiseOrValue<BytesLike>,
+			s: PromiseOrValue<BytesLike>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<BigNumber>
+
+		permitTypeHash(overrides?: CallOverrides): Promise<BigNumber>
+
+		'permitTypeHash()'(overrides?: CallOverrides): Promise<BigNumber>
+
+		returnFromPool(
+			_poolAddress: PromiseOrValue<string>,
+			_receiver: PromiseOrValue<string>,
+			_amount: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<BigNumber>
+
+		'returnFromPool(address,address,uint256)'(
+			_poolAddress: PromiseOrValue<string>,
+			_receiver: PromiseOrValue<string>,
+			_amount: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<BigNumber>
+
+		sendToPool(
+			_sender: PromiseOrValue<string>,
+			_poolAddress: PromiseOrValue<string>,
+			_amount: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<BigNumber>
+
+		'sendToPool(address,address,uint256)'(
+			_sender: PromiseOrValue<string>,
+			_poolAddress: PromiseOrValue<string>,
+			_amount: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<BigNumber>
+
+		stabilityPoolAddress(overrides?: CallOverrides): Promise<BigNumber>
+
+		'stabilityPoolAddress()'(overrides?: CallOverrides): Promise<BigNumber>
+
+		symbol(overrides?: CallOverrides): Promise<BigNumber>
+
+		'symbol()'(overrides?: CallOverrides): Promise<BigNumber>
+
+		totalSupply(overrides?: CallOverrides): Promise<BigNumber>
+
+		'totalSupply()'(overrides?: CallOverrides): Promise<BigNumber>
+
+		transfer(
+			recipient: PromiseOrValue<string>,
+			amount: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<BigNumber>
+
+		'transfer(address,uint256)'(
+			recipient: PromiseOrValue<string>,
+			amount: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<BigNumber>
+
+		transferFrom(
+			sender: PromiseOrValue<string>,
+			recipient: PromiseOrValue<string>,
+			amount: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<BigNumber>
+
+		'transferFrom(address,address,uint256)'(
+			sender: PromiseOrValue<string>,
+			recipient: PromiseOrValue<string>,
+			amount: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<BigNumber>
+
+		troveManagerAddress(overrides?: CallOverrides): Promise<BigNumber>
+
+		'troveManagerAddress()'(overrides?: CallOverrides): Promise<BigNumber>
+
+		version(overrides?: CallOverrides): Promise<BigNumber>
+
+		'version()'(overrides?: CallOverrides): Promise<BigNumber>
+	}
+
+	populateTransaction: {
+		allowance(owner: PromiseOrValue<string>, spender: PromiseOrValue<string>, overrides?: CallOverrides): Promise<PopulatedTransaction>
+
+		'allowance(address,address)'(
+			owner: PromiseOrValue<string>,
+			spender: PromiseOrValue<string>,
+			overrides?: CallOverrides,
+		): Promise<PopulatedTransaction>
+
+		approve(
+			spender: PromiseOrValue<string>,
+			amount: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<PopulatedTransaction>
+
+		'approve(address,uint256)'(
+			spender: PromiseOrValue<string>,
+			amount: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<PopulatedTransaction>
+
+		balanceOf(account: PromiseOrValue<string>, overrides?: CallOverrides): Promise<PopulatedTransaction>
+
+		'balanceOf(address)'(account: PromiseOrValue<string>, overrides?: CallOverrides): Promise<PopulatedTransaction>
+
+		borrowerOperationsAddress(overrides?: CallOverrides): Promise<PopulatedTransaction>
+
+		'borrowerOperationsAddress()'(overrides?: CallOverrides): Promise<PopulatedTransaction>
+
+		burn(
+			_account: PromiseOrValue<string>,
+			_amount: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<PopulatedTransaction>
+
+		'burn(address,uint256)'(
+			_account: PromiseOrValue<string>,
+			_amount: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<PopulatedTransaction>
+
+		decimals(overrides?: CallOverrides): Promise<PopulatedTransaction>
+
+		'decimals()'(overrides?: CallOverrides): Promise<PopulatedTransaction>
+
+		decreaseAllowance(
+			spender: PromiseOrValue<string>,
+			subtractedValue: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<PopulatedTransaction>
+
+		'decreaseAllowance(address,uint256)'(
+			spender: PromiseOrValue<string>,
+			subtractedValue: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<PopulatedTransaction>
+
+		domainSeparator(overrides?: CallOverrides): Promise<PopulatedTransaction>
+
+		'domainSeparator()'(overrides?: CallOverrides): Promise<PopulatedTransaction>
+
+		increaseAllowance(
+			spender: PromiseOrValue<string>,
+			addedValue: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<PopulatedTransaction>
+
+		'increaseAllowance(address,uint256)'(
+			spender: PromiseOrValue<string>,
+			addedValue: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<PopulatedTransaction>
+
+		mint(
+			_account: PromiseOrValue<string>,
+			_amount: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<PopulatedTransaction>
+
+		'mint(address,uint256)'(
+			_account: PromiseOrValue<string>,
+			_amount: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<PopulatedTransaction>
+
+		name(overrides?: CallOverrides): Promise<PopulatedTransaction>
+
+		'name()'(overrides?: CallOverrides): Promise<PopulatedTransaction>
+
+		nonces(owner: PromiseOrValue<string>, overrides?: CallOverrides): Promise<PopulatedTransaction>
+
+		'nonces(address)'(owner: PromiseOrValue<string>, overrides?: CallOverrides): Promise<PopulatedTransaction>
+
+		permit(
+			owner: PromiseOrValue<string>,
+			spender: PromiseOrValue<string>,
+			amount: PromiseOrValue<BigNumberish>,
+			deadline: PromiseOrValue<BigNumberish>,
+			v: PromiseOrValue<BigNumberish>,
+			r: PromiseOrValue<BytesLike>,
+			s: PromiseOrValue<BytesLike>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<PopulatedTransaction>
+
+		'permit(address,address,uint256,uint256,uint8,bytes32,bytes32)'(
+			owner: PromiseOrValue<string>,
+			spender: PromiseOrValue<string>,
+			amount: PromiseOrValue<BigNumberish>,
+			deadline: PromiseOrValue<BigNumberish>,
+			v: PromiseOrValue<BigNumberish>,
+			r: PromiseOrValue<BytesLike>,
+			s: PromiseOrValue<BytesLike>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<PopulatedTransaction>
+
+		permitTypeHash(overrides?: CallOverrides): Promise<PopulatedTransaction>
+
+		'permitTypeHash()'(overrides?: CallOverrides): Promise<PopulatedTransaction>
+
+		returnFromPool(
+			_poolAddress: PromiseOrValue<string>,
+			_receiver: PromiseOrValue<string>,
+			_amount: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<PopulatedTransaction>
+
+		'returnFromPool(address,address,uint256)'(
+			_poolAddress: PromiseOrValue<string>,
+			_receiver: PromiseOrValue<string>,
+			_amount: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<PopulatedTransaction>
+
+		sendToPool(
+			_sender: PromiseOrValue<string>,
+			_poolAddress: PromiseOrValue<string>,
+			_amount: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<PopulatedTransaction>
+
+		'sendToPool(address,address,uint256)'(
+			_sender: PromiseOrValue<string>,
+			_poolAddress: PromiseOrValue<string>,
+			_amount: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<PopulatedTransaction>
+
+		stabilityPoolAddress(overrides?: CallOverrides): Promise<PopulatedTransaction>
+
+		'stabilityPoolAddress()'(overrides?: CallOverrides): Promise<PopulatedTransaction>
+
+		symbol(overrides?: CallOverrides): Promise<PopulatedTransaction>
+
+		'symbol()'(overrides?: CallOverrides): Promise<PopulatedTransaction>
+
+		totalSupply(overrides?: CallOverrides): Promise<PopulatedTransaction>
+
+		'totalSupply()'(overrides?: CallOverrides): Promise<PopulatedTransaction>
+
+		transfer(
+			recipient: PromiseOrValue<string>,
+			amount: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<PopulatedTransaction>
+
+		'transfer(address,uint256)'(
+			recipient: PromiseOrValue<string>,
+			amount: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<PopulatedTransaction>
+
+		transferFrom(
+			sender: PromiseOrValue<string>,
+			recipient: PromiseOrValue<string>,
+			amount: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<PopulatedTransaction>
+
+		'transferFrom(address,address,uint256)'(
+			sender: PromiseOrValue<string>,
+			recipient: PromiseOrValue<string>,
+			amount: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<PopulatedTransaction>
+
+		troveManagerAddress(overrides?: CallOverrides): Promise<PopulatedTransaction>
+
+		'troveManagerAddress()'(overrides?: CallOverrides): Promise<PopulatedTransaction>
+
+		version(overrides?: CallOverrides): Promise<PopulatedTransaction>
+
+		'version()'(overrides?: CallOverrides): Promise<PopulatedTransaction>
+	}
 }

@@ -148,8 +148,8 @@ const PositionListItem: React.FC<PositionListItemProps> = ({
 							{vault.isBasket && avgBasketAPY
 								? getDisplayBalance(avgBasketAPY, 0, 2) + '%'
 								: vault.isSynth
-								? getDisplayBalance(vault.borrowApy, 18, 2) + '%'
-								: '-'}
+								  ? getDisplayBalance(vault.borrowApy, 18, 2) + '%'
+								  : '-'}
 						</Typography>
 					</div>
 

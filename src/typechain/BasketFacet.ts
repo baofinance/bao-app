@@ -2,2148 +2,1372 @@
 /* tslint:disable */
 /* eslint-disable */
 import type {
-  BaseContract,
-  BigNumber,
-  BigNumberish,
-  BytesLike,
-  CallOverrides,
-  ContractTransaction,
-  Overrides,
-  PopulatedTransaction,
-  Signer,
-  utils,
-} from "ethers";
-import type {
-  FunctionFragment,
-  Result,
-  EventFragment,
-} from "@ethersproject/abi";
-import type { Listener, Provider } from "@ethersproject/providers";
-import type {
-  TypedEventFilter,
-  TypedEvent,
-  TypedListener,
-  OnEvent,
-  PromiseOrValue,
-} from "./common";
+	BaseContract,
+	BigNumber,
+	BigNumberish,
+	BytesLike,
+	CallOverrides,
+	ContractTransaction,
+	Overrides,
+	PopulatedTransaction,
+	Signer,
+	utils,
+} from 'ethers'
+import type { FunctionFragment, Result, EventFragment } from '@ethersproject/abi'
+import type { Listener, Provider } from '@ethersproject/providers'
+import type { TypedEventFilter, TypedEvent, TypedListener, OnEvent, PromiseOrValue } from './common'
 
 export interface BasketFacetInterface extends utils.Interface {
-  functions: {
-    "HUNDRED_PERCENT()": FunctionFragment;
-    "MAX_ANNUAL_FEE()": FunctionFragment;
-    "MAX_ENTRY_FEE()": FunctionFragment;
-    "MAX_EXIT_FEE()": FunctionFragment;
-    "MAX_TOKENS()": FunctionFragment;
-    "MIN_AMOUNT()": FunctionFragment;
-    "addToken(address)": FunctionFragment;
-    "balance(address)": FunctionFragment;
-    "calcOutStandingAnnualizedFee()": FunctionFragment;
-    "calcTokensForAmount(uint256)": FunctionFragment;
-    "calcTokensForAmountExit(uint256)": FunctionFragment;
-    "chargeOutstandingAnnualizedFee()": FunctionFragment;
-    "exitPool(uint256)": FunctionFragment;
-    "getAnnualizedFee()": FunctionFragment;
-    "getCap()": FunctionFragment;
-    "getEntryFee()": FunctionFragment;
-    "getEntryFeeBeneficiaryShare()": FunctionFragment;
-    "getExitFee()": FunctionFragment;
-    "getExitFeeBeneficiaryShare()": FunctionFragment;
-    "getFeeBeneficiary()": FunctionFragment;
-    "getLock()": FunctionFragment;
-    "getLockBlock()": FunctionFragment;
-    "getTokenInPool(address)": FunctionFragment;
-    "getTokens()": FunctionFragment;
-    "joinPool(uint256)": FunctionFragment;
-    "removeToken(address)": FunctionFragment;
-    "setAnnualizedFee(uint256)": FunctionFragment;
-    "setCap(uint256)": FunctionFragment;
-    "setEntryFee(uint256)": FunctionFragment;
-    "setEntryFeeBeneficiaryShare(uint256)": FunctionFragment;
-    "setExitFee(uint256)": FunctionFragment;
-    "setExitFeeBeneficiaryShare(uint256)": FunctionFragment;
-    "setFeeBeneficiary(address)": FunctionFragment;
-    "setLock(uint256)": FunctionFragment;
-  };
+	functions: {
+		'HUNDRED_PERCENT()': FunctionFragment
+		'MAX_ANNUAL_FEE()': FunctionFragment
+		'MAX_ENTRY_FEE()': FunctionFragment
+		'MAX_EXIT_FEE()': FunctionFragment
+		'MAX_TOKENS()': FunctionFragment
+		'MIN_AMOUNT()': FunctionFragment
+		'addToken(address)': FunctionFragment
+		'balance(address)': FunctionFragment
+		'calcOutStandingAnnualizedFee()': FunctionFragment
+		'calcTokensForAmount(uint256)': FunctionFragment
+		'calcTokensForAmountExit(uint256)': FunctionFragment
+		'chargeOutstandingAnnualizedFee()': FunctionFragment
+		'exitPool(uint256)': FunctionFragment
+		'getAnnualizedFee()': FunctionFragment
+		'getCap()': FunctionFragment
+		'getEntryFee()': FunctionFragment
+		'getEntryFeeBeneficiaryShare()': FunctionFragment
+		'getExitFee()': FunctionFragment
+		'getExitFeeBeneficiaryShare()': FunctionFragment
+		'getFeeBeneficiary()': FunctionFragment
+		'getLock()': FunctionFragment
+		'getLockBlock()': FunctionFragment
+		'getTokenInPool(address)': FunctionFragment
+		'getTokens()': FunctionFragment
+		'joinPool(uint256)': FunctionFragment
+		'removeToken(address)': FunctionFragment
+		'setAnnualizedFee(uint256)': FunctionFragment
+		'setCap(uint256)': FunctionFragment
+		'setEntryFee(uint256)': FunctionFragment
+		'setEntryFeeBeneficiaryShare(uint256)': FunctionFragment
+		'setExitFee(uint256)': FunctionFragment
+		'setExitFeeBeneficiaryShare(uint256)': FunctionFragment
+		'setFeeBeneficiary(address)': FunctionFragment
+		'setLock(uint256)': FunctionFragment
+	}
 
-  getFunction(
-    nameOrSignatureOrTopic:
-      | "HUNDRED_PERCENT"
-      | "HUNDRED_PERCENT()"
-      | "MAX_ANNUAL_FEE"
-      | "MAX_ANNUAL_FEE()"
-      | "MAX_ENTRY_FEE"
-      | "MAX_ENTRY_FEE()"
-      | "MAX_EXIT_FEE"
-      | "MAX_EXIT_FEE()"
-      | "MAX_TOKENS"
-      | "MAX_TOKENS()"
-      | "MIN_AMOUNT"
-      | "MIN_AMOUNT()"
-      | "addToken"
-      | "addToken(address)"
-      | "balance"
-      | "balance(address)"
-      | "calcOutStandingAnnualizedFee"
-      | "calcOutStandingAnnualizedFee()"
-      | "calcTokensForAmount"
-      | "calcTokensForAmount(uint256)"
-      | "calcTokensForAmountExit"
-      | "calcTokensForAmountExit(uint256)"
-      | "chargeOutstandingAnnualizedFee"
-      | "chargeOutstandingAnnualizedFee()"
-      | "exitPool"
-      | "exitPool(uint256)"
-      | "getAnnualizedFee"
-      | "getAnnualizedFee()"
-      | "getCap"
-      | "getCap()"
-      | "getEntryFee"
-      | "getEntryFee()"
-      | "getEntryFeeBeneficiaryShare"
-      | "getEntryFeeBeneficiaryShare()"
-      | "getExitFee"
-      | "getExitFee()"
-      | "getExitFeeBeneficiaryShare"
-      | "getExitFeeBeneficiaryShare()"
-      | "getFeeBeneficiary"
-      | "getFeeBeneficiary()"
-      | "getLock"
-      | "getLock()"
-      | "getLockBlock"
-      | "getLockBlock()"
-      | "getTokenInPool"
-      | "getTokenInPool(address)"
-      | "getTokens"
-      | "getTokens()"
-      | "joinPool"
-      | "joinPool(uint256)"
-      | "removeToken"
-      | "removeToken(address)"
-      | "setAnnualizedFee"
-      | "setAnnualizedFee(uint256)"
-      | "setCap"
-      | "setCap(uint256)"
-      | "setEntryFee"
-      | "setEntryFee(uint256)"
-      | "setEntryFeeBeneficiaryShare"
-      | "setEntryFeeBeneficiaryShare(uint256)"
-      | "setExitFee"
-      | "setExitFee(uint256)"
-      | "setExitFeeBeneficiaryShare"
-      | "setExitFeeBeneficiaryShare(uint256)"
-      | "setFeeBeneficiary"
-      | "setFeeBeneficiary(address)"
-      | "setLock"
-      | "setLock(uint256)"
-  ): FunctionFragment;
+	getFunction(
+		nameOrSignatureOrTopic:
+			| 'HUNDRED_PERCENT'
+			| 'HUNDRED_PERCENT()'
+			| 'MAX_ANNUAL_FEE'
+			| 'MAX_ANNUAL_FEE()'
+			| 'MAX_ENTRY_FEE'
+			| 'MAX_ENTRY_FEE()'
+			| 'MAX_EXIT_FEE'
+			| 'MAX_EXIT_FEE()'
+			| 'MAX_TOKENS'
+			| 'MAX_TOKENS()'
+			| 'MIN_AMOUNT'
+			| 'MIN_AMOUNT()'
+			| 'addToken'
+			| 'addToken(address)'
+			| 'balance'
+			| 'balance(address)'
+			| 'calcOutStandingAnnualizedFee'
+			| 'calcOutStandingAnnualizedFee()'
+			| 'calcTokensForAmount'
+			| 'calcTokensForAmount(uint256)'
+			| 'calcTokensForAmountExit'
+			| 'calcTokensForAmountExit(uint256)'
+			| 'chargeOutstandingAnnualizedFee'
+			| 'chargeOutstandingAnnualizedFee()'
+			| 'exitPool'
+			| 'exitPool(uint256)'
+			| 'getAnnualizedFee'
+			| 'getAnnualizedFee()'
+			| 'getCap'
+			| 'getCap()'
+			| 'getEntryFee'
+			| 'getEntryFee()'
+			| 'getEntryFeeBeneficiaryShare'
+			| 'getEntryFeeBeneficiaryShare()'
+			| 'getExitFee'
+			| 'getExitFee()'
+			| 'getExitFeeBeneficiaryShare'
+			| 'getExitFeeBeneficiaryShare()'
+			| 'getFeeBeneficiary'
+			| 'getFeeBeneficiary()'
+			| 'getLock'
+			| 'getLock()'
+			| 'getLockBlock'
+			| 'getLockBlock()'
+			| 'getTokenInPool'
+			| 'getTokenInPool(address)'
+			| 'getTokens'
+			| 'getTokens()'
+			| 'joinPool'
+			| 'joinPool(uint256)'
+			| 'removeToken'
+			| 'removeToken(address)'
+			| 'setAnnualizedFee'
+			| 'setAnnualizedFee(uint256)'
+			| 'setCap'
+			| 'setCap(uint256)'
+			| 'setEntryFee'
+			| 'setEntryFee(uint256)'
+			| 'setEntryFeeBeneficiaryShare'
+			| 'setEntryFeeBeneficiaryShare(uint256)'
+			| 'setExitFee'
+			| 'setExitFee(uint256)'
+			| 'setExitFeeBeneficiaryShare'
+			| 'setExitFeeBeneficiaryShare(uint256)'
+			| 'setFeeBeneficiary'
+			| 'setFeeBeneficiary(address)'
+			| 'setLock'
+			| 'setLock(uint256)',
+	): FunctionFragment
 
-  encodeFunctionData(
-    functionFragment: "HUNDRED_PERCENT",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "HUNDRED_PERCENT()",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "MAX_ANNUAL_FEE",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "MAX_ANNUAL_FEE()",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "MAX_ENTRY_FEE",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "MAX_ENTRY_FEE()",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "MAX_EXIT_FEE",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "MAX_EXIT_FEE()",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "MAX_TOKENS",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "MAX_TOKENS()",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "MIN_AMOUNT",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "MIN_AMOUNT()",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "addToken",
-    values: [PromiseOrValue<string>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "addToken(address)",
-    values: [PromiseOrValue<string>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "balance",
-    values: [PromiseOrValue<string>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "balance(address)",
-    values: [PromiseOrValue<string>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "calcOutStandingAnnualizedFee",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "calcOutStandingAnnualizedFee()",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "calcTokensForAmount",
-    values: [PromiseOrValue<BigNumberish>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "calcTokensForAmount(uint256)",
-    values: [PromiseOrValue<BigNumberish>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "calcTokensForAmountExit",
-    values: [PromiseOrValue<BigNumberish>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "calcTokensForAmountExit(uint256)",
-    values: [PromiseOrValue<BigNumberish>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "chargeOutstandingAnnualizedFee",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "chargeOutstandingAnnualizedFee()",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "exitPool",
-    values: [PromiseOrValue<BigNumberish>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "exitPool(uint256)",
-    values: [PromiseOrValue<BigNumberish>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "getAnnualizedFee",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "getAnnualizedFee()",
-    values?: undefined
-  ): string;
-  encodeFunctionData(functionFragment: "getCap", values?: undefined): string;
-  encodeFunctionData(functionFragment: "getCap()", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "getEntryFee",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "getEntryFee()",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "getEntryFeeBeneficiaryShare",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "getEntryFeeBeneficiaryShare()",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "getExitFee",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "getExitFee()",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "getExitFeeBeneficiaryShare",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "getExitFeeBeneficiaryShare()",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "getFeeBeneficiary",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "getFeeBeneficiary()",
-    values?: undefined
-  ): string;
-  encodeFunctionData(functionFragment: "getLock", values?: undefined): string;
-  encodeFunctionData(functionFragment: "getLock()", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "getLockBlock",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "getLockBlock()",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "getTokenInPool",
-    values: [PromiseOrValue<string>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "getTokenInPool(address)",
-    values: [PromiseOrValue<string>]
-  ): string;
-  encodeFunctionData(functionFragment: "getTokens", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "getTokens()",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "joinPool",
-    values: [PromiseOrValue<BigNumberish>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "joinPool(uint256)",
-    values: [PromiseOrValue<BigNumberish>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "removeToken",
-    values: [PromiseOrValue<string>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "removeToken(address)",
-    values: [PromiseOrValue<string>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "setAnnualizedFee",
-    values: [PromiseOrValue<BigNumberish>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "setAnnualizedFee(uint256)",
-    values: [PromiseOrValue<BigNumberish>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "setCap",
-    values: [PromiseOrValue<BigNumberish>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "setCap(uint256)",
-    values: [PromiseOrValue<BigNumberish>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "setEntryFee",
-    values: [PromiseOrValue<BigNumberish>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "setEntryFee(uint256)",
-    values: [PromiseOrValue<BigNumberish>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "setEntryFeeBeneficiaryShare",
-    values: [PromiseOrValue<BigNumberish>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "setEntryFeeBeneficiaryShare(uint256)",
-    values: [PromiseOrValue<BigNumberish>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "setExitFee",
-    values: [PromiseOrValue<BigNumberish>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "setExitFee(uint256)",
-    values: [PromiseOrValue<BigNumberish>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "setExitFeeBeneficiaryShare",
-    values: [PromiseOrValue<BigNumberish>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "setExitFeeBeneficiaryShare(uint256)",
-    values: [PromiseOrValue<BigNumberish>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "setFeeBeneficiary",
-    values: [PromiseOrValue<string>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "setFeeBeneficiary(address)",
-    values: [PromiseOrValue<string>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "setLock",
-    values: [PromiseOrValue<BigNumberish>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "setLock(uint256)",
-    values: [PromiseOrValue<BigNumberish>]
-  ): string;
+	encodeFunctionData(functionFragment: 'HUNDRED_PERCENT', values?: undefined): string
+	encodeFunctionData(functionFragment: 'HUNDRED_PERCENT()', values?: undefined): string
+	encodeFunctionData(functionFragment: 'MAX_ANNUAL_FEE', values?: undefined): string
+	encodeFunctionData(functionFragment: 'MAX_ANNUAL_FEE()', values?: undefined): string
+	encodeFunctionData(functionFragment: 'MAX_ENTRY_FEE', values?: undefined): string
+	encodeFunctionData(functionFragment: 'MAX_ENTRY_FEE()', values?: undefined): string
+	encodeFunctionData(functionFragment: 'MAX_EXIT_FEE', values?: undefined): string
+	encodeFunctionData(functionFragment: 'MAX_EXIT_FEE()', values?: undefined): string
+	encodeFunctionData(functionFragment: 'MAX_TOKENS', values?: undefined): string
+	encodeFunctionData(functionFragment: 'MAX_TOKENS()', values?: undefined): string
+	encodeFunctionData(functionFragment: 'MIN_AMOUNT', values?: undefined): string
+	encodeFunctionData(functionFragment: 'MIN_AMOUNT()', values?: undefined): string
+	encodeFunctionData(functionFragment: 'addToken', values: [PromiseOrValue<string>]): string
+	encodeFunctionData(functionFragment: 'addToken(address)', values: [PromiseOrValue<string>]): string
+	encodeFunctionData(functionFragment: 'balance', values: [PromiseOrValue<string>]): string
+	encodeFunctionData(functionFragment: 'balance(address)', values: [PromiseOrValue<string>]): string
+	encodeFunctionData(functionFragment: 'calcOutStandingAnnualizedFee', values?: undefined): string
+	encodeFunctionData(functionFragment: 'calcOutStandingAnnualizedFee()', values?: undefined): string
+	encodeFunctionData(functionFragment: 'calcTokensForAmount', values: [PromiseOrValue<BigNumberish>]): string
+	encodeFunctionData(functionFragment: 'calcTokensForAmount(uint256)', values: [PromiseOrValue<BigNumberish>]): string
+	encodeFunctionData(functionFragment: 'calcTokensForAmountExit', values: [PromiseOrValue<BigNumberish>]): string
+	encodeFunctionData(functionFragment: 'calcTokensForAmountExit(uint256)', values: [PromiseOrValue<BigNumberish>]): string
+	encodeFunctionData(functionFragment: 'chargeOutstandingAnnualizedFee', values?: undefined): string
+	encodeFunctionData(functionFragment: 'chargeOutstandingAnnualizedFee()', values?: undefined): string
+	encodeFunctionData(functionFragment: 'exitPool', values: [PromiseOrValue<BigNumberish>]): string
+	encodeFunctionData(functionFragment: 'exitPool(uint256)', values: [PromiseOrValue<BigNumberish>]): string
+	encodeFunctionData(functionFragment: 'getAnnualizedFee', values?: undefined): string
+	encodeFunctionData(functionFragment: 'getAnnualizedFee()', values?: undefined): string
+	encodeFunctionData(functionFragment: 'getCap', values?: undefined): string
+	encodeFunctionData(functionFragment: 'getCap()', values?: undefined): string
+	encodeFunctionData(functionFragment: 'getEntryFee', values?: undefined): string
+	encodeFunctionData(functionFragment: 'getEntryFee()', values?: undefined): string
+	encodeFunctionData(functionFragment: 'getEntryFeeBeneficiaryShare', values?: undefined): string
+	encodeFunctionData(functionFragment: 'getEntryFeeBeneficiaryShare()', values?: undefined): string
+	encodeFunctionData(functionFragment: 'getExitFee', values?: undefined): string
+	encodeFunctionData(functionFragment: 'getExitFee()', values?: undefined): string
+	encodeFunctionData(functionFragment: 'getExitFeeBeneficiaryShare', values?: undefined): string
+	encodeFunctionData(functionFragment: 'getExitFeeBeneficiaryShare()', values?: undefined): string
+	encodeFunctionData(functionFragment: 'getFeeBeneficiary', values?: undefined): string
+	encodeFunctionData(functionFragment: 'getFeeBeneficiary()', values?: undefined): string
+	encodeFunctionData(functionFragment: 'getLock', values?: undefined): string
+	encodeFunctionData(functionFragment: 'getLock()', values?: undefined): string
+	encodeFunctionData(functionFragment: 'getLockBlock', values?: undefined): string
+	encodeFunctionData(functionFragment: 'getLockBlock()', values?: undefined): string
+	encodeFunctionData(functionFragment: 'getTokenInPool', values: [PromiseOrValue<string>]): string
+	encodeFunctionData(functionFragment: 'getTokenInPool(address)', values: [PromiseOrValue<string>]): string
+	encodeFunctionData(functionFragment: 'getTokens', values?: undefined): string
+	encodeFunctionData(functionFragment: 'getTokens()', values?: undefined): string
+	encodeFunctionData(functionFragment: 'joinPool', values: [PromiseOrValue<BigNumberish>]): string
+	encodeFunctionData(functionFragment: 'joinPool(uint256)', values: [PromiseOrValue<BigNumberish>]): string
+	encodeFunctionData(functionFragment: 'removeToken', values: [PromiseOrValue<string>]): string
+	encodeFunctionData(functionFragment: 'removeToken(address)', values: [PromiseOrValue<string>]): string
+	encodeFunctionData(functionFragment: 'setAnnualizedFee', values: [PromiseOrValue<BigNumberish>]): string
+	encodeFunctionData(functionFragment: 'setAnnualizedFee(uint256)', values: [PromiseOrValue<BigNumberish>]): string
+	encodeFunctionData(functionFragment: 'setCap', values: [PromiseOrValue<BigNumberish>]): string
+	encodeFunctionData(functionFragment: 'setCap(uint256)', values: [PromiseOrValue<BigNumberish>]): string
+	encodeFunctionData(functionFragment: 'setEntryFee', values: [PromiseOrValue<BigNumberish>]): string
+	encodeFunctionData(functionFragment: 'setEntryFee(uint256)', values: [PromiseOrValue<BigNumberish>]): string
+	encodeFunctionData(functionFragment: 'setEntryFeeBeneficiaryShare', values: [PromiseOrValue<BigNumberish>]): string
+	encodeFunctionData(functionFragment: 'setEntryFeeBeneficiaryShare(uint256)', values: [PromiseOrValue<BigNumberish>]): string
+	encodeFunctionData(functionFragment: 'setExitFee', values: [PromiseOrValue<BigNumberish>]): string
+	encodeFunctionData(functionFragment: 'setExitFee(uint256)', values: [PromiseOrValue<BigNumberish>]): string
+	encodeFunctionData(functionFragment: 'setExitFeeBeneficiaryShare', values: [PromiseOrValue<BigNumberish>]): string
+	encodeFunctionData(functionFragment: 'setExitFeeBeneficiaryShare(uint256)', values: [PromiseOrValue<BigNumberish>]): string
+	encodeFunctionData(functionFragment: 'setFeeBeneficiary', values: [PromiseOrValue<string>]): string
+	encodeFunctionData(functionFragment: 'setFeeBeneficiary(address)', values: [PromiseOrValue<string>]): string
+	encodeFunctionData(functionFragment: 'setLock', values: [PromiseOrValue<BigNumberish>]): string
+	encodeFunctionData(functionFragment: 'setLock(uint256)', values: [PromiseOrValue<BigNumberish>]): string
 
-  decodeFunctionResult(
-    functionFragment: "HUNDRED_PERCENT",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "HUNDRED_PERCENT()",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "MAX_ANNUAL_FEE",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "MAX_ANNUAL_FEE()",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "MAX_ENTRY_FEE",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "MAX_ENTRY_FEE()",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "MAX_EXIT_FEE",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "MAX_EXIT_FEE()",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "MAX_TOKENS", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "MAX_TOKENS()",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "MIN_AMOUNT", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "MIN_AMOUNT()",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "addToken", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "addToken(address)",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "balance", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "balance(address)",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "calcOutStandingAnnualizedFee",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "calcOutStandingAnnualizedFee()",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "calcTokensForAmount",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "calcTokensForAmount(uint256)",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "calcTokensForAmountExit",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "calcTokensForAmountExit(uint256)",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "chargeOutstandingAnnualizedFee",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "chargeOutstandingAnnualizedFee()",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "exitPool", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "exitPool(uint256)",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "getAnnualizedFee",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "getAnnualizedFee()",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "getCap", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "getCap()", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "getEntryFee",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "getEntryFee()",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "getEntryFeeBeneficiaryShare",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "getEntryFeeBeneficiaryShare()",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "getExitFee", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "getExitFee()",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "getExitFeeBeneficiaryShare",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "getExitFeeBeneficiaryShare()",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "getFeeBeneficiary",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "getFeeBeneficiary()",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "getLock", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "getLock()", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "getLockBlock",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "getLockBlock()",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "getTokenInPool",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "getTokenInPool(address)",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "getTokens", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "getTokens()",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "joinPool", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "joinPool(uint256)",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "removeToken",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "removeToken(address)",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "setAnnualizedFee",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "setAnnualizedFee(uint256)",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "setCap", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "setCap(uint256)",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "setEntryFee",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "setEntryFee(uint256)",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "setEntryFeeBeneficiaryShare",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "setEntryFeeBeneficiaryShare(uint256)",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "setExitFee", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "setExitFee(uint256)",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "setExitFeeBeneficiaryShare",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "setExitFeeBeneficiaryShare(uint256)",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "setFeeBeneficiary",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "setFeeBeneficiary(address)",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "setLock", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "setLock(uint256)",
-    data: BytesLike
-  ): Result;
+	decodeFunctionResult(functionFragment: 'HUNDRED_PERCENT', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'HUNDRED_PERCENT()', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'MAX_ANNUAL_FEE', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'MAX_ANNUAL_FEE()', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'MAX_ENTRY_FEE', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'MAX_ENTRY_FEE()', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'MAX_EXIT_FEE', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'MAX_EXIT_FEE()', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'MAX_TOKENS', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'MAX_TOKENS()', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'MIN_AMOUNT', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'MIN_AMOUNT()', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'addToken', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'addToken(address)', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'balance', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'balance(address)', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'calcOutStandingAnnualizedFee', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'calcOutStandingAnnualizedFee()', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'calcTokensForAmount', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'calcTokensForAmount(uint256)', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'calcTokensForAmountExit', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'calcTokensForAmountExit(uint256)', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'chargeOutstandingAnnualizedFee', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'chargeOutstandingAnnualizedFee()', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'exitPool', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'exitPool(uint256)', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'getAnnualizedFee', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'getAnnualizedFee()', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'getCap', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'getCap()', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'getEntryFee', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'getEntryFee()', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'getEntryFeeBeneficiaryShare', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'getEntryFeeBeneficiaryShare()', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'getExitFee', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'getExitFee()', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'getExitFeeBeneficiaryShare', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'getExitFeeBeneficiaryShare()', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'getFeeBeneficiary', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'getFeeBeneficiary()', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'getLock', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'getLock()', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'getLockBlock', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'getLockBlock()', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'getTokenInPool', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'getTokenInPool(address)', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'getTokens', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'getTokens()', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'joinPool', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'joinPool(uint256)', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'removeToken', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'removeToken(address)', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'setAnnualizedFee', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'setAnnualizedFee(uint256)', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'setCap', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'setCap(uint256)', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'setEntryFee', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'setEntryFee(uint256)', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'setEntryFeeBeneficiaryShare', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'setEntryFeeBeneficiaryShare(uint256)', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'setExitFee', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'setExitFee(uint256)', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'setExitFeeBeneficiaryShare', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'setExitFeeBeneficiaryShare(uint256)', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'setFeeBeneficiary', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'setFeeBeneficiary(address)', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'setLock', data: BytesLike): Result
+	decodeFunctionResult(functionFragment: 'setLock(uint256)', data: BytesLike): Result
 
-  events: {
-    "AnnualizedFeeSet(uint256)": EventFragment;
-    "CapSet(uint256)": EventFragment;
-    "EntryFeeBeneficiaryShareSet(uint256)": EventFragment;
-    "EntryFeeSet(uint256)": EventFragment;
-    "ExitFeeBeneficiaryShareSet(uint256)": EventFragment;
-    "ExitFeeSet(uint256)": EventFragment;
-    "FeeBeneficiarySet(address)": EventFragment;
-    "FeeCharged(uint256)": EventFragment;
-    "LockSet(uint256)": EventFragment;
-    "PoolExited(address,uint256)": EventFragment;
-    "PoolJoined(address,uint256)": EventFragment;
-    "TokenAdded(address)": EventFragment;
-    "TokenRemoved(address)": EventFragment;
-  };
+	events: {
+		'AnnualizedFeeSet(uint256)': EventFragment
+		'CapSet(uint256)': EventFragment
+		'EntryFeeBeneficiaryShareSet(uint256)': EventFragment
+		'EntryFeeSet(uint256)': EventFragment
+		'ExitFeeBeneficiaryShareSet(uint256)': EventFragment
+		'ExitFeeSet(uint256)': EventFragment
+		'FeeBeneficiarySet(address)': EventFragment
+		'FeeCharged(uint256)': EventFragment
+		'LockSet(uint256)': EventFragment
+		'PoolExited(address,uint256)': EventFragment
+		'PoolJoined(address,uint256)': EventFragment
+		'TokenAdded(address)': EventFragment
+		'TokenRemoved(address)': EventFragment
+	}
 
-  getEvent(nameOrSignatureOrTopic: "AnnualizedFeeSet"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "AnnualizedFeeSet(uint256)"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "CapSet"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "CapSet(uint256)"): EventFragment;
-  getEvent(
-    nameOrSignatureOrTopic: "EntryFeeBeneficiaryShareSet"
-  ): EventFragment;
-  getEvent(
-    nameOrSignatureOrTopic: "EntryFeeBeneficiaryShareSet(uint256)"
-  ): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "EntryFeeSet"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "EntryFeeSet(uint256)"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "ExitFeeBeneficiaryShareSet"): EventFragment;
-  getEvent(
-    nameOrSignatureOrTopic: "ExitFeeBeneficiaryShareSet(uint256)"
-  ): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "ExitFeeSet"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "ExitFeeSet(uint256)"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "FeeBeneficiarySet"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "FeeBeneficiarySet(address)"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "FeeCharged"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "FeeCharged(uint256)"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "LockSet"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "LockSet(uint256)"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "PoolExited"): EventFragment;
-  getEvent(
-    nameOrSignatureOrTopic: "PoolExited(address,uint256)"
-  ): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "PoolJoined"): EventFragment;
-  getEvent(
-    nameOrSignatureOrTopic: "PoolJoined(address,uint256)"
-  ): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "TokenAdded"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "TokenAdded(address)"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "TokenRemoved"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "TokenRemoved(address)"): EventFragment;
+	getEvent(nameOrSignatureOrTopic: 'AnnualizedFeeSet'): EventFragment
+	getEvent(nameOrSignatureOrTopic: 'AnnualizedFeeSet(uint256)'): EventFragment
+	getEvent(nameOrSignatureOrTopic: 'CapSet'): EventFragment
+	getEvent(nameOrSignatureOrTopic: 'CapSet(uint256)'): EventFragment
+	getEvent(nameOrSignatureOrTopic: 'EntryFeeBeneficiaryShareSet'): EventFragment
+	getEvent(nameOrSignatureOrTopic: 'EntryFeeBeneficiaryShareSet(uint256)'): EventFragment
+	getEvent(nameOrSignatureOrTopic: 'EntryFeeSet'): EventFragment
+	getEvent(nameOrSignatureOrTopic: 'EntryFeeSet(uint256)'): EventFragment
+	getEvent(nameOrSignatureOrTopic: 'ExitFeeBeneficiaryShareSet'): EventFragment
+	getEvent(nameOrSignatureOrTopic: 'ExitFeeBeneficiaryShareSet(uint256)'): EventFragment
+	getEvent(nameOrSignatureOrTopic: 'ExitFeeSet'): EventFragment
+	getEvent(nameOrSignatureOrTopic: 'ExitFeeSet(uint256)'): EventFragment
+	getEvent(nameOrSignatureOrTopic: 'FeeBeneficiarySet'): EventFragment
+	getEvent(nameOrSignatureOrTopic: 'FeeBeneficiarySet(address)'): EventFragment
+	getEvent(nameOrSignatureOrTopic: 'FeeCharged'): EventFragment
+	getEvent(nameOrSignatureOrTopic: 'FeeCharged(uint256)'): EventFragment
+	getEvent(nameOrSignatureOrTopic: 'LockSet'): EventFragment
+	getEvent(nameOrSignatureOrTopic: 'LockSet(uint256)'): EventFragment
+	getEvent(nameOrSignatureOrTopic: 'PoolExited'): EventFragment
+	getEvent(nameOrSignatureOrTopic: 'PoolExited(address,uint256)'): EventFragment
+	getEvent(nameOrSignatureOrTopic: 'PoolJoined'): EventFragment
+	getEvent(nameOrSignatureOrTopic: 'PoolJoined(address,uint256)'): EventFragment
+	getEvent(nameOrSignatureOrTopic: 'TokenAdded'): EventFragment
+	getEvent(nameOrSignatureOrTopic: 'TokenAdded(address)'): EventFragment
+	getEvent(nameOrSignatureOrTopic: 'TokenRemoved'): EventFragment
+	getEvent(nameOrSignatureOrTopic: 'TokenRemoved(address)'): EventFragment
 }
 
 export interface AnnualizedFeeSetEventObject {
-  fee: BigNumber;
+	fee: BigNumber
 }
-export type AnnualizedFeeSetEvent = TypedEvent<
-  [BigNumber],
-  AnnualizedFeeSetEventObject
->;
+export type AnnualizedFeeSetEvent = TypedEvent<[BigNumber], AnnualizedFeeSetEventObject>
 
-export type AnnualizedFeeSetEventFilter =
-  TypedEventFilter<AnnualizedFeeSetEvent>;
+export type AnnualizedFeeSetEventFilter = TypedEventFilter<AnnualizedFeeSetEvent>
 
 export interface CapSetEventObject {
-  cap: BigNumber;
+	cap: BigNumber
 }
-export type CapSetEvent = TypedEvent<[BigNumber], CapSetEventObject>;
+export type CapSetEvent = TypedEvent<[BigNumber], CapSetEventObject>
 
-export type CapSetEventFilter = TypedEventFilter<CapSetEvent>;
+export type CapSetEventFilter = TypedEventFilter<CapSetEvent>
 
 export interface EntryFeeBeneficiaryShareSetEventObject {
-  share: BigNumber;
+	share: BigNumber
 }
-export type EntryFeeBeneficiaryShareSetEvent = TypedEvent<
-  [BigNumber],
-  EntryFeeBeneficiaryShareSetEventObject
->;
+export type EntryFeeBeneficiaryShareSetEvent = TypedEvent<[BigNumber], EntryFeeBeneficiaryShareSetEventObject>
 
-export type EntryFeeBeneficiaryShareSetEventFilter =
-  TypedEventFilter<EntryFeeBeneficiaryShareSetEvent>;
+export type EntryFeeBeneficiaryShareSetEventFilter = TypedEventFilter<EntryFeeBeneficiaryShareSetEvent>
 
 export interface EntryFeeSetEventObject {
-  fee: BigNumber;
+	fee: BigNumber
 }
-export type EntryFeeSetEvent = TypedEvent<[BigNumber], EntryFeeSetEventObject>;
+export type EntryFeeSetEvent = TypedEvent<[BigNumber], EntryFeeSetEventObject>
 
-export type EntryFeeSetEventFilter = TypedEventFilter<EntryFeeSetEvent>;
+export type EntryFeeSetEventFilter = TypedEventFilter<EntryFeeSetEvent>
 
 export interface ExitFeeBeneficiaryShareSetEventObject {
-  share: BigNumber;
+	share: BigNumber
 }
-export type ExitFeeBeneficiaryShareSetEvent = TypedEvent<
-  [BigNumber],
-  ExitFeeBeneficiaryShareSetEventObject
->;
+export type ExitFeeBeneficiaryShareSetEvent = TypedEvent<[BigNumber], ExitFeeBeneficiaryShareSetEventObject>
 
-export type ExitFeeBeneficiaryShareSetEventFilter =
-  TypedEventFilter<ExitFeeBeneficiaryShareSetEvent>;
+export type ExitFeeBeneficiaryShareSetEventFilter = TypedEventFilter<ExitFeeBeneficiaryShareSetEvent>
 
 export interface ExitFeeSetEventObject {
-  fee: BigNumber;
+	fee: BigNumber
 }
-export type ExitFeeSetEvent = TypedEvent<[BigNumber], ExitFeeSetEventObject>;
+export type ExitFeeSetEvent = TypedEvent<[BigNumber], ExitFeeSetEventObject>
 
-export type ExitFeeSetEventFilter = TypedEventFilter<ExitFeeSetEvent>;
+export type ExitFeeSetEventFilter = TypedEventFilter<ExitFeeSetEvent>
 
 export interface FeeBeneficiarySetEventObject {
-  beneficiary: string;
+	beneficiary: string
 }
-export type FeeBeneficiarySetEvent = TypedEvent<
-  [string],
-  FeeBeneficiarySetEventObject
->;
+export type FeeBeneficiarySetEvent = TypedEvent<[string], FeeBeneficiarySetEventObject>
 
-export type FeeBeneficiarySetEventFilter =
-  TypedEventFilter<FeeBeneficiarySetEvent>;
+export type FeeBeneficiarySetEventFilter = TypedEventFilter<FeeBeneficiarySetEvent>
 
 export interface FeeChargedEventObject {
-  amount: BigNumber;
+	amount: BigNumber
 }
-export type FeeChargedEvent = TypedEvent<[BigNumber], FeeChargedEventObject>;
+export type FeeChargedEvent = TypedEvent<[BigNumber], FeeChargedEventObject>
 
-export type FeeChargedEventFilter = TypedEventFilter<FeeChargedEvent>;
+export type FeeChargedEventFilter = TypedEventFilter<FeeChargedEvent>
 
 export interface LockSetEventObject {
-  lockBlock: BigNumber;
+	lockBlock: BigNumber
 }
-export type LockSetEvent = TypedEvent<[BigNumber], LockSetEventObject>;
+export type LockSetEvent = TypedEvent<[BigNumber], LockSetEventObject>
 
-export type LockSetEventFilter = TypedEventFilter<LockSetEvent>;
+export type LockSetEventFilter = TypedEventFilter<LockSetEvent>
 
 export interface PoolExitedEventObject {
-  who: string;
-  amount: BigNumber;
+	who: string
+	amount: BigNumber
 }
-export type PoolExitedEvent = TypedEvent<
-  [string, BigNumber],
-  PoolExitedEventObject
->;
+export type PoolExitedEvent = TypedEvent<[string, BigNumber], PoolExitedEventObject>
 
-export type PoolExitedEventFilter = TypedEventFilter<PoolExitedEvent>;
+export type PoolExitedEventFilter = TypedEventFilter<PoolExitedEvent>
 
 export interface PoolJoinedEventObject {
-  who: string;
-  amount: BigNumber;
+	who: string
+	amount: BigNumber
 }
-export type PoolJoinedEvent = TypedEvent<
-  [string, BigNumber],
-  PoolJoinedEventObject
->;
+export type PoolJoinedEvent = TypedEvent<[string, BigNumber], PoolJoinedEventObject>
 
-export type PoolJoinedEventFilter = TypedEventFilter<PoolJoinedEvent>;
+export type PoolJoinedEventFilter = TypedEventFilter<PoolJoinedEvent>
 
 export interface TokenAddedEventObject {
-  _token: string;
+	_token: string
 }
-export type TokenAddedEvent = TypedEvent<[string], TokenAddedEventObject>;
+export type TokenAddedEvent = TypedEvent<[string], TokenAddedEventObject>
 
-export type TokenAddedEventFilter = TypedEventFilter<TokenAddedEvent>;
+export type TokenAddedEventFilter = TypedEventFilter<TokenAddedEvent>
 
 export interface TokenRemovedEventObject {
-  _token: string;
+	_token: string
 }
-export type TokenRemovedEvent = TypedEvent<[string], TokenRemovedEventObject>;
+export type TokenRemovedEvent = TypedEvent<[string], TokenRemovedEventObject>
 
-export type TokenRemovedEventFilter = TypedEventFilter<TokenRemovedEvent>;
+export type TokenRemovedEventFilter = TypedEventFilter<TokenRemovedEvent>
 
 export interface BasketFacet extends BaseContract {
-  contractName: "BasketFacet";
+	contractName: 'BasketFacet'
 
-  connect(signerOrProvider: Signer | Provider | string): this;
-  attach(addressOrName: string): this;
-  deployed(): Promise<this>;
-
-  interface: BasketFacetInterface;
-
-  queryFilter<TEvent extends TypedEvent>(
-    event: TypedEventFilter<TEvent>,
-    fromBlockOrBlockhash?: string | number | undefined,
-    toBlock?: string | number | undefined
-  ): Promise<Array<TEvent>>;
-
-  listeners<TEvent extends TypedEvent>(
-    eventFilter?: TypedEventFilter<TEvent>
-  ): Array<TypedListener<TEvent>>;
-  listeners(eventName?: string): Array<Listener>;
-  removeAllListeners<TEvent extends TypedEvent>(
-    eventFilter: TypedEventFilter<TEvent>
-  ): this;
-  removeAllListeners(eventName?: string): this;
-  off: OnEvent<this>;
-  on: OnEvent<this>;
-  once: OnEvent<this>;
-  removeListener: OnEvent<this>;
-
-  functions: {
-    HUNDRED_PERCENT(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    "HUNDRED_PERCENT()"(overrides?: CallOverrides): Promise<[BigNumber]>;
+	connect(signerOrProvider: Signer | Provider | string): this
+	attach(addressOrName: string): this
+	deployed(): Promise<this>
 
-    MAX_ANNUAL_FEE(overrides?: CallOverrides): Promise<[BigNumber]>;
+	interface: BasketFacetInterface
 
-    "MAX_ANNUAL_FEE()"(overrides?: CallOverrides): Promise<[BigNumber]>;
+	queryFilter<TEvent extends TypedEvent>(
+		event: TypedEventFilter<TEvent>,
+		fromBlockOrBlockhash?: string | number | undefined,
+		toBlock?: string | number | undefined,
+	): Promise<Array<TEvent>>
 
-    MAX_ENTRY_FEE(overrides?: CallOverrides): Promise<[BigNumber]>;
+	listeners<TEvent extends TypedEvent>(eventFilter?: TypedEventFilter<TEvent>): Array<TypedListener<TEvent>>
+	listeners(eventName?: string): Array<Listener>
+	removeAllListeners<TEvent extends TypedEvent>(eventFilter: TypedEventFilter<TEvent>): this
+	removeAllListeners(eventName?: string): this
+	off: OnEvent<this>
+	on: OnEvent<this>
+	once: OnEvent<this>
+	removeListener: OnEvent<this>
 
-    "MAX_ENTRY_FEE()"(overrides?: CallOverrides): Promise<[BigNumber]>;
+	functions: {
+		HUNDRED_PERCENT(overrides?: CallOverrides): Promise<[BigNumber]>
 
-    MAX_EXIT_FEE(overrides?: CallOverrides): Promise<[BigNumber]>;
+		'HUNDRED_PERCENT()'(overrides?: CallOverrides): Promise<[BigNumber]>
 
-    "MAX_EXIT_FEE()"(overrides?: CallOverrides): Promise<[BigNumber]>;
+		MAX_ANNUAL_FEE(overrides?: CallOverrides): Promise<[BigNumber]>
 
-    MAX_TOKENS(overrides?: CallOverrides): Promise<[BigNumber]>;
+		'MAX_ANNUAL_FEE()'(overrides?: CallOverrides): Promise<[BigNumber]>
 
-    "MAX_TOKENS()"(overrides?: CallOverrides): Promise<[BigNumber]>;
+		MAX_ENTRY_FEE(overrides?: CallOverrides): Promise<[BigNumber]>
 
-    MIN_AMOUNT(overrides?: CallOverrides): Promise<[BigNumber]>;
+		'MAX_ENTRY_FEE()'(overrides?: CallOverrides): Promise<[BigNumber]>
 
-    "MIN_AMOUNT()"(overrides?: CallOverrides): Promise<[BigNumber]>;
+		MAX_EXIT_FEE(overrides?: CallOverrides): Promise<[BigNumber]>
 
-    addToken(
-      _token: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
+		'MAX_EXIT_FEE()'(overrides?: CallOverrides): Promise<[BigNumber]>
 
-    "addToken(address)"(
-      _token: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
+		MAX_TOKENS(overrides?: CallOverrides): Promise<[BigNumber]>
 
-    balance(
-      _token: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
+		'MAX_TOKENS()'(overrides?: CallOverrides): Promise<[BigNumber]>
 
-    "balance(address)"(
-      _token: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
+		MIN_AMOUNT(overrides?: CallOverrides): Promise<[BigNumber]>
 
-    calcOutStandingAnnualizedFee(
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
+		'MIN_AMOUNT()'(overrides?: CallOverrides): Promise<[BigNumber]>
 
-    "calcOutStandingAnnualizedFee()"(
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
+		addToken(_token: PromiseOrValue<string>, overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<ContractTransaction>
 
-    calcTokensForAmount(
-      _amount: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<
-      [string[], BigNumber[]] & { tokens: string[]; amounts: BigNumber[] }
-    >;
+		'addToken(address)'(
+			_token: PromiseOrValue<string>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<ContractTransaction>
 
-    "calcTokensForAmount(uint256)"(
-      _amount: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<
-      [string[], BigNumber[]] & { tokens: string[]; amounts: BigNumber[] }
-    >;
+		balance(_token: PromiseOrValue<string>, overrides?: CallOverrides): Promise<[BigNumber]>
 
-    calcTokensForAmountExit(
-      _amount: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<
-      [string[], BigNumber[]] & { tokens: string[]; amounts: BigNumber[] }
-    >;
+		'balance(address)'(_token: PromiseOrValue<string>, overrides?: CallOverrides): Promise<[BigNumber]>
 
-    "calcTokensForAmountExit(uint256)"(
-      _amount: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<
-      [string[], BigNumber[]] & { tokens: string[]; amounts: BigNumber[] }
-    >;
+		calcOutStandingAnnualizedFee(overrides?: CallOverrides): Promise<[BigNumber]>
 
-    chargeOutstandingAnnualizedFee(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
+		'calcOutStandingAnnualizedFee()'(overrides?: CallOverrides): Promise<[BigNumber]>
 
-    "chargeOutstandingAnnualizedFee()"(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
+		calcTokensForAmount(
+			_amount: PromiseOrValue<BigNumberish>,
+			overrides?: CallOverrides,
+		): Promise<[string[], BigNumber[]] & { tokens: string[]; amounts: BigNumber[] }>
 
-    exitPool(
-      _amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
+		'calcTokensForAmount(uint256)'(
+			_amount: PromiseOrValue<BigNumberish>,
+			overrides?: CallOverrides,
+		): Promise<[string[], BigNumber[]] & { tokens: string[]; amounts: BigNumber[] }>
 
-    "exitPool(uint256)"(
-      _amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
+		calcTokensForAmountExit(
+			_amount: PromiseOrValue<BigNumberish>,
+			overrides?: CallOverrides,
+		): Promise<[string[], BigNumber[]] & { tokens: string[]; amounts: BigNumber[] }>
 
-    getAnnualizedFee(overrides?: CallOverrides): Promise<[BigNumber]>;
+		'calcTokensForAmountExit(uint256)'(
+			_amount: PromiseOrValue<BigNumberish>,
+			overrides?: CallOverrides,
+		): Promise<[string[], BigNumber[]] & { tokens: string[]; amounts: BigNumber[] }>
 
-    "getAnnualizedFee()"(overrides?: CallOverrides): Promise<[BigNumber]>;
+		chargeOutstandingAnnualizedFee(overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<ContractTransaction>
 
-    getCap(overrides?: CallOverrides): Promise<[BigNumber]>;
+		'chargeOutstandingAnnualizedFee()'(overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<ContractTransaction>
 
-    "getCap()"(overrides?: CallOverrides): Promise<[BigNumber]>;
+		exitPool(_amount: PromiseOrValue<BigNumberish>, overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<ContractTransaction>
 
-    getEntryFee(overrides?: CallOverrides): Promise<[BigNumber]>;
+		'exitPool(uint256)'(
+			_amount: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<ContractTransaction>
 
-    "getEntryFee()"(overrides?: CallOverrides): Promise<[BigNumber]>;
+		getAnnualizedFee(overrides?: CallOverrides): Promise<[BigNumber]>
 
-    getEntryFeeBeneficiaryShare(
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
+		'getAnnualizedFee()'(overrides?: CallOverrides): Promise<[BigNumber]>
 
-    "getEntryFeeBeneficiaryShare()"(
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
+		getCap(overrides?: CallOverrides): Promise<[BigNumber]>
 
-    getExitFee(overrides?: CallOverrides): Promise<[BigNumber]>;
+		'getCap()'(overrides?: CallOverrides): Promise<[BigNumber]>
 
-    "getExitFee()"(overrides?: CallOverrides): Promise<[BigNumber]>;
+		getEntryFee(overrides?: CallOverrides): Promise<[BigNumber]>
 
-    getExitFeeBeneficiaryShare(overrides?: CallOverrides): Promise<[BigNumber]>;
+		'getEntryFee()'(overrides?: CallOverrides): Promise<[BigNumber]>
 
-    "getExitFeeBeneficiaryShare()"(
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
+		getEntryFeeBeneficiaryShare(overrides?: CallOverrides): Promise<[BigNumber]>
 
-    getFeeBeneficiary(overrides?: CallOverrides): Promise<[string]>;
+		'getEntryFeeBeneficiaryShare()'(overrides?: CallOverrides): Promise<[BigNumber]>
 
-    "getFeeBeneficiary()"(overrides?: CallOverrides): Promise<[string]>;
+		getExitFee(overrides?: CallOverrides): Promise<[BigNumber]>
 
-    getLock(overrides?: CallOverrides): Promise<[boolean]>;
+		'getExitFee()'(overrides?: CallOverrides): Promise<[BigNumber]>
 
-    "getLock()"(overrides?: CallOverrides): Promise<[boolean]>;
+		getExitFeeBeneficiaryShare(overrides?: CallOverrides): Promise<[BigNumber]>
 
-    getLockBlock(overrides?: CallOverrides): Promise<[BigNumber]>;
+		'getExitFeeBeneficiaryShare()'(overrides?: CallOverrides): Promise<[BigNumber]>
 
-    "getLockBlock()"(overrides?: CallOverrides): Promise<[BigNumber]>;
+		getFeeBeneficiary(overrides?: CallOverrides): Promise<[string]>
 
-    getTokenInPool(
-      _token: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<[boolean]>;
+		'getFeeBeneficiary()'(overrides?: CallOverrides): Promise<[string]>
 
-    "getTokenInPool(address)"(
-      _token: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<[boolean]>;
+		getLock(overrides?: CallOverrides): Promise<[boolean]>
 
-    getTokens(overrides?: CallOverrides): Promise<[string[]]>;
+		'getLock()'(overrides?: CallOverrides): Promise<[boolean]>
 
-    "getTokens()"(overrides?: CallOverrides): Promise<[string[]]>;
+		getLockBlock(overrides?: CallOverrides): Promise<[BigNumber]>
 
-    joinPool(
-      _amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
+		'getLockBlock()'(overrides?: CallOverrides): Promise<[BigNumber]>
 
-    "joinPool(uint256)"(
-      _amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
+		getTokenInPool(_token: PromiseOrValue<string>, overrides?: CallOverrides): Promise<[boolean]>
 
-    removeToken(
-      _token: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
+		'getTokenInPool(address)'(_token: PromiseOrValue<string>, overrides?: CallOverrides): Promise<[boolean]>
 
-    "removeToken(address)"(
-      _token: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
+		getTokens(overrides?: CallOverrides): Promise<[string[]]>
 
-    setAnnualizedFee(
-      _fee: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
+		'getTokens()'(overrides?: CallOverrides): Promise<[string[]]>
 
-    "setAnnualizedFee(uint256)"(
-      _fee: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
+		joinPool(_amount: PromiseOrValue<BigNumberish>, overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<ContractTransaction>
 
-    setCap(
-      _maxCap: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
+		'joinPool(uint256)'(
+			_amount: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<ContractTransaction>
 
-    "setCap(uint256)"(
-      _maxCap: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
+		removeToken(_token: PromiseOrValue<string>, overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<ContractTransaction>
 
-    setEntryFee(
-      _fee: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
+		'removeToken(address)'(
+			_token: PromiseOrValue<string>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<ContractTransaction>
 
-    "setEntryFee(uint256)"(
-      _fee: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
+		setAnnualizedFee(
+			_fee: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<ContractTransaction>
 
-    setEntryFeeBeneficiaryShare(
-      _share: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
+		'setAnnualizedFee(uint256)'(
+			_fee: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<ContractTransaction>
 
-    "setEntryFeeBeneficiaryShare(uint256)"(
-      _share: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
+		setCap(_maxCap: PromiseOrValue<BigNumberish>, overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<ContractTransaction>
 
-    setExitFee(
-      _fee: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
+		'setCap(uint256)'(
+			_maxCap: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<ContractTransaction>
 
-    "setExitFee(uint256)"(
-      _fee: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
+		setEntryFee(_fee: PromiseOrValue<BigNumberish>, overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<ContractTransaction>
 
-    setExitFeeBeneficiaryShare(
-      _share: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
+		'setEntryFee(uint256)'(
+			_fee: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<ContractTransaction>
 
-    "setExitFeeBeneficiaryShare(uint256)"(
-      _share: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
+		setEntryFeeBeneficiaryShare(
+			_share: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<ContractTransaction>
 
-    setFeeBeneficiary(
-      _beneficiary: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
+		'setEntryFeeBeneficiaryShare(uint256)'(
+			_share: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<ContractTransaction>
 
-    "setFeeBeneficiary(address)"(
-      _beneficiary: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
+		setExitFee(_fee: PromiseOrValue<BigNumberish>, overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<ContractTransaction>
 
-    setLock(
-      _lock: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
+		'setExitFee(uint256)'(
+			_fee: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<ContractTransaction>
 
-    "setLock(uint256)"(
-      _lock: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-  };
+		setExitFeeBeneficiaryShare(
+			_share: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<ContractTransaction>
 
-  HUNDRED_PERCENT(overrides?: CallOverrides): Promise<BigNumber>;
+		'setExitFeeBeneficiaryShare(uint256)'(
+			_share: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<ContractTransaction>
 
-  "HUNDRED_PERCENT()"(overrides?: CallOverrides): Promise<BigNumber>;
+		setFeeBeneficiary(
+			_beneficiary: PromiseOrValue<string>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<ContractTransaction>
 
-  MAX_ANNUAL_FEE(overrides?: CallOverrides): Promise<BigNumber>;
+		'setFeeBeneficiary(address)'(
+			_beneficiary: PromiseOrValue<string>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<ContractTransaction>
 
-  "MAX_ANNUAL_FEE()"(overrides?: CallOverrides): Promise<BigNumber>;
+		setLock(_lock: PromiseOrValue<BigNumberish>, overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<ContractTransaction>
 
-  MAX_ENTRY_FEE(overrides?: CallOverrides): Promise<BigNumber>;
+		'setLock(uint256)'(
+			_lock: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<ContractTransaction>
+	}
 
-  "MAX_ENTRY_FEE()"(overrides?: CallOverrides): Promise<BigNumber>;
+	HUNDRED_PERCENT(overrides?: CallOverrides): Promise<BigNumber>
 
-  MAX_EXIT_FEE(overrides?: CallOverrides): Promise<BigNumber>;
+	'HUNDRED_PERCENT()'(overrides?: CallOverrides): Promise<BigNumber>
 
-  "MAX_EXIT_FEE()"(overrides?: CallOverrides): Promise<BigNumber>;
+	MAX_ANNUAL_FEE(overrides?: CallOverrides): Promise<BigNumber>
 
-  MAX_TOKENS(overrides?: CallOverrides): Promise<BigNumber>;
+	'MAX_ANNUAL_FEE()'(overrides?: CallOverrides): Promise<BigNumber>
 
-  "MAX_TOKENS()"(overrides?: CallOverrides): Promise<BigNumber>;
+	MAX_ENTRY_FEE(overrides?: CallOverrides): Promise<BigNumber>
 
-  MIN_AMOUNT(overrides?: CallOverrides): Promise<BigNumber>;
+	'MAX_ENTRY_FEE()'(overrides?: CallOverrides): Promise<BigNumber>
 
-  "MIN_AMOUNT()"(overrides?: CallOverrides): Promise<BigNumber>;
+	MAX_EXIT_FEE(overrides?: CallOverrides): Promise<BigNumber>
 
-  addToken(
-    _token: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
+	'MAX_EXIT_FEE()'(overrides?: CallOverrides): Promise<BigNumber>
 
-  "addToken(address)"(
-    _token: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
+	MAX_TOKENS(overrides?: CallOverrides): Promise<BigNumber>
 
-  balance(
-    _token: PromiseOrValue<string>,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
+	'MAX_TOKENS()'(overrides?: CallOverrides): Promise<BigNumber>
 
-  "balance(address)"(
-    _token: PromiseOrValue<string>,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
+	MIN_AMOUNT(overrides?: CallOverrides): Promise<BigNumber>
 
-  calcOutStandingAnnualizedFee(overrides?: CallOverrides): Promise<BigNumber>;
+	'MIN_AMOUNT()'(overrides?: CallOverrides): Promise<BigNumber>
 
-  "calcOutStandingAnnualizedFee()"(
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
+	addToken(_token: PromiseOrValue<string>, overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<ContractTransaction>
 
-  calcTokensForAmount(
-    _amount: PromiseOrValue<BigNumberish>,
-    overrides?: CallOverrides
-  ): Promise<
-    [string[], BigNumber[]] & { tokens: string[]; amounts: BigNumber[] }
-  >;
+	'addToken(address)'(
+		_token: PromiseOrValue<string>,
+		overrides?: Overrides & { from?: PromiseOrValue<string> },
+	): Promise<ContractTransaction>
 
-  "calcTokensForAmount(uint256)"(
-    _amount: PromiseOrValue<BigNumberish>,
-    overrides?: CallOverrides
-  ): Promise<
-    [string[], BigNumber[]] & { tokens: string[]; amounts: BigNumber[] }
-  >;
+	balance(_token: PromiseOrValue<string>, overrides?: CallOverrides): Promise<BigNumber>
 
-  calcTokensForAmountExit(
-    _amount: PromiseOrValue<BigNumberish>,
-    overrides?: CallOverrides
-  ): Promise<
-    [string[], BigNumber[]] & { tokens: string[]; amounts: BigNumber[] }
-  >;
+	'balance(address)'(_token: PromiseOrValue<string>, overrides?: CallOverrides): Promise<BigNumber>
 
-  "calcTokensForAmountExit(uint256)"(
-    _amount: PromiseOrValue<BigNumberish>,
-    overrides?: CallOverrides
-  ): Promise<
-    [string[], BigNumber[]] & { tokens: string[]; amounts: BigNumber[] }
-  >;
+	calcOutStandingAnnualizedFee(overrides?: CallOverrides): Promise<BigNumber>
 
-  chargeOutstandingAnnualizedFee(
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
+	'calcOutStandingAnnualizedFee()'(overrides?: CallOverrides): Promise<BigNumber>
 
-  "chargeOutstandingAnnualizedFee()"(
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
+	calcTokensForAmount(
+		_amount: PromiseOrValue<BigNumberish>,
+		overrides?: CallOverrides,
+	): Promise<[string[], BigNumber[]] & { tokens: string[]; amounts: BigNumber[] }>
 
-  exitPool(
-    _amount: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
+	'calcTokensForAmount(uint256)'(
+		_amount: PromiseOrValue<BigNumberish>,
+		overrides?: CallOverrides,
+	): Promise<[string[], BigNumber[]] & { tokens: string[]; amounts: BigNumber[] }>
 
-  "exitPool(uint256)"(
-    _amount: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
+	calcTokensForAmountExit(
+		_amount: PromiseOrValue<BigNumberish>,
+		overrides?: CallOverrides,
+	): Promise<[string[], BigNumber[]] & { tokens: string[]; amounts: BigNumber[] }>
 
-  getAnnualizedFee(overrides?: CallOverrides): Promise<BigNumber>;
+	'calcTokensForAmountExit(uint256)'(
+		_amount: PromiseOrValue<BigNumberish>,
+		overrides?: CallOverrides,
+	): Promise<[string[], BigNumber[]] & { tokens: string[]; amounts: BigNumber[] }>
 
-  "getAnnualizedFee()"(overrides?: CallOverrides): Promise<BigNumber>;
+	chargeOutstandingAnnualizedFee(overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<ContractTransaction>
 
-  getCap(overrides?: CallOverrides): Promise<BigNumber>;
+	'chargeOutstandingAnnualizedFee()'(overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<ContractTransaction>
 
-  "getCap()"(overrides?: CallOverrides): Promise<BigNumber>;
+	exitPool(_amount: PromiseOrValue<BigNumberish>, overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<ContractTransaction>
 
-  getEntryFee(overrides?: CallOverrides): Promise<BigNumber>;
+	'exitPool(uint256)'(
+		_amount: PromiseOrValue<BigNumberish>,
+		overrides?: Overrides & { from?: PromiseOrValue<string> },
+	): Promise<ContractTransaction>
 
-  "getEntryFee()"(overrides?: CallOverrides): Promise<BigNumber>;
+	getAnnualizedFee(overrides?: CallOverrides): Promise<BigNumber>
 
-  getEntryFeeBeneficiaryShare(overrides?: CallOverrides): Promise<BigNumber>;
+	'getAnnualizedFee()'(overrides?: CallOverrides): Promise<BigNumber>
 
-  "getEntryFeeBeneficiaryShare()"(
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
+	getCap(overrides?: CallOverrides): Promise<BigNumber>
 
-  getExitFee(overrides?: CallOverrides): Promise<BigNumber>;
+	'getCap()'(overrides?: CallOverrides): Promise<BigNumber>
 
-  "getExitFee()"(overrides?: CallOverrides): Promise<BigNumber>;
+	getEntryFee(overrides?: CallOverrides): Promise<BigNumber>
 
-  getExitFeeBeneficiaryShare(overrides?: CallOverrides): Promise<BigNumber>;
+	'getEntryFee()'(overrides?: CallOverrides): Promise<BigNumber>
 
-  "getExitFeeBeneficiaryShare()"(overrides?: CallOverrides): Promise<BigNumber>;
+	getEntryFeeBeneficiaryShare(overrides?: CallOverrides): Promise<BigNumber>
 
-  getFeeBeneficiary(overrides?: CallOverrides): Promise<string>;
+	'getEntryFeeBeneficiaryShare()'(overrides?: CallOverrides): Promise<BigNumber>
 
-  "getFeeBeneficiary()"(overrides?: CallOverrides): Promise<string>;
+	getExitFee(overrides?: CallOverrides): Promise<BigNumber>
 
-  getLock(overrides?: CallOverrides): Promise<boolean>;
+	'getExitFee()'(overrides?: CallOverrides): Promise<BigNumber>
 
-  "getLock()"(overrides?: CallOverrides): Promise<boolean>;
+	getExitFeeBeneficiaryShare(overrides?: CallOverrides): Promise<BigNumber>
 
-  getLockBlock(overrides?: CallOverrides): Promise<BigNumber>;
+	'getExitFeeBeneficiaryShare()'(overrides?: CallOverrides): Promise<BigNumber>
 
-  "getLockBlock()"(overrides?: CallOverrides): Promise<BigNumber>;
+	getFeeBeneficiary(overrides?: CallOverrides): Promise<string>
 
-  getTokenInPool(
-    _token: PromiseOrValue<string>,
-    overrides?: CallOverrides
-  ): Promise<boolean>;
+	'getFeeBeneficiary()'(overrides?: CallOverrides): Promise<string>
 
-  "getTokenInPool(address)"(
-    _token: PromiseOrValue<string>,
-    overrides?: CallOverrides
-  ): Promise<boolean>;
+	getLock(overrides?: CallOverrides): Promise<boolean>
 
-  getTokens(overrides?: CallOverrides): Promise<string[]>;
+	'getLock()'(overrides?: CallOverrides): Promise<boolean>
 
-  "getTokens()"(overrides?: CallOverrides): Promise<string[]>;
+	getLockBlock(overrides?: CallOverrides): Promise<BigNumber>
 
-  joinPool(
-    _amount: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
+	'getLockBlock()'(overrides?: CallOverrides): Promise<BigNumber>
 
-  "joinPool(uint256)"(
-    _amount: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
+	getTokenInPool(_token: PromiseOrValue<string>, overrides?: CallOverrides): Promise<boolean>
 
-  removeToken(
-    _token: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
+	'getTokenInPool(address)'(_token: PromiseOrValue<string>, overrides?: CallOverrides): Promise<boolean>
 
-  "removeToken(address)"(
-    _token: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
+	getTokens(overrides?: CallOverrides): Promise<string[]>
 
-  setAnnualizedFee(
-    _fee: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
+	'getTokens()'(overrides?: CallOverrides): Promise<string[]>
 
-  "setAnnualizedFee(uint256)"(
-    _fee: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
+	joinPool(_amount: PromiseOrValue<BigNumberish>, overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<ContractTransaction>
 
-  setCap(
-    _maxCap: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
+	'joinPool(uint256)'(
+		_amount: PromiseOrValue<BigNumberish>,
+		overrides?: Overrides & { from?: PromiseOrValue<string> },
+	): Promise<ContractTransaction>
 
-  "setCap(uint256)"(
-    _maxCap: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
+	removeToken(_token: PromiseOrValue<string>, overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<ContractTransaction>
 
-  setEntryFee(
-    _fee: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
+	'removeToken(address)'(
+		_token: PromiseOrValue<string>,
+		overrides?: Overrides & { from?: PromiseOrValue<string> },
+	): Promise<ContractTransaction>
 
-  "setEntryFee(uint256)"(
-    _fee: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
+	setAnnualizedFee(
+		_fee: PromiseOrValue<BigNumberish>,
+		overrides?: Overrides & { from?: PromiseOrValue<string> },
+	): Promise<ContractTransaction>
 
-  setEntryFeeBeneficiaryShare(
-    _share: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
+	'setAnnualizedFee(uint256)'(
+		_fee: PromiseOrValue<BigNumberish>,
+		overrides?: Overrides & { from?: PromiseOrValue<string> },
+	): Promise<ContractTransaction>
 
-  "setEntryFeeBeneficiaryShare(uint256)"(
-    _share: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
+	setCap(_maxCap: PromiseOrValue<BigNumberish>, overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<ContractTransaction>
 
-  setExitFee(
-    _fee: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
+	'setCap(uint256)'(
+		_maxCap: PromiseOrValue<BigNumberish>,
+		overrides?: Overrides & { from?: PromiseOrValue<string> },
+	): Promise<ContractTransaction>
 
-  "setExitFee(uint256)"(
-    _fee: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
+	setEntryFee(_fee: PromiseOrValue<BigNumberish>, overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<ContractTransaction>
 
-  setExitFeeBeneficiaryShare(
-    _share: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
+	'setEntryFee(uint256)'(
+		_fee: PromiseOrValue<BigNumberish>,
+		overrides?: Overrides & { from?: PromiseOrValue<string> },
+	): Promise<ContractTransaction>
 
-  "setExitFeeBeneficiaryShare(uint256)"(
-    _share: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
+	setEntryFeeBeneficiaryShare(
+		_share: PromiseOrValue<BigNumberish>,
+		overrides?: Overrides & { from?: PromiseOrValue<string> },
+	): Promise<ContractTransaction>
 
-  setFeeBeneficiary(
-    _beneficiary: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
+	'setEntryFeeBeneficiaryShare(uint256)'(
+		_share: PromiseOrValue<BigNumberish>,
+		overrides?: Overrides & { from?: PromiseOrValue<string> },
+	): Promise<ContractTransaction>
 
-  "setFeeBeneficiary(address)"(
-    _beneficiary: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
+	setExitFee(_fee: PromiseOrValue<BigNumberish>, overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<ContractTransaction>
 
-  setLock(
-    _lock: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
+	'setExitFee(uint256)'(
+		_fee: PromiseOrValue<BigNumberish>,
+		overrides?: Overrides & { from?: PromiseOrValue<string> },
+	): Promise<ContractTransaction>
 
-  "setLock(uint256)"(
-    _lock: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
+	setExitFeeBeneficiaryShare(
+		_share: PromiseOrValue<BigNumberish>,
+		overrides?: Overrides & { from?: PromiseOrValue<string> },
+	): Promise<ContractTransaction>
 
-  callStatic: {
-    HUNDRED_PERCENT(overrides?: CallOverrides): Promise<BigNumber>;
+	'setExitFeeBeneficiaryShare(uint256)'(
+		_share: PromiseOrValue<BigNumberish>,
+		overrides?: Overrides & { from?: PromiseOrValue<string> },
+	): Promise<ContractTransaction>
 
-    "HUNDRED_PERCENT()"(overrides?: CallOverrides): Promise<BigNumber>;
+	setFeeBeneficiary(
+		_beneficiary: PromiseOrValue<string>,
+		overrides?: Overrides & { from?: PromiseOrValue<string> },
+	): Promise<ContractTransaction>
 
-    MAX_ANNUAL_FEE(overrides?: CallOverrides): Promise<BigNumber>;
+	'setFeeBeneficiary(address)'(
+		_beneficiary: PromiseOrValue<string>,
+		overrides?: Overrides & { from?: PromiseOrValue<string> },
+	): Promise<ContractTransaction>
 
-    "MAX_ANNUAL_FEE()"(overrides?: CallOverrides): Promise<BigNumber>;
+	setLock(_lock: PromiseOrValue<BigNumberish>, overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<ContractTransaction>
 
-    MAX_ENTRY_FEE(overrides?: CallOverrides): Promise<BigNumber>;
+	'setLock(uint256)'(
+		_lock: PromiseOrValue<BigNumberish>,
+		overrides?: Overrides & { from?: PromiseOrValue<string> },
+	): Promise<ContractTransaction>
 
-    "MAX_ENTRY_FEE()"(overrides?: CallOverrides): Promise<BigNumber>;
+	callStatic: {
+		HUNDRED_PERCENT(overrides?: CallOverrides): Promise<BigNumber>
 
-    MAX_EXIT_FEE(overrides?: CallOverrides): Promise<BigNumber>;
+		'HUNDRED_PERCENT()'(overrides?: CallOverrides): Promise<BigNumber>
 
-    "MAX_EXIT_FEE()"(overrides?: CallOverrides): Promise<BigNumber>;
+		MAX_ANNUAL_FEE(overrides?: CallOverrides): Promise<BigNumber>
 
-    MAX_TOKENS(overrides?: CallOverrides): Promise<BigNumber>;
+		'MAX_ANNUAL_FEE()'(overrides?: CallOverrides): Promise<BigNumber>
 
-    "MAX_TOKENS()"(overrides?: CallOverrides): Promise<BigNumber>;
+		MAX_ENTRY_FEE(overrides?: CallOverrides): Promise<BigNumber>
 
-    MIN_AMOUNT(overrides?: CallOverrides): Promise<BigNumber>;
+		'MAX_ENTRY_FEE()'(overrides?: CallOverrides): Promise<BigNumber>
 
-    "MIN_AMOUNT()"(overrides?: CallOverrides): Promise<BigNumber>;
+		MAX_EXIT_FEE(overrides?: CallOverrides): Promise<BigNumber>
 
-    addToken(
-      _token: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<void>;
+		'MAX_EXIT_FEE()'(overrides?: CallOverrides): Promise<BigNumber>
 
-    "addToken(address)"(
-      _token: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<void>;
+		MAX_TOKENS(overrides?: CallOverrides): Promise<BigNumber>
 
-    balance(
-      _token: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+		'MAX_TOKENS()'(overrides?: CallOverrides): Promise<BigNumber>
 
-    "balance(address)"(
-      _token: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+		MIN_AMOUNT(overrides?: CallOverrides): Promise<BigNumber>
 
-    calcOutStandingAnnualizedFee(overrides?: CallOverrides): Promise<BigNumber>;
+		'MIN_AMOUNT()'(overrides?: CallOverrides): Promise<BigNumber>
 
-    "calcOutStandingAnnualizedFee()"(
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+		addToken(_token: PromiseOrValue<string>, overrides?: CallOverrides): Promise<void>
 
-    calcTokensForAmount(
-      _amount: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<
-      [string[], BigNumber[]] & { tokens: string[]; amounts: BigNumber[] }
-    >;
+		'addToken(address)'(_token: PromiseOrValue<string>, overrides?: CallOverrides): Promise<void>
 
-    "calcTokensForAmount(uint256)"(
-      _amount: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<
-      [string[], BigNumber[]] & { tokens: string[]; amounts: BigNumber[] }
-    >;
+		balance(_token: PromiseOrValue<string>, overrides?: CallOverrides): Promise<BigNumber>
 
-    calcTokensForAmountExit(
-      _amount: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<
-      [string[], BigNumber[]] & { tokens: string[]; amounts: BigNumber[] }
-    >;
+		'balance(address)'(_token: PromiseOrValue<string>, overrides?: CallOverrides): Promise<BigNumber>
 
-    "calcTokensForAmountExit(uint256)"(
-      _amount: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<
-      [string[], BigNumber[]] & { tokens: string[]; amounts: BigNumber[] }
-    >;
+		calcOutStandingAnnualizedFee(overrides?: CallOverrides): Promise<BigNumber>
 
-    chargeOutstandingAnnualizedFee(overrides?: CallOverrides): Promise<void>;
+		'calcOutStandingAnnualizedFee()'(overrides?: CallOverrides): Promise<BigNumber>
 
-    "chargeOutstandingAnnualizedFee()"(
-      overrides?: CallOverrides
-    ): Promise<void>;
+		calcTokensForAmount(
+			_amount: PromiseOrValue<BigNumberish>,
+			overrides?: CallOverrides,
+		): Promise<[string[], BigNumber[]] & { tokens: string[]; amounts: BigNumber[] }>
 
-    exitPool(
-      _amount: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<void>;
+		'calcTokensForAmount(uint256)'(
+			_amount: PromiseOrValue<BigNumberish>,
+			overrides?: CallOverrides,
+		): Promise<[string[], BigNumber[]] & { tokens: string[]; amounts: BigNumber[] }>
 
-    "exitPool(uint256)"(
-      _amount: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<void>;
+		calcTokensForAmountExit(
+			_amount: PromiseOrValue<BigNumberish>,
+			overrides?: CallOverrides,
+		): Promise<[string[], BigNumber[]] & { tokens: string[]; amounts: BigNumber[] }>
 
-    getAnnualizedFee(overrides?: CallOverrides): Promise<BigNumber>;
+		'calcTokensForAmountExit(uint256)'(
+			_amount: PromiseOrValue<BigNumberish>,
+			overrides?: CallOverrides,
+		): Promise<[string[], BigNumber[]] & { tokens: string[]; amounts: BigNumber[] }>
 
-    "getAnnualizedFee()"(overrides?: CallOverrides): Promise<BigNumber>;
+		chargeOutstandingAnnualizedFee(overrides?: CallOverrides): Promise<void>
 
-    getCap(overrides?: CallOverrides): Promise<BigNumber>;
+		'chargeOutstandingAnnualizedFee()'(overrides?: CallOverrides): Promise<void>
 
-    "getCap()"(overrides?: CallOverrides): Promise<BigNumber>;
+		exitPool(_amount: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<void>
 
-    getEntryFee(overrides?: CallOverrides): Promise<BigNumber>;
+		'exitPool(uint256)'(_amount: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<void>
 
-    "getEntryFee()"(overrides?: CallOverrides): Promise<BigNumber>;
+		getAnnualizedFee(overrides?: CallOverrides): Promise<BigNumber>
 
-    getEntryFeeBeneficiaryShare(overrides?: CallOverrides): Promise<BigNumber>;
+		'getAnnualizedFee()'(overrides?: CallOverrides): Promise<BigNumber>
 
-    "getEntryFeeBeneficiaryShare()"(
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+		getCap(overrides?: CallOverrides): Promise<BigNumber>
 
-    getExitFee(overrides?: CallOverrides): Promise<BigNumber>;
+		'getCap()'(overrides?: CallOverrides): Promise<BigNumber>
 
-    "getExitFee()"(overrides?: CallOverrides): Promise<BigNumber>;
+		getEntryFee(overrides?: CallOverrides): Promise<BigNumber>
 
-    getExitFeeBeneficiaryShare(overrides?: CallOverrides): Promise<BigNumber>;
+		'getEntryFee()'(overrides?: CallOverrides): Promise<BigNumber>
 
-    "getExitFeeBeneficiaryShare()"(
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+		getEntryFeeBeneficiaryShare(overrides?: CallOverrides): Promise<BigNumber>
 
-    getFeeBeneficiary(overrides?: CallOverrides): Promise<string>;
+		'getEntryFeeBeneficiaryShare()'(overrides?: CallOverrides): Promise<BigNumber>
 
-    "getFeeBeneficiary()"(overrides?: CallOverrides): Promise<string>;
+		getExitFee(overrides?: CallOverrides): Promise<BigNumber>
 
-    getLock(overrides?: CallOverrides): Promise<boolean>;
+		'getExitFee()'(overrides?: CallOverrides): Promise<BigNumber>
 
-    "getLock()"(overrides?: CallOverrides): Promise<boolean>;
+		getExitFeeBeneficiaryShare(overrides?: CallOverrides): Promise<BigNumber>
 
-    getLockBlock(overrides?: CallOverrides): Promise<BigNumber>;
+		'getExitFeeBeneficiaryShare()'(overrides?: CallOverrides): Promise<BigNumber>
 
-    "getLockBlock()"(overrides?: CallOverrides): Promise<BigNumber>;
+		getFeeBeneficiary(overrides?: CallOverrides): Promise<string>
 
-    getTokenInPool(
-      _token: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
+		'getFeeBeneficiary()'(overrides?: CallOverrides): Promise<string>
 
-    "getTokenInPool(address)"(
-      _token: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
+		getLock(overrides?: CallOverrides): Promise<boolean>
 
-    getTokens(overrides?: CallOverrides): Promise<string[]>;
+		'getLock()'(overrides?: CallOverrides): Promise<boolean>
 
-    "getTokens()"(overrides?: CallOverrides): Promise<string[]>;
+		getLockBlock(overrides?: CallOverrides): Promise<BigNumber>
 
-    joinPool(
-      _amount: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<void>;
+		'getLockBlock()'(overrides?: CallOverrides): Promise<BigNumber>
 
-    "joinPool(uint256)"(
-      _amount: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<void>;
+		getTokenInPool(_token: PromiseOrValue<string>, overrides?: CallOverrides): Promise<boolean>
 
-    removeToken(
-      _token: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<void>;
+		'getTokenInPool(address)'(_token: PromiseOrValue<string>, overrides?: CallOverrides): Promise<boolean>
 
-    "removeToken(address)"(
-      _token: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<void>;
+		getTokens(overrides?: CallOverrides): Promise<string[]>
 
-    setAnnualizedFee(
-      _fee: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<void>;
+		'getTokens()'(overrides?: CallOverrides): Promise<string[]>
 
-    "setAnnualizedFee(uint256)"(
-      _fee: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<void>;
+		joinPool(_amount: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<void>
 
-    setCap(
-      _maxCap: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<void>;
+		'joinPool(uint256)'(_amount: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<void>
 
-    "setCap(uint256)"(
-      _maxCap: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<void>;
+		removeToken(_token: PromiseOrValue<string>, overrides?: CallOverrides): Promise<void>
 
-    setEntryFee(
-      _fee: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<void>;
+		'removeToken(address)'(_token: PromiseOrValue<string>, overrides?: CallOverrides): Promise<void>
 
-    "setEntryFee(uint256)"(
-      _fee: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<void>;
+		setAnnualizedFee(_fee: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<void>
 
-    setEntryFeeBeneficiaryShare(
-      _share: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<void>;
+		'setAnnualizedFee(uint256)'(_fee: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<void>
 
-    "setEntryFeeBeneficiaryShare(uint256)"(
-      _share: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<void>;
+		setCap(_maxCap: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<void>
 
-    setExitFee(
-      _fee: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<void>;
+		'setCap(uint256)'(_maxCap: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<void>
 
-    "setExitFee(uint256)"(
-      _fee: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<void>;
+		setEntryFee(_fee: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<void>
 
-    setExitFeeBeneficiaryShare(
-      _share: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<void>;
+		'setEntryFee(uint256)'(_fee: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<void>
 
-    "setExitFeeBeneficiaryShare(uint256)"(
-      _share: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<void>;
+		setEntryFeeBeneficiaryShare(_share: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<void>
 
-    setFeeBeneficiary(
-      _beneficiary: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<void>;
+		'setEntryFeeBeneficiaryShare(uint256)'(_share: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<void>
 
-    "setFeeBeneficiary(address)"(
-      _beneficiary: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<void>;
+		setExitFee(_fee: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<void>
 
-    setLock(
-      _lock: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<void>;
+		'setExitFee(uint256)'(_fee: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<void>
 
-    "setLock(uint256)"(
-      _lock: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<void>;
-  };
+		setExitFeeBeneficiaryShare(_share: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<void>
 
-  filters: {
-    "AnnualizedFeeSet(uint256)"(fee?: null): AnnualizedFeeSetEventFilter;
-    AnnualizedFeeSet(fee?: null): AnnualizedFeeSetEventFilter;
+		'setExitFeeBeneficiaryShare(uint256)'(_share: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<void>
 
-    "CapSet(uint256)"(cap?: null): CapSetEventFilter;
-    CapSet(cap?: null): CapSetEventFilter;
+		setFeeBeneficiary(_beneficiary: PromiseOrValue<string>, overrides?: CallOverrides): Promise<void>
 
-    "EntryFeeBeneficiaryShareSet(uint256)"(
-      share?: null
-    ): EntryFeeBeneficiaryShareSetEventFilter;
-    EntryFeeBeneficiaryShareSet(
-      share?: null
-    ): EntryFeeBeneficiaryShareSetEventFilter;
+		'setFeeBeneficiary(address)'(_beneficiary: PromiseOrValue<string>, overrides?: CallOverrides): Promise<void>
 
-    "EntryFeeSet(uint256)"(fee?: null): EntryFeeSetEventFilter;
-    EntryFeeSet(fee?: null): EntryFeeSetEventFilter;
+		setLock(_lock: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<void>
 
-    "ExitFeeBeneficiaryShareSet(uint256)"(
-      share?: null
-    ): ExitFeeBeneficiaryShareSetEventFilter;
-    ExitFeeBeneficiaryShareSet(
-      share?: null
-    ): ExitFeeBeneficiaryShareSetEventFilter;
+		'setLock(uint256)'(_lock: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<void>
+	}
 
-    "ExitFeeSet(uint256)"(fee?: null): ExitFeeSetEventFilter;
-    ExitFeeSet(fee?: null): ExitFeeSetEventFilter;
+	filters: {
+		'AnnualizedFeeSet(uint256)'(fee?: null): AnnualizedFeeSetEventFilter
+		AnnualizedFeeSet(fee?: null): AnnualizedFeeSetEventFilter
 
-    "FeeBeneficiarySet(address)"(
-      beneficiary?: PromiseOrValue<string> | null
-    ): FeeBeneficiarySetEventFilter;
-    FeeBeneficiarySet(
-      beneficiary?: PromiseOrValue<string> | null
-    ): FeeBeneficiarySetEventFilter;
+		'CapSet(uint256)'(cap?: null): CapSetEventFilter
+		CapSet(cap?: null): CapSetEventFilter
 
-    "FeeCharged(uint256)"(amount?: null): FeeChargedEventFilter;
-    FeeCharged(amount?: null): FeeChargedEventFilter;
+		'EntryFeeBeneficiaryShareSet(uint256)'(share?: null): EntryFeeBeneficiaryShareSetEventFilter
+		EntryFeeBeneficiaryShareSet(share?: null): EntryFeeBeneficiaryShareSetEventFilter
 
-    "LockSet(uint256)"(lockBlock?: null): LockSetEventFilter;
-    LockSet(lockBlock?: null): LockSetEventFilter;
+		'EntryFeeSet(uint256)'(fee?: null): EntryFeeSetEventFilter
+		EntryFeeSet(fee?: null): EntryFeeSetEventFilter
 
-    "PoolExited(address,uint256)"(
-      who?: PromiseOrValue<string> | null,
-      amount?: null
-    ): PoolExitedEventFilter;
-    PoolExited(
-      who?: PromiseOrValue<string> | null,
-      amount?: null
-    ): PoolExitedEventFilter;
+		'ExitFeeBeneficiaryShareSet(uint256)'(share?: null): ExitFeeBeneficiaryShareSetEventFilter
+		ExitFeeBeneficiaryShareSet(share?: null): ExitFeeBeneficiaryShareSetEventFilter
 
-    "PoolJoined(address,uint256)"(
-      who?: PromiseOrValue<string> | null,
-      amount?: null
-    ): PoolJoinedEventFilter;
-    PoolJoined(
-      who?: PromiseOrValue<string> | null,
-      amount?: null
-    ): PoolJoinedEventFilter;
+		'ExitFeeSet(uint256)'(fee?: null): ExitFeeSetEventFilter
+		ExitFeeSet(fee?: null): ExitFeeSetEventFilter
 
-    "TokenAdded(address)"(
-      _token?: PromiseOrValue<string> | null
-    ): TokenAddedEventFilter;
-    TokenAdded(_token?: PromiseOrValue<string> | null): TokenAddedEventFilter;
+		'FeeBeneficiarySet(address)'(beneficiary?: PromiseOrValue<string> | null): FeeBeneficiarySetEventFilter
+		FeeBeneficiarySet(beneficiary?: PromiseOrValue<string> | null): FeeBeneficiarySetEventFilter
 
-    "TokenRemoved(address)"(
-      _token?: PromiseOrValue<string> | null
-    ): TokenRemovedEventFilter;
-    TokenRemoved(
-      _token?: PromiseOrValue<string> | null
-    ): TokenRemovedEventFilter;
-  };
+		'FeeCharged(uint256)'(amount?: null): FeeChargedEventFilter
+		FeeCharged(amount?: null): FeeChargedEventFilter
 
-  estimateGas: {
-    HUNDRED_PERCENT(overrides?: CallOverrides): Promise<BigNumber>;
+		'LockSet(uint256)'(lockBlock?: null): LockSetEventFilter
+		LockSet(lockBlock?: null): LockSetEventFilter
 
-    "HUNDRED_PERCENT()"(overrides?: CallOverrides): Promise<BigNumber>;
+		'PoolExited(address,uint256)'(who?: PromiseOrValue<string> | null, amount?: null): PoolExitedEventFilter
+		PoolExited(who?: PromiseOrValue<string> | null, amount?: null): PoolExitedEventFilter
 
-    MAX_ANNUAL_FEE(overrides?: CallOverrides): Promise<BigNumber>;
+		'PoolJoined(address,uint256)'(who?: PromiseOrValue<string> | null, amount?: null): PoolJoinedEventFilter
+		PoolJoined(who?: PromiseOrValue<string> | null, amount?: null): PoolJoinedEventFilter
 
-    "MAX_ANNUAL_FEE()"(overrides?: CallOverrides): Promise<BigNumber>;
+		'TokenAdded(address)'(_token?: PromiseOrValue<string> | null): TokenAddedEventFilter
+		TokenAdded(_token?: PromiseOrValue<string> | null): TokenAddedEventFilter
 
-    MAX_ENTRY_FEE(overrides?: CallOverrides): Promise<BigNumber>;
+		'TokenRemoved(address)'(_token?: PromiseOrValue<string> | null): TokenRemovedEventFilter
+		TokenRemoved(_token?: PromiseOrValue<string> | null): TokenRemovedEventFilter
+	}
 
-    "MAX_ENTRY_FEE()"(overrides?: CallOverrides): Promise<BigNumber>;
+	estimateGas: {
+		HUNDRED_PERCENT(overrides?: CallOverrides): Promise<BigNumber>
 
-    MAX_EXIT_FEE(overrides?: CallOverrides): Promise<BigNumber>;
+		'HUNDRED_PERCENT()'(overrides?: CallOverrides): Promise<BigNumber>
 
-    "MAX_EXIT_FEE()"(overrides?: CallOverrides): Promise<BigNumber>;
+		MAX_ANNUAL_FEE(overrides?: CallOverrides): Promise<BigNumber>
 
-    MAX_TOKENS(overrides?: CallOverrides): Promise<BigNumber>;
+		'MAX_ANNUAL_FEE()'(overrides?: CallOverrides): Promise<BigNumber>
 
-    "MAX_TOKENS()"(overrides?: CallOverrides): Promise<BigNumber>;
+		MAX_ENTRY_FEE(overrides?: CallOverrides): Promise<BigNumber>
 
-    MIN_AMOUNT(overrides?: CallOverrides): Promise<BigNumber>;
+		'MAX_ENTRY_FEE()'(overrides?: CallOverrides): Promise<BigNumber>
 
-    "MIN_AMOUNT()"(overrides?: CallOverrides): Promise<BigNumber>;
+		MAX_EXIT_FEE(overrides?: CallOverrides): Promise<BigNumber>
 
-    addToken(
-      _token: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
+		'MAX_EXIT_FEE()'(overrides?: CallOverrides): Promise<BigNumber>
 
-    "addToken(address)"(
-      _token: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
+		MAX_TOKENS(overrides?: CallOverrides): Promise<BigNumber>
 
-    balance(
-      _token: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+		'MAX_TOKENS()'(overrides?: CallOverrides): Promise<BigNumber>
 
-    "balance(address)"(
-      _token: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+		MIN_AMOUNT(overrides?: CallOverrides): Promise<BigNumber>
 
-    calcOutStandingAnnualizedFee(overrides?: CallOverrides): Promise<BigNumber>;
+		'MIN_AMOUNT()'(overrides?: CallOverrides): Promise<BigNumber>
 
-    "calcOutStandingAnnualizedFee()"(
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+		addToken(_token: PromiseOrValue<string>, overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<BigNumber>
 
-    calcTokensForAmount(
-      _amount: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+		'addToken(address)'(_token: PromiseOrValue<string>, overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<BigNumber>
 
-    "calcTokensForAmount(uint256)"(
-      _amount: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+		balance(_token: PromiseOrValue<string>, overrides?: CallOverrides): Promise<BigNumber>
 
-    calcTokensForAmountExit(
-      _amount: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+		'balance(address)'(_token: PromiseOrValue<string>, overrides?: CallOverrides): Promise<BigNumber>
 
-    "calcTokensForAmountExit(uint256)"(
-      _amount: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+		calcOutStandingAnnualizedFee(overrides?: CallOverrides): Promise<BigNumber>
 
-    chargeOutstandingAnnualizedFee(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
+		'calcOutStandingAnnualizedFee()'(overrides?: CallOverrides): Promise<BigNumber>
 
-    "chargeOutstandingAnnualizedFee()"(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
+		calcTokensForAmount(_amount: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<BigNumber>
 
-    exitPool(
-      _amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
+		'calcTokensForAmount(uint256)'(_amount: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<BigNumber>
 
-    "exitPool(uint256)"(
-      _amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
+		calcTokensForAmountExit(_amount: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<BigNumber>
 
-    getAnnualizedFee(overrides?: CallOverrides): Promise<BigNumber>;
+		'calcTokensForAmountExit(uint256)'(_amount: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<BigNumber>
 
-    "getAnnualizedFee()"(overrides?: CallOverrides): Promise<BigNumber>;
+		chargeOutstandingAnnualizedFee(overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<BigNumber>
 
-    getCap(overrides?: CallOverrides): Promise<BigNumber>;
+		'chargeOutstandingAnnualizedFee()'(overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<BigNumber>
 
-    "getCap()"(overrides?: CallOverrides): Promise<BigNumber>;
+		exitPool(_amount: PromiseOrValue<BigNumberish>, overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<BigNumber>
 
-    getEntryFee(overrides?: CallOverrides): Promise<BigNumber>;
+		'exitPool(uint256)'(
+			_amount: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<BigNumber>
 
-    "getEntryFee()"(overrides?: CallOverrides): Promise<BigNumber>;
+		getAnnualizedFee(overrides?: CallOverrides): Promise<BigNumber>
 
-    getEntryFeeBeneficiaryShare(overrides?: CallOverrides): Promise<BigNumber>;
+		'getAnnualizedFee()'(overrides?: CallOverrides): Promise<BigNumber>
 
-    "getEntryFeeBeneficiaryShare()"(
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+		getCap(overrides?: CallOverrides): Promise<BigNumber>
 
-    getExitFee(overrides?: CallOverrides): Promise<BigNumber>;
+		'getCap()'(overrides?: CallOverrides): Promise<BigNumber>
 
-    "getExitFee()"(overrides?: CallOverrides): Promise<BigNumber>;
+		getEntryFee(overrides?: CallOverrides): Promise<BigNumber>
 
-    getExitFeeBeneficiaryShare(overrides?: CallOverrides): Promise<BigNumber>;
+		'getEntryFee()'(overrides?: CallOverrides): Promise<BigNumber>
 
-    "getExitFeeBeneficiaryShare()"(
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+		getEntryFeeBeneficiaryShare(overrides?: CallOverrides): Promise<BigNumber>
 
-    getFeeBeneficiary(overrides?: CallOverrides): Promise<BigNumber>;
+		'getEntryFeeBeneficiaryShare()'(overrides?: CallOverrides): Promise<BigNumber>
 
-    "getFeeBeneficiary()"(overrides?: CallOverrides): Promise<BigNumber>;
+		getExitFee(overrides?: CallOverrides): Promise<BigNumber>
 
-    getLock(overrides?: CallOverrides): Promise<BigNumber>;
+		'getExitFee()'(overrides?: CallOverrides): Promise<BigNumber>
 
-    "getLock()"(overrides?: CallOverrides): Promise<BigNumber>;
+		getExitFeeBeneficiaryShare(overrides?: CallOverrides): Promise<BigNumber>
 
-    getLockBlock(overrides?: CallOverrides): Promise<BigNumber>;
+		'getExitFeeBeneficiaryShare()'(overrides?: CallOverrides): Promise<BigNumber>
 
-    "getLockBlock()"(overrides?: CallOverrides): Promise<BigNumber>;
+		getFeeBeneficiary(overrides?: CallOverrides): Promise<BigNumber>
 
-    getTokenInPool(
-      _token: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+		'getFeeBeneficiary()'(overrides?: CallOverrides): Promise<BigNumber>
 
-    "getTokenInPool(address)"(
-      _token: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+		getLock(overrides?: CallOverrides): Promise<BigNumber>
 
-    getTokens(overrides?: CallOverrides): Promise<BigNumber>;
+		'getLock()'(overrides?: CallOverrides): Promise<BigNumber>
 
-    "getTokens()"(overrides?: CallOverrides): Promise<BigNumber>;
+		getLockBlock(overrides?: CallOverrides): Promise<BigNumber>
 
-    joinPool(
-      _amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
+		'getLockBlock()'(overrides?: CallOverrides): Promise<BigNumber>
 
-    "joinPool(uint256)"(
-      _amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
+		getTokenInPool(_token: PromiseOrValue<string>, overrides?: CallOverrides): Promise<BigNumber>
 
-    removeToken(
-      _token: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
+		'getTokenInPool(address)'(_token: PromiseOrValue<string>, overrides?: CallOverrides): Promise<BigNumber>
 
-    "removeToken(address)"(
-      _token: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
+		getTokens(overrides?: CallOverrides): Promise<BigNumber>
 
-    setAnnualizedFee(
-      _fee: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
+		'getTokens()'(overrides?: CallOverrides): Promise<BigNumber>
 
-    "setAnnualizedFee(uint256)"(
-      _fee: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
+		joinPool(_amount: PromiseOrValue<BigNumberish>, overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<BigNumber>
 
-    setCap(
-      _maxCap: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
+		'joinPool(uint256)'(
+			_amount: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<BigNumber>
 
-    "setCap(uint256)"(
-      _maxCap: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
+		removeToken(_token: PromiseOrValue<string>, overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<BigNumber>
 
-    setEntryFee(
-      _fee: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
+		'removeToken(address)'(_token: PromiseOrValue<string>, overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<BigNumber>
 
-    "setEntryFee(uint256)"(
-      _fee: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
+		setAnnualizedFee(_fee: PromiseOrValue<BigNumberish>, overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<BigNumber>
 
-    setEntryFeeBeneficiaryShare(
-      _share: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
+		'setAnnualizedFee(uint256)'(
+			_fee: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<BigNumber>
 
-    "setEntryFeeBeneficiaryShare(uint256)"(
-      _share: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
+		setCap(_maxCap: PromiseOrValue<BigNumberish>, overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<BigNumber>
 
-    setExitFee(
-      _fee: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
+		'setCap(uint256)'(_maxCap: PromiseOrValue<BigNumberish>, overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<BigNumber>
 
-    "setExitFee(uint256)"(
-      _fee: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
+		setEntryFee(_fee: PromiseOrValue<BigNumberish>, overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<BigNumber>
 
-    setExitFeeBeneficiaryShare(
-      _share: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
+		'setEntryFee(uint256)'(
+			_fee: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<BigNumber>
 
-    "setExitFeeBeneficiaryShare(uint256)"(
-      _share: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
+		setEntryFeeBeneficiaryShare(
+			_share: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<BigNumber>
 
-    setFeeBeneficiary(
-      _beneficiary: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
+		'setEntryFeeBeneficiaryShare(uint256)'(
+			_share: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<BigNumber>
 
-    "setFeeBeneficiary(address)"(
-      _beneficiary: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
+		setExitFee(_fee: PromiseOrValue<BigNumberish>, overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<BigNumber>
 
-    setLock(
-      _lock: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
+		'setExitFee(uint256)'(_fee: PromiseOrValue<BigNumberish>, overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<BigNumber>
 
-    "setLock(uint256)"(
-      _lock: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-  };
+		setExitFeeBeneficiaryShare(
+			_share: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<BigNumber>
 
-  populateTransaction: {
-    HUNDRED_PERCENT(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+		'setExitFeeBeneficiaryShare(uint256)'(
+			_share: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<BigNumber>
 
-    "HUNDRED_PERCENT()"(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+		setFeeBeneficiary(_beneficiary: PromiseOrValue<string>, overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<BigNumber>
 
-    MAX_ANNUAL_FEE(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+		'setFeeBeneficiary(address)'(
+			_beneficiary: PromiseOrValue<string>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<BigNumber>
 
-    "MAX_ANNUAL_FEE()"(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+		setLock(_lock: PromiseOrValue<BigNumberish>, overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<BigNumber>
 
-    MAX_ENTRY_FEE(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+		'setLock(uint256)'(_lock: PromiseOrValue<BigNumberish>, overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<BigNumber>
+	}
 
-    "MAX_ENTRY_FEE()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+	populateTransaction: {
+		HUNDRED_PERCENT(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
-    MAX_EXIT_FEE(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+		'HUNDRED_PERCENT()'(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
-    "MAX_EXIT_FEE()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+		MAX_ANNUAL_FEE(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
-    MAX_TOKENS(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+		'MAX_ANNUAL_FEE()'(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
-    "MAX_TOKENS()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+		MAX_ENTRY_FEE(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
-    MIN_AMOUNT(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+		'MAX_ENTRY_FEE()'(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
-    "MIN_AMOUNT()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+		MAX_EXIT_FEE(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
-    addToken(
-      _token: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
+		'MAX_EXIT_FEE()'(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
-    "addToken(address)"(
-      _token: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
+		MAX_TOKENS(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
-    balance(
-      _token: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+		'MAX_TOKENS()'(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
-    "balance(address)"(
-      _token: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+		MIN_AMOUNT(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
-    calcOutStandingAnnualizedFee(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+		'MIN_AMOUNT()'(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
-    "calcOutStandingAnnualizedFee()"(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+		addToken(_token: PromiseOrValue<string>, overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<PopulatedTransaction>
 
-    calcTokensForAmount(
-      _amount: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+		'addToken(address)'(
+			_token: PromiseOrValue<string>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<PopulatedTransaction>
 
-    "calcTokensForAmount(uint256)"(
-      _amount: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+		balance(_token: PromiseOrValue<string>, overrides?: CallOverrides): Promise<PopulatedTransaction>
 
-    calcTokensForAmountExit(
-      _amount: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+		'balance(address)'(_token: PromiseOrValue<string>, overrides?: CallOverrides): Promise<PopulatedTransaction>
 
-    "calcTokensForAmountExit(uint256)"(
-      _amount: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+		calcOutStandingAnnualizedFee(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
-    chargeOutstandingAnnualizedFee(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
+		'calcOutStandingAnnualizedFee()'(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
-    "chargeOutstandingAnnualizedFee()"(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
+		calcTokensForAmount(_amount: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<PopulatedTransaction>
 
-    exitPool(
-      _amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
+		'calcTokensForAmount(uint256)'(_amount: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<PopulatedTransaction>
 
-    "exitPool(uint256)"(
-      _amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
+		calcTokensForAmountExit(_amount: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<PopulatedTransaction>
 
-    getAnnualizedFee(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+		'calcTokensForAmountExit(uint256)'(_amount: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<PopulatedTransaction>
 
-    "getAnnualizedFee()"(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+		chargeOutstandingAnnualizedFee(overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<PopulatedTransaction>
 
-    getCap(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+		'chargeOutstandingAnnualizedFee()'(overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<PopulatedTransaction>
 
-    "getCap()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+		exitPool(
+			_amount: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<PopulatedTransaction>
 
-    getEntryFee(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+		'exitPool(uint256)'(
+			_amount: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<PopulatedTransaction>
 
-    "getEntryFee()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+		getAnnualizedFee(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
-    getEntryFeeBeneficiaryShare(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+		'getAnnualizedFee()'(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
-    "getEntryFeeBeneficiaryShare()"(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+		getCap(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
-    getExitFee(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+		'getCap()'(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
-    "getExitFee()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+		getEntryFee(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
-    getExitFeeBeneficiaryShare(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+		'getEntryFee()'(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
-    "getExitFeeBeneficiaryShare()"(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+		getEntryFeeBeneficiaryShare(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
-    getFeeBeneficiary(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+		'getEntryFeeBeneficiaryShare()'(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
-    "getFeeBeneficiary()"(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+		getExitFee(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
-    getLock(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+		'getExitFee()'(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
-    "getLock()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+		getExitFeeBeneficiaryShare(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
-    getLockBlock(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+		'getExitFeeBeneficiaryShare()'(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
-    "getLockBlock()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+		getFeeBeneficiary(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
-    getTokenInPool(
-      _token: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+		'getFeeBeneficiary()'(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
-    "getTokenInPool(address)"(
-      _token: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+		getLock(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
-    getTokens(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+		'getLock()'(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
-    "getTokens()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+		getLockBlock(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
-    joinPool(
-      _amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
+		'getLockBlock()'(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
-    "joinPool(uint256)"(
-      _amount: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
+		getTokenInPool(_token: PromiseOrValue<string>, overrides?: CallOverrides): Promise<PopulatedTransaction>
 
-    removeToken(
-      _token: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
+		'getTokenInPool(address)'(_token: PromiseOrValue<string>, overrides?: CallOverrides): Promise<PopulatedTransaction>
 
-    "removeToken(address)"(
-      _token: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
+		getTokens(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
-    setAnnualizedFee(
-      _fee: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
+		'getTokens()'(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
-    "setAnnualizedFee(uint256)"(
-      _fee: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
+		joinPool(
+			_amount: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<PopulatedTransaction>
 
-    setCap(
-      _maxCap: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
+		'joinPool(uint256)'(
+			_amount: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<PopulatedTransaction>
 
-    "setCap(uint256)"(
-      _maxCap: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
+		removeToken(_token: PromiseOrValue<string>, overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<PopulatedTransaction>
 
-    setEntryFee(
-      _fee: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
+		'removeToken(address)'(
+			_token: PromiseOrValue<string>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<PopulatedTransaction>
 
-    "setEntryFee(uint256)"(
-      _fee: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
+		setAnnualizedFee(
+			_fee: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<PopulatedTransaction>
 
-    setEntryFeeBeneficiaryShare(
-      _share: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
+		'setAnnualizedFee(uint256)'(
+			_fee: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<PopulatedTransaction>
 
-    "setEntryFeeBeneficiaryShare(uint256)"(
-      _share: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
+		setCap(_maxCap: PromiseOrValue<BigNumberish>, overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<PopulatedTransaction>
 
-    setExitFee(
-      _fee: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
+		'setCap(uint256)'(
+			_maxCap: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<PopulatedTransaction>
 
-    "setExitFee(uint256)"(
-      _fee: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
+		setEntryFee(
+			_fee: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<PopulatedTransaction>
 
-    setExitFeeBeneficiaryShare(
-      _share: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
+		'setEntryFee(uint256)'(
+			_fee: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<PopulatedTransaction>
 
-    "setExitFeeBeneficiaryShare(uint256)"(
-      _share: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
+		setEntryFeeBeneficiaryShare(
+			_share: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<PopulatedTransaction>
 
-    setFeeBeneficiary(
-      _beneficiary: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
+		'setEntryFeeBeneficiaryShare(uint256)'(
+			_share: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<PopulatedTransaction>
 
-    "setFeeBeneficiary(address)"(
-      _beneficiary: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
+		setExitFee(_fee: PromiseOrValue<BigNumberish>, overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<PopulatedTransaction>
 
-    setLock(
-      _lock: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
+		'setExitFee(uint256)'(
+			_fee: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<PopulatedTransaction>
 
-    "setLock(uint256)"(
-      _lock: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-  };
+		setExitFeeBeneficiaryShare(
+			_share: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<PopulatedTransaction>
+
+		'setExitFeeBeneficiaryShare(uint256)'(
+			_share: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<PopulatedTransaction>
+
+		setFeeBeneficiary(
+			_beneficiary: PromiseOrValue<string>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<PopulatedTransaction>
+
+		'setFeeBeneficiary(address)'(
+			_beneficiary: PromiseOrValue<string>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<PopulatedTransaction>
+
+		setLock(_lock: PromiseOrValue<BigNumberish>, overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<PopulatedTransaction>
+
+		'setLock(uint256)'(
+			_lock: PromiseOrValue<BigNumberish>,
+			overrides?: Overrides & { from?: PromiseOrValue<string> },
+		): Promise<PopulatedTransaction>
+	}
 }

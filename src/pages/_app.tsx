@@ -24,8 +24,6 @@ import Head from 'next/head'
 import { useRouter } from 'next/router'
 import React, { ReactNode, useEffect, useState } from 'react'
 
-console.log('v2.1.1')
-
 function getLibrary(provider: any): Web3Provider {
 	const library = new Web3Provider(provider)
 	library.pollingInterval = 12000

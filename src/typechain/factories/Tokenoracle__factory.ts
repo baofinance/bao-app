@@ -3,56 +3,53 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { Contract, Signer, utils } from "ethers";
-import type { Provider } from "@ethersproject/providers";
-import type { Tokenoracle, TokenoracleInterface } from "../Tokenoracle";
+import { Contract, Signer, utils } from 'ethers'
+import type { Provider } from '@ethersproject/providers'
+import type { Tokenoracle, TokenoracleInterface } from '../Tokenoracle'
 
 const _abi = [
-  {
-    inputs: [
-      {
-        internalType: "address[]",
-        name: "tokens",
-        type: "address[]",
-      },
-    ],
-    name: "fetch",
-    outputs: [
-      {
-        internalType: "string[]",
-        name: "symbols",
-        type: "string[]",
-      },
-      {
-        internalType: "string[]",
-        name: "names",
-        type: "string[]",
-      },
-      {
-        internalType: "uint8[]",
-        name: "decimals",
-        type: "uint8[]",
-      },
-      {
-        internalType: "uint256[]",
-        name: "supplies",
-        type: "uint256[]",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-];
+	{
+		inputs: [
+			{
+				internalType: 'address[]',
+				name: 'tokens',
+				type: 'address[]',
+			},
+		],
+		name: 'fetch',
+		outputs: [
+			{
+				internalType: 'string[]',
+				name: 'symbols',
+				type: 'string[]',
+			},
+			{
+				internalType: 'string[]',
+				name: 'names',
+				type: 'string[]',
+			},
+			{
+				internalType: 'uint8[]',
+				name: 'decimals',
+				type: 'uint8[]',
+			},
+			{
+				internalType: 'uint256[]',
+				name: 'supplies',
+				type: 'uint256[]',
+			},
+		],
+		stateMutability: 'view',
+		type: 'function',
+	},
+]
 
 export class Tokenoracle__factory {
-  static readonly abi = _abi;
-  static createInterface(): TokenoracleInterface {
-    return new utils.Interface(_abi) as TokenoracleInterface;
-  }
-  static connect(
-    address: string,
-    signerOrProvider: Signer | Provider
-  ): Tokenoracle {
-    return new Contract(address, _abi, signerOrProvider) as Tokenoracle;
-  }
+	static readonly abi = _abi
+	static createInterface(): TokenoracleInterface {
+		return new utils.Interface(_abi) as TokenoracleInterface
+	}
+	static connect(address: string, signerOrProvider: Signer | Provider): Tokenoracle {
+		return new Contract(address, _abi, signerOrProvider) as Tokenoracle
+	}
 }
