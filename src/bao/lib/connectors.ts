@@ -42,9 +42,10 @@ export const walletConnect = new WalletConnectV2Connector({
 		themeVariables: {
 			// Display the WC modal over other Decentraland UI's modals.
 			// Won't be visible without this.
-			'--wcm-z-index': '9999',
+			'--w3m-z-index': '9999',
 		},
 	},
+
 	// Methods and events based on what is used on the decentraland dapps and the ethereum-provider lib found at:
 	// https://github.com/WalletConnect/walletconnect-monorepo/blob/v2.0/providers/ethereum-provider/src/constants/rpc.ts
 	// If the wallet doesn't support non optional methods, it will not allow the connection.

@@ -23,8 +23,6 @@ import dynamic from 'next/dynamic'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import React, { ReactNode, useEffect, useState } from 'react'
-import { WagmiConfig, createConfig, mainnet } from 'wagmi'
-import { createPublicClient, http } from 'viem'
 
 function getLibrary(provider: any): Web3Provider {
 	const library = new Web3Provider(provider)
