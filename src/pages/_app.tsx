@@ -22,7 +22,9 @@ import type { AppProps } from 'next/app'
 import dynamic from 'next/dynamic'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
+import Script from 'next/script'
 import React, { ReactNode, useEffect, useState } from 'react'
+import useZonkaFeedback from '@/hooks/feedback/useZonkaFeedback'
 
 function getLibrary(provider: any): Web3Provider {
 	const library = new Web3Provider(provider)
@@ -56,6 +58,8 @@ function Loading() {
 const Web3ReactNetworkProvider = dynamic(() => import('@/components/Web3NetworkProvider'), { ssr: false })
 
 function App({ Component, pageProps }: AppProps) {
+	useZonkaFeedback(process.env.NEXT_PUBLIC_WORKSPACE_ID)
+
 	return (
 		<>
 			<Head>
