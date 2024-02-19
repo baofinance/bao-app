@@ -9,8 +9,8 @@ const Ballast: React.FC = () => {
 	return (
 		<>
 			<NextSeo title={'Ballast'} description={'Mint and redeem Bao synths for an equivalent asset.'} />
-			<div className='grid lg:grid-cols-5 lg:gap-24'>
-				<div className='w-full lg:col-span-2'>
+			<div className='space-y-12'>
+				<div className='lg:col-span-2 flex flex-wrap flex-col'>
 					<Typography variant='hero' className='stroke'>
 						Ballast
 					</Typography>
@@ -20,8 +20,13 @@ const Ballast: React.FC = () => {
 							Mint or redeem synths with an equivalent asset for a small fee.
 						</Typography>
 					</div>
-					<div className='hidden lg:block'>
-						<a href='https://info.bao.finance/docs/guides/bao-markets/ballast' target='_blank' rel='noopener noreferrer'>
+					<div className='flex lg:block mr-auto'>
+						<a
+							className='mr-auto'
+							href='https://info.bao.finance/docs/guides/bao-markets/ballast'
+							target='_blank'
+							rel='noopener noreferrer'
+						>
 							<Button className='!rounded-full border border-baoRed hover:bg-baoRed'>Learn More</Button>
 						</a>
 					</div>

@@ -9,8 +9,8 @@ const Vaults: React.FC = () => {
 	return (
 		<>
 			<NextSeo title={'Vaults'} description={'Provide different collateral types to mint synthetics.'} />
-			<div className='grid gap-10 lg:grid-cols-5 lg:gap-24'>
-				<div className='w-full lg:col-span-2'>
+			<div className=' space-y-12'>
+				<div className='lg:col-span-2 flex flex-wrap'>
 					<Typography variant='hero' className='stroke'>
 						Vaults
 					</Typography>
@@ -21,8 +21,13 @@ const Vaults: React.FC = () => {
 						</Typography>
 					</div>
 
-					<div className='hidden lg:block'>
-						<a href='https://info.bao.finance/docs/franchises/bao-markets-hard-synths' target='_blank' rel='noopener noreferrer'>
+					<div className='flex lg:block mr-auto'>
+						<a
+							className='mr-auto'
+							href='https://info.bao.finance/docs/franchises/bao-markets-hard-synths'
+							target='_blank'
+							rel='noopener noreferrer'
+						>
 							<Button className='!rounded-full border border-baoRed hover:bg-baoRed'>Learn More</Button>
 						</a>
 					</div>
