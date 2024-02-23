@@ -14,7 +14,7 @@ import { useWeb3React } from '@web3-react/core'
 import { BigNumber } from 'ethers'
 import { formatUnits } from 'ethers/lib/utils'
 import Image from 'next/future/image'
-import React, { useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { isDesktop } from 'react-device-detect'
 import GaugeModal from './Modals'
 import Tooltipped from '@/components/Tooltipped'
@@ -61,7 +61,16 @@ const GaugeListItem: React.FC<GaugeListItemProps> = ({ gauge }) => {
 	const mintable = useMintable()
 	const { gaugeTVL, depositAmount } = useGaugeTVL(gauge)
 	const rewardsValue = baoPrice ? baoPrice.mul(mintable) : BigNumber.from(0)
-	const rewardsAPR = gaugeTVL && gaugeTVL.gt(0) ? rewardsValue.mul(currentWeight).div(gaugeTVL).mul(100).toString() : BigNumber.from(0)
+	const rewardsAPR =
+		gaugeTVL && gaugeTVL.gt(0)
+			? rewardsValue
+					.mul(currentWeight.gt(0) ? currentWeight.div(100) : 100000000000000)
+					.div(gaugeTVL)
+					.mul(100)
+					.toString()
+			: BigNumber.from(0)
+
+	console.log('rewardsAPR', rewardsAPR)
 
 	const gaugeInfo = useGaugeInfo(gauge)
 	const veInfo = useVeInfo()
