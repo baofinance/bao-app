@@ -70,8 +70,6 @@ const GaugeListItem: React.FC<GaugeListItemProps> = ({ gauge }) => {
 					.toString()
 			: BigNumber.from(0)
 
-	console.log('rewardsAPR', rewardsAPR)
-
 	const gaugeInfo = useGaugeInfo(gauge)
 	const veInfo = useVeInfo()
 
