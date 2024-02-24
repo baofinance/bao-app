@@ -85,7 +85,9 @@ const usePoolInfo = (gauge: ActiveSupportedGauge): PoolInfoTypes => {
 										? res0[0].values[0][2].toString()
 										: res0[0].values[0][1].toString()
 									: res0[0].values[0][0].toString()
-						    : res0[0].values[0].toString(),
+						    : res0[0]?.values[0]
+						      ? res0[0].values[0].toString()
+						      : '',
 				token1Address:
 					gauge.type.toLowerCase() === 'curve'
 						? res0[0].values[1].toString()
@@ -97,7 +99,9 @@ const usePoolInfo = (gauge: ActiveSupportedGauge): PoolInfoTypes => {
 										? res0[0].values[0][0].toString()
 										: res0[0].values[0][2].toString()
 									: res0[0].values[0][1].toString()
-						    : res0[2].values[0].toString(),
+						    : res0[2]?.values[0]
+						      ? res0[0].values[0].toString()
+						      : '',
 				token0Balance:
 					gauge.type.toLowerCase() === 'curve'
 						? res0[2].values[0].toString()
@@ -109,7 +113,9 @@ const usePoolInfo = (gauge: ActiveSupportedGauge): PoolInfoTypes => {
 										? res0[0].values[1][2].hex
 										: res0[0].values[1][1].hex
 									: res0[0].values[1][0].hex
-						    : res0[0].values[0].toString(),
+						    : res0[0]?.values[0]
+						      ? res0[0].values[0].toString()
+						      : '',
 				token1Balance:
 					gauge.type.toLowerCase() === 'curve'
 						? res0[2].values[1].toString()

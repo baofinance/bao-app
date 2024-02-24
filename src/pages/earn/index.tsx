@@ -23,7 +23,7 @@ const Gauges: React.FC = () => {
 							driving engagement and maximizing returns.
 						</Typography>
 					</div>
-					<div className='flex lg:block mr-auto'>
+					<div className='flex lg:block mr-auto mt-5'>
 						<a
 							className='mr-auto'
 							href='https://info.bao.finance/docs/guides/gauges/depositing-lps-for-rewards'
