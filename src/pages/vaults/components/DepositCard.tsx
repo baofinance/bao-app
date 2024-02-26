@@ -97,7 +97,7 @@ export const DepositCard = ({
 			</Typography>
 			<Card className='glassmorphic-card p-6'>
 				<Card.Body>
-					<div className='flex w-full gap-2 rounded-full border border-baoWhite border-opacity-20 bg-baoWhite bg-opacity-5'>
+					<div className='flex w-full gap-2 rounded border border-baoWhite border-opacity-20 bg-baoWhite bg-opacity-5'>
 						<Listbox value={selectedOption} onChange={setSelectedOption}>
 							{({ open }) => (
 								<div>
@@ -206,30 +206,30 @@ export const DepositCard = ({
 								</div>
 							)}
 						</Listbox>
-						<div className='m-auto w-full'>
+						<div className='flex flex-col space-y-2 py-2'>
 							<Input
 								value={val}
 								onChange={handleChange}
 								onSelectMax={() => setVal(formatUnits(max(), asset.underlyingDecimals))}
 								placeholder={`${formatUnits(max(), asset.underlyingDecimals)}`}
-								className='h-10 bg-baoBlack lg:h-auto'
+								className='h-10 min-w-[150px] bg-baoBlack lg:h-auto'
 							/>
-						</div>
-						<div className='m-auto mr-2'>
-							<Button
-								onClick={() => setShowSupplyModal(true)}
-								disabled={!account || !val || (val && parseUnits(val, asset.underlyingDecimals).gt(max()))}
-								className={!isDesktop ? '!h-10 !px-2 !text-sm' : ''}
-							>
-								Supply
-							</Button>
-							<SupplyModal
-								asset={asset}
-								vaultName={vaultName}
-								val={val ? parseUnits(val, asset.underlyingDecimals) : BigNumber.from(0)}
-								show={showSupplyModal}
-								onHide={hide}
-							/>
+							<div className='m-auto mr-2'>
+								<Button
+									onClick={() => setShowSupplyModal(true)}
+									disabled={!account || !val || (val && parseUnits(val, asset.underlyingDecimals).gt(max()))}
+									className={!isDesktop ? '!h-10 !px-2 !text-sm' : ''}
+								>
+									Supply
+								</Button>
+								<SupplyModal
+									asset={asset}
+									vaultName={vaultName}
+									val={val ? parseUnits(val, asset.underlyingDecimals) : BigNumber.from(0)}
+									show={showSupplyModal}
+									onHide={hide}
+								/>
+							</div>
 						</div>
 					</div>
 					<Typography variant='xl' className='p-4 text-center font-bakbak text-baoWhite/60'>

@@ -86,7 +86,7 @@ export const MintCard = ({
 			</Typography>
 			<Card className='glassmorphic-card p-6'>
 				<Card.Body>
-					<div className='flex w-full gap-2 rounded-full border border-baoWhite border-opacity-20 bg-baoWhite bg-opacity-5'>
+					<div className='flex w-full gap-2 rounded border border-baoWhite border-opacity-20 bg-baoWhite bg-opacity-5'>
 						<div>
 							<div className='m-2 mr-0 flex w-10 rounded-full border-none duration-300 lg:!m-2 lg:w-32 lg:bg-baoWhite/5 lg:hover:bg-transparent-300'>
 								<div className='m-auto text-baoWhite lg:py-3'>
@@ -109,7 +109,7 @@ export const MintCard = ({
 								</div>
 							</div>
 						</div>
-						<div className='m-auto w-full'>
+						<div className='flex flex-col space-y-2 py-2'>
 							<Input
 								value={val}
 								onChange={handleChange}
@@ -117,29 +117,29 @@ export const MintCard = ({
 								placeholder={`${formatUnits(max(), synth.underlyingDecimals)}`}
 								className='h-10 bg-baoBlack lg:h-auto'
 							/>
-						</div>
-						<div className='m-auto mr-2'>
-							<Button
-								onClick={() => setShowMintModal(true)}
-								disabled={
-									!val ||
-									(val && parseUnits(val, synth.underlyingDecimals).gt(max())) ||
-									// FIXME: temporarily limit minting/borrowing to 5k baoUSD & 3 baoETH.
-									(val &&
-										borrowed.lt(parseUnits(vaultName === 'baoUSD' ? '5000' : '3')) &&
-										parseUnits(val, synth.underlyingDecimals).lt(parseUnits(vaultName === 'baoUSD' ? '5000' : '3')))
-								}
-								className={!isDesktop ? '!h-10 !px-2 !text-sm' : ''}
-							>
-								Mint
-							</Button>
-							<MintModal
-								asset={synth}
-								vaultName={vaultName}
-								val={val ? parseUnits(val, synth.underlyingDecimals) : BigNumber.from(0)}
-								show={showMintModal}
-								onHide={hide}
-							/>
+							<div className='m-auto mr-2'>
+								<Button
+									onClick={() => setShowMintModal(true)}
+									disabled={
+										!val ||
+										(val && parseUnits(val, synth.underlyingDecimals).gt(max())) ||
+										// FIXME: temporarily limit minting/borrowing to 5k baoUSD & 3 baoETH.
+										(val &&
+											borrowed.lt(parseUnits(vaultName === 'baoUSD' ? '5000' : '3')) &&
+											parseUnits(val, synth.underlyingDecimals).lt(parseUnits(vaultName === 'baoUSD' ? '5000' : '3')))
+									}
+									className={!isDesktop ? '!h-10 !px-2 !text-sm' : ''}
+								>
+									Mint
+								</Button>
+								<MintModal
+									asset={synth}
+									vaultName={vaultName}
+									val={val ? parseUnits(val, synth.underlyingDecimals) : BigNumber.from(0)}
+									show={showMintModal}
+									onHide={hide}
+								/>
+							</div>
 						</div>
 					</div>
 					<Typography variant='xl' className='p-4 text-center font-bakbak text-baoWhite/60'>
