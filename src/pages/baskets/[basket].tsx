@@ -201,6 +201,9 @@ const Basket: NextPage<{
 			</div>
 
 			<Composition composition={composition} rates={rates} info={info} basketId={basketId} />
+			<Typography variant='base' className='text-baoRed font-bakbak leading-5 my-2'>
+				NOTICE: Baskets are in sunset. We will be discontinuing them and so minting is disabled.
+			</Typography>
 			<BasketButtons basket={basket} swapLink={basket.swap} />
 			<Description basketAddress={basket.basketAddresses[1]} />
 		</>
