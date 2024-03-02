@@ -26,7 +26,7 @@ const BasketButtons: React.FC<BasketButtonsProps> = ({ basket, swapLink }) => {
 			<BasketModal basket={basket} operation={modalOperation} show={showBasketModal} hideModal={() => setShowBasketModal(false)} />
 			<div className='mt-4 grid grid-cols-3 gap-4'>
 				<div>
-					<Button fullWidth onClick={() => handleClick('MINT')} className='glassmorphic-card !justify-center !text-center'>
+					<Button fullWidth disabled onClick={() => handleClick('MINT')} className='glassmorphic-card !justify-center !text-center'>
 						Mint
 					</Button>
 				</div>

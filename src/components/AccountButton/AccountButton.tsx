@@ -58,9 +58,14 @@ const AccountButton: React.FC<AccountButtonProps> = () => {
 
 	useEffect(() => {
 		if (!account) return
-		udReverseAddress(account).then(_ud => {
-			if (_ud) setUd(_ud)
-		})
+		console.log(account)
+		udReverseAddress(account)
+			.then(_ud => {
+				if (_ud) setUd(_ud)
+			})
+			.catch(_e => {
+				console.error('error: cannot get UD')
+			})
 	}, [account])
 
 	const pendingTxs = useMemo(() => Object.keys(transactions).filter(txHash => !transactions[txHash].receipt).length, [transactions])
