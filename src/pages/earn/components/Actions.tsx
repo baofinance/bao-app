@@ -257,6 +257,9 @@ interface VoteProps {
 }
 
 export const Vote: React.FC<VoteProps> = ({ gauge, tvl, rewardsValue }) => {
+	const decimals = 17
+	const DECIMAL = BigNumber.from(10).pow(decimals)
+
 	const { pendingTx, txHash, handleTx } = useTransactionHandler()
 	const gaugeControllerContract = useContract<GaugeController>('GaugeController')
 	const lockInfo = useLockInfo()
@@ -267,8 +270,22 @@ export const Vote: React.FC<VoteProps> = ({ gauge, tvl, rewardsValue }) => {
 	)
 	const { currentWeight, futureWeight } = useRelativeWeight(gauge.gaugeAddress)
 
-	const currentAPR = tvl && tvl.gt(0) ? rewardsValue.mul(currentWeight).div(tvl).mul(100).toString() : BigNumber.from(0)
-	const futureAPR = tvl && tvl.gt(0) ? rewardsValue.mul(futureWeight).div(tvl).mul(100).toString() : BigNumber.from(0)
+	const currentAPR =
+		tvl && tvl.gt(0)
+			? rewardsValue
+					.mul(currentWeight.gt(0) ? currentWeight : DECIMAL)
+					.div(tvl)
+					.mul(100)
+					.toString()
+			: BigNumber.from(0)
+	const futureAPR =
+		tvl && tvl.gt(0)
+			? rewardsValue
+					.mul(futureWeight.gt(0) ? futureWeight : DECIMAL)
+					.div(tvl)
+					.mul(100)
+					.toString()
+			: BigNumber.from(0)
 
 	const handleChange = useCallback(
 		(e: React.FormEvent<HTMLInputElement>) => {
@@ -342,10 +359,10 @@ export const Vote: React.FC<VoteProps> = ({ gauge, tvl, rewardsValue }) => {
 								userSlopes && userSlopes.power.eq(0) && votingPowerAllocated.eq(0)
 									? BigNumber.from(100).toString()
 									: userSlopes && votingPowerAllocated.div(100).eq(100) && userSlopes.power.eq(0)
-									  ? BigNumber.from(0).toString()
-									  : userSlopes && votingPowerAllocated.div(100).gt(0)
-									    ? userSlopes && BigNumber.from(100).add(userSlopes.power.div(100)).sub(votingPowerAllocated.div(100)).toString()
-									    : userSlopes && BigNumber.from(100).add(userSlopes.power.div(100)).sub(userSlopes.power.div(100)).toString()
+										? BigNumber.from(0).toString()
+										: userSlopes && votingPowerAllocated.div(100).gt(0)
+											? userSlopes && BigNumber.from(100).add(userSlopes.power.div(100)).sub(votingPowerAllocated.div(100)).toString()
+											: userSlopes && BigNumber.from(100).add(userSlopes.power.div(100)).sub(userSlopes.power.div(100)).toString()
 							}
 							value={val}
 							className='h-2 w-full appearance-none rounded-full bg-baoWhite bg-opacity-20 accent-baoRed disabled:cursor-not-allowed'
