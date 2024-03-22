@@ -359,10 +359,10 @@ export const Vote: React.FC<VoteProps> = ({ gauge, tvl, rewardsValue }) => {
 								userSlopes && userSlopes.power.eq(0) && votingPowerAllocated.eq(0)
 									? BigNumber.from(100).toString()
 									: userSlopes && votingPowerAllocated.div(100).eq(100) && userSlopes.power.eq(0)
-										? BigNumber.from(0).toString()
-										: userSlopes && votingPowerAllocated.div(100).gt(0)
-											? userSlopes && BigNumber.from(100).add(userSlopes.power.div(100)).sub(votingPowerAllocated.div(100)).toString()
-											: userSlopes && BigNumber.from(100).add(userSlopes.power.div(100)).sub(userSlopes.power.div(100)).toString()
+									  ? BigNumber.from(0).toString()
+									  : userSlopes && votingPowerAllocated.div(100).gt(0)
+									    ? userSlopes && BigNumber.from(100).add(userSlopes.power.div(100)).sub(votingPowerAllocated.div(100)).toString()
+									    : userSlopes && BigNumber.from(100).add(userSlopes.power.div(100)).sub(userSlopes.power.div(100)).toString()
 							}
 							value={val}
 							className='h-2 w-full appearance-none rounded-full bg-baoWhite bg-opacity-20 accent-baoRed disabled:cursor-not-allowed'
