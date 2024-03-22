@@ -53,6 +53,9 @@ interface GaugeListItemProps {
 }
 
 const GaugeListItem: React.FC<GaugeListItemProps> = ({ gauge }) => {
+	const decimals = 17
+	const DECIMAL = BigNumber.from(10).pow(decimals)
+
 	const { account } = useWeb3React()
 	const [showGaugeModal, setShowGaugeModal] = useState(false)
 	const { currentWeight } = useRelativeWeight(gauge.gaugeAddress)
@@ -64,7 +67,7 @@ const GaugeListItem: React.FC<GaugeListItemProps> = ({ gauge }) => {
 	const rewardsAPR =
 		gaugeTVL && gaugeTVL.gt(0)
 			? rewardsValue
-					.mul(currentWeight.gt(0) ? currentWeight.div(100) : 100000000000000)
+					.mul(currentWeight.gt(0) ? currentWeight : DECIMAL)
 					.div(gaugeTVL)
 					.mul(100)
 					.toString()

@@ -257,6 +257,9 @@ interface VoteProps {
 }
 
 export const Vote: React.FC<VoteProps> = ({ gauge, tvl, rewardsValue }) => {
+	const decimals = 17
+	const DECIMAL = BigNumber.from(10).pow(decimals)
+
 	const { pendingTx, txHash, handleTx } = useTransactionHandler()
 	const gaugeControllerContract = useContract<GaugeController>('GaugeController')
 	const lockInfo = useLockInfo()
@@ -267,8 +270,22 @@ export const Vote: React.FC<VoteProps> = ({ gauge, tvl, rewardsValue }) => {
 	)
 	const { currentWeight, futureWeight } = useRelativeWeight(gauge.gaugeAddress)
 
-	const currentAPR = tvl && tvl.gt(0) ? rewardsValue.mul(currentWeight).div(tvl).mul(100).toString() : BigNumber.from(0)
-	const futureAPR = tvl && tvl.gt(0) ? rewardsValue.mul(futureWeight).div(tvl).mul(100).toString() : BigNumber.from(0)
+	const currentAPR =
+		tvl && tvl.gt(0)
+			? rewardsValue
+					.mul(currentWeight.gt(0) ? currentWeight : DECIMAL)
+					.div(tvl)
+					.mul(100)
+					.toString()
+			: BigNumber.from(0)
+	const futureAPR =
+		tvl && tvl.gt(0)
+			? rewardsValue
+					.mul(futureWeight.gt(0) ? futureWeight : DECIMAL)
+					.div(tvl)
+					.mul(100)
+					.toString()
+			: BigNumber.from(0)
 
 	const handleChange = useCallback(
 		(e: React.FormEvent<HTMLInputElement>) => {
