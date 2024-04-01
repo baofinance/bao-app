@@ -346,6 +346,7 @@ export default {
 			iconA: '/images/tokens/baoUSD.png',
 			iconB: '/images/tokens/3CRV.png',
 			pairUrl: 'https://curve.fi/#/ethereum/pools/factory-v2-84',
+			active: false,
 		},
 		{
 			gid: 2,
@@ -367,6 +368,7 @@ export default {
 			iconA: '/images/tokens/bSTBL.png',
 			iconB: '/images/tokens/DAI.png',
 			pairUrl: 'https://curve.fi/#/ethereum/pools/factory-crypto-61',
+			active: false,
 		},
 		{
 			gid: 3,
@@ -388,6 +390,7 @@ export default {
 			iconA: '/images/tokens/BAO.png',
 			iconB: '/images/tokens/ETH.png',
 			pairUrl: 'https://app.uniswap.org/#/add/v2/0xCe391315b414D4c7555956120461D21808A69F3A/ETH',
+			active: false,
 		},
 		// {
 		// 	gid: 4,
@@ -431,6 +434,7 @@ export default {
 			iconB: '/images/tokens/LUSD.png',
 			pairUrl: 'https://app.balancer.fi/#/ethereum/pool/0x7e9afd25f5ec0eb24d7d4b089ae7ecb9651c8b1f000000000000000000000511',
 			balancerPoolId: '0x7e9afd25f5ec0eb24d7d4b089ae7ecb9651c8b1f000000000000000000000511',
+			active: false,
 		},
 		{
 			gid: 6,
@@ -453,6 +457,7 @@ export default {
 			iconB: '/images/tokens/ETH.png',
 			pairUrl: 'https://app.balancer.fi/#/ethereum/pool/0x1a44e35d5451e0b78621a1b3e7a53dfaa306b1d000000000000000000000051b',
 			balancerPoolId: '0x1a44e35d5451e0b78621a1b3e7a53dfaa306b1d000000000000000000000051b',
+			active: true,
 		},
 		{
 			gid: 7,
@@ -475,6 +480,7 @@ export default {
 			iconB: '/images/tokens/LUSD.png',
 			pairUrl: 'https://app.balancer.fi/#/ethereum/pool/0x08cc92fedc1ce2d8525176a63fcff404450f2998000200000000000000000542',
 			balancerPoolId: '0x08cc92fedc1ce2d8525176a63fcff404450f2998000200000000000000000542',
+			active: false,
 		},
 		{
 			gid: 8,
@@ -497,6 +503,7 @@ export default {
 			iconB: '/images/tokens/ETH.png',
 			pairUrl: 'https://app.balancer.fi/#/ethereum/pool/0x3b9fb87f7d081ceddb1289258fa5660d955317b6000200000000000000000544',
 			balancerPoolId: '0x3b9fb87f7d081ceddb1289258fa5660d955317b6000200000000000000000544',
+			active: true,
 		},
 		{
 			gid: 9,
@@ -519,6 +526,7 @@ export default {
 			iconB: '/images/tokens/bETH.png',
 			pairUrl: 'https://app.balancer.fi/#/ethereum/pool/0x0bbc7b78ff8453c40718e290b33f1d00ee67274e000000000000000000000563',
 			balancerPoolId: '0x0bbc7b78ff8453c40718e290b33f1d00ee67274e000000000000000000000563',
+			active: false,
 		},
 		{
 			gid: 10,
@@ -539,6 +547,7 @@ export default {
 			type: 'BProtocol',
 			iconA: '/images/tokens/baoETH.png',
 			pairUrl: '/backstops',
+			active: false,
 		},
 	],
 	baskets: [

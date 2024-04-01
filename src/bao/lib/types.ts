@@ -55,6 +55,7 @@ export interface SupportedGauge {
 	poolInfoAddresses: {
 		[network: number]: string
 	}
+	active: boolean
 }
 
 export interface SupportedBasket {
