@@ -457,7 +457,7 @@ export default {
 			iconB: '/images/tokens/ETH.png',
 			pairUrl: 'https://app.balancer.fi/#/ethereum/pool/0x1a44e35d5451e0b78621a1b3e7a53dfaa306b1d000000000000000000000051b',
 			balancerPoolId: '0x1a44e35d5451e0b78621a1b3e7a53dfaa306b1d000000000000000000000051b',
-			active: true,
+			active: false,
 		},
 		{
 			gid: 7,
@@ -480,7 +480,7 @@ export default {
 			iconB: '/images/tokens/LUSD.png',
 			pairUrl: 'https://app.balancer.fi/#/ethereum/pool/0x08cc92fedc1ce2d8525176a63fcff404450f2998000200000000000000000542',
 			balancerPoolId: '0x08cc92fedc1ce2d8525176a63fcff404450f2998000200000000000000000542',
-			active: false,
+			active: true,
 		},
 		{
 			gid: 8,
