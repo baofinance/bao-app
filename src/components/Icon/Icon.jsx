@@ -4,10 +4,12 @@ import clsx from 'clsx'
 
 import WarningIcon from '@/components/Icons/WarningIcon'
 import LightbulbIcon from '../Icons/LightbulbIcon'
+import ArchivedIcon from '@/components/Icons/ArchivedIcon'
 
 const icons = {
 	warning: WarningIcon,
 	lightbulb: LightbulbIcon,
+	archived: ArchivedIcon,
 }
 
 const iconStyles = {

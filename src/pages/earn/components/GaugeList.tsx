@@ -19,6 +19,7 @@ import { isDesktop } from 'react-device-detect'
 import GaugeModal from './Modals'
 import Tooltipped from '@/components/Tooltipped'
 import ReactSwitch from 'react-switch'
+import { Icon } from '@/components/Icon'
 
 const GaugeList: React.FC = () => {
 	const gauges = useGauges()
@@ -51,7 +52,8 @@ const GaugeList: React.FC = () => {
 				<Typography className='flex w-full basis-1/3 flex-col items-center px-4 pb-0 font-bakbak text-base first:items-start lg:basis-2/5 lg:text-lg'>
 					{isDesktop && 'Gauge'} Name
 				</Typography>
-				<Typography className='text-center font-bakbak text-base lg:basis-2/5 lg:text-lg'>APR</Typography>
+				<Typography className='text-center font-bakbak text-base lg:basis-1/5 lg:text-lg'>APR</Typography>
+				<Typography className='text-center font-bakbak text-base lg:basis-1/5 lg:text-lg'></Typography>
 				<Typography className='flex w-full basis-1/3 flex-col items-center px-4 pb-0 font-bakbak text-base last:items-end lg:basis-1/5 lg:text-lg'>
 					TVL
 				</Typography>
@@ -88,7 +90,7 @@ const GaugeListItem: React.FC<GaugeListItemProps> = ({ gauge }) => {
 	const { gaugeTVL, depositAmount } = useGaugeTVL(gauge)
 	const rewardsValue = baoPrice ? baoPrice.mul(mintable) : BigNumber.from(0)
 	const rewardsAPR =
-		gaugeTVL && gaugeTVL.gt(0)
+		gauge.active == true && gaugeTVL && gaugeTVL.gt(0)
 			? rewardsValue
 					.mul(currentWeight.gt(0) ? currentWeight : DECIMAL)
 					.div(gaugeTVL)
@@ -157,7 +159,7 @@ const GaugeListItem: React.FC<GaugeListItemProps> = ({ gauge }) => {
 						</div>
 					</div>
 
-					<div className='mx-auto my-0 flex basis-1/3 items-center justify-center lg:basis-2/5'>
+					<div className='mx-auto my-0 flex basis-1/3 items-center justify-center lg:basis-1/5'>
 						<Tooltipped
 							content={`Max APR can be reached with a max boost of 2.5x. Your APR is: ${getDisplayBalance(
 								isNaN(boost) ? rewardsAPR : parseFloat(rewardsAPR.toString()) * boost,
@@ -168,6 +170,10 @@ const GaugeListItem: React.FC<GaugeListItemProps> = ({ gauge }) => {
 								{getDisplayBalance(rewardsAPR)}% ➝ {getDisplayBalance(parseFloat(rewardsAPR.toString()) * 2.5)}%
 							</Typography>
 						</Tooltipped>
+					</div>
+
+					<div className='mx-auto my-0 flex basis-1/3 flex-col items-end justify-center text-right lg:basis-1/5'>
+						{!gauge.active && <Icon icon='archived' className='m-0 h-10 w-10 flex-none' />}
 					</div>
 
 					<div className='mx-auto my-0 flex basis-1/3 flex-col items-end justify-center text-right lg:basis-1/5'>
