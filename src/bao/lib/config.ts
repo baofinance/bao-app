@@ -244,7 +244,7 @@ export default {
 				{
 					mid: 6,
 					symbol: 'bdWSTETH',
-					archived: true,
+					archived: false,
 					vaultAddresses: {
 						1: '0x62CfE0b2763f45Ea07FF119A83ed1F0ae2f73F42',
 					},
@@ -340,7 +340,7 @@ export default {
 				{
 					mid: 6,
 					symbol: 'bdWSTETH',
-					archived: true,
+					archived: false,
 					vaultAddresses: {
 						1: '0xF998d46efF00685D5AF71Cbf9D47A4CAeB611675',
 					},
