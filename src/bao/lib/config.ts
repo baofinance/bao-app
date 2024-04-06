@@ -26,6 +26,7 @@ export default {
 		CRV: '0xD533a949740bb3306d119CC777fa900bA034cd52',
 		MKR: '0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2',
 		LUSD: '0x5f98805A4E8be255a32880FDeC7F6728C6568bA0',
+		WSTETH: '0x7f39c581f595b53c5cb19bd0b3f8da6c935e2ca0',
 		//Synths
 		baoUSD: '0x7945b0A6674b175695e5d1D08aE1e6F13744Abb0',
 		baoETH: '0xf4edfad26EE0D23B69CA93112eccE52704E0006f',
@@ -240,6 +241,20 @@ export default {
 					coingeckoId: 'weth',
 					underlyingDecimals: 18,
 				},
+				{
+					mid: 6,
+					symbol: 'bdWSTETH',
+					archived: true,
+					vaultAddresses: {
+						1: '0x62CfE0b2763f45Ea07FF119A83ed1F0ae2f73F42',
+					},
+					underlyingAddresses: {
+						1: 'WSTETH',
+					},
+					icon: 'wstETH.png',
+					coingeckoId: 'wrapped-steth',
+					underlyingDecimals: 18,
+				},
 			],
 		},
 		baoETH: {
@@ -321,6 +336,20 @@ export default {
 					coingeckoId: 'dai',
 					underlyingDecimals: 18,
 					isBasket: true,
+				},
+				{
+					mid: 6,
+					symbol: 'bdWSTETH',
+					archived: true,
+					vaultAddresses: {
+						1: '0xF998d46efF00685D5AF71Cbf9D47A4CAeB611675',
+					},
+					underlyingAddresses: {
+						1: 'WSTETH',
+					},
+					icon: 'wstETH.png',
+					coingeckoId: 'wrapped-steth',
+					underlyingDecimals: 18,
 				},
 			],
 		},
