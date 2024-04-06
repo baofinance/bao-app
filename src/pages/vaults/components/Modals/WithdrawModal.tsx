@@ -45,7 +45,7 @@ const WithdrawModal = ({ asset, show, onHide, vaultName }: WithdrawModalProps) =
 						supplyBalances
 							.find(balance => balance.address.toLowerCase() === asset.vaultAddress.toLowerCase())
 							.balance.mul(exchangeRates[asset.vaultAddress]),
-				  )
+					)
 				: BigNumber.from(0),
 		[supplyBalances, exchangeRates, asset.vaultAddress],
 	)

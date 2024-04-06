@@ -202,7 +202,7 @@ export const Ballast = () => {
 															? getDisplayBalance(
 																	accountBalances.find(balance => balance.address === synth.underlyingAddress).balance,
 																	synth.underlyingDecimals,
-															  )
+																)
 															: '-'}
 													</Typography>
 												</div>
@@ -241,7 +241,7 @@ export const Ballast = () => {
 															? getDisplayBalance(
 																	accountBalances.find(balance => balance.address === synth.underlyingAddress).balance,
 																	synth.underlyingDecimals,
-															  )
+																)
 															: '-'}
 													</Typography>
 												</div>

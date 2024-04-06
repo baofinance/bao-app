@@ -57,7 +57,7 @@ export const MintCard = ({
 					FixedNumber.from(formatUnits(accountLiquidity && accountLiquidity.usdBorrowable)).divUnsafe(
 						FixedNumber.from(formatUnits(synth.price)),
 					),
-			  )
+				)
 			: BigNumber.from(0)
 	}
 

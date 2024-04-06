@@ -63,7 +63,7 @@ export const DepositCard = ({
 						return a + parseFloat(formatUnits(b))
 					}, 0) /
 					composition.length) *
-			  100
+				100
 			: 0
 
 	const max = () => {
@@ -190,7 +190,7 @@ export const DepositCard = ({
 																			? getDisplayBalance(
 																					accountBalances.find(balance => balance.address === asset.underlyingAddress).balance,
 																					asset.underlyingDecimals,
-																			  )
+																				)
 																			: '-'}
 																	</Typography>
 																</div>
