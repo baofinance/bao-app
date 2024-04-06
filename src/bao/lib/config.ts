@@ -249,7 +249,7 @@ export default {
 						1: '0x62CfE0b2763f45Ea07FF119A83ed1F0ae2f73F42',
 					},
 					underlyingAddresses: {
-						1: 'WSTETH',
+						1: '0x7f39c581f595b53c5cb19bd0b3f8da6c935e2ca0',
 					},
 					icon: 'wstETH.png',
 					coingeckoId: 'wrapped-steth',
@@ -345,7 +345,7 @@ export default {
 						1: '0xF998d46efF00685D5AF71Cbf9D47A4CAeB611675',
 					},
 					underlyingAddresses: {
-						1: 'WSTETH',
+						1: '0x7f39c581f595b53c5cb19bd0b3f8da6c935e2ca0',
 					},
 					icon: 'wstETH.png',
 					coingeckoId: 'wrapped-steth',
