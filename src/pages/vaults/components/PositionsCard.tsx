@@ -34,13 +34,14 @@ export const PositionList = ({
 	accountVaults: ActiveSupportedVault[]
 	borrowBalances: Balance[]
 }) => {
+	const filteredCollateral = collateral.filter(vault => !!vault)
 	return (
 		<>
 			<Typography variant='xl' className='p-4 text-center font-bakbak'>
 				Open Positions
 			</Typography>
 			<ListHeader headers={['Asset', 'Amount', 'vAPY', '']} className='mx-4 pb-0 text-center text-baoWhite/60' />
-			{collateral
+			{filteredCollateral
 				.map((vault: ActiveSupportedVault) => (
 					<PositionListItem
 						vault={vault}
