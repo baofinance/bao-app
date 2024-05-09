@@ -200,4 +200,28 @@ export interface Config {
 		}
 	}
 	gauges: SupportedGauge[]
+	swapTokens: SwapToken[]
+}
+
+export interface SwapToken {
+	id: number
+	active: boolean
+	tokenAddresses: {
+		[network: number]: string
+	}
+	pools: [
+		{
+			poolAddress: string
+			poolId: string
+		},
+	]
+	name: string
+	icon: string
+	platforms: [
+		{
+			name: string
+			url: string
+			icon: string
+		},
+	]
 }
