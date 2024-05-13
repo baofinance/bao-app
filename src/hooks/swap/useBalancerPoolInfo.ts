@@ -27,7 +27,7 @@ const useBalancerPoolInfo = (swapToken: SwapToken): BalancerPoolInfo => {
 		async () => {
 			const balancerVault = BalancerVault__factory.connect(Config.contracts.BalancerVault[chainId].address, library)
 
-			let contracts: any[] = []
+			const contracts: any[] = []
 			let balance = BigNumber.from(0)
 
 			swapToken.pools.map(pool => {
