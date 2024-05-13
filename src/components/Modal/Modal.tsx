@@ -32,7 +32,7 @@ export interface ModalProps {
 	maxWidth?: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl'
 	unmount?: boolean
 	background?: string
-	backgroundOpacity: string
+	backgroundOpacity?: string
 }
 
 const Modal: ModalType<ModalProps> = ({
