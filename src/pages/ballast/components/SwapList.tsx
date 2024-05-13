@@ -84,9 +84,9 @@ const SwapListItem: React.FC<SwapListItemProps> = ({ token }) => {
 					width='450px'
 					height='675px'
 					allow='fullscreen'
-					marginWidth='0'
-					marginHeight='0'
-					frameBorder='0'
+					marginWidth={parseInt('0')}
+					marginHeight={parseInt('0')}
+					frameBorder={parseInt('0')}
 					scrolling='no'
 					loading='eager'
 				></iframe>
