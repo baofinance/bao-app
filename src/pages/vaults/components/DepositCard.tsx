@@ -137,7 +137,7 @@ export const DepositCard = ({
 										<thead>
 											<tr className=''>
 												<th>APY</th>
-												<th>Balance</th>
+												<th>Supplied</th>
 											</tr>
 										</thead>
 										<div className='h-1 w-[200px] bg-red-400' />
