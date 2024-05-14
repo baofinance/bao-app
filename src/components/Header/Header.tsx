@@ -123,7 +123,7 @@ const Header: FC = () => {
 												>
 													<div className='space-y-4'>
 														<MobileNavLink href='/vaults'>BORROW</MobileNavLink>
-														<MobileNavLink href='/ballast'>SWAP</MobileNavLink>
+														<MobileNavLink href='/swap'>SWAP</MobileNavLink>
 														<MobileNavLink href='/baskets'>BASKETS</MobileNavLink>
 														<MobileNavLink href='/earn'>EARN</MobileNavLink>
 														<MobileNavLink href='/vebao'>STAKE</MobileNavLink>

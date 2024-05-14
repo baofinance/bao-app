@@ -16,7 +16,7 @@ export const SwapList: React.FC = () => {
 
 	return (
 		<>
-			<ListHeader headers={['Token', 'Balance', 'Platforms']} />
+			<ListHeader headers={['Token', 'Balance', 'Platform']} />
 			<div className='flex flex-col gap-4'>
 				<div className='flex flex-col gap-4'>
 					{swapTokens && swapTokens.map(swapToken => <SwapListItem token={swapToken} key={swapToken.id} />)}
@@ -43,34 +43,38 @@ const SwapListItem: React.FC<SwapListItemProps> = ({ token }) => {
 
 	return (
 		<>
-			<button className='glassmorphic-card w-full px-4 py-2 duration-300 hover:border-baoRed hover:bg-baoRed hover:bg-opacity-20'>
-				<div className='flex w-full flex-row'>
-					<div className='flex w-full'>
-						<div className='my-auto flex place-items-center'>
-							<Image src={token.icon} alt={token.name} className={`inline-block`} height={32} width={32} />
-							<span className='inline-block text-left align-middle'>
-								<Typography variant='lg' className='ml-2 font-bakbak'>
-									{token.name}
-								</Typography>
-							</span>
-						</div>
-					</div>
+			{token.platforms.map((platform: any, index) => {
+				return (
+					<button
+						className='glassmorphic-card w-full px-4 py-2 duration-300 hover:border-baoRed hover:bg-baoRed hover:bg-opacity-20'
+						onClick={() => handleClick(platform)}
+						key={index}
+					>
+						<div className='flex w-full flex-row'>
+							<div className='flex w-full'>
+								<div className='my-auto flex place-items-center'>
+									<Image src={token.icon} alt={token.name} className={`inline-block`} height={32} width={32} />
+									<span className='inline-block text-left align-middle'>
+										<Typography variant='lg' className='ml-2 font-bakbak'>
+											{token.name}
+										</Typography>
+									</span>
+								</div>
+							</div>
 
-					<div className='mx-auto my-0 flex w-full items-center justify-center'>{formattedBalance ? formattedBalance : <Loader />}</div>
+							<div className='mx-auto my-0 flex w-full items-center justify-center'>{formattedBalance ? formattedBalance : <Loader />}</div>
 
-					<div className='mx-auto my-0 flex w-full flex-auto items-end justify-end text-right'>
-						{token.platforms.map((platform: any) => {
-							return (
+							<div className='mx-auto my-0 flex w-full flex-auto items-end justify-end text-right'>
 								<Tooltipped content={platform.name} key={platform.name} placement='bottom'>
-									<span className={`ml-5 inline-block select-none duration-200`} onClick={() => handleClick(platform)}>
-										<Image src={platform.icon} alt={platform.name} height={32} width={32} className='rounded-full' />
+									<span className={`ml-5 inline-block select-none duration-200`}>
+										<Image src={platform.icon} alt={platform.name} height={32} width={32} />
 									</span>
 								</Tooltipped>
-							)
-						})}
-					</div>
-				</div>
-			</button>
+							</div>
+						</div>
+					</button>
+				)
+			})}
 			<Modal
 				isOpen={showIframe}
 				onDismiss={() => setShowIframe(!showIframe)}

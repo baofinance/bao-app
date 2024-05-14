@@ -5,7 +5,7 @@ import React, { useState } from 'react'
 import BallastCard from './components/Ballast'
 import { Icon } from '@/components/Icon'
 import VaultList from '@/pages/vaults/components/VaultList'
-import SwapList from '@/pages/ballast/components/SwapList'
+import SwapList from '@/pages/swap/components/SwapList'
 import ReactSwitch from 'react-switch'
 
 const Ballast: React.FC = () => {
@@ -23,13 +23,13 @@ const Ballast: React.FC = () => {
 					<Typography variant='hero' className='stroke'>
 						Swap
 					</Typography>
-					<div className='mt-4 flex gap-2'>
+					<div className='!mt-0 flex gap-2'>
 						<Icon icon='lightbulb' className='m-0 h-6 w-6 flex-none' />
 						<Typography className='m-0 pr-1 text-base font-light tracking-tight lg:mb-4'>
-							Swap BaoETH, BaoUSD and Bao right here using the LlamaSwap aggregator by DefiLlama.
+							Swap native BAO tokens using the LlamaSwap aggregator.
 						</Typography>
 					</div>
-					<div className='flex lg:block mr-auto'>
+					<div className='flex lg:block mr-auto !mt-3'>
 						<a
 							className='mr-auto'
 							href='https://info.bao.finance/docs/guides/bao-markets/ballast'
@@ -46,15 +46,17 @@ const Ballast: React.FC = () => {
 
 				<div className='lg:col-span-2 flex flex-wrap flex-col'>
 					<Typography variant='hero' className='stroke'>
-						Ballast - Archived
+						Ballast
 					</Typography>
 					<div className='mt-4 flex gap-2'>
 						<Icon icon='archived' className='m-0 h-8 w-8 flex-none' />
-						<Typography className='m-0 text-base font-light tracking-tight lg:mb-4'>Ballast has been archived toggle to enable.</Typography>
+						<Typography className='m-0 text-base font-light tracking-tight lg:mb-4'>
+							Ballast has been archived. Toggle to enable.
+						</Typography>
 					</div>
 				</div>
 
-				<div className={`flex w-full flex-row gap-2 px-2 py-3`}>
+				<div className={`flex w-full flex-row gap-2 py-3 !mt-0`}>
 					<ReactSwitch
 						checked={showBallast}
 						onChange={handleShowBallastToggle}

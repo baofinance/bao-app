@@ -668,7 +668,7 @@ export default {
 				},
 			],
 			name: 'bao',
-			icon: '/images/tokens/bao.png',
+			icon: '/images/tokens/BAO.png',
 			platforms: [
 				{
 					pid: 1,
