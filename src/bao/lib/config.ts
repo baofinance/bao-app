@@ -181,6 +181,7 @@ export default {
 					icon: 'ETH.png',
 					coingeckoId: 'weth',
 					underlyingDecimals: 18,
+					archived: false,
 				},
 				{
 					mid: 1,
@@ -275,6 +276,7 @@ export default {
 					icon: 'ETH.png',
 					coingeckoId: 'weth',
 					underlyingDecimals: 18,
+					archived: false,
 				},
 				{
 					mid: 1,

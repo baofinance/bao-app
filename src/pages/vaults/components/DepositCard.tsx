@@ -19,6 +19,7 @@ import Image from 'next/future/image'
 import React, { Fragment, useCallback, useEffect, useState } from 'react'
 import { isDesktop } from 'react-device-detect'
 import SupplyModal from './Modals/SupplyModal'
+import { Icon } from '@/components/Icon'
 
 export const DepositCard = ({
 	vaultName,
@@ -35,14 +36,14 @@ export const DepositCard = ({
 }) => {
 	const { account } = useWeb3React()
 	const [val, setVal] = useState<string>('')
-	const [selectedOption, setSelectedOption] = useState('ETH')
+	const [selectedOption, setSelectedOption] = useState('wstETH')
 	const [showSupplyModal, setShowSupplyModal] = useState(false)
 
 	const asset =
 		collateral &&
 		(collateral.length
 			? collateral.find(asset => asset.underlyingSymbol === selectedOption)
-			: collateral.find(asset => asset.underlyingSymbol === 'ETH'))
+			: collateral.find(asset => asset.underlyingSymbol === 'wstETH'))
 
 	const baskets = useBaskets()
 	const basket =
@@ -136,10 +137,11 @@ export const DepositCard = ({
 
 									<Transition show={open} as={Fragment} leave='transition ease-in duration-100' leaveFrom='opacity-100' leaveTo='opacity-0'>
 										<Listbox.Options className='absolute z-10 w-auto origin-top-right overflow-hidden rounded-3xl border border-baoWhite/20 bg-baoBlack p-2 shadow-lg shadow-baoBlack ring-1 ring-black ring-opacity-5 focus:outline-none'>
-											<div className='grid grid-cols-6 p-2 font-bakbak font-normal text-baoWhite'>
-												<div className='col-span-2'>
+											<div className='grid grid-cols-8 p-2 font-bakbak font-normal text-baoWhite'>
+												<div className='col-span-3'>
 													<Typography variant='lg'>Asset</Typography>
 												</div>
+												<div className='col-span-1'></div>
 												<div className='col-span-2'>
 													<Typography variant='lg' className='text-center'>
 														APY
@@ -153,50 +155,60 @@ export const DepositCard = ({
 											</div>
 											{collateral.length ? (
 												collateral.map((asset: ActiveSupportedVault) => (
-													<Listbox.Option
+													<Tooltipped
+														content={false !== asset.archived ? 'Deprecated' : 'Active'}
 														key={asset.underlyingSymbol}
-														className={({ active }) =>
-															classNames(
-																active ? 'border !border-baoRed bg-baoWhite bg-opacity-5 text-baoRed' : 'text-baoWhite',
-																'cursor-pointer select-none rounded-3xl border border-baoBlack p-4 text-sm',
-															)
-														}
-														value={asset.underlyingSymbol}
+														placement='top'
+														className='rounded-full bg-baoRed'
 													>
-														{({ selected, active }) => (
-															<div className='mx-0 my-auto grid h-full grid-cols-6 items-center gap-4'>
-																<div className='col-span-2'>
-																	<Image
-																		className='z-10 inline-block select-none'
-																		src={`/images/tokens/${asset.underlyingSymbol}.png`}
-																		alt={asset.underlyingSymbol}
-																		width={24}
-																		height={24}
-																	/>
-																	<span className='ml-2 inline-block text-left align-middle'>
-																		<Typography variant='lg' className='font-bakbak'>
-																			{asset.underlyingSymbol}
+														<Listbox.Option
+															key={asset.underlyingSymbol}
+															className={({ active }) =>
+																classNames(
+																	active ? 'border !border-baoRed bg-baoWhite bg-opacity-5 text-baoRed' : 'text-baoWhite',
+																	'cursor-pointer select-none rounded-3xl border border-baoBlack p-4 text-sm',
+																)
+															}
+															value={asset.underlyingSymbol}
+														>
+															{({ selected, active }) => (
+																<div className='mx-0 my-auto grid h-full grid-cols-8 items-center gap-4'>
+																	<div className='col-span-3'>
+																		<Image
+																			className='z-10 inline-block select-none'
+																			src={`/images/tokens/${asset.underlyingSymbol}.png`}
+																			alt={asset.underlyingSymbol}
+																			width={24}
+																			height={24}
+																		/>
+																		<span className='ml-2 inline-block text-left align-middle'>
+																			<Typography variant='lg' className='font-bakbak'>
+																				{asset.underlyingSymbol}
+																			</Typography>
+																		</span>
+																	</div>
+																	<div className='col-span-1'>
+																		{false !== asset.archived && <Icon icon='archived' className='m-0 h-10 w-10 flex-none' />}
+																	</div>
+																	<div className='col-span-2'>
+																		<Typography variant='lg' className='text-center align-middle font-bakbak'>
+																			{asset.isBasket && avgBasketAPY ? getDisplayBalance(avgBasketAPY, 0, 2) + '%' : '-'}
 																		</Typography>
-																	</span>
+																	</div>
+																	<div className='col-span-2'>
+																		<Typography variant='lg' className='text-right align-middle font-bakbak'>
+																			{account
+																				? getDisplayBalance(
+																						accountBalances.find(balance => balance.address === asset.underlyingAddress).balance,
+																						asset.underlyingDecimals,
+																					)
+																				: '-'}
+																		</Typography>
+																	</div>
 																</div>
-																<div className='col-span-2'>
-																	<Typography variant='lg' className='text-center align-middle font-bakbak'>
-																		{asset.isBasket && avgBasketAPY ? getDisplayBalance(avgBasketAPY, 0, 2) + '%' : '-'}
-																	</Typography>
-																</div>
-																<div className='col-span-2'>
-																	<Typography variant='lg' className='text-right align-middle font-bakbak'>
-																		{account
-																			? getDisplayBalance(
-																					accountBalances.find(balance => balance.address === asset.underlyingAddress).balance,
-																					asset.underlyingDecimals,
-																				)
-																			: '-'}
-																	</Typography>
-																</div>
-															</div>
-														)}
-													</Listbox.Option>
+															)}
+														</Listbox.Option>
+													</Tooltipped>
 												))
 											) : (
 												<Typography>Select a collateral</Typography>
