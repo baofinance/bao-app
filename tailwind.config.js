@@ -29,6 +29,7 @@ module.exports = {
 				baoWhite: '#faf2e3',
 				baoBlack: '#1e2022',
 				baoRed: '#e21a53',
+				llamaSwapBackground: '#22242a',
 				transparent: {
 					100: '#1e202280', //black
 					200: '#faf2e380', //white
