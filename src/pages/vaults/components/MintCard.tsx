@@ -82,7 +82,7 @@ export const MintCard = ({
 	return (
 		<>
 			<Typography variant='xl' className='p-4 text-left font-bakbak'>
-				Mint
+				Borrow
 			</Typography>
 			<Card className='glassmorphic-card p-6'>
 				<Card.Body>
@@ -130,7 +130,7 @@ export const MintCard = ({
 									}
 									className={!isDesktop ? '!h-10 !px-2 !text-sm' : ''}
 								>
-									Mint
+									Borrow
 								</Button>
 								<MintModal
 									asset={synth}
@@ -143,7 +143,7 @@ export const MintCard = ({
 						</div>
 					</div>
 					<Typography variant='xl' className='p-4 text-center font-bakbak text-baoWhite/60'>
-						Mint Info
+						Borrow Info
 					</Typography>
 					<div className='flex flex-col gap-4 rounded'>
 						<StatBlock

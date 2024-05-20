@@ -10,7 +10,7 @@ import useComposition from '@/hooks/baskets/useComposition'
 import { Balance } from '@/hooks/vaults/useBalances'
 import { decimate, getDisplayBalance } from '@/utils/numberFormat'
 import { Listbox, Transition } from '@headlessui/react'
-import { ChevronDownIcon } from '@heroicons/react/20/solid'
+import { ChevronDownIcon, InformationCircleIcon } from '@heroicons/react/20/solid'
 import { useWeb3React } from '@web3-react/core'
 import classNames from 'classnames'
 import { BigNumber } from 'ethers'
@@ -20,6 +20,9 @@ import React, { Fragment, useCallback, useEffect, useState } from 'react'
 import { isDesktop } from 'react-device-detect'
 import SupplyModal from './Modals/SupplyModal'
 import { Icon } from '@/components/Icon'
+import { LineChart } from '@mui/x-charts'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faCircleInfo } from '@fortawesome/free-solid-svg-icons'
 
 export const DepositCard = ({
 	vaultName,
@@ -37,8 +40,8 @@ export const DepositCard = ({
 	const { account } = useWeb3React()
 	const [val, setVal] = useState<string>('')
 	const [selectedOption, setSelectedOption] = useState('wstETH')
-	const [showSupplyModal, setShowSupplyModal] = useState(false)
-	const [showInfo, setShowInfo] = useState(false)
+	const [showSupplyModal, setShowSupplyModal] = useState(0)
+	const [showInfo, setShowInfo] = useState(true)
 
 	const asset =
 		collateral &&
@@ -89,7 +92,7 @@ export const DepositCard = ({
 
 	const hide = () => {
 		setVal('')
-		setShowSupplyModal(false)
+		setShowSupplyModal(0)
 	}
 
 	return (
@@ -101,81 +104,89 @@ export const DepositCard = ({
 				<Card.Body>
 					<div className='flex w-full gap-2'>
 						<div className='z-20 flex flex-col place-items-center gap-5 w-full'>
-							{collateral.map((asset: ActiveSupportedVault) => (
-								<div className='flex w-full justify-between place-items-center gap-5'>
-									<Tooltipped
-										content={false !== asset.archived ? 'Deprecated' : 'Active'}
-										key={asset.underlyingSymbol}
-										placement='top'
-										className='rounded-full bg-baoRed '
+							{collateral
+								.filter((asset: ActiveSupportedVault) => !(false !== asset.archived))
+								.map((currentAsset: ActiveSupportedVault, index) => (
+									<div
+										className={
+											'flex w-full justify-between place-items-center gap-5 glassmorphic-card p-2' +
+											(selectedOption == currentAsset.underlyingSymbol ? ' !border-baoRed !bg-transparent-300' : '')
+										}
 									>
-										<div
-											key={asset.underlyingSymbol}
-											className={
-												'text-baoWhite flex overflow-hidden rounded-2xl border border-baoWhite/20 bg-baoBlack shadow-lg shadow-baoBlack ring-1 ring-black ring-opacity-5 focus:outline-none select-none border-baoBlack px-2 py-3 text-sm'
-											}
+										<Tooltipped
+											content={false !== asset.archived ? 'Deprecated' : 'Active'}
+											key={currentAsset.underlyingSymbol}
+											placement='top'
+											className='rounded-full bg-baoRed '
 										>
-											<div className='mx-0 my-auto flex h-full justify-center items-center gap-4 w-[180px]'>
-												<div className='col-span-3'>
-													<Image
-														className='z-10 inline-block select-none'
-														src={`/images/tokens/${asset.underlyingSymbol}.png`}
-														alt={asset.underlyingSymbol}
-														width={24}
-														height={24}
-													/>
-													<span className='ml-2 inline-block text-left align-middle'>
-														<Typography variant='lg' className='font-bakbak'>
-															{asset.underlyingSymbol}
-														</Typography>
-													</span>
+											<div
+												key={currentAsset.underlyingSymbol}
+												className={
+													'text-baoWhite flex overflow-hidden rounded-2xl border border-baoWhite/20 bg-baoBlack shadow-lg shadow-baoBlack ring-1 ring-black ring-opacity-5 focus:outline-none select-none border-baoBlack px-2 py-3 text-sm'
+												}
+											>
+												<div className='mx-0 my-auto flex h-full justify-center items-center gap-4 w-[180px]'>
+													<div className='col-span-3'>
+														<Image
+															className='z-10 inline-block select-none'
+															src={`/images/tokens/${currentAsset.underlyingSymbol}.png`}
+															alt={currentAsset.underlyingSymbol}
+															width={24}
+															height={24}
+														/>
+														<span className='ml-2 inline-block text-left align-middle'>
+															<Typography variant='lg' className='font-bakbak'>
+																{currentAsset.underlyingSymbol}
+															</Typography>
+														</span>
+													</div>
 												</div>
 											</div>
+										</Tooltipped>
+										<table className='table-fixed justify-between w-2/3 text-left'>
+											<thead>
+												<tr className=''>
+													<th>APY</th>
+													<th>Supplied</th>
+												</tr>
+											</thead>
+											<div className='h-1 w-[200px] bg-red-400' />
+											<tbody>
+												<tr>
+													<td>
+														<h1>
+															{(
+																Number(
+																	collateral.find(assetToFind => assetToFind.underlyingAddress === currentAsset.underlyingAddress)
+																		?.borrowApy,
+																) / 100000000000000000
+															).toFixed(2)}
+															%
+														</h1>
+													</td>
+													<td>
+														{(
+															Number(
+																collateral.find(assetToFind => assetToFind.underlyingAddress === currentAsset.underlyingAddress)?.supplied,
+															) / 100000000000000000
+														).toFixed(2)}
+													</td>
+												</tr>
+											</tbody>
+										</table>
+										<div className='m-auto mr-2 flex space-x-2'>
+											<Button className='!p-3' onClick={() => setSelectedOption(currentAsset.underlyingSymbol)}>
+												<FontAwesomeIcon icon={faCircleInfo} width={24} height={24} />
+											</Button>
+											<Button onClick={() => setShowSupplyModal(index + 1)} className={!isDesktop ? '!h-10 !px-2 !text-sm' : ''}>
+												Supply
+											</Button>
+											<SupplyModal asset={currentAsset} vaultName={vaultName} show={showSupplyModal == index + 1} onHide={hide} />
 										</div>
-									</Tooltipped>
-									<table className='table-fixed justify-between w-2/3 text-left'>
-										<thead>
-											<tr className=''>
-												<th>APY</th>
-												<th>Supplied</th>
-											</tr>
-										</thead>
-										<div className='h-1 w-[200px] bg-red-400' />
-										<tbody>
-											<tr>
-												<td>
-													<h1>
-														%{(Number(collateral.find(assetToFind => assetToFind.underlyingSymbol === asset.underlyingAddress)?.borrowApy) / 100000000000000000).toFixed(2)}
-													</h1>
-												</td>
-												<td>183527.124</td>
-											</tr>
-										</tbody>
-									</table>
-									<div className='m-auto mr-2 flex space-x-2'>
-										<Button onClick={() => setShowSupplyModal(true)} className={!isDesktop ? '!h-10 !px-2 !text-sm' : ''}>
-											Supply
-										</Button><Button onClick={() => setShowSupplyModal(true)} className={!isDesktop ? '!h-10 !px-2 !text-sm' : ''}>
-											Info
-										</Button>
-										<SupplyModal
-											asset={asset}
-											vaultName={vaultName}
-											val={val ? parseUnits(val, asset.underlyingDecimals) : BigNumber.from(0)}
-											show={showSupplyModal}
-											onHide={hide}
-										/>
 									</div>
-								</div>
-							))}
+								))}
 						</div>
 					</div>
-					<Button
-						onClick={() => setShowInfo(showInfo ? false : true)}
-						className={!isDesktop ? '!h-10 !px-3 !py-1 !text-sm mt-5 !rounded-md' : 'mt-5 !rounded-md !px-3 !py-1'}
-					>
-						Details
-					</Button>
 					<Transition show={showInfo} leave='transition ease-in duration-100' leaveFrom='opacity-100' leaveTo='opacity-0'>
 						<Typography variant='xl' className='p-2 mt-5 text-left font-bakbak text-baoWhite/60'>
 							Collateral Info
