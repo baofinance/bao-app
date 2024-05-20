@@ -112,6 +112,7 @@ export const DepositCard = ({
 											'flex w-full justify-between place-items-center gap-5 glassmorphic-card p-2' +
 											(selectedOption == currentAsset.underlyingSymbol ? ' !border-baoRed !bg-transparent-300' : '')
 										}
+										key={index}
 									>
 										<Tooltipped
 											content={false !== asset.archived ? 'Deprecated' : 'Active'}
