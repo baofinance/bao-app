@@ -144,7 +144,7 @@ export const DepositCard = ({
 												</div>
 											</div>
 										</Tooltipped>
-										<table className='table-fixed justify-between w-2/3 text-left'>
+										<table className='table-fixed justify-between w-2/3 text-left md:table hidden'>
 											<thead>
 												<tr className=''>
 													<th>APY</th>
