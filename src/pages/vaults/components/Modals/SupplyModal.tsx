@@ -13,49 +13,67 @@ import { decimate, getDisplayBalance } from '@/utils/numberFormat'
 import { faExternalLink } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { BigNumber, ethers } from 'ethers'
-import { parseUnits } from 'ethers/lib/utils'
+import { formatUnits, parseUnits } from 'ethers/lib/utils'
 import Image from 'next/future/image'
-import { useCallback } from 'react'
+import { useCallback, useState } from 'react'
 import VaultButton from '../VaultButton'
+import Input from '@/components/Input'
 
 export type SupplyModalProps = {
 	asset: ActiveSupportedVault
-	val: BigNumber
 	show: boolean
 	onHide: () => void
 	vaultName: string
 }
 
-const SupplyModal = ({ asset, show, onHide, vaultName, val }: SupplyModalProps) => {
+const SupplyModal = ({ asset, show, onHide, vaultName }: SupplyModalProps) => {
 	const { pendingTx, txHash, handleTx } = useTransactionHandler()
 	const { approvals } = useApprovals(vaultName)
 	const { vaultContract } = asset
 	const erc20 = useContract<Erc20>('Erc20', asset.underlyingAddress)
-	const usdValue = val.mul(asset.price)
+	const [val, setVal] = useState('0')
 	const operation = 'Supply'
+
+	const handleChange = useCallback(
+		(e: React.FormEvent<HTMLInputElement>) => {
+			if (e.currentTarget.value.length < 20) setVal(e.currentTarget.value)
+		},
+		[setVal],
+	)
 
 	const hideModal = useCallback(() => {
 		onHide()
 	}, [onHide])
 
 	return (
-		<Modal isOpen={show} onDismiss={hideModal}>
+		<Modal isOpen={show} onDismiss={() => {}}>
 			<Modal.Header onClose={hideModal}>
 				<div className='mx-0 my-auto flex h-full items-center text-baoWhite'>
 					<Typography variant='xl' className='mr-1 inline-block'>
-						Confirm Deposit
+						Supply {asset.underlyingSymbol}
 					</Typography>
 				</div>
 			</Modal.Header>
 			<Modal.Body>
-				<Typography variant='lg' className='p-6 text-center font-bakbak'>
-					<Image src={`/images/tokens/${asset.icon}`} width={32} height={32} alt={asset.underlyingSymbol} className='inline p-1' />
-					{getDisplayBalance(val, asset.underlyingDecimals).toString()} {asset.underlyingSymbol}{' '}
-					<Badge>${getDisplayBalance(decimate(usdValue))}</Badge>
+				<Typography variant='lg' className='py-5 text-center font-bakbak'>
+					<Input
+						value={val.toString()}
+						onChange={handleChange}
+						onSelectMax={() => {}}
+						placeholder={`0`}
+						className='h-12 min-w-[150px] z-20 w-full bg-baoBlack lg:h-auto'
+					/>
 				</Typography>
 			</Modal.Body>
 			<Modal.Actions>
-				<VaultButton operation={operation} asset={asset} val={val} isDisabled={!val} onHide={onHide} vaultName={vaultName} />
+				<VaultButton
+					operation={operation}
+					asset={asset}
+					val={val ? parseUnits(val, asset.underlyingDecimals) : BigNumber.from(0)}
+					isDisabled={!val}
+					onHide={onHide}
+					vaultName={vaultName}
+				/>
 			</Modal.Actions>
 		</Modal>
 	)

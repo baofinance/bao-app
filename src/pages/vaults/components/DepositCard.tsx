@@ -10,7 +10,7 @@ import useComposition from '@/hooks/baskets/useComposition'
 import { Balance } from '@/hooks/vaults/useBalances'
 import { decimate, getDisplayBalance } from '@/utils/numberFormat'
 import { Listbox, Transition } from '@headlessui/react'
-import { ChevronDownIcon } from '@heroicons/react/20/solid'
+import { ChevronDownIcon, InformationCircleIcon } from '@heroicons/react/20/solid'
 import { useWeb3React } from '@web3-react/core'
 import classNames from 'classnames'
 import { BigNumber } from 'ethers'
@@ -19,13 +19,13 @@ import Image from 'next/future/image'
 import React, { Fragment, useCallback, useEffect, useState } from 'react'
 import { isDesktop } from 'react-device-detect'
 import SupplyModal from './Modals/SupplyModal'
-import { Icon } from '@/components/Icon'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faAngleUp, faCaretUp, faCircleInfo, faX } from '@fortawesome/free-solid-svg-icons'
 
 export const DepositCard = ({
 	vaultName,
 	collateral,
 	balances,
-	accountBalances,
 	onUpdate,
 }: {
 	vaultName: string
@@ -36,8 +36,9 @@ export const DepositCard = ({
 }) => {
 	const { account } = useWeb3React()
 	const [val, setVal] = useState<string>('')
-	const [selectedOption, setSelectedOption] = useState('wstETH')
-	const [showSupplyModal, setShowSupplyModal] = useState(false)
+	const [selectedOption, setSelectedOption] = useState('ETH')
+	const [showSupplyModal, setShowSupplyModal] = useState(0)
+	const [showInfo, setShowInfo] = useState(false)
 
 	const asset =
 		collateral &&
@@ -88,234 +89,188 @@ export const DepositCard = ({
 
 	const hide = () => {
 		setVal('')
-		setShowSupplyModal(false)
+		setShowSupplyModal(0)
 	}
 
 	return (
 		<>
-			<Typography variant='xl' className='p-4 text-center font-bakbak'>
-				Deposit
+			<Typography variant='xl' className='p-4 text-left font-bakbak'>
+				Supply
 			</Typography>
 			<Card className='glassmorphic-card p-6'>
 				<Card.Body>
-					<div className='flex w-full gap-2 rounded border border-baoWhite border-opacity-20 bg-baoWhite bg-opacity-5'>
-						<Listbox value={selectedOption} onChange={setSelectedOption}>
-							{({ open }) => (
-								<div>
-									<Listbox.Button className={(classNames(open ? 'text-baoRed' : 'text-baoWhite'), 'inline-flex')}>
-										<div className='m-2 mr-0 flex w-10 rounded-full border-none duration-300 lg:!m-2 lg:w-32 lg:bg-baoWhite/5 lg:hover:bg-transparent-300'>
-											<div className='m-auto text-baoWhite lg:py-3'>
-												{selectedOption === '' ? (
-													<Typography>Select a collateral</Typography>
-												) : (
-													<div className='items-start'>
-														<div className='inline-block lg:mr-2'>
-															<Image
-																className='z-10 inline-block select-none'
-																src={asset && `/images/tokens/${asset.underlyingSymbol}.png`}
-																alt={asset && asset.underlyingSymbol}
-																width={isDesktop ? 24 : 32}
-																height={isDesktop ? 24 : 32}
-															/>
-														</div>
-														<span className='hidden text-left align-middle lg:inline-block'>
-															<Typography variant='xl' className='font-bakbak'>
-																{asset && asset.underlyingSymbol}
+					<div className='flex w-full gap-2'>
+						<div className='z-20 flex flex-col place-items-center gap-5 w-full'>
+							{collateral
+								.filter((asset: ActiveSupportedVault) => !(false !== asset.archived))
+								.map((currentAsset: ActiveSupportedVault, index) => (
+									<div
+										className={
+											'flex w-full justify-between place-items-center gap-5 glassmorphic-card p-2' +
+											(selectedOption == currentAsset.underlyingSymbol ? ' !border-baoRed !bg-transparent-300' : '')
+										}
+										key={index}
+									>
+										<Tooltipped
+											content={false !== asset.archived ? 'Deprecated' : 'Active'}
+											key={currentAsset.underlyingSymbol}
+											placement='top'
+											className='rounded-full bg-baoRed '
+										>
+											<div
+												key={currentAsset.underlyingSymbol}
+												className={
+													'text-baoWhite flex overflow-hidden rounded-2xl border border-baoWhite/20 bg-baoBlack shadow-lg shadow-baoBlack ring-1 ring-black ring-opacity-5 focus:outline-none select-none border-baoBlack px-2 py-3 text-sm'
+												}
+											>
+												<div className='mx-0 my-auto flex h-full justify-center items-center gap-4 w-[180px]'>
+													<div className='col-span-3'>
+														<Image
+															className='z-10 inline-block select-none'
+															src={`/images/tokens/${currentAsset.underlyingSymbol}.png`}
+															alt={currentAsset.underlyingSymbol}
+															width={24}
+															height={24}
+														/>
+														<span className='ml-2 inline-block text-left align-middle'>
+															<Typography variant='lg' className='font-bakbak'>
+																{currentAsset.underlyingSymbol}
 															</Typography>
 														</span>
 													</div>
-												)}
+												</div>
 											</div>
-											<div className='m-auto hidden justify-end text-end lg:ml-0 lg:block'>
-												<ChevronDownIcon className='h-5 w-5 text-baoRed' aria-hidden='true' />
-											</div>
+										</Tooltipped>
+										<table className='table-fixed justify-between w-2/3 text-left md:table hidden'>
+											<thead>
+												<tr className=''>
+													<th>APY</th>
+													<th>Supplied</th>
+												</tr>
+											</thead>
+											<div className='h-1 w-[200px] bg-red-400' />
+											<tbody>
+												<tr>
+													<td>
+														<h1>
+															{(
+																Number(
+																	collateral.find(assetToFind => assetToFind.underlyingAddress === currentAsset.underlyingAddress)
+																		?.borrowApy,
+																) / 100000000000000000
+															).toFixed(2)}
+															%
+														</h1>
+													</td>
+													<td>
+														{(
+															Number(
+																collateral.find(assetToFind => assetToFind.underlyingAddress === currentAsset.underlyingAddress)?.supplied,
+															) / 100000000000000000
+														).toFixed(2)}
+													</td>
+												</tr>
+											</tbody>
+										</table>
+										<div className='m-auto mr-2 flex space-x-2'>
+											<Button
+												className='!p-3'
+												onClick={() => {
+													setSelectedOption(currentAsset.underlyingSymbol)
+													setShowInfo(true)
+												}}
+											>
+												<FontAwesomeIcon icon={faCircleInfo} width={24} height={24} />
+											</Button>
+											<Button onClick={() => setShowSupplyModal(index + 1)} className={!isDesktop ? '!h-10 !px-2 !text-sm' : ''}>
+												Supply
+											</Button>
+											<SupplyModal asset={currentAsset} vaultName={vaultName} show={showSupplyModal == index + 1} onHide={hide} />
 										</div>
-										<div className='m-auto block justify-end text-end lg:ml-0 lg:hidden'>
-											<ChevronDownIcon className='-mr-1 h-5 w-5 text-baoWhite' aria-hidden='true' />
-										</div>
-									</Listbox.Button>
-
-									<Transition show={open} as={Fragment} leave='transition ease-in duration-100' leaveFrom='opacity-100' leaveTo='opacity-0'>
-										<Listbox.Options className='absolute z-10 w-auto origin-top-right overflow-hidden rounded-3xl border border-baoWhite/20 bg-baoBlack p-2 shadow-lg shadow-baoBlack ring-1 ring-black ring-opacity-5 focus:outline-none'>
-											<div className='grid grid-cols-8 p-2 font-bakbak font-normal text-baoWhite'>
-												<div className='col-span-3'>
-													<Typography variant='lg'>Asset</Typography>
-												</div>
-												<div className='col-span-1'></div>
-												<div className='col-span-2'>
-													<Typography variant='lg' className='text-center'>
-														APY
-													</Typography>
-												</div>
-												<div className='col-span-2'>
-													<Typography variant='lg' className='text-right'>
-														Balance
-													</Typography>
-												</div>
-											</div>
-											{collateral.length ? (
-												collateral.map((asset: ActiveSupportedVault) => (
-													<Tooltipped
-														content={false !== asset.archived ? 'Deprecated' : 'Active'}
-														key={asset.underlyingSymbol}
-														placement='top'
-														className='rounded-full bg-baoRed'
-													>
-														<Listbox.Option
-															key={asset.underlyingSymbol}
-															className={({ active }) =>
-																classNames(
-																	active ? 'border !border-baoRed bg-baoWhite bg-opacity-5 text-baoRed' : 'text-baoWhite',
-																	'cursor-pointer select-none rounded-3xl border border-baoBlack p-4 text-sm',
-																)
-															}
-															value={asset.underlyingSymbol}
-														>
-															{({ selected, active }) => (
-																<div className='mx-0 my-auto grid h-full grid-cols-8 items-center gap-4'>
-																	<div className='col-span-3'>
-																		<Image
-																			className='z-10 inline-block select-none'
-																			src={`/images/tokens/${asset.underlyingSymbol}.png`}
-																			alt={asset.underlyingSymbol}
-																			width={24}
-																			height={24}
-																		/>
-																		<span className='ml-2 inline-block text-left align-middle'>
-																			<Typography variant='lg' className='font-bakbak'>
-																				{asset.underlyingSymbol}
-																			</Typography>
-																		</span>
-																	</div>
-																	<div className='col-span-1'>
-																		{false !== asset.archived && <Icon icon='archived' className='m-0 h-10 w-10 flex-none' />}
-																	</div>
-																	<div className='col-span-2'>
-																		<Typography variant='lg' className='text-center align-middle font-bakbak'>
-																			{asset.isBasket && avgBasketAPY ? getDisplayBalance(avgBasketAPY, 0, 2) + '%' : '-'}
-																		</Typography>
-																	</div>
-																	<div className='col-span-2'>
-																		<Typography variant='lg' className='text-right align-middle font-bakbak'>
-																			{account
-																				? getDisplayBalance(
-																						accountBalances.find(balance => balance.address === asset.underlyingAddress).balance,
-																						asset.underlyingDecimals,
-																					)
-																				: '-'}
-																		</Typography>
-																	</div>
-																</div>
-															)}
-														</Listbox.Option>
-													</Tooltipped>
-												))
-											) : (
-												<Typography>Select a collateral</Typography>
-											)}
-										</Listbox.Options>
-									</Transition>
-								</div>
-							)}
-						</Listbox>
-						<div className='flex flex-col space-y-2 py-2'>
-							<Input
-								value={val}
-								onChange={handleChange}
-								onSelectMax={() => setVal(formatUnits(max(), asset.underlyingDecimals))}
-								placeholder={`${formatUnits(max(), asset.underlyingDecimals)}`}
-								className='h-10 min-w-[150px] bg-baoBlack lg:h-auto'
-							/>
-							<div className='m-auto mr-2'>
-								<Button
-									onClick={() => setShowSupplyModal(true)}
-									disabled={!account || !val || (val && parseUnits(val, asset.underlyingDecimals).gt(max()))}
-									className={!isDesktop ? '!h-10 !px-2 !text-sm' : ''}
-								>
-									Supply
-								</Button>
-								<SupplyModal
-									asset={asset}
-									vaultName={vaultName}
-									val={val ? parseUnits(val, asset.underlyingDecimals) : BigNumber.from(0)}
-									show={showSupplyModal}
-									onHide={hide}
-								/>
-							</div>
+									</div>
+								))}
 						</div>
 					</div>
-					<Typography variant='xl' className='p-4 text-center font-bakbak text-baoWhite/60'>
-						Collateral Info
-					</Typography>
-					<StatBlock
-						label=''
-						stats={[
-							{
-								label: 'Total Supplied',
-								value: (
-									<>
-										<Tooltipped
-											content={`$${getDisplayBalance(decimate(asset.supplied.mul(asset.price)))}`}
-											key={asset.underlyingSymbol}
-											placement='top'
-											className='rounded-full bg-baoRed'
-										>
+					<Transition show={showInfo} leave='transition ease-in duration-100' leaveFrom='opacity-100' leaveTo='opacity-0'>
+						<div className='flex p-2 mt-5 space-x-3'>
+							<button onClick={() => setShowInfo(false)} className=''>
+								<FontAwesomeIcon icon={faAngleUp} width={32} height={32} />
+							</button>
+							<Typography variant='xl' className=' text-left font-bakbak text-baoWhite/60'>
+								Collateral Info
+							</Typography>
+						</div>
+
+						<StatBlock
+							label=''
+							stats={[
+								{
+									label: 'Total Supplied',
+									value: (
+										<>
+											<Tooltipped
+												content={`$${getDisplayBalance(decimate(asset.supplied.mul(asset.price)))}`}
+												key={asset.underlyingSymbol}
+												placement='top'
+												className='rounded-full bg-baoRed'
+											>
+												<Typography className='inline-block align-middle text-sm lg:text-base'>
+													{getDisplayBalance(asset.supplied, asset.underlyingDecimals)}
+												</Typography>
+											</Tooltipped>
+											<Image
+												className='z-10 ml-1 inline-block select-none'
+												src={asset && `/images/tokens/${asset.underlyingSymbol}.png`}
+												alt={asset && asset.underlyingSymbol}
+												width={16}
+												height={16}
+											/>
+										</>
+									),
+								},
+								{
+									label: 'Collateral Factor',
+									value: (
+										<>
 											<Typography className='inline-block align-middle text-sm lg:text-base'>
-												{getDisplayBalance(asset.supplied, asset.underlyingDecimals)}
+												{getDisplayBalance(asset.collateralFactor.mul(100), 18, 0)}%
 											</Typography>
-										</Tooltipped>
-										<Image
-											className='z-10 ml-1 inline-block select-none'
-											src={asset && `/images/tokens/${asset.underlyingSymbol}.png`}
-											alt={asset && asset.underlyingSymbol}
-											width={16}
-											height={16}
-										/>
-									</>
-								),
-							},
-							{
-								label: 'Collateral Factor',
-								value: (
-									<>
-										<Typography className='inline-block align-middle text-sm lg:text-base'>
-											{getDisplayBalance(asset.collateralFactor.mul(100), 18, 0)}%
-										</Typography>
-									</>
-								),
-							},
-							{
-								label: 'Initial Margin Factor',
-								value: (
-									<>
-										<Typography className='inline-block align-middle text-sm lg:text-base'>
-											{getDisplayBalance(asset.imfFactor.mul(100), 18, 0)}%
-										</Typography>
-									</>
-								),
-							},
-							{
-								label: 'Reserve Factor',
-								value: (
-									<>
-										<Typography className='inline-block align-middle text-sm lg:text-base'>
-											{getDisplayBalance(asset.reserveFactor.mul(100), 18, 0)}%
-										</Typography>
-									</>
-								),
-							},
-							{
-								label: 'Total Reserves',
-								value: (
-									<>
-										<Typography className='inline-block align-middle text-sm lg:text-base'>
-											${getDisplayBalance(asset.totalReserves.mul(asset.price), 18 + asset.underlyingDecimals)}
-										</Typography>
-									</>
-								),
-							},
-						]}
-					/>
+										</>
+									),
+								},
+								{
+									label: 'Initial Margin Factor',
+									value: (
+										<>
+											<Typography className='inline-block align-middle text-sm lg:text-base'>
+												{getDisplayBalance(asset.imfFactor.mul(100), 18, 0)}%
+											</Typography>
+										</>
+									),
+								},
+								{
+									label: 'Reserve Factor',
+									value: (
+										<>
+											<Typography className='inline-block align-middle text-sm lg:text-base'>
+												{getDisplayBalance(asset.reserveFactor.mul(100), 18, 0)}%
+											</Typography>
+										</>
+									),
+								},
+								{
+									label: 'Total Reserves',
+									value: (
+										<>
+											<Typography className='inline-block align-middle text-sm lg:text-base'>
+												${getDisplayBalance(asset.totalReserves.mul(asset.price), 18 + asset.underlyingDecimals)}
+											</Typography>
+										</>
+									),
+								},
+							]}
+						/>
+					</Transition>
 				</Card.Body>
 			</Card>
 		</>

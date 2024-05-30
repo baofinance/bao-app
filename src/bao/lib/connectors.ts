@@ -45,6 +45,12 @@ export const walletConnect = new WalletConnectV2Connector({
 			'--wcm-z-index': '9999',
 		},
 	},
+	metadata: {
+		name: 'Bao Finance',
+		description: 'Deliciously wrapped finance!',
+		url: 'https://bao.finance',
+		icons: ['%PUBLIC_URL%/twitterCard.png'],
+	},
 
 	// Methods and events based on what is used on the decentraland dapps and the ethereum-provider lib found at:
 	// https://github.com/WalletConnect/walletconnect-monorepo/blob/v2.0/providers/ethereum-provider/src/constants/rpc.ts

@@ -81,41 +81,41 @@ export const MintCard = ({
 
 	return (
 		<>
-			<Typography variant='xl' className='p-4 text-center font-bakbak'>
-				Mint
+			<Typography variant='xl' className='p-4 text-left font-bakbak'>
+				Borrow
 			</Typography>
 			<Card className='glassmorphic-card p-6'>
 				<Card.Body>
-					<div className='flex w-full gap-2 rounded border border-baoWhite border-opacity-20 bg-baoWhite bg-opacity-5'>
-						<div>
-							<div className='m-2 mr-0 flex w-10 rounded-full border-none duration-300 lg:!m-2 lg:w-32 lg:bg-baoWhite/5 lg:hover:bg-transparent-300'>
-								<div className='m-auto text-baoWhite lg:py-3'>
-									<div className='items-start'>
-										<div className='inline-block lg:mr-2'>
-											<Image
-												className='z-10 inline-block select-none'
-												src={synth && `/images/tokens/${synth.underlyingSymbol}.png`}
-												alt={synth && synth.underlyingSymbol}
-												width={isDesktop ? 24 : 32}
-												height={isDesktop ? 24 : 32}
-											/>
+					<div className='flex w-full gap-2'>
+						<div className='flex items-center gap-3 w-full py-2'>
+							<div>
+								<div className='m-2 mr-0 flex w-10 rounded-full border-none duration-300 lg:!m-2 lg:w-32 lg:bg-baoWhite/5 lg:hover:bg-transparent-300'>
+									<div className='m-auto text-baoWhite lg:py-3'>
+										<div className='items-start'>
+											<div className='inline-block lg:mr-2'>
+												<Image
+													className='z-10 inline-block select-none'
+													src={synth && `/images/tokens/${synth.underlyingSymbol}.png`}
+													alt={synth && synth.underlyingSymbol}
+													width={isDesktop ? 24 : 32}
+													height={isDesktop ? 24 : 32}
+												/>
+											</div>
+											<span className='hidden text-left align-middle lg:inline-block'>
+												<Typography variant='lg' className='font-bakbak'>
+													{synth && synth.underlyingSymbol}
+												</Typography>
+											</span>
 										</div>
-										<span className='hidden text-left align-middle lg:inline-block'>
-											<Typography variant='lg' className='font-bakbak'>
-												{synth && synth.underlyingSymbol}
-											</Typography>
-										</span>
 									</div>
 								</div>
 							</div>
-						</div>
-						<div className='flex flex-col space-y-2 py-2'>
 							<Input
 								value={val}
 								onChange={handleChange}
 								onSelectMax={() => setVal(formatUnits(max(), synth.underlyingDecimals))}
 								placeholder={`${formatUnits(max(), synth.underlyingDecimals)}`}
-								className='h-10 bg-baoBlack lg:h-auto'
+								className='h-12 min-w-[150px] w-full bg-baoBlack lg:h-auto'
 							/>
 							<div className='m-auto mr-2'>
 								<Button
@@ -130,7 +130,7 @@ export const MintCard = ({
 									}
 									className={!isDesktop ? '!h-10 !px-2 !text-sm' : ''}
 								>
-									Mint
+									Borrow
 								</Button>
 								<MintModal
 									asset={synth}
@@ -143,7 +143,7 @@ export const MintCard = ({
 						</div>
 					</div>
 					<Typography variant='xl' className='p-4 text-center font-bakbak text-baoWhite/60'>
-						Mint Info
+						Borrow Info
 					</Typography>
 					<div className='flex flex-col gap-4 rounded'>
 						<StatBlock

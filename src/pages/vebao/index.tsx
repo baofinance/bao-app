@@ -52,7 +52,6 @@ const VeBAO: React.FC = () => {
 			</div>
 
 			<Lock />
-			<Dashboard />
 		</>
 	)
 }

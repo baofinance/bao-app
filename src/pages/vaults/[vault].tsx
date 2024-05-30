@@ -104,13 +104,13 @@ const Vault: NextPage<{
 					<>
 						<div className='mb-4 flex w-full flex-row items-center gap-4 rounded border-0 align-middle'>
 							<Link href='/vaults'>
-								<div className='glassmorphic-card flex h-fit w-fit flex-row items-center p-4 align-middle duration-200 hover:bg-baoRed lg:p-7'>
+								<div className='glassmorphic-card flex h-fit w-fit flex-row items-center p-4 align-middle duration-200 hover:bg-baoRed'>
 									<FontAwesomeIcon icon={faArrowLeft} size='lg' />
 								</div>
 							</Link>
 							{/*Desktop*/}
-							<div className='glassmorphic-card hidden w-full !px-8 !py-4 lg:grid lg:grid-cols-4'>
-								<div className='col-span-1 mx-auto my-0 flex w-full flex-row items-center text-start align-middle'>
+							<div className='hidden w-full !px-8 !py-4 lg:flex gap-12'>
+								<div className='col-span-1 mx-auto my-0 flex flex-row items-center text-start align-middle'>
 									<Image
 										src={`/images/tokens/${synth.icon}`}
 										alt={`${synth.underlyingSymbol}`}
@@ -122,40 +122,41 @@ const Vault: NextPage<{
 										<Typography variant='h3' className='ml-2 inline-block items-center align-middle font-bakbak leading-5'>
 											{synth.underlyingSymbol}
 										</Typography>
-										<Badge className='ml-2 inline-block font-bakbak text-base'>${getDisplayBalance(synth.price)}</Badge>
 									</span>
 								</div>
-								<div className='col-span-3 mx-auto my-0 flex w-full flex-row items-center justify-end align-middle'>
-									<div className='grid grid-cols-4 gap-16'>
-										<div className='col-span-1 break-words text-center'>
-											<Typography variant='base' className='font-bakbak text-baoRed'>
-												Total Debt
+								<div className='h-10 w-[1px] ml-5 bg-baoWhite bg-opacity-40 my-auto' />
+
+								<div className='mx-auto my-0 flex w-full items-center justify-between place-content-between'>
+									<div className='flex gap-5 flex-wrap w-full justify-between place-content-between'>
+										<div className='col-span-1 break-words text-left'>
+											<Typography variant='sm' className='font-bakbak text-baoRed'>
+												Oracle Price
 											</Typography>
-											<Typography variant='xl' className='inline-block font-bakbak leading-5'>
-												${getDisplayBalance(decimate(totalDebt), synth.underlyingDecimals)}
+											<Typography variant='h3' className='inline-block font-bakbak text-left leading-5'>
+												${getDisplayBalance(synth.price)}
 											</Typography>
 										</div>
-										<div className='col-span-1 break-words text-center'>
-											<Typography variant='base' className='font-bakbak text-baoRed'>
+										<div className='col-span-1 break-words'>
+											<Typography variant='sm' className='font-bakbak text-baoRed text-left'>
 												Total Collateral
 											</Typography>
-											<Typography variant='xl' className='inline-block font-bakbak leading-5'>
+											<Typography variant='h3' className='inline-block font-bakbak leading-5'>
 												${getDisplayBalance(decimate(totalCollateral), synth.underlyingDecimals)}
 											</Typography>
 										</div>
-										<div className='col-span-1 break-words text-center'>
-											<Typography variant='base' className='font-bakbak text-baoRed'>
+										<div className='col-span-1 break-words text-left'>
+											<Typography variant='sm' className='font-bakbak text-baoRed text-left'>
 												Utilization
 											</Typography>
-											<Typography variant='xl' className='inline-block font-bakbak leading-5'>
+											<Typography variant='h3' className='inline-block font-bakbak leading-5'>
 												{getDisplayBalance(totalDebt.div(decimate(totalCollateral)).mul(100))}%
 											</Typography>
 										</div>
-										<div className='col-span-1 break-words text-center'>
-											<Typography variant='base' className='font-bakbak text-baoRed'>
+										<div className='col-span-1 break-words text-left'>
+											<Typography variant='sm' className='font-bakbak text-baoRed text-left'>
 												Borrow Rate
 											</Typography>
-											<Typography variant='xl' className='inline-block font-bakbak leading-5'>
+											<Typography variant='h3' className='inline-block font-bakbak leading-5'>
 												{getDisplayBalance(synth.borrowApy, 18, 2)}%
 											</Typography>
 											<Typography className='ml-1 inline-block font-bakbak leading-5 text-baoWhite'>vAPY</Typography>
@@ -209,27 +210,8 @@ const Vault: NextPage<{
 							</div>
 						</div>
 
-						{accountVaults.length >= 1 && !accountLiquidity.usdSupply.lte(0) && !accountLiquidity.usdBorrowable.lte(0) && (
-							<div className='mt-6 grid gap-6 lg:grid lg:grid-cols-2 lg:flex-col lg:gap-16'>
-								<div className='col-span-1'>
-									<DebtCard vaultName={vaultName} asset={synth} depositVal={depositVal} mintVal={mintVal} />
-								</div>
-								<div className='lg:col-span-1'>
-									<PositionList
-										vaultName={vaultName}
-										supplyBalances={supplyBalances}
-										collateral={userVaults}
-										exchangeRates={exchangeRates}
-										accountBalances={accountBalances}
-										accountVaults={accountVaults}
-										borrowBalances={borrowBalances}
-									/>
-								</div>
-							</div>
-						)}
-
-						<div className='mt-6 grid gap-6 lg:grid-cols-2 lg:gap-16'>
-							<div className='lg:col-span-1'>
+						<div className='mt-6 space-y-12'>
+							<div>
 								<DepositCard
 									vaultName={vaultName}
 									balances={balances}
@@ -238,7 +220,27 @@ const Vault: NextPage<{
 									onUpdate={handleDepositVal}
 								/>
 							</div>
-							<div className='col-span-1'>
+
+							{accountVaults.length >= 1 && !accountLiquidity.usdSupply.lte(0) && !accountLiquidity.usdBorrowable.lte(0) && (
+								<div className='mt-6 grid gap-6'>
+									<div>
+										<DebtCard vaultName={vaultName} asset={synth} depositVal={depositVal} mintVal={mintVal} />
+									</div>
+									<div>
+										<PositionList
+											vaultName={vaultName}
+											supplyBalances={supplyBalances}
+											collateral={userVaults}
+											exchangeRates={exchangeRates}
+											accountBalances={accountBalances}
+											accountVaults={accountVaults}
+											borrowBalances={borrowBalances}
+										/>
+									</div>
+								</div>
+							)}
+
+							<div>
 								<MintCard
 									vaultName={vaultName}
 									prices={prices}
