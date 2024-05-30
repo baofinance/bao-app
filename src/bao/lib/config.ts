@@ -652,4 +652,82 @@ export default {
 			icon: '/images/tokens/baoETH.png',
 		},
 	],
+	swapTokens: [
+		{
+			id: 1,
+			active: true,
+			tokenAddresses: {
+				1: '0xce391315b414d4c7555956120461d21808a69f3a',
+			},
+			pools: [
+				{
+					poolAddress: '0x3B9Fb87F7d081CEDdb1289258FA5660d955317b6',
+					poolId: '0x3b9fb87f7d081ceddb1289258fa5660d955317b6000200000000000000000544',
+				},
+				{
+					poolAddress: '0x08cC92fEdc1cE2D8525176a63FcfF404450f2998',
+					poolId: '0x08cc92fedc1ce2d8525176a63fcff404450f2998000200000000000000000542',
+				},
+			],
+			name: 'bao',
+			icon: '/images/tokens/BAO.png',
+			platforms: [
+				{
+					pid: 1,
+					name: 'LlamaSwap',
+					url: 'https://swap.defillama.com/?chain=ethereum&from=0x0000000000000000000000000000000000000000&to=0xce391315b414d4c7555956120461d21808a69f3a',
+					icon: '/images/platforms/llamaSwap.png',
+					background: 'bg-llamaSwapBackground',
+				},
+			],
+		},
+		{
+			id: 2,
+			active: true,
+			tokenAddresses: {
+				1: '0xf4edfad26EE0D23B69CA93112eccE52704E0006f',
+			},
+			pools: [
+				{
+					poolAddress: '0x1A44E35d5451E0b78621A1B3e7a53DFaA306B1D0',
+					poolId: '0x1a44e35d5451e0b78621a1b3e7a53dfaa306b1d000000000000000000000051b',
+				},
+			],
+			name: 'baoETH',
+			icon: '/images/tokens/baoETH.png',
+			platforms: [
+				{
+					pid: 1,
+					name: 'LlamaSwap',
+					url: 'https://swap.defillama.com/?chain=ethereum&from=0x0000000000000000000000000000000000000000&to=0xf4edfad26EE0D23B69CA93112eccE52704E0006f',
+					icon: '/images/platforms/llamaSwap.png',
+					background: 'bg-llamaSwapBackground',
+				},
+			],
+		},
+		{
+			id: 3,
+			active: true,
+			tokenAddresses: {
+				1: '0x7945b0a6674b175695e5d1d08ae1e6f13744abb0',
+			},
+			pools: [
+				{
+					poolAddress: '0x7E9AfD25F5Ec0eb24d7d4b089Ae7EcB9651c8b1F',
+					poolId: '0x7e9afd25f5ec0eb24d7d4b089ae7ecb9651c8b1f000000000000000000000511',
+				},
+			],
+			name: 'baoUSD',
+			icon: '/images/tokens/baoUSD.png',
+			platforms: [
+				{
+					pid: 1,
+					name: 'LlamaSwap',
+					url: 'https://swap.defillama.com/?chain=ethereum&from=0x0000000000000000000000000000000000000000&to=0x7945b0a6674b175695e5d1d08ae1e6f13744abb0',
+					icon: '/images/platforms/llamaSwap.png',
+					background: 'bg-llamaSwapBackground',
+				},
+			],
+		},
+	],
 } as unknown as Config

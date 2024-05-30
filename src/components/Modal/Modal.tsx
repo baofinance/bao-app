@@ -31,9 +31,21 @@ export interface ModalProps {
 	transparent?: boolean
 	maxWidth?: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl'
 	unmount?: boolean
+	background?: string
+	backgroundOpacity?: string
 }
 
-const Modal: ModalType<ModalProps> = ({ isOpen, onDismiss, afterLeave, children, transparent = false, maxWidth = 'lg', unmount }) => {
+const Modal: ModalType<ModalProps> = ({
+	isOpen,
+	onDismiss,
+	afterLeave,
+	children,
+	transparent = false,
+	maxWidth = 'lg',
+	unmount,
+	background = 'bg-baoBlack',
+	backgroundOpacity = 'bg-opacity-80',
+}) => {
 	return (
 		<Transition appear show={isOpen} as={Fragment} afterLeave={afterLeave} unmount={unmount}>
 			<Dialog as='div' className='fixed inset-0 z-50' onClose={onDismiss} unmount={unmount}>
@@ -74,8 +86,10 @@ const Modal: ModalType<ModalProps> = ({ isOpen, onDismiss, afterLeave, children,
 							className={classNames(
 								transparent
 									? ''
-									: 'mx-auto inline-block max-h-[85vh] w-[85vw] transform rounded-3xl !border !border-solid !border-baoWhite !border-opacity-20 bg-baoBlack bg-opacity-80 p-4 text-left align-bottom lg:w-full lg:p-6',
+									: 'mx-auto inline-block max-h-[85vh] w-[85vw] transform rounded-3xl !border !border-solid !border-baoWhite !border-opacity-20 p-4 text-left align-bottom lg:w-full lg:p-6',
 								isDesktop ? MAX_WIDTH_CLASS_MAPPING[maxWidth] : '',
+								background,
+								backgroundOpacity,
 							)}
 						>
 							{children}
