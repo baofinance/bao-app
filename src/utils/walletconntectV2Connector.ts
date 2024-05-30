@@ -43,6 +43,12 @@ export class WalletConnectV2Connector extends AbstractConnector {
 						'--wcm-z-index': '3000',
 					},
 				},
+				metadata: {
+					name: 'Bao Finance',
+					description: 'Deliciously wrapped finance!',
+					url: 'https://bao.finance',
+					icons: ['%PUBLIC_URL%/twitterCard.png'],
+				},
 				// Methods and events based on what is used on the decentraland dapps and the ethereum-provider lib found at:
 				// https://github.com/WalletConnect/walletconnect-monorepo/blob/v2.0/providers/ethereum-provider/src/constants/rpc.ts
 				// If the wallet doesn't support non optional methods, it will not allow the connection.
