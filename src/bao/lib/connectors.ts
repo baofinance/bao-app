@@ -37,7 +37,6 @@ export const walletConnect = new WalletConnectV2Connector({
 	chains: [1],
 	showQrModal: true,
 	// Decentraland's RPCs don't support the `test` method used for the ping.
-	metadata: null,
 	disableProviderPing: true,
 	qrModalOptions: {
 		themeVariables: {
@@ -45,6 +44,12 @@ export const walletConnect = new WalletConnectV2Connector({
 			// Won't be visible without this.
 			'--wcm-z-index': '9999',
 		},
+	},
+	metadata: {
+		name: 'Bao Finance',
+		description: 'Deliciously wrapped finance!',
+		url: 'https://bao.finance',
+		icons: ['%PUBLIC_URL%/twitterCard.png'],
 	},
 
 	// Methods and events based on what is used on the decentraland dapps and the ethereum-provider lib found at:
