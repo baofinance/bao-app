@@ -37,6 +37,7 @@ export const walletConnect = new WalletConnectV2Connector({
 	chains: [1],
 	showQrModal: true,
 	// Decentraland's RPCs don't support the `test` method used for the ping.
+	metadata: null,
 	disableProviderPing: true,
 	qrModalOptions: {
 		themeVariables: {
