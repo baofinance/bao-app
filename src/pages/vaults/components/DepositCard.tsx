@@ -19,16 +19,13 @@ import Image from 'next/future/image'
 import React, { Fragment, useCallback, useEffect, useState } from 'react'
 import { isDesktop } from 'react-device-detect'
 import SupplyModal from './Modals/SupplyModal'
-import { Icon } from '@/components/Icon'
-import { LineChart } from '@mui/x-charts'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCircleInfo } from '@fortawesome/free-solid-svg-icons'
+import { faAngleUp, faCaretUp, faCircleInfo, faX } from '@fortawesome/free-solid-svg-icons'
 
 export const DepositCard = ({
 	vaultName,
 	collateral,
 	balances,
-	accountBalances,
 	onUpdate,
 }: {
 	vaultName: string
@@ -39,9 +36,9 @@ export const DepositCard = ({
 }) => {
 	const { account } = useWeb3React()
 	const [val, setVal] = useState<string>('')
-	const [selectedOption, setSelectedOption] = useState('wstETH')
+	const [selectedOption, setSelectedOption] = useState('ETH')
 	const [showSupplyModal, setShowSupplyModal] = useState(0)
-	const [showInfo, setShowInfo] = useState(true)
+	const [showInfo, setShowInfo] = useState(false)
 
 	const asset =
 		collateral &&
@@ -176,7 +173,13 @@ export const DepositCard = ({
 											</tbody>
 										</table>
 										<div className='m-auto mr-2 flex space-x-2'>
-											<Button className='!p-3' onClick={() => setSelectedOption(currentAsset.underlyingSymbol)}>
+											<Button
+												className='!p-3'
+												onClick={() => {
+													setSelectedOption(currentAsset.underlyingSymbol)
+													setShowInfo(true)
+												}}
+											>
 												<FontAwesomeIcon icon={faCircleInfo} width={24} height={24} />
 											</Button>
 											<Button onClick={() => setShowSupplyModal(index + 1)} className={!isDesktop ? '!h-10 !px-2 !text-sm' : ''}>
@@ -189,9 +192,14 @@ export const DepositCard = ({
 						</div>
 					</div>
 					<Transition show={showInfo} leave='transition ease-in duration-100' leaveFrom='opacity-100' leaveTo='opacity-0'>
-						<Typography variant='xl' className='p-2 mt-5 text-left font-bakbak text-baoWhite/60'>
-							Collateral Info
-						</Typography>
+						<div className='flex p-2 mt-5 space-x-3'>
+							<button onClick={() => setShowInfo(false)} className=''>
+								<FontAwesomeIcon icon={faAngleUp} width={32} height={32} />
+							</button>
+							<Typography variant='xl' className=' text-left font-bakbak text-baoWhite/60'>
+								Collateral Info
+							</Typography>
+						</div>
 
 						<StatBlock
 							label=''
