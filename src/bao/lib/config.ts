@@ -256,6 +256,20 @@ export default {
 					coingeckoId: 'wrapped-steth',
 					underlyingDecimals: 18,
 				},
+				{
+					mid: 7,
+					symbol: 'bdrETH',
+					archived: false,
+					vaultAddresses: {
+						1: '0x18fabEAc59123224E6409d4DA620ac164378912A',
+					},
+					underlyingAddresses: {
+						1: '0xae78736Cd615f374D3085123A210448E74Fc6393',
+					},
+					icon: 'rETH.png',
+					coingeckoId: 'rocket-pool-eth',
+					underlyingDecimals: 18,
+				},
 			],
 		},
 		baoETH: {
@@ -351,6 +365,20 @@ export default {
 					},
 					icon: 'wstETH.png',
 					coingeckoId: 'wrapped-steth',
+					underlyingDecimals: 18,
+				},
+				{
+					mid: 7,
+					symbol: 'bdrETH',
+					archived: false,
+					vaultAddresses: {
+						1: '0xD9588C5D34045Bae95D2272F2A1EC39a243c7FbF',
+					},
+					underlyingAddresses: {
+						1: '0xae78736Cd615f374D3085123A210448E74Fc6393',
+					},
+					icon: 'rETH.png',
+					coingeckoId: 'rocket-pool-eth',
 					underlyingDecimals: 18,
 				},
 			],
