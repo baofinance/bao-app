@@ -144,7 +144,6 @@ export const DepositCard = ({
 										<table className='table-fixed justify-between w-2/3 text-left md:table hidden'>
 											<thead>
 												<tr className=''>
-													<th>APY</th>
 													<th>Supplied</th>
 												</tr>
 											</thead>
@@ -152,21 +151,10 @@ export const DepositCard = ({
 											<tbody>
 												<tr>
 													<td>
-														<h1>
-															{(
-																Number(
-																	collateral.find(assetToFind => assetToFind.underlyingAddress === currentAsset.underlyingAddress)
-																		?.borrowApy,
-																) / 100000000000000000
-															).toFixed(2)}
-															%
-														</h1>
-													</td>
-													<td>
 														{(
 															Number(
 																collateral.find(assetToFind => assetToFind.underlyingAddress === currentAsset.underlyingAddress)?.supplied,
-															) / 100000000000000000
+															) / 1000000000000000000
 														).toFixed(2)}
 													</td>
 												</tr>
