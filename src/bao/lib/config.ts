@@ -307,7 +307,7 @@ export default {
 					underlyingSymbol: 'baoETH',
 					underlyingDecimals: 18,
 					desc: 'Synthetic ETH',
-					minimumBorrow: 3,
+					minimumBorrow: 2,
 				},
 				{
 					mid: 2,
