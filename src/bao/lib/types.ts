@@ -201,6 +201,10 @@ export interface Config {
 	}
 	gauges: SupportedGauge[]
 	swapTokens: SwapToken[]
+	assets: Asset[]
+	lendMarkets: {
+		[market: string]: LendMarket
+	}
 }
 
 export interface SwapToken {
@@ -224,4 +228,32 @@ export interface SwapToken {
 			icon: string
 		},
 	]
+}
+
+export interface LendMarket {
+	id: number
+	active: boolean
+	comptroller: string
+	oracle: string
+	assets: Asset[]
+}
+
+export interface Asset {
+	id: number
+	active: boolean
+	underlyingAddress: {
+		[network: number]: string
+	}
+	underlyingDecimals: number
+	name: string
+	icon: string
+	supply: boolean
+	borrow: boolean
+}
+
+export type Balance = {
+	address: string
+	symbol: string
+	balance: BigNumber
+	decimals: number
 }

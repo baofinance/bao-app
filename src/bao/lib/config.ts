@@ -806,4 +806,94 @@ export default {
 			],
 		},
 	],
+	lendMarkets: {
+		weETH: {
+			id: 1,
+			active: true,
+			comptroller: '0xc2eA0F9856B58CF182Cc72B8FaEc51351479232e',
+			oracle: '0xc7D8b6b170E0FCf4182fa29b47F35F48C402bF0F',
+			assets: [
+				{
+					id: 1,
+					active: true,
+					underlyingAddress: {
+						1: '0x353A07b25c84a522356aF2D9a7c0d7FF481733e9',
+					},
+					underlyingDecimals: 18,
+					name: 'weETH',
+					icon: '/images/tokens/weETH.png',
+					supply: true,
+					borrow: false,
+				},
+				{
+					id: 2,
+					active: true,
+					underlyingAddress: {
+						1: '0x085c35278fDC840b9Ca74AAB226bA8E2f95C446F',
+					},
+					underlyingDecimals: 18,
+					name: 'BaoUSD',
+					icon: '/images/tokens/baoUSD.png',
+					supply: false,
+					borrow: true,
+				},
+				{
+					id: 3,
+					active: true,
+					underlyingAddress: {
+						1: '0xdC39e6365AA75D762729513004c956D1475bED20',
+					},
+					underlyingDecimals: 18,
+					name: 'BaoETH',
+					icon: '/images/tokens/baoETH.png',
+					supply: false,
+					borrow: true,
+				},
+			],
+		},
+		USDe: {
+			id: 1,
+			active: true,
+			comptroller: '0xc2eA0F9856B58CF182Cc72B8FaEc51351479232e',
+			oracle: '0xc7D8b6b170E0FCf4182fa29b47F35F48C402bF0F',
+			assets: [
+				{
+					id: 1,
+					active: true,
+					underlyingAddress: {
+						1: '0x353A07b25c84a522356aF2D9a7c0d7FF481733e9',
+					},
+					underlyingDecimals: 18,
+					name: 'USDe',
+					icon: '/images/tokens/USDe.png',
+					supply: true,
+					borrow: true,
+				},
+				{
+					id: 2,
+					active: true,
+					underlyingAddress: {
+						1: '0x085c35278fDC840b9Ca74AAB226bA8E2f95C446F',
+					},
+					underlyingDecimals: 18,
+					name: 'BaoUSD',
+					icon: '/images/tokens/baoUSD.png',
+					supply: true,
+					borrow: true,
+				},
+				{
+					id: 3,
+					active: true,
+					underlyingAddress: {
+						1: '0xdC39e6365AA75D762729513004c956D1475bED20',
+					},
+					underlyingDecimals: 18,
+					name: 'BaoETH',
+					icon: '/images/tokens/baoETH.png',
+					supply: true,
+					borrow: true,
+				},
+			],
+		},
+	},
 } as unknown as Config
