@@ -284,32 +284,30 @@ const Header: FC = () => {
 										</Menu.Item>
 										<Menu.Item>
 											{({ active }) => (
-												<a
-													href='/backstops'
+												<Link 
+													href='/backstops' 
 													aria-label='Backstops'
-													rel='noreferrer'
 													className={classNames(
 														active ? 'text-baoRed' : 'text-baoWhite',
 														'flex flex-1 flex-row items-center justify-between gap-4 px-4 py-2 text-sm',
 													)}
 												>
-													Backstops <FontAwesomeIcon icon={faCircleArrowRight} />
-												</a>
+												Backstops <FontAwesomeIcon icon={faCircleArrowRight} />
+											</Link>
 											)}
 										</Menu.Item>
 										<Menu.Item>
 											{({ active }) => (
-												<a
-													href='/baskets'
+												<Link 
+													href='/baskets' 
 													aria-label='Baskets'
-													rel='noreferrer'
 													className={classNames(
 														active ? 'text-baoRed' : 'text-baoWhite',
 														'flex flex-1 flex-row items-center justify-between gap-4 px-4 py-2 text-sm',
 													)}
 												>
 													Baskets <FontAwesomeIcon icon={faCircleArrowRight} />
-												</a>
+												</Link>
 											)}
 										</Menu.Item>
 									</div>
