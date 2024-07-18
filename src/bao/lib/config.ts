@@ -622,7 +622,7 @@ export default {
 			poolInfoAddresses: {
 				1: '0x19DF5BB37380186bC8EFc5Ad91516373A2C5459f',
 			},
-			name: 'baoETH-ETH/BAO',
+			name: 'baoETH-ETH/BAO (20/80 Pool)',
 			symbol: 'baoETH-ETH/BAO',
 			type: 'Balancer',
 			iconA: '/images/tokens/baoETH.png',
@@ -645,7 +645,7 @@ export default {
 			poolInfoAddresses: {
 				1: '0x9412206f58cc72b9b4e340422A95354372A3ec3D',
 			},
-			name: 'baoUSD-LUSD/BAO',
+			name: 'baoUSD-LUSD/BAO (20/80 Pool)',
 			symbol: 'baoUSD-LUSD/BAO',
 			type: 'Balancer',
 			iconA: '/images/tokens/baoUSD.png',
