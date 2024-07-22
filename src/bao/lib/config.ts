@@ -539,7 +539,7 @@ export default {
 			iconB: '/images/tokens/LUSD.png',
 			pairUrl: 'https://app.balancer.fi/#/ethereum/pool/0x08cc92fedc1ce2d8525176a63fcff404450f2998000200000000000000000542',
 			balancerPoolId: '0x08cc92fedc1ce2d8525176a63fcff404450f2998000200000000000000000542',
-			active: true,
+			active: false,
 		},
 		{
 			gid: 8,
@@ -562,7 +562,7 @@ export default {
 			iconB: '/images/tokens/ETH.png',
 			pairUrl: 'https://app.balancer.fi/#/ethereum/pool/0x3b9fb87f7d081ceddb1289258fa5660d955317b6000200000000000000000544',
 			balancerPoolId: '0x3b9fb87f7d081ceddb1289258fa5660d955317b6000200000000000000000544',
-			active: true,
+			active: false,
 		},
 		{
 			gid: 9,
@@ -607,6 +607,52 @@ export default {
 			iconA: '/images/tokens/baoETH.png',
 			pairUrl: '/backstops',
 			active: false,
+		},
+		{
+			gid: 11,
+			gaugeAddresses: {
+				1: '0x7deb783311039d474bafece4d08c7c8a310ee225',
+			},
+			poolAddresses: {
+				1: '0x19DF5BB37380186bC8EFc5Ad91516373A2C5459f',
+			},
+			lpAddresses: {
+				1: '0x19DF5BB37380186bC8EFc5Ad91516373A2C5459f',
+			},
+			poolInfoAddresses: {
+				1: '0x19DF5BB37380186bC8EFc5Ad91516373A2C5459f',
+			},
+			name: 'baoETH-ETH/BAO (20/80 Pool)',
+			symbol: 'baoETH-ETH/BAO',
+			type: 'Balancer',
+			iconA: '/images/tokens/baoETH.png',
+			iconB: '/images/tokens/ETH.png',
+			pairUrl: 'https://app.balancer.fi/#/ethereum/pool/0x19df5bb37380186bc8efc5ad91516373a2c5459f000200000000000000000698',
+			balancerPoolId: '0x19df5bb37380186bc8efc5ad91516373a2c5459f000200000000000000000698',
+			active: true,
+		},
+		{
+			gid: 12,
+			gaugeAddresses: {
+				1: '0x402FA148926D7dd97A86B49B18EbED6C762eCaC1',
+			},
+			poolAddresses: {
+				1: '0x9412206f58cc72b9b4e340422A95354372A3ec3D',
+			},
+			lpAddresses: {
+				1: '0x9412206f58cc72b9b4e340422A95354372A3ec3D',
+			},
+			poolInfoAddresses: {
+				1: '0x9412206f58cc72b9b4e340422A95354372A3ec3D',
+			},
+			name: 'baoUSD-LUSD/BAO (20/80 Pool)',
+			symbol: 'baoUSD-LUSD/BAO',
+			type: 'Balancer',
+			iconA: '/images/tokens/baoUSD.png',
+			iconB: '/images/tokens/LUSD.png',
+			pairUrl: 'https://app.balancer.fi/#/ethereum/pool/0x9412206f58cc72b9b4e340422a95354372a3ec3d00020000000000000000069a',
+			balancerPoolId: '0x9412206f58cc72b9b4e340422a95354372a3ec3d00020000000000000000069a',
+			active: true,
 		},
 	],
 	baskets: [

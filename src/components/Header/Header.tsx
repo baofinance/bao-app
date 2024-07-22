@@ -1,8 +1,8 @@
 import Config from '@/bao/lib/config'
 import Logo from '@/components/Logo'
 import useTokenBalance from '@/hooks/base/useTokenBalance'
-import { faDiscord, faGithub, faMedium, faTwitter } from '@fortawesome/free-brands-svg-icons'
-import { faBolt, faBook, faBug, faEllipsisVertical, faVoteYea } from '@fortawesome/free-solid-svg-icons'
+import { faDiscord, faGithub, faMedium, faTwitter, faStackOverflow } from '@fortawesome/free-brands-svg-icons'
+import { faBolt, faBook, faBug, faEllipsisVertical, faVoteYea, faCircleArrowRight } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Menu, Popover, Transition } from '@headlessui/react'
 import classNames from 'classnames'
@@ -124,10 +124,8 @@ const Header: FC = () => {
 													<div className='space-y-4'>
 														<MobileNavLink href='/vaults'>BORROW</MobileNavLink>
 														<MobileNavLink href='/swap'>SWAP</MobileNavLink>
-														<MobileNavLink href='/baskets'>BASKETS</MobileNavLink>
 														<MobileNavLink href='/earn'>EARN</MobileNavLink>
 														<MobileNavLink href='/vebao'>STAKE</MobileNavLink>
-														<MobileNavLink href='/backstops'>BACKSTOPS</MobileNavLink>
 													</div>
 												</Popover.Panel>
 											</>
@@ -282,6 +280,34 @@ const Header: FC = () => {
 												>
 													Medium <FontAwesomeIcon icon={faMedium} />
 												</a>
+											)}
+										</Menu.Item>
+										<Menu.Item>
+											{({ active }) => (
+												<Link
+													href='/backstops'
+													aria-label='Backstops'
+													className={classNames(
+														active ? 'text-baoRed' : 'text-baoWhite',
+														'flex flex-1 flex-row items-center justify-between gap-4 px-4 py-2 text-sm',
+													)}
+												>
+													Backstops <FontAwesomeIcon icon={faCircleArrowRight} />
+												</Link>
+											)}
+										</Menu.Item>
+										<Menu.Item>
+											{({ active }) => (
+												<Link
+													href='/baskets'
+													aria-label='Baskets'
+													className={classNames(
+														active ? 'text-baoRed' : 'text-baoWhite',
+														'flex flex-1 flex-row items-center justify-between gap-4 px-4 py-2 text-sm',
+													)}
+												>
+													Baskets <FontAwesomeIcon icon={faCircleArrowRight} />
+												</Link>
 											)}
 										</Menu.Item>
 									</div>
