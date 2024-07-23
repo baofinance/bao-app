@@ -11,6 +11,8 @@ import { faExternalLink } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { BigNumber, ethers } from 'ethers'
 import { useWeb3React } from '@web3-react/core'
+import { useActiveLendMarket } from '@/hooks/lend/useActiveLendMarket'
+import { useLendMarketApprovals } from '@/hooks/lend/useLendMarketApprovals'
 
 type SupplyButtonProps = {
 	asset: Asset
@@ -21,8 +23,10 @@ type SupplyButtonProps = {
 }
 
 const SupplyButton = ({ asset, val, isDisabled, onHide, marketName }: SupplyButtonProps) => {
+	const activeLendMarket = useActiveLendMarket(marketName)
+
 	const { pendingTx, handleTx, txHash } = useTransactionHandler()
-	const { approvals } = useApprovals(marketName)
+	const { approvals } = useLendMarketApprovals(activeLendMarket)
 	const { chainId } = useWeb3React()
 
 	const erc20 = useContract<Erc20>('Erc20', asset.underlyingAddress[chainId])
@@ -37,22 +41,14 @@ const SupplyButton = ({ asset, val, isDisabled, onHide, marketName }: SupplyButt
 			</a>
 		)
 	} else {
-		return approvals && (asset.underlyingAddress[chainId] === 'ETH' || approvals[asset.underlyingAddress[chainId]].gt(0)) ? (
+		return typeof approvals != 'undefined' &&
+			(asset.underlyingAddress[chainId] === 'ETH' || approvals[asset.underlyingAddress[chainId]].gt(0)) ? (
 			<Button
 				fullWidth
 				disabled={isDisabled}
 				onClick={async () => {
-					let mintTx
-					if (asset.underlyingAddress === 'ETH') {
-						// @ts-ignore
-						mintTx = vaultContract.mint(true, {
-							value: val,
-						})
-						// TODO- Give the user the option in the SupplyModal to tick collateral on/off
-					} else {
-						// @ts-ignore
-						mintTx = vaultContract.mint(val, true) // TODO- Give the user the option in the SupplyModal to tick collateral on/off
-					}
+					// @ts-ignore
+					const mintTx = activeLendMarket.marketContract.mint(val, true) // TODO- Give the user the option in the SupplyModal to tick collateral on/off
 					handleTx(mintTx, `${marketName} Vault: Supply ${getDisplayBalance(val, 18).toString()} ${asset.name}`, () => onHide())
 				}}
 			>

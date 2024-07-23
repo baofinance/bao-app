@@ -812,6 +812,12 @@ export default {
 			active: true,
 			comptroller: '0xc2eA0F9856B58CF182Cc72B8FaEc51351479232e',
 			oracle: '0xc7D8b6b170E0FCf4182fa29b47F35F48C402bF0F',
+			marketAddresses: {
+				1: '0x353A07b25c84a522356aF2D9a7c0d7FF481733e9',
+			},
+			underlyingAddresses: {
+				1: '0xCd5fE23C85820F7B72D0926FC9b05b43E359b7ee',
+			},
 			assets: [
 				{
 					id: 1,
@@ -856,6 +862,12 @@ export default {
 			active: true,
 			comptroller: '0xc2eA0F9856B58CF182Cc72B8FaEc51351479232e',
 			oracle: '0xc7D8b6b170E0FCf4182fa29b47F35F48C402bF0F',
+			marketAddresses: {
+				1: '',
+			},
+			underlyingAddresses: {
+				1: '',
+			},
 			assets: [
 				{
 					id: 1,

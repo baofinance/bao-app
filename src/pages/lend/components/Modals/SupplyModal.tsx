@@ -4,10 +4,8 @@ import Modal from '@/components/Modal'
 import { BigNumber } from 'ethers'
 import { parseUnits } from 'ethers/lib/utils'
 import { useCallback, useState } from 'react'
-import MarketButton from '../MarketButton'
 import Input from '@/components/Input'
 import Typography from '@/components/Typography'
-import VaultButton from '@/pages/vaults/components/VaultButton'
 import SupplyButton from '@/pages/lend/components/Buttons/SupplyButton'
 
 export type SupplyModalProps = {

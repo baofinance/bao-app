@@ -235,7 +235,20 @@ export interface LendMarket {
 	active: boolean
 	comptroller: string
 	oracle: string
+	marketAddresses: {
+		[network: number]: string
+	}
+	underlyingAddresses: {
+		[network: number]: string
+	}
 	assets: Asset[]
+}
+
+export interface ActiveLendMarket {
+	marketAddress: string
+	marketContract: Cether | Ctoken
+	underlyingAddress: string
+	underlyingContract?: Erc20
 }
 
 export interface Asset {

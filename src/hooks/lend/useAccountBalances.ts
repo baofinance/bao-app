@@ -20,9 +20,6 @@ export type Balance = {
 export const useAccountBalances = (marketName: string): Balance[] => {
 	const bao = useBao()
 	const { account, library, chainId } = useWeb3React()
-
-	console.log(marketName)
-	console.log(Config.lendMarkets[marketName].assets)
 	const enabled = !!bao && !!account && !!chainId
 	const { data: balances } = useQuery(
 		['@/hooks/lend/useAccountBalance', providerKey(library, account, chainId), { enabled }],
@@ -45,7 +42,7 @@ export const useAccountBalances = (marketName: string): Balance[] => {
 				),
 			)
 			const ethBalance = await library.getBalance(account)
-			console.log(res)
+
 			return tokens.map(address => {
 				const symbol = res[address] ? res[address][0].values[0] : 'ETH'
 				const decimals = res[address] ? res[address][1].values[0] : 18
