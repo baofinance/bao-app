@@ -49,7 +49,7 @@ export const useLendMarketApprovals = (lendMarket: ActiveLendMarket): LendMarket
 			return Object.keys(res).reduce(
 				(approvals: { [key: string]: BigNumber }, address: string) => ({
 					...approvals,
-					[res[address][0].ref]: BigNumber.from(res[address][0].values[0]),
+					[address]: BigNumber.from(res[address][0].values[0]),
 				}),
 				{},
 			)

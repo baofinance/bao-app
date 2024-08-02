@@ -24,7 +24,6 @@ type SupplyButtonProps = {
 
 const SupplyButton = ({ asset, val, isDisabled, onHide, marketName }: SupplyButtonProps) => {
 	const activeLendMarket = useActiveLendMarket(marketName)
-
 	const { pendingTx, handleTx, txHash } = useTransactionHandler()
 	const { approvals } = useLendMarketApprovals(activeLendMarket)
 	const { chainId } = useWeb3React()
@@ -41,8 +40,7 @@ const SupplyButton = ({ asset, val, isDisabled, onHide, marketName }: SupplyButt
 			</a>
 		)
 	} else {
-		return typeof approvals != 'undefined' &&
-			(asset.underlyingAddress[chainId] === 'ETH' || approvals[asset.underlyingAddress[chainId]].gt(0)) ? (
+		return typeof approvals != 'undefined' && approvals[asset.underlyingAddress[chainId]].gt(0) ? (
 			<Button
 				fullWidth
 				disabled={isDisabled}

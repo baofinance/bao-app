@@ -823,7 +823,7 @@ export default {
 					id: 1,
 					active: true,
 					underlyingAddress: {
-						1: '0x353A07b25c84a522356aF2D9a7c0d7FF481733e9',
+						1: '0xCd5fE23C85820F7B72D0926FC9b05b43E359b7ee',
 					},
 					underlyingDecimals: 18,
 					name: 'weETH',

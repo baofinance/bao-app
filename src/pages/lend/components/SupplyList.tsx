@@ -28,6 +28,7 @@ export const SupplyList: React.FC<SupplyListProps> = ({ accountBalances, marketN
 const SupplyListItem: React.FC<SupplyListItemProps> = ({ asset, accountBalances, marketName }) => {
 	const { chainId } = useWeb3React()
 	const [formattedBalance, setFormattedBalance] = useState(null)
+	const [balance, setBalance] = useState(null)
 	const [showSupplyModal, setShowSupplyModal] = useState(false)
 	const [showBorrowModal, setShowBorrowModal] = useState(false)
 
@@ -38,7 +39,10 @@ const SupplyListItem: React.FC<SupplyListItemProps> = ({ asset, accountBalances,
 
 	useEffect(() => {
 		const balance = fetchBalance(asset)
-		if (balance !== null && balance !== undefined) setFormattedBalance(getDisplayBalance(balance.balance, balance.decimals))
+		if (balance !== null && balance !== undefined) {
+			setBalance(balance)
+			setFormattedBalance(getDisplayBalance(balance.balance, balance.decimals))
+		}
 	}, [accountBalances])
 
 	return (
@@ -74,10 +78,17 @@ const SupplyListItem: React.FC<SupplyListItemProps> = ({ asset, accountBalances,
 				</table>
 				<div className='m-auto mr-2 flex space-x-2'>
 					{asset.supply === true && <Button onClick={() => setShowSupplyModal(true)}>Supply</Button>}
+
 					{asset.borrow === true && <Button onClick={() => setShowBorrowModal(true)}>Borrow</Button>}
 				</div>
 
-				<SupplyModal asset={asset} show={showSupplyModal} onHide={() => setShowSupplyModal(!showSupplyModal)} marketName={marketName} />
+				<SupplyModal
+					asset={asset}
+					show={showSupplyModal}
+					onHide={() => setShowSupplyModal(!showSupplyModal)}
+					marketName={marketName}
+					fullBalance={balance}
+				/>
 				<BorrowModal asset={asset} show={showBorrowModal} onHide={() => setShowBorrowModal(!showBorrowModal)} />
 			</div>
 		</>

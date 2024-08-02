@@ -3,23 +3,20 @@ import { useWeb3React } from '@web3-react/core'
 import { useQuery } from '@tanstack/react-query'
 import { providerKey } from '@/utils/index'
 import { Contract } from '@ethersproject/contracts'
-import { Ctoken__factory } from '@/typechain/factories'
+import { Erc20__factory } from '@/typechain/factories'
 import MultiCall from '@/utils/multicall'
-import { useBlockUpdater } from '@/hooks/base/useBlock'
-import { useTxReceiptUpdater } from '@/hooks/base/useTransactionProvider'
-import { Asset, Balance } from '@/bao/lib/types'
+import { Balance } from '@/bao/lib/types'
 import Config from '@/bao/lib/config'
 
-export const useSupplyBalance = (): Balance[] => {
+export const useSupplyBalances = (marketName: string): Balance[] => {
 	const bao = useBao()
 	const { account, library, chainId } = useWeb3React()
 
 	const enabled = !!bao && !!account && !!chainId
-	const { data: balances, refetch } = useQuery(
+	const { data: balances } = useQuery(
 		['@/hooks/lend/useSupplyBalances', providerKey(library, account, chainId), { enabled }],
 		async () => {
-			const assets = Config.assets.filter(asset => asset.supply == true)
-			const contracts: Contract[] = assets.map(asset => Ctoken__factory.connect(asset.underlyingAddress[chainId], library))
+			const contracts: Contract[] = [Erc20__factory.connect(Config.lendMarkets[marketName].underlyingAddresses[chainId], library)]
 
 			const res = MultiCall.parseCallResults(
 				await bao.multicall.call(
@@ -46,12 +43,6 @@ export const useSupplyBalance = (): Balance[] => {
 			enabled,
 		},
 	)
-
-	const _refetch = () => {
-		if (enabled) refetch()
-	}
-	useBlockUpdater(_refetch, 10)
-	useTxReceiptUpdater(_refetch)
 
 	return balances
 }
