@@ -86,7 +86,7 @@ const SwapListItem: React.FC<SwapListItemProps> = ({ token }) => {
 					name={platform && platform.name + ' Widget'}
 					src={platform && platform.url}
 					width='450px'
-					height='675px'
+					height='750px'
 					allow='fullscreen'
 					marginWidth={parseInt('0')}
 					marginHeight={parseInt('0')}
