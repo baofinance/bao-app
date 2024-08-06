@@ -90,6 +90,7 @@ function App({ Component, pageProps }: AppProps) {
 					content='Lend and borrow synthetics with Bao Vaults and get diversified expsoure to crypto with automated yield bearing strategies using Bao Baskets.'
 				/>
 				<meta property='og:image' content='%PUBLIC_URL%/twitterCard.png' />
+				<script src='https://kit.fontawesome.com/f49c82b818.js' crossOrigin='anonymous' async />
 			</Head>
 			<Providers>
 				<DefaultSeo {...SEO} />

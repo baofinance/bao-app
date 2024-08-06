@@ -44,10 +44,10 @@ const DashboardCard: React.FC<DashboardCardProps> = ({ asset, vaultName, mintVal
 		const c = healthFactor.eq(0)
 			? `${(props: any) => props.theme.color.text[100]}`
 			: healthFactor.lte(parseUnits('1.25'))
-				? '#e32222'
-				: healthFactor.lt(parseUnits('1.55'))
-					? '#ffdf19'
-					: '#45be31'
+			  ? '#e32222'
+			  : healthFactor.lt(parseUnits('1.55'))
+			    ? '#ffdf19'
+			    : '#45be31'
 		return c
 	}
 
@@ -145,8 +145,8 @@ const DashboardCard: React.FC<DashboardCardProps> = ({ asset, vaultName, mintVal
 													(healthFactor.lte(BigNumber.from(0))
 														? '-'
 														: healthFactor.gt(parseUnits('10000'))
-															? '∞'
-															: getDisplayBalance(healthFactor))}
+														  ? '∞'
+														  : getDisplayBalance(healthFactor))}
 											</Typography>
 										</div>
 									</div>

@@ -46,20 +46,20 @@ const usePoolInfo = (gauge: ActiveSupportedGauge): PoolInfoTypes => {
 								{ method: 'get_decimals', params: [gauge.poolAddress] },
 								{ method: 'get_balances', params: [gauge.poolAddress] },
 							],
-						}
+					  }
 					: gauge.type.toLowerCase() === 'uniswap'
-						? {
+					  ? {
 								contract: univ2LpContract,
 								ref: gauge.lpAddress,
 								calls: [{ method: 'getReserves' }, { method: 'token0' }, { method: 'token1' }],
-							}
-						: gauge.type.toLowerCase() === 'balancer'
-							? {
+					    }
+					  : gauge.type.toLowerCase() === 'balancer'
+					    ? {
 									contract: balancerVault,
 									ref: gauge.poolAddress,
 									calls: [{ method: 'getPoolTokens', params: [gauge.balancerPoolId] }],
-								}
-							: {
+					      }
+					    : {
 									contract: saddlePoolContract,
 									ref: gauge.poolAddress,
 									calls: [
@@ -68,7 +68,7 @@ const usePoolInfo = (gauge: ActiveSupportedGauge): PoolInfoTypes => {
 										{ method: 'getToken', params: ['1'] },
 										{ method: 'getTokenBalance', params: ['1'] },
 									],
-								},
+					      },
 			])
 
 			const { [gauge.poolAddress]: res0 } = Multicall.parseCallResults(await bao.multicall.call(lpQuery))
@@ -78,56 +78,56 @@ const usePoolInfo = (gauge: ActiveSupportedGauge): PoolInfoTypes => {
 					gauge.type.toLowerCase() === 'curve'
 						? res0[0].values[0].toString()
 						: gauge.type.toLowerCase() === 'uniswap'
-							? res0[1].values[0].toString()
-							: gauge.type.toLowerCase() === 'balancer'
-								? res0[0].values[0][0].toString() === gauge.poolAddress
+						  ? res0[1].values[0].toString()
+						  : gauge.type.toLowerCase() === 'balancer'
+						    ? res0[0].values[0][0].toString() === gauge.poolAddress
 									? res0[0].values[0][1].toString() === gauge.poolAddress
 										? res0[0].values[0][2].toString()
 										: res0[0].values[0][1].toString()
 									: res0[0].values[0][0].toString()
-								: res0[0]?.values[0]
-									? res0[0].values[0].toString()
-									: '',
+						    : res0[0]?.values[0]
+						      ? res0[0].values[0].toString()
+						      : '',
 				token1Address:
 					gauge.type.toLowerCase() === 'curve'
 						? res0[0].values[1].toString()
 						: gauge.type.toLowerCase() === 'uniswap'
-							? res0[2].values[0].toString()
-							: gauge.type.toLowerCase() === 'balancer'
-								? res0[0].values[0][0].toString() === gauge.poolAddress
+						  ? res0[2].values[0].toString()
+						  : gauge.type.toLowerCase() === 'balancer'
+						    ? res0[0].values[0][0].toString() === gauge.poolAddress
 									? res0[0].values[0][1].toString() === gauge.poolAddress
 										? res0[0].values[0][0].toString()
 										: res0[0].values[0][2].toString()
 									: res0[0].values[0][1].toString()
-								: res0[2]?.values[0]
-									? res0[0].values[0].toString()
-									: '',
+						    : res0[2]?.values[0]
+						      ? res0[0].values[0].toString()
+						      : '',
 				token0Balance:
 					gauge.type.toLowerCase() === 'curve'
 						? res0[2].values[0].toString()
 						: gauge.type.toLowerCase() === 'uniswap'
-							? res0[0].values[0].toString()
-							: gauge.type.toLowerCase() === 'balancer'
-								? res0[0].values[0][0].toString() === gauge.poolAddress
+						  ? res0[0].values[0].toString()
+						  : gauge.type.toLowerCase() === 'balancer'
+						    ? res0[0].values[0][0].toString() === gauge.poolAddress
 									? res0[0].values[0][1].toString() === gauge.poolAddress
 										? res0[0].values[1][2].hex
 										: res0[0].values[1][1].hex
 									: res0[0].values[1][0].hex
-								: res0[0]?.values[0]
-									? res0[0].values[0].toString()
-									: '',
+						    : res0[0]?.values[0]
+						      ? res0[0].values[0].toString()
+						      : '',
 				token1Balance:
 					gauge.type.toLowerCase() === 'curve'
 						? res0[2].values[1].toString()
 						: gauge.type.toLowerCase() === 'uniswap'
-							? res0[0].values[1].toString()
-							: gauge.type.toLowerCase() === 'balancer'
-								? res0[0].values[0][0].toString() === gauge.poolAddress
+						  ? res0[0].values[1].toString()
+						  : gauge.type.toLowerCase() === 'balancer'
+						    ? res0[0].values[0][0].toString() === gauge.poolAddress
 									? res0[0].values[0][1].toString() === gauge.poolAddress
 										? res0[0].values[1][0].hex
 										: res0[0].values[1][2].hex
 									: res0[0].values[1][1].hex
-								: res0[3].values[0].toString(),
+						    : res0[3].values[0].toString(),
 				token0Decimals: gauge.type.toLowerCase() === 'curve' ? res0[1].values[0].toString() : 18,
 				token1Decimals: gauge.type.toLowerCase() === 'curve' ? res0[1].values[1].toString() : 18,
 			}

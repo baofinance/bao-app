@@ -18,8 +18,8 @@ import { BigNumber } from 'ethers'
 import { formatEther } from 'ethers/lib/utils'
 import Image from 'next/future/image'
 import React, { Fragment, useMemo, useState } from 'react'
-import BallastButton from './BallastButton'
 import { isDesktop } from 'react-device-detect'
+import BallastButton from './BallastButton'
 
 export const Ballast = () => {
 	const [selectedOption, setSelectedOption] = useState('baoUSD')
@@ -202,7 +202,7 @@ export const Ballast = () => {
 															? getDisplayBalance(
 																	accountBalances.find(balance => balance.address === synth.underlyingAddress).balance,
 																	synth.underlyingDecimals,
-																)
+															  )
 															: '-'}
 													</Typography>
 												</div>
@@ -241,7 +241,7 @@ export const Ballast = () => {
 															? getDisplayBalance(
 																	accountBalances.find(balance => balance.address === synth.underlyingAddress).balance,
 																	synth.underlyingDecimals,
-																)
+															  )
 															: '-'}
 													</Typography>
 												</div>

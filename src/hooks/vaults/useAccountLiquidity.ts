@@ -80,8 +80,8 @@ export const useAccountLiquidity = (vaultName: string): AccountLiquidity => {
 				supplyApy.gt(borrowApy) && !usdSupply.eq(0)
 					? supplyApy.sub(borrowApy).div(usdSupply)
 					: borrowApy.gt(supplyApy) && !usdBorrow.eq(0)
-						? supplyApy.sub(borrowApy).div(usdBorrow)
-						: BigNumber.from(0)
+					  ? supplyApy.sub(borrowApy).div(usdBorrow)
+					  : BigNumber.from(0)
 
 			return {
 				netApy,
