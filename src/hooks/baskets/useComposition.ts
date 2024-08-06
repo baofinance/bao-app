@@ -72,14 +72,14 @@ const useComposition = (basket: ActiveSupportedBasket): Array<BasketComponent> =
 							symbol: tokenInfo[tokenComposition[i]][1].values[0],
 							name: tokenInfo[tokenComposition[i]][2].values[0],
 							balance: tokenInfo[tokenComposition[i]][3].values[0],
-						}
+					  }
 					: {
 							// INFO: this is where we handly MKR manually later as it its config is non-standard and funky
 							decimals: await mkr.decimals(),
 							symbol: 'MKR', // MKR token uses bytes32 for this
 							name: 'Maker DAO', // MKR token uses bytes32 for this
 							balance: await mkr.balanceOf(basket.address),
-						}
+					  }
 				_c.address = tokenComposition[i]
 				_c.price = prices[tokenComposition[i].toLowerCase()]
 

@@ -48,7 +48,7 @@ const BackstopModal: React.FC<BackstopModalProps> = ({ backstop, show, onHide })
 						supplyBalances
 							.find(balance => balance.address.toLowerCase() === synth?.vaultAddress.toLowerCase())
 							.balance.mul(exchangeRates[synth?.vaultAddress]),
-					)
+				  )
 				: BigNumber.from(0),
 		[supplyBalances, exchangeRates, synth],
 	)

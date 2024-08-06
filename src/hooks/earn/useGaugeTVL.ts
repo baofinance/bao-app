@@ -46,44 +46,44 @@ const useGaugeTVL = (gauge: ActiveSupportedGauge) => {
 					? baoUSDPrice && threeCrvPrice && baoUSDPrice.mul(poolInfo.token0Balance).add(threeCrvPrice.mul(poolInfo.token1Balance))
 					: baoUSDPrice && threeCrvPrice && baoUSDPrice.mul(poolInfo.token1Balance).add(threeCrvPrice.mul(poolInfo.token0Balance))
 				: gauge.symbol === 'bSTBLDAI'
-					? bSTBLPrice
+				  ? bSTBLPrice
 						? poolInfo?.token0Address.toLowerCase() === Config.addressMap.bSTBL.toLowerCase()
 							? bSTBLPrice && daiPrice && bSTBLPrice.mul(poolInfo.token0Balance).add(daiPrice.mul(poolInfo.token1Balance))
 							: bSTBLPrice && daiPrice && bSTBLPrice.mul(poolInfo.token1Balance).add(daiPrice.mul(poolInfo.token0Balance))
 						: BigNumber.from(0)
-					: gauge.symbol === 'BAOETH'
-						? poolInfo?.token0Address.toLowerCase() === Config.addressMap.BAO.toLowerCase()
+				  : gauge.symbol === 'BAOETH'
+				    ? poolInfo?.token0Address.toLowerCase() === Config.addressMap.BAO.toLowerCase()
 							? baoPrice && ethPrice && baoPrice.mul(poolInfo.token0Balance).add(ethPrice.mul(poolInfo.token1Balance))
 							: baoPrice && ethPrice && baoPrice.mul(poolInfo.token1Balance).add(ethPrice.mul(poolInfo.token0Balance))
-						: gauge.symbol === 'baoUSD-LUSD'
-							? poolInfo?.token0Address.toLowerCase() === Config.addressMap.baoUSD.toLowerCase()
+				    : gauge.symbol === 'baoUSD-LUSD'
+				      ? poolInfo?.token0Address.toLowerCase() === Config.addressMap.baoUSD.toLowerCase()
 								? baoUSDPrice && lusdPrice && baoUSDPrice.mul(poolInfo.token0Balance).add(lusdPrice.mul(poolInfo.token1Balance))
 								: baoUSDPrice && lusdPrice && baoUSDPrice.mul(poolInfo.token1Balance).add(lusdPrice.mul(poolInfo.token0Balance))
-							: gauge.symbol === 'baoETH-ETH'
-								? poolInfo?.token0Address.toLowerCase() === Config.addressMap.baoETH.toLowerCase()
+				      : gauge.symbol === 'baoETH-ETH'
+				        ? poolInfo?.token0Address.toLowerCase() === Config.addressMap.baoETH.toLowerCase()
 									? baoETHPrice && ethPrice && baoETHPrice.mul(poolInfo.token0Balance).add(ethPrice.mul(poolInfo.token1Balance))
 									: baoETHPrice && ethPrice && baoETHPrice.mul(poolInfo.token1Balance).add(ethPrice.mul(poolInfo.token0Balance))
-								: gauge.symbol === 'baoUSD-LUSD/BAO'
-									? poolInfo?.token0Address.toLowerCase() === Config.addressMap.BAO.toLowerCase()
+				        : gauge.symbol === 'baoUSD-LUSD/BAO'
+				          ? poolInfo?.token0Address.toLowerCase() === Config.addressMap.BAO.toLowerCase()
 										? baoUSDlusdPrice && baoPrice && baoPrice.mul(poolInfo.token0Balance).add(baoUSDlusdPrice.mul(poolInfo.token1Balance))
 										: baoUSDlusdPrice && baoPrice && baoPrice.mul(poolInfo.token1Balance).add(baoUSDlusdPrice.mul(poolInfo.token0Balance))
-									: gauge.symbol === 'baoETH-ETH/BAO'
-										? poolInfo?.token0Address.toLowerCase() === Config.addressMap.BAO.toLowerCase()
+				          : gauge.symbol === 'baoETH-ETH/BAO'
+				            ? poolInfo?.token0Address.toLowerCase() === Config.addressMap.BAO.toLowerCase()
 											? baoETHethPrice && baoPrice && baoPrice.mul(poolInfo.token0Balance).add(baoETHethPrice.mul(poolInfo.token1Balance))
 											: baoETHethPrice && baoPrice && baoPrice.mul(poolInfo.token1Balance).add(baoETHethPrice.mul(poolInfo.token0Balance))
-										: gauge.symbol === 'baoETH-ETH/bETH'
-											? poolInfo?.token0Address.toLowerCase() === Config.addressMap.baoETHETH.toLowerCase()
+				            : gauge.symbol === 'baoETH-ETH/bETH'
+				              ? poolInfo?.token0Address.toLowerCase() === Config.addressMap.baoETHETH.toLowerCase()
 												? baoETHethPrice &&
-													bETHPrice &&
-													baoETHethPrice.mul(poolInfo.token0Balance).add(bETHPrice.mul(poolInfo.token1Balance))
+												  bETHPrice &&
+												  baoETHethPrice.mul(poolInfo.token0Balance).add(bETHPrice.mul(poolInfo.token1Balance))
 												: baoETHethPrice &&
-													bETHPrice &&
-													baoETHethPrice.mul(poolInfo.token1Balance).add(bETHPrice.mul(poolInfo.token0Balance))
-											: gauge.symbol === 'saddle-FRAXBP-baoUSD'
-												? poolInfo?.token0Address.toLowerCase() === Config.addressMap.baoUSD.toLowerCase()
+												  bETHPrice &&
+												  baoETHethPrice.mul(poolInfo.token1Balance).add(bETHPrice.mul(poolInfo.token0Balance))
+				              : gauge.symbol === 'saddle-FRAXBP-baoUSD'
+				                ? poolInfo?.token0Address.toLowerCase() === Config.addressMap.baoUSD.toLowerCase()
 													? baoUSDPrice && daiPrice && baoUSDPrice.mul(poolInfo.token0Balance).add(daiPrice.mul(poolInfo.token1Balance))
 													: baoUSDPrice && daiPrice && baoUSDPrice.mul(poolInfo.token1Balance).add(daiPrice.mul(poolInfo.token0Balance))
-												: BigNumber.from(0))
+				                : BigNumber.from(0))
 		)
 	}, [
 		bETHPrice,
@@ -115,24 +115,24 @@ const useGaugeTVL = (gauge: ActiveSupportedGauge) => {
 							contract: curveLpContract,
 							ref: gauge?.lpAddress,
 							calls: [{ method: 'balanceOf', params: [gauge?.gaugeAddress] }, { method: 'totalSupply' }],
-						}
+					  }
 					: gauge.type.toLowerCase() === 'uniswap'
-						? {
+					  ? {
 								contract: uniLpContract,
 								ref: gauge?.lpAddress,
 								calls: [{ method: 'balanceOf', params: [gauge?.gaugeAddress] }, { method: 'totalSupply' }],
-							}
-						: gauge.type.toLowerCase() === 'balancer'
-							? {
+					    }
+					  : gauge.type.toLowerCase() === 'balancer'
+					    ? {
 									contract: balancerComposableStablePool,
 									ref: gauge?.lpAddress,
 									calls: [{ method: 'balanceOf', params: [gauge?.gaugeAddress] }, { method: 'getActualSupply' }],
-								}
-							: {
+					      }
+					    : {
 									contract: saddleLpContract,
 									ref: gauge?.lpAddress,
 									calls: [{ method: 'balanceOf', params: [gauge?.gaugeAddress] }, { method: 'totalSupply' }],
-								},
+					      },
 			])
 			const { [gauge?.lpAddress]: res0 } = Multicall.parseCallResults(await bao.multicall.call(query))
 

@@ -1,7 +1,6 @@
 import { ActiveSupportedVault } from '@/bao/lib/types'
 import Button from '@/components/Button'
 import Card from '@/components/Card/Card'
-import Input from '@/components/Input'
 import { StatBlock } from '@/components/Stats'
 import Tooltipped from '@/components/Tooltipped'
 import Typography from '@/components/Typography'
@@ -9,18 +8,16 @@ import useBaskets from '@/hooks/baskets/useBaskets'
 import useComposition from '@/hooks/baskets/useComposition'
 import { Balance } from '@/hooks/vaults/useBalances'
 import { decimate, getDisplayBalance } from '@/utils/numberFormat'
-import { Listbox, Transition } from '@headlessui/react'
-import { ChevronDownIcon, InformationCircleIcon } from '@heroicons/react/20/solid'
+import { faAngleUp, faCircleInfo } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { Transition } from '@headlessui/react'
 import { useWeb3React } from '@web3-react/core'
-import classNames from 'classnames'
 import { BigNumber } from 'ethers'
 import { formatUnits, parseUnits } from 'ethers/lib/utils'
 import Image from 'next/future/image'
-import React, { Fragment, useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { isDesktop } from 'react-device-detect'
 import SupplyModal from './Modals/SupplyModal'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faAngleUp, faCaretUp, faCircleInfo, faX } from '@fortawesome/free-solid-svg-icons'
 
 export const DepositCard = ({
 	vaultName,
@@ -65,7 +62,7 @@ export const DepositCard = ({
 						return a + parseFloat(formatUnits(b))
 					}, 0) /
 					composition.length) *
-				100
+			  100
 			: 0
 
 	const max = () => {

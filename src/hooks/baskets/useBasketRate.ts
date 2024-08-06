@@ -48,7 +48,7 @@ const useBasketRates = (basket: ActiveSupportedBasket): BasketRates => {
 									params,
 								},
 							],
-						}
+					  }
 					: {
 							contract: recipe,
 							ref: 'recipe',
@@ -62,7 +62,7 @@ const useBasketRates = (basket: ActiveSupportedBasket): BasketRates => {
 									params,
 								},
 							],
-						},
+					  },
 			])
 			const { recipe: res } = Multicall.parseCallResults(await bao.multicall.call(query))
 			return {
