@@ -87,6 +87,19 @@ const SupplyModal = ({ asset, show, onHide, vaultName }: SupplyModalProps) => {
 						max={fullBalance}
 						placeholder={`0`}
 						className='h-12 min-w-[150px] z-20 w-full bg-baoBlack lg:h-auto'
+						label={
+							<div className='flex flex-row items-center pl-2 pr-4'>
+								<div className='flex w-6 justify-center'>
+									<Image
+										src={`/images/tokens/${asset.icon}`}
+										width={32}
+										height={32}
+										alt={asset.symbol}
+										className='block h-6 w-6 align-middle'
+									/>
+								</div>
+							</div>
+						}
 					/>
 				</Typography>
 			</Modal.Body>
@@ -107,7 +120,7 @@ const SupplyModal = ({ asset, show, onHide, vaultName }: SupplyModalProps) => {
 								onClick={async () => {
 									// TODO- give the user a notice that we're approving max uint and instruct them how to change this value.
 									const tx = asset.underlyingContract.approve(asset.vaultAddress, ethers.constants.MaxUint256)
-									handleTx(tx, `${asset.underlyingSymbol} Gauge: Approve ${asset.underlyingSymbol}`)
+									handleTx(tx, `${asset.underlyingSymbol} Token: Approve ${asset.underlyingSymbol}`)
 								}}
 							>
 								Approve {asset.underlyingSymbol}
