@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { ActiveSupportedVault } from '@/bao/lib/types'
+import Button from '@/components/Button'
 import Input from '@/components/Input'
+import { PendingTransaction } from '@/components/Loader/Loader'
 import Modal from '@/components/Modal'
 import Typography from '@/components/Typography'
 import useContract from '@/hooks/base/useContract'
@@ -11,7 +13,9 @@ import { useAccountBalances, useBorrowBalances, useSupplyBalances } from '@/hook
 import { useExchangeRates } from '@/hooks/vaults/useExchangeRates'
 import { Erc20 } from '@/typechain/Erc20'
 import { decimate, exponentiate, getDisplayBalance, sqrt } from '@/utils/numberFormat'
-import { BigNumber } from 'ethers'
+import { faExternalLink } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { BigNumber, ethers } from 'ethers'
 import { formatUnits, parseUnits } from 'ethers/lib/utils'
 import Image from 'next/future/image'
 import React, { useCallback, useMemo, useState } from 'react'
@@ -49,7 +53,7 @@ const RepayModal = ({ asset, show, onHide, vaultName }: RepayModalProps) => {
 						supplyBalances
 							.find(balance => balance.address.toLowerCase() === asset.vaultAddress.toLowerCase())
 							.balance.mul(exchangeRates[asset.vaultAddress]),
-				  )
+					)
 				: BigNumber.from(0),
 		[supplyBalances, exchangeRates, asset.vaultAddress],
 	)

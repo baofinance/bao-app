@@ -14,8 +14,8 @@ import { BigNumber, FixedNumber } from 'ethers'
 import { formatUnits, parseUnits } from 'ethers/lib/utils'
 import Image from 'next/future/image'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
-import { isDesktop } from 'react-device-detect'
 import MintModal from './Modals/MintModal'
+import { isDesktop } from 'react-device-detect'
 
 export const MintCard = ({
 	vaultName,
@@ -57,7 +57,7 @@ export const MintCard = ({
 					FixedNumber.from(formatUnits(accountLiquidity && accountLiquidity.usdBorrowable)).divUnsafe(
 						FixedNumber.from(formatUnits(synth.price)),
 					),
-			  )
+				)
 			: BigNumber.from(0)
 	}
 

@@ -28,7 +28,7 @@ import { BigNumber } from 'ethers'
 import { formatUnits } from 'ethers/lib/utils'
 import Image from 'next/future/image'
 import Slider from 'rc-slider'
-import React, { Fragment, useCallback, useState } from 'react'
+import React, { Fragment, useCallback, useEffect, useState } from 'react'
 
 export const Dashboard = () => {
 	const { account } = useWeb3React()
@@ -386,7 +386,7 @@ export const Dashboard = () => {
 								? (
 										parseFloat(formatUnits(veInfo.totalSupply)) *
 										parseFloat(formatUnits(typeof currentWeight == 'bigint' ? currentWeight : 0))
-								  ).toLocaleString()
+									).toLocaleString()
 								: '0'}
 						</Typography>
 					</div>
@@ -447,10 +447,10 @@ export const Dashboard = () => {
 								userSlopes && userSlopes.power.eq(0) && votingPowerAllocated.eq(0)
 									? BigNumber.from(100).toString()
 									: userSlopes && votingPowerAllocated.div(100).eq(100) && userSlopes.power.eq(0)
-									  ? BigNumber.from(0).toString()
-									  : userSlopes && votingPowerAllocated.div(100).gt(0)
-									    ? userSlopes && BigNumber.from(100).add(userSlopes.power.div(100)).sub(votingPowerAllocated.div(100)).toString()
-									    : userSlopes && BigNumber.from(100).add(userSlopes.power.div(100)).sub(userSlopes.power.div(100)).toString()
+										? BigNumber.from(0).toString()
+										: userSlopes && votingPowerAllocated.div(100).gt(0)
+											? userSlopes && BigNumber.from(100).add(userSlopes.power.div(100)).sub(votingPowerAllocated.div(100)).toString()
+											: userSlopes && BigNumber.from(100).add(userSlopes.power.div(100)).sub(userSlopes.power.div(100)).toString()
 							}
 							value={val}
 							className='h-2 w-full appearance-none rounded-3xl bg-baoWhite bg-opacity-20 disabled:cursor-not-allowed'
@@ -465,7 +465,7 @@ export const Dashboard = () => {
 							placeholder={val.toString()}
 							value={val}
 							className='relative -mr-1 h-6 w-12
-				appearance-none rounded-3xl border-solid border-inherit bg-baoBlack bg-opacity-0 pl-2
+				appearance-none rounded-3xl border-solid border-inherit bg-baoBlack bg-opacity-0 pl-2 
 				text-end align-middle font-bakbak text-lg outline-none outline
 				 outline-2 outline-offset-2 transition-all duration-200 disabled:text-baoWhite'
 						/>

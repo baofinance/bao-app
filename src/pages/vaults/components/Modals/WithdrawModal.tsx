@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { ActiveSupportedVault } from '@/bao/lib/types'
+import Button from '@/components/Button'
 import Input from '@/components/Input'
+import { PendingTransaction } from '@/components/Loader/Loader'
 import Modal from '@/components/Modal'
 import Typography from '@/components/Typography'
 import useTransactionHandler from '@/hooks/base/useTransactionHandler'
@@ -8,6 +10,8 @@ import { useAccountLiquidity } from '@/hooks/vaults/useAccountLiquidity'
 import { useSupplyBalances } from '@/hooks/vaults/useBalances'
 import { useExchangeRates } from '@/hooks/vaults/useExchangeRates'
 import { decimate, exponentiate, getDisplayBalance, sqrt } from '@/utils/numberFormat'
+import { faExternalLink } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { BigNumber } from 'ethers'
 import { formatUnits, parseUnits } from 'ethers/lib/utils'
 import Image from 'next/future/image'
@@ -41,7 +45,7 @@ const WithdrawModal = ({ asset, show, onHide, vaultName }: WithdrawModalProps) =
 						supplyBalances
 							.find(balance => balance.address.toLowerCase() === asset.vaultAddress.toLowerCase())
 							.balance.mul(exchangeRates[asset.vaultAddress]),
-				  )
+					)
 				: BigNumber.from(0),
 		[supplyBalances, exchangeRates, asset.vaultAddress],
 	)
