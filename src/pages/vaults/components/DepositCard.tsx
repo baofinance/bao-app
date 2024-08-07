@@ -62,7 +62,7 @@ export const DepositCard = ({
 						return a + parseFloat(formatUnits(b))
 					}, 0) /
 					composition.length) *
-			  100
+				100
 			: 0
 
 	const max = () => {

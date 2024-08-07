@@ -305,12 +305,12 @@ const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal 
 							(daiAllowance.eq(0) || daiAllowance.lt(parseUnits(val)))
 								? 'Approve DAI'
 								: !val
-								  ? 'Enter a Value'
-								  : isButtonDisabled
-								    ? 'Invalid Input'
-								    : operation === 'MINT'
-								      ? `Mint ${(secondaryVal && getDisplayBalance(secondaryVal, 0)) || 0} ${basket.symbol}`
-								      : `Redeem ${(val && getDisplayBalance(val, 0)) || 0} ${basket.symbol}`}
+									? 'Enter a Value'
+									: isButtonDisabled
+										? 'Invalid Input'
+										: operation === 'MINT'
+											? `Mint ${(secondaryVal && getDisplayBalance(secondaryVal, 0)) || 0} ${basket.symbol}`
+											: `Redeem ${(val && getDisplayBalance(val, 0)) || 0} ${basket.symbol}`}
 						</Button>
 					)}
 				</Modal.Actions>
