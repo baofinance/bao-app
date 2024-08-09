@@ -138,6 +138,7 @@
     "react-circular-progressbar": "^2.0.4",
     "react-device-detect": "^2.2.3",
     "react-dom": "^18.1.0",
+    "react-native-progress-bar-horizontal": "^1.0.1",
     "react-notifications-component": "^4.0.1",
     "react-spinners": "^0.13.8",
     "react-spring": "^9.7.2",

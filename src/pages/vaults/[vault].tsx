@@ -7,7 +7,7 @@ import { useExchangeRates } from '@/hooks/vaults/useExchangeRates'
 import { useVaultPrices } from '@/hooks/vaults/usePrices'
 import { useAccountVaults, useVaults } from '@/hooks/vaults/useVaults'
 import { decimate, getDisplayBalance } from '@/utils/numberFormat'
-import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
+import { faArrowLeft, faDashboard } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { BigNumber } from 'ethers'
 import { NextPage } from 'next'
@@ -124,7 +124,7 @@ const Vault: NextPage<{
 										</Typography>
 									</span>
 								</div>
-								<div className='h-10 w-[1px] ml-5 bg-baoWhite bg-opacity-40 my-auto' />
+								<div className='h-10 w-[2px] ml-5 bg-baoWhite bg-opacity-40 my-auto' />
 
 								<div className='mx-auto my-0 flex w-full items-center justify-between place-content-between'>
 									<div className='flex gap-5 flex-wrap w-full justify-between place-content-between'>
@@ -207,6 +207,60 @@ const Vault: NextPage<{
 								<Typography variant='base' className='inline-block font-bakbak leading-5'>
 									{getDisplayBalance(synth.borrowApy, 18, 2)}%
 								</Typography>
+							</div>
+						</div>
+
+						<div>
+							<Typography variant='h3' className='ml-2 inline-block items-center align-middle font-bakbak leading-5'>
+							Debt Health:
+							</Typography>
+						</div>
+
+						<div className='mb-4 flex w-full flex-row items-center gap-4 rounded border-0 align-middle'>
+								<div className='glassmorphic-card flex h-fit w-fit flex-row items-center p-4 align-middle duration-200 hover:bg-baoRed'>
+									<FontAwesomeIcon icon={faDashboard} size='lg' />
+								</div>
+							{/*Desktop*/}
+							<div className='hidden w-full !px-8 !py-4 lg:flex gap-12'>
+								<div className='h-10 w-[2px] ml-5 bg-baoWhite bg-opacity-40 my-auto' />
+
+								<div className='mx-auto my-0 flex w-full items-center justify-between place-content-between'>
+									<div className='flex gap-5 flex-wrap w-full justify-between place-content-between'>
+										<div className='col-span-1 break-words text-left'>
+											<Typography variant='sm' className='font-bakbak text-baoRed'>
+												Collateral
+											</Typography>
+											<Typography variant='h3' className='inline-block font-bakbak text-left leading-5'>
+												${getDisplayBalance(synth.price)}
+											</Typography>
+										</div>
+										<div className='col-span-1 break-words'>
+											<Typography variant='sm' className='font-bakbak text-baoRed text-left'>
+												Debt
+											</Typography>
+											<Typography variant='h3' className='inline-block font-bakbak leading-5'>
+												${getDisplayBalance(decimate(totalCollateral), synth.underlyingDecimals)}
+											</Typography>
+										</div>
+										<div className='col-span-1 break-words text-left'>
+											<Typography variant='sm' className='font-bakbak text-baoRed text-left'>
+												Debt Limit Used
+											</Typography>
+											<Typography variant='h3' className='inline-block font-bakbak leading-5'>
+												{getDisplayBalance(totalDebt.div(decimate(totalCollateral)).mul(100))}%
+											</Typography>
+										</div>
+										<div className='col-span-1 break-words text-left'>
+											<Typography variant='sm' className='font-bakbak text-baoRed text-left'>
+												Debt Limit Remaining
+											</Typography>
+											<Typography variant='h3' className='inline-block font-bakbak leading-5'>
+												{getDisplayBalance(synth.borrowApy, 18, 2)}%
+											</Typography>
+											<Typography className='ml-1 inline-block font-bakbak leading-5 text-baoWhite'>vAPY</Typography>
+										</div>
+									</div>
+								</div>
 							</div>
 						</div>
 
