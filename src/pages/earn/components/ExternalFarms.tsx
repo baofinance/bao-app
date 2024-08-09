@@ -371,7 +371,13 @@ const ExternalFarms: React.FC = () => {
 							<div className='mx-0 my-auto inline-block h-full items-center'>
 								<div className='mr-2 hidden lg:inline-block'>
 									<Image className='z-10 inline-block select-none' src='/images/tokens/baoUSD.png' alt='baoETH' width={24} height={24} />
-									<Image className='z-20 -ml-2 inline-block select-none' src='/images/tokens/sUSDe.png' alt='sUSDe' width={24} height={24} />
+									<Image
+										className='z-20 -ml-2 inline-block select-none'
+										src='/images/tokens/sUSDe.png'
+										alt='sUSDe'
+										width={24}
+										height={24}
+									/>
 								</div>
 								<span className='inline-block text-left align-middle'>
 									<Typography variant='base' className='font-bakbak'>
