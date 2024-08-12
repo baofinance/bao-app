@@ -22,7 +22,7 @@ export type WithdrawModalProps = {
 }
 
 const WithdrawModal = ({ asset, show, onHide, vaultName }: WithdrawModalProps) => {
-	const [val, setVal] = useState<string>('')
+	const [val, setVal] = useState<string>('0')
 	const supplyBalances = useSupplyBalances(vaultName)
 	const accountLiquidity = useAccountLiquidity(vaultName)
 	const { exchangeRates } = useExchangeRates(vaultName)
@@ -85,9 +85,8 @@ const WithdrawModal = ({ asset, show, onHide, vaultName }: WithdrawModalProps) =
 				<Modal.Header onClose={hideModal}>
 					<div className='mx-0 my-auto flex h-full items-center text-baoWhite'>
 						<Typography variant='xl' className='mr-1 inline-block'>
-							Withdraw
+							Withdraw {asset.underlyingSymbol}
 						</Typography>
-						<Image src={`/images/tokens/${asset.icon}`} width={32} height={32} alt={asset.underlyingSymbol} />
 					</div>
 				</Modal.Header>
 				<>

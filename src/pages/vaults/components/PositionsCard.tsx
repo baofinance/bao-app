@@ -16,6 +16,12 @@ import React, { useMemo, useState } from 'react'
 import { isDesktop } from 'react-device-detect'
 import RepayModal from './Modals/RepayModal'
 import WithdrawModal from './Modals/WithdrawModal'
+import Card from '@/components/Card/Card'
+import { faAngleUp, faCircleInfo } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import SupplyModal from './Modals/SupplyModal'
+import { Transition } from '@headlessui/react'
+import { StatBlock } from '@/components/Stats'
 
 export const PositionList = ({
 	vaultName,
@@ -34,27 +40,32 @@ export const PositionList = ({
 	accountVaults: ActiveSupportedVault[]
 	borrowBalances: Balance[]
 }) => {
-	const filteredCollateral = collateral.filter(vault => !!vault)
+	const filteredCollateral = collateral.filter((vault: ActiveSupportedVault) => !(false !== vault.archived))
 	return (
 		<>
-			<Typography variant='xl' className='p-4 text-center font-bakbak'>
-				Open Positions
+			<Typography variant='xl' className='p-2 text-left font-bakbak'>
+				Supply
 			</Typography>
-			<ListHeader headers={['Asset', 'Amount', 'vAPY', '']} className='mx-4 pb-0 text-center text-baoWhite/60' />
-			{filteredCollateral
-				.map((vault: ActiveSupportedVault) => (
-					<PositionListItem
-						vault={vault}
-						vaultName={vaultName}
-						accountBalances={accountBalances}
-						accountVaults={accountVaults}
-						supplyBalances={supplyBalances}
-						borrowBalances={borrowBalances}
-						exchangeRates={exchangeRates}
-						key={vault.vaultAddress}
-					/>
-				))
-				.sort((a, b) => (a.props.vault.isSynth === true ? -1 : b.props.vault.isSynth === false ? 1 : 0))}
+			<Card className='glassmorphic-card p-2'>
+				<Card.Body>
+					<div className='flex flex-col gap-2'>
+						{filteredCollateral
+							.map((vault: ActiveSupportedVault) => (
+								<PositionListItem
+									vault={vault}
+									vaultName={vaultName}
+									accountBalances={accountBalances}
+									accountVaults={accountVaults}
+									supplyBalances={supplyBalances}
+									borrowBalances={borrowBalances}
+									exchangeRates={exchangeRates}
+									key={vault.vaultAddress}
+								/>
+							))
+							.sort((a, b) => (a.props.vault.isSynth === true ? -1 : b.props.vault.isSynth === false ? 1 : 0))}
+					</div>
+				</Card.Body>
+			</Card>
 		</>
 	)
 }
@@ -67,7 +78,10 @@ const PositionListItem: React.FC<PositionListItemProps> = ({
 	exchangeRates,
 }: PositionListItemProps) => {
 	const [showWithdrawModal, setShowWithdrawModal] = useState(false)
+	const [showSupplyModal, setShowSupplyModal] = useState(false)
 	const [showRepayModal, setShowRepayModal] = useState(false)
+	const [selectedOption, setSelectedOption] = useState('ETH')
+	const [showInfo, setShowInfo] = useState(false)
 	const { account } = useWeb3React()
 
 	const suppliedUnderlying = useMemo(() => {
@@ -110,65 +124,156 @@ const PositionListItem: React.FC<PositionListItemProps> = ({
 
 	return (
 		<>
-			<div className='glassmorphic-card my-4 p-2 lg:p-4'>
-				<div className='grid w-full grid-cols-12 items-center justify-center px-2'>
-					<div className='items-left col-span-3 m-auto text-start align-middle lg:ml-0'>
-						<Image
-							src={`/images/tokens/${vault.icon}`}
-							alt={`${vault.underlyingSymbol}`}
-							width={isDesktop ? 24 : 32}
-							height={isDesktop ? 24 : 32}
-							className='inline-block select-none'
-						/>
-						<span className='hidden text-left align-middle lg:inline-block'>
-							<Typography variant='lg' className='ml-2 font-bakbak leading-5'>
-								{vault.underlyingSymbol}
-							</Typography>
-						</span>
-					</div>
-					<div className='col-span-3 mr-0 items-start'>
-						<Tooltipped
-							content={`$${getDisplayBalance((!vault.isSynth ? decimate(suppliedUnderlying) : decimate(borrowed)).mul(vault.price))}`}
-							key={vault.underlyingSymbol}
-							placement='top'
-							className='rounded-full bg-baoRed'
-						>
-							<Typography variant='lg' className='text-center font-bakbak leading-5'>
-								<span className='align-middle'>{`${getDisplayBalance(
-									!vault.isSynth ? suppliedUnderlying : borrowed,
-									vault.underlyingDecimals,
-								)}`}</span>
-							</Typography>
-						</Tooltipped>
-					</div>
-					<div className='col-span-3 m-auto items-center justify-center'>
-						<Typography
-							variant='lg'
-							className={`font-bakbak text-lg leading-5 ${vault.isSynth ? `text-red` : avgBasketAPY > 0 && `text-green`}`}
-						>
-							{vault.isBasket && avgBasketAPY
-								? getDisplayBalance(avgBasketAPY, 0, 2) + '%'
-								: vault.isSynth
-									? getDisplayBalance(vault.borrowApy, 18, 2) + '%'
-									: '-'}
-						</Typography>
-					</div>
-
-					<div className='col-span-3 m-auto mr-0 w-full items-end'>
-						{!vault.isSynth ? (
-							<Button fullWidth size='xs' onClick={() => setShowWithdrawModal(true)} disabled={!account} className='text-sm lg:text-base'>
+			<div className='flex w-full gap-2'>
+				<div className='z-20 flex flex-col place-items-center gap-5 w-full'>
+					<div className='flex w-full justify-between place-items-center gap-5 glassmorphic-card p-2'>
+						<div className='text-baoWhite flex overflow-hidden rounded-2xl border border-baoWhite/20 bg-baoBlack shadow-lg shadow-baoBlack ring-1 ring-black ring-opacity-5 focus:outline-none select-none border-baoBlack px-2 py-3 text-sm'>
+							<div className='mx-0 my-auto flex h-full justify-center items-center gap-4 w-[200px]'>
+								<div className='col-span-3'>
+									<Image
+										src={`/images/tokens/${vault.icon}`}
+										alt={`${vault.underlyingSymbol}`}
+										width={isDesktop ? 24 : 32}
+										height={isDesktop ? 24 : 32}
+										className='inline-block select-none'
+									/>
+									<span className='hidden text-left align-middle lg:inline-block'>
+										<Typography variant='lg' className='ml-2 font-bakbak leading-5'>
+											{vault.underlyingSymbol}
+										</Typography>
+									</span>
+								</div>
+							</div>
+						</div>
+						<table className='table-fixed justify-between w-2/3 text-left md:table hidden'>
+							<thead>
+								<tr className='align-middle'>
+									<th>Total market supply</th>
+									<th>Your Position</th>
+								</tr>
+							</thead>
+							<div className='h-1 w-[200px] bg-red-400' />
+							<tbody>
+								<tr>
+									<td>
+										<Typography variant='lg' className='text-left leading-5'>
+											<span className='align-middle'>{(Number(vault.supplied) / 1000000000000000000).toFixed(2)}</span>
+										</Typography>
+									</td>
+									<td>
+										<Typography variant='lg' className='text-left leading-5'>
+											<span className='align-middle'>{`${getDisplayBalance(
+												!vault.isSynth ? suppliedUnderlying : borrowed,
+												vault.underlyingDecimals,
+											)}`}</span>
+										</Typography>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<div className='m-auto mr-2 flex space-x-2'>
+							<Button
+								className='!p-3'
+								onClick={() => {
+									setSelectedOption(vault.underlyingSymbol)
+									setShowInfo(prevState => !prevState) // Toggles the state
+								}}
+							>
+								{showInfo ? (
+									<FontAwesomeIcon icon={faAngleUp} width={72} height={24} />
+								) : (
+									<FontAwesomeIcon icon={faCircleInfo} width={72} height={24} />
+								)}
+							</Button>
+							<Button fullWidth size='xs' onClick={() => setShowSupplyModal(true)} disabled={!account} className='!p-3 !h-12'>
+								Supply
+							</Button>
+							<Button fullWidth size='xs' onClick={() => setShowWithdrawModal(true)} disabled={!account} className='!p-3 !h-12'>
 								Withdraw
 							</Button>
-						) : (
-							<Button fullWidth size='xs' onClick={() => setShowRepayModal(true)} disabled={!account} className='text-sm lg:text-base'>
-								Repay
-							</Button>
-						)}
+						</div>
 					</div>
 				</div>
 			</div>
 			<WithdrawModal asset={vault} vaultName={vaultName} show={showWithdrawModal} onHide={() => setShowWithdrawModal(false)} />
-			<RepayModal asset={vault} vaultName={vaultName} show={showRepayModal} onHide={() => setShowRepayModal(false)} />
+			<SupplyModal asset={vault} vaultName={vaultName} show={showSupplyModal} onHide={() => setShowSupplyModal(false)} />
+			<Transition show={showInfo} leave='transition ease-in duration-100' leaveFrom='opacity-100' leaveTo='opacity-0'>
+				<div className='flex p-2 mt-5 space-x-3'>
+					<Typography variant='xl' className=' text-left font-bakbak text-baoWhite/60'>
+						Collateral Info
+					</Typography>
+				</div>
+
+				<StatBlock
+					label=''
+					stats={[
+						{
+							label: 'Total Supplied',
+							value: (
+								<>
+									<Tooltipped
+										content={`$${getDisplayBalance(decimate(vault.supplied.mul(vault.price)))}`}
+										key={vault.underlyingSymbol}
+										placement='top'
+										className='rounded-full bg-baoRed'
+									>
+										<Typography className='inline-block align-middle text-sm lg:text-base'>
+											{getDisplayBalance(vault.supplied, vault.underlyingDecimals)}
+										</Typography>
+									</Tooltipped>
+									<Image
+										className='z-10 ml-1 inline-block select-none'
+										src={vault && `/images/tokens/${vault.underlyingSymbol}.png`}
+										alt={vault && vault.underlyingSymbol}
+										width={16}
+										height={16}
+									/>
+								</>
+							),
+						},
+						{
+							label: 'Collateral Factor',
+							value: (
+								<>
+									<Typography className='inline-block align-middle text-sm lg:text-base'>
+										{getDisplayBalance(vault.collateralFactor.mul(100), 18, 0)}%
+									</Typography>
+								</>
+							),
+						},
+						{
+							label: 'Initial Margin Factor',
+							value: (
+								<>
+									<Typography className='inline-block align-middle text-sm lg:text-base'>
+										{getDisplayBalance(vault.imfFactor.mul(100), 18, 0)}%
+									</Typography>
+								</>
+							),
+						},
+						{
+							label: 'Reserve Factor',
+							value: (
+								<>
+									<Typography className='inline-block align-middle text-sm lg:text-base'>
+										{getDisplayBalance(vault.reserveFactor.mul(100), 18, 0)}%
+									</Typography>
+								</>
+							),
+						},
+						{
+							label: 'Total Reserves',
+							value: (
+								<>
+									<Typography className='inline-block align-middle text-sm lg:text-base'>
+										${getDisplayBalance(vault.totalReserves.mul(vault.price), 18 + vault.underlyingDecimals)}
+									</Typography>
+								</>
+							),
+						},
+					]}
+				/>
+			</Transition>
 		</>
 	)
 }

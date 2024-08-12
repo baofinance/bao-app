@@ -210,99 +210,21 @@ const Vault: NextPage<{
 							</div>
 						</div>
 
-						<div>
-							<Typography variant='h3' className='ml-2 inline-block items-center align-middle font-bakbak leading-5'>
-							Debt Health:
-							</Typography>
+						<div style={{ marginTop: '8px', marginBottom: '16px' }}>
+							<DebtCard vaultName={vaultName} asset={synth} depositVal={depositVal} mintVal={mintVal} />
 						</div>
 
-						<div className='mb-4 flex w-full flex-row items-center gap-4 rounded border-0 align-middle'>
-								<div className='glassmorphic-card flex h-fit w-fit flex-row items-center p-4 align-middle duration-200 hover:bg-baoRed'>
-									<FontAwesomeIcon icon={faDashboard} size='lg' />
-								</div>
-							{/*Desktop*/}
-							<div className='hidden w-full !px-8 !py-4 lg:flex gap-12'>
-								<div className='h-10 w-[2px] ml-5 bg-baoWhite bg-opacity-40 my-auto' />
-
-								<div className='mx-auto my-0 flex w-full items-center justify-between place-content-between'>
-									<div className='flex gap-5 flex-wrap w-full justify-between place-content-between'>
-										<div className='col-span-1 break-words text-left'>
-											<Typography variant='sm' className='font-bakbak text-baoRed'>
-												Collateral
-											</Typography>
-											<Typography variant='h3' className='inline-block font-bakbak text-left leading-5'>
-												${getDisplayBalance(synth.price)}
-											</Typography>
-										</div>
-										<div className='col-span-1 break-words'>
-											<Typography variant='sm' className='font-bakbak text-baoRed text-left'>
-												Debt
-											</Typography>
-											<Typography variant='h3' className='inline-block font-bakbak leading-5'>
-												${getDisplayBalance(decimate(totalCollateral), synth.underlyingDecimals)}
-											</Typography>
-										</div>
-										<div className='col-span-1 break-words text-left'>
-											<Typography variant='sm' className='font-bakbak text-baoRed text-left'>
-												Debt Limit Used
-											</Typography>
-											<Typography variant='h3' className='inline-block font-bakbak leading-5'>
-												{getDisplayBalance(totalDebt.div(decimate(totalCollateral)).mul(100))}%
-											</Typography>
-										</div>
-										<div className='col-span-1 break-words text-left'>
-											<Typography variant='sm' className='font-bakbak text-baoRed text-left'>
-												Debt Limit Remaining
-											</Typography>
-											<Typography variant='h3' className='inline-block font-bakbak leading-5'>
-												{getDisplayBalance(synth.borrowApy, 18, 2)}%
-											</Typography>
-											<Typography className='ml-1 inline-block font-bakbak leading-5 text-baoWhite'>vAPY</Typography>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-
-						<div className='mt-6 space-y-12'>
-							<div>
-								<DepositCard
-									vaultName={vaultName}
-									balances={balances}
-									collateral={collateral}
-									accountBalances={accountBalances}
-									onUpdate={handleDepositVal}
-								/>
-							</div>
-
-							{accountVaults.length >= 1 && !accountLiquidity.usdSupply.lte(0) && !accountLiquidity.usdBorrowable.lte(0) && (
-								<div className='mt-6 grid gap-6'>
-									<div>
-										<DebtCard vaultName={vaultName} asset={synth} depositVal={depositVal} mintVal={mintVal} />
-									</div>
-									<div>
-										<PositionList
-											vaultName={vaultName}
-											supplyBalances={supplyBalances}
-											collateral={userVaults}
-											exchangeRates={exchangeRates}
-											accountBalances={accountBalances}
-											accountVaults={accountVaults}
-											borrowBalances={borrowBalances}
-										/>
-									</div>
-								</div>
-							)}
-
-							<div>
-								<MintCard
-									vaultName={vaultName}
-									prices={prices}
-									accountLiquidity={accountLiquidity}
-									synth={synth}
-									onUpdate={handleMintVal}
-								/>
-							</div>
+						<div style={{ marginTop: '8px', marginBottom: '0' }}>
+							<PositionList
+								vaultName={vaultName}
+								supplyBalances={supplyBalances}
+								collateral={userVaults}
+								exchangeRates={exchangeRates}
+								accountBalances={accountBalances}
+								accountVaults={accountVaults}
+								borrowBalances={borrowBalances}
+							/>
+							<MintCard vaultName={vaultName} prices={prices} accountLiquidity={accountLiquidity} synth={synth} onUpdate={handleMintVal} />
 						</div>
 					</>
 				) : (

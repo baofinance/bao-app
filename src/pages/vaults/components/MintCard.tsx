@@ -16,6 +16,7 @@ import Image from 'next/future/image'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { isDesktop } from 'react-device-detect'
 import MintModal from './Modals/MintModal'
+import RepayModal from './Modals/RepayModal'
 
 export const MintCard = ({
 	vaultName,
@@ -33,6 +34,7 @@ export const MintCard = ({
 	const { account, library, chainId } = useWeb3React()
 	const [val, setVal] = useState<string>('')
 	const [showMintModal, setShowMintModal] = useState(false)
+	const [showRepayModal, setShowRepayModal] = useState(false)
 	const borrowBalances = useBorrowBalances(vaultName)
 
 	const { data: maxMintable } = useQuery(
@@ -81,10 +83,10 @@ export const MintCard = ({
 
 	return (
 		<>
-			<Typography variant='xl' className='p-4 text-left font-bakbak'>
+			<Typography variant='xl' className='p-2 text-left font-bakbak'>
 				Borrow
 			</Typography>
-			<Card className='glassmorphic-card p-6'>
+			<Card className='glassmorphic-card p-2'>
 				<Card.Body>
 					<div className='flex w-full gap-2'>
 						<div className='flex items-center gap-3 w-full py-2'>
@@ -125,8 +127,8 @@ export const MintCard = ({
 										(val && parseUnits(val, synth.underlyingDecimals).gt(max())) ||
 										// FIXME: temporarily limit minting/borrowing to 5k baoUSD & 3 baoETH.
 										(val &&
-											borrowed.lt(parseUnits(vaultName === 'baoUSD' ? '5000' : '3')) &&
-											parseUnits(val, synth.underlyingDecimals).lt(parseUnits(vaultName === 'baoUSD' ? '5000' : '3')))
+											borrowed.lt(parseUnits(vaultName === 'baoUSD' ? '5000' : '2')) &&
+											parseUnits(val, synth.underlyingDecimals).lt(parseUnits(vaultName === 'baoUSD' ? '5000' : '2')))
 									}
 									className={!isDesktop ? '!h-10 !px-2 !text-sm' : ''}
 								>
@@ -139,6 +141,12 @@ export const MintCard = ({
 									show={showMintModal}
 									onHide={hide}
 								/>
+							</div>
+							<div className='m-auto mr-2'>
+								<Button onClick={() => setShowRepayModal(true)} className={!isDesktop ? '!h-10 !px-2 !text-sm' : ''}>
+									Repay
+								</Button>
+								<RepayModal asset={synth} vaultName={vaultName} show={showRepayModal} onHide={() => setShowRepayModal(false)} />
 							</div>
 						</div>
 					</div>
@@ -175,6 +183,23 @@ export const MintCard = ({
 											</Typography>
 											<Image
 												className='z-10 ml-1 inline-block select-none'
+												src={synth && `/images/tokens/${synth.underlyingSymbol}.png`}
+												alt={synth && synth.underlyingSymbol}
+												width={16}
+												height={16}
+											/>
+										</>
+									),
+								},
+								{
+									label: 'Borrowed',
+									value: (
+										<>
+											<Typography className='m-auto inline-block align-middle font-bakbak text-baoRed'>
+												{borrowed ? getDisplayBalance(borrowed) : 0}
+											</Typography>
+											<Image
+												className='z-10 m-auto ml-1 inline-block select-none align-middle'
 												src={synth && `/images/tokens/${synth.underlyingSymbol}.png`}
 												alt={synth && synth.underlyingSymbol}
 												width={16}
