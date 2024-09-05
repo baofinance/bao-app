@@ -1,86 +1,22 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { ActiveSupportedVault } from '@/bao/lib/types'
-import Button from '@/components/Button'
-import Input from '@/components/Input'
-import { PendingTransaction } from '@/components/Loader/Loader'
+import { Asset } from '@/bao/lib/types'
 import Modal from '@/components/Modal'
 import Typography from '@/components/Typography'
-import useTransactionHandler from '@/hooks/base/useTransactionHandler'
-import { useAccountLiquidity } from '@/hooks/vaults/useAccountLiquidity'
-import { useSupplyBalances } from '@/hooks/vaults/useBalances'
-import { useExchangeRates } from '@/hooks/vaults/useExchangeRates'
-import { decimate, exponentiate, getDisplayBalance, sqrt } from '@/utils/numberFormat'
-import { faExternalLink } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { BigNumber } from 'ethers'
-import { formatUnits, parseUnits } from 'ethers/lib/utils'
 import Image from 'next/future/image'
-import React, { useCallback, useMemo, useState } from 'react'
-import MarketButton from '../MarketButton'
+import React, { useCallback } from 'react'
 
 export type WithdrawModalProps = {
-	asset: ActiveSupportedVault
+	asset: Asset
 	show: boolean
 	onHide: () => void
-	vaultName: string
+	marketName: string
 }
 
-const WithdrawModal = ({ asset, show, onHide, vaultName }: WithdrawModalProps) => {
-	const [val, setVal] = useState<string>('')
-	const supplyBalances = useSupplyBalances(vaultName)
-	const accountLiquidity = useAccountLiquidity(vaultName)
-	const { exchangeRates } = useExchangeRates(vaultName)
-	const { pendingTx, txHash, handleTx } = useTransactionHandler()
-	const { vaultContract } = asset
-
+const WithdrawModal = ({ asset, show, onHide, marketName }: WithdrawModalProps) => {
 	const operation = 'Withdraw'
-
-	const supply = useMemo(
-		() =>
-			supplyBalances &&
-			supplyBalances.find(balance => balance.address.toLowerCase() === asset.vaultAddress.toLowerCase()) &&
-			exchangeRates &&
-			exchangeRates[asset.vaultAddress]
-				? decimate(
-						supplyBalances
-							.find(balance => balance.address.toLowerCase() === asset.vaultAddress.toLowerCase())
-							.balance.mul(exchangeRates[asset.vaultAddress]),
-					)
-				: BigNumber.from(0),
-		[supplyBalances, exchangeRates, asset.vaultAddress],
-	)
-
-	let _imfFactor = asset.imfFactor
-	if (accountLiquidity) {
-		const _sqrt = sqrt(supply)
-		const num = exponentiate(parseUnits('1.1'))
-		const denom = decimate(asset.imfFactor.mul(_sqrt).add(parseUnits('1')))
-		_imfFactor = num.div(denom)
-	}
-
-	let withdrawable = BigNumber.from(0)
-	if (_imfFactor.gt(asset.collateralFactor) && asset.price.gt(0)) {
-		if (asset.collateralFactor.mul(asset.price).gt(0)) {
-			withdrawable = accountLiquidity && exponentiate(accountLiquidity.usdBorrowable).div(decimate(asset.collateralFactor.mul(asset.price)))
-		} else {
-			withdrawable = accountLiquidity && exponentiate(accountLiquidity.usdBorrowable).div(decimate(_imfFactor).mul(asset.price))
-		}
-	}
-
-	const max = () => {
-		return !(accountLiquidity && accountLiquidity.usdBorrowable) || withdrawable.gt(supply) ? supply : withdrawable
-	}
-
-	const handleChange = useCallback(
-		(e: React.FormEvent<HTMLInputElement>) => {
-			if (e.currentTarget.value.length < 20) setVal(e.currentTarget.value)
-		},
-		[setVal],
-	)
 
 	const hideModal = useCallback(() => {
 		onHide()
-		setVal('')
 	}, [onHide])
 
 	return (
@@ -91,7 +27,7 @@ const WithdrawModal = ({ asset, show, onHide, vaultName }: WithdrawModalProps) =
 						<Typography variant='xl' className='mr-1 inline-block'>
 							Withdraw
 						</Typography>
-						<Image src={`/images/tokens/${asset.icon}`} width={32} height={32} alt={asset.underlyingSymbol} />
+						<Image src={asset.icon} width={32} height={32} alt={asset.name} />
 					</div>
 				</Modal.Header>
 				<>
@@ -102,41 +38,15 @@ const WithdrawModal = ({ asset, show, onHide, vaultName }: WithdrawModalProps) =
 									<Typography variant='sm' className='font-bakbak text-baoRed'>
 										Withdrawable:
 									</Typography>
-									<Typography variant='sm' className='font-bakbak'>{`${getDisplayBalance(max(), asset.underlyingDecimals)} ${
-										asset.underlyingSymbol
-									}`}</Typography>
+									<Typography variant='sm' className='font-bakbak'>
+										<Image src={asset.icon} width={32} height={32} alt={asset.name} className='inline p-1' />
+										{asset.name}
+									</Typography>
 								</div>
 							</div>
-							<Input
-								value={val}
-								onChange={handleChange}
-								onSelectMax={() => setVal(formatUnits(max(), asset.underlyingDecimals))}
-								label={
-									<div className='flex flex-row items-center pl-2 pr-4'>
-										<div className='flex w-6 justify-center'>
-											<Image
-												src={`/images/tokens/${asset.icon}`}
-												width={32}
-												height={32}
-												alt={asset.symbol}
-												className='block h-6 w-6 align-middle'
-											/>
-										</div>
-									</div>
-								}
-							/>
 						</div>
 					</Modal.Body>
-					<Modal.Actions>
-						<MarketButton
-							operation={operation}
-							asset={asset}
-							val={val ? parseUnits(val, asset.underlyingDecimals) : BigNumber.from(0)}
-							isDisabled={!val}
-							onHide={onHide}
-							vaultName={vaultName}
-						/>
-					</Modal.Actions>
+					<Modal.Actions></Modal.Actions>
 				</>
 			</Modal>
 		</>

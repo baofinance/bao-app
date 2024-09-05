@@ -18,7 +18,7 @@ export const SuppliedCard = ({ marketName, onUpdate }: { marketName: string; onU
 
 	useEffect(() => {
 		if (suppliedBalances) {
-			let suppliedAddresses = suppliedBalances.filter(balance => balance.balance.gt(BigNumber.from(0))).map(balance => balance.address)
+			const suppliedAddresses = suppliedBalances.filter(balance => balance.balance.gt(BigNumber.from(0))).map(balance => balance.address)
 			setSupplied(assets.filter(asset => asset.supply === true && suppliedAddresses.includes(asset.underlyingAddress[chainId])))
 		}
 	}, [suppliedBalances])

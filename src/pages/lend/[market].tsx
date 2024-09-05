@@ -7,13 +7,12 @@ import Image from 'next/future/image'
 import Link from 'next/link'
 import React, { useCallback, useState } from 'react'
 import Config from '@/bao/lib/config'
-import SuppliedCard from '@/pages/lend/components/SuppliedCard'
-import BorrowedCard from '@/pages/lend/components/BorrowedCard'
 import AssetsCard from '@/pages/lend/components/AssetsCard'
 import { useAccountBalances } from '@/hooks/lend/useAccountBalances'
+import DebtCard from '@/pages/lend/components/DebtCard'
 
 export async function getStaticPaths() {
-	let paths: { params: { market: string } }[] = []
+	const paths: { params: { market: string } }[] = []
 	Object.keys(Config.lendMarkets).map(marketName => paths.push({ params: { market: marketName } }))
 
 	return {
@@ -83,16 +82,53 @@ const Market: NextPage<{
 										</Typography>
 									</span>
 								</div>
+
+								<div className='h-10 w-[2px] ml-5 bg-baoWhite bg-opacity-40 my-auto' />
+
+								<div className='mx-auto my-0 flex w-full items-center justify-between place-content-between'>
+									<div className='flex gap-5 flex-wrap w-full justify-between place-content-between'>
+										<div className='col-span-1 break-words text-left'>
+											<Typography variant='sm' className='font-bakbak text-baoRed'>
+												Oracle Price
+											</Typography>
+											<Typography variant='h3' className='inline-block font-bakbak text-left leading-5'>
+												$123.00 {/*getDisplayBalance(synth.price)*/}
+											</Typography>
+										</div>
+										<div className='col-span-1 break-words'>
+											<Typography variant='sm' className='font-bakbak text-baoRed text-left'>
+												Total Collateral
+											</Typography>
+											<Typography variant='h3' className='inline-block font-bakbak leading-5'>
+												$1000.00 {/*getDisplayBalance(decimate(totalCollateral), synth.underlyingDecimals)*/}
+											</Typography>
+										</div>
+										<div className='col-span-1 break-words text-left'>
+											<Typography variant='sm' className='font-bakbak text-baoRed text-left'>
+												Utilization
+											</Typography>
+											<Typography variant='h3' className='inline-block font-bakbak leading-5'>
+												{/*getDisplayBalance(totalDebt.div(decimate(totalCollateral)).mul(100))*/} 12.3%
+											</Typography>
+										</div>
+										<div className='col-span-1 break-words text-left'>
+											<Typography variant='sm' className='font-bakbak text-baoRed text-left'>
+												Borrow Rate
+											</Typography>
+											<Typography variant='h3' className='inline-block font-bakbak leading-5'>
+												{/*getDisplayBalance(synth.borrowApy, 18, 2)*/}50%
+											</Typography>
+											<Typography className='ml-1 inline-block font-bakbak leading-5 text-baoWhite'>vAPY</Typography>
+										</div>
+									</div>
+								</div>
 							</div>
 						</div>
-						<div className='mt-6 grid gap-6 lg:grid-cols-2 lg:gap-16'>
-							<div className='lg:col-span-1'>
-								<SuppliedCard marketName={marketName} onUpdate={handleSupplyVal} />
-							</div>
-							<div className='col-span-1'>
-								<BorrowedCard marketName={marketName} onUpdate={handleBorrowVal} />
-							</div>
+
+						<div style={{ marginTop: '8px', marginBottom: '16px' }}>
+							<DebtCard marketName={marketName} depositVal={'0'} mintVal={'0'} />
 						</div>
+
 						<div className='mt-6 grid gap-6 lg:grid-cols-1 lg:gap-16'>
 							<div className='lg:col-span-1'>
 								<AssetsCard accountBalances={accountBalances} marketName={marketName} />

@@ -1,19 +1,9 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { ActiveSupportedVault, Asset } from '@/bao/lib/types'
-import Badge from '@/components/Badge'
-import Button from '@/components/Button'
-import { PendingTransaction } from '@/components/Loader/Loader'
+import { Asset } from '@/bao/lib/types'
 import Modal from '@/components/Modal'
 import Typography from '@/components/Typography'
-import useTransactionHandler from '@/hooks/base/useTransactionHandler'
-import { decimate, getDisplayBalance } from '@/utils/numberFormat'
-import { faExternalLink } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { BigNumber } from 'ethers'
-import { parseUnits } from 'ethers/lib/utils'
 import Image from 'next/future/image'
 import { useCallback } from 'react'
-import MarketButton from '../MarketButton'
 
 export type BorrowModalProps = {
 	asset: Asset

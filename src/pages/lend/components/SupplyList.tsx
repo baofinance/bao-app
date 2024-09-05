@@ -9,6 +9,9 @@ import { useWeb3React } from '@web3-react/core'
 import Button from '@/components/Button'
 import SupplyModal from '@/pages/lend/components/Modals/SupplyModal'
 import BorrowModal from '@/pages/lend/components/Modals/BorrowModal'
+import WithdrawModal from '@/pages/lend/components/Modals/WithdrawModal'
+import RepayModal from '@/pages/lend/components/Modals/RepayModal'
+import { BigNumber } from 'ethers'
 
 export const SupplyList: React.FC<SupplyListProps> = ({ accountBalances, marketName }) => {
 	const assets = Config.lendMarkets[marketName].assets
@@ -27,11 +30,15 @@ export const SupplyList: React.FC<SupplyListProps> = ({ accountBalances, marketN
 
 const SupplyListItem: React.FC<SupplyListItemProps> = ({ asset, accountBalances, marketName }) => {
 	const { chainId } = useWeb3React()
-	const [formattedBalance, setFormattedBalance] = useState(null)
+	const [totalMarketSupply, setTotalMarketSupply] = useState(getDisplayBalance(BigNumber.from(0), 18))
+	const [yourPosition, setYourPosition] = useState(getDisplayBalance(BigNumber.from(0), 18))
 	const [balance, setBalance] = useState(null)
 	const [showSupplyModal, setShowSupplyModal] = useState(false)
+	const [showWithdrawModal, setShowWithdrawModal] = useState(false)
 	const [showBorrowModal, setShowBorrowModal] = useState(false)
+	const [showRepayModal, setShowRepayModal] = useState(false)
 
+	/*
 	function fetchBalance(asset: Asset) {
 		if (accountBalances !== null && accountBalances !== undefined)
 			return accountBalances.find(({ address }) => address === asset.underlyingAddress[chainId])
@@ -44,7 +51,7 @@ const SupplyListItem: React.FC<SupplyListItemProps> = ({ asset, accountBalances,
 			setFormattedBalance(getDisplayBalance(balance.balance, balance.decimals))
 		}
 	}, [accountBalances])
-
+	*/
 	return (
 		<>
 			<div className='flex w-full justify-between place-items-center gap-5 glassmorphic-card p-2'>
@@ -66,20 +73,31 @@ const SupplyListItem: React.FC<SupplyListItemProps> = ({ asset, accountBalances,
 				<table className='table-fixed justify-between w-2/3 text-left md:table hidden'>
 					<thead>
 						<tr className=''>
-							<th>Account balance</th>
+							<th className='w-[250px]'>Total market supply</th>
+							<th>Your position</th>
 						</tr>
 					</thead>
 					<div className='h-1 w-[200px] bg-red-400' />
 					<tbody>
 						<tr>
-							<td>{formattedBalance ? formattedBalance : <Loader />}</td>
+							<td>{totalMarketSupply ? totalMarketSupply : <Loader />}</td>
+							<td>{yourPosition ? yourPosition : <Loader />}</td>
 						</tr>
 					</tbody>
 				</table>
 				<div className='m-auto mr-2 flex space-x-2'>
-					{asset.supply === true && <Button onClick={() => setShowSupplyModal(true)}>Supply</Button>}
-
-					{asset.borrow === true && <Button onClick={() => setShowBorrowModal(true)}>Borrow</Button>}
+					{asset.supply === true && (
+						<>
+							<Button onClick={() => setShowSupplyModal(true)}>Supply</Button>
+							<Button onClick={() => setShowWithdrawModal(true)}>Withdraw</Button>
+						</>
+					)}
+					{asset.borrow === true && (
+						<>
+							<Button onClick={() => setShowBorrowModal(true)}>Borrow</Button>
+							<Button onClick={() => setShowRepayModal(true)}>Repay</Button>
+						</>
+					)}
 				</div>
 
 				<SupplyModal
@@ -89,7 +107,14 @@ const SupplyListItem: React.FC<SupplyListItemProps> = ({ asset, accountBalances,
 					marketName={marketName}
 					fullBalance={balance}
 				/>
+				<WithdrawModal
+					asset={asset}
+					show={showWithdrawModal}
+					onHide={() => setShowWithdrawModal(!showWithdrawModal)}
+					marketName={marketName}
+				/>
 				<BorrowModal asset={asset} show={showBorrowModal} onHide={() => setShowBorrowModal(!showBorrowModal)} />
+				<RepayModal asset={asset} show={showRepayModal} onHide={() => setShowRepayModal(!showRepayModal)} marketName={marketName} />
 			</div>
 		</>
 	)
