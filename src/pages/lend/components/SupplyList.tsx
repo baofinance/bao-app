@@ -57,7 +57,7 @@ const SupplyListItem: React.FC<SupplyListItemProps> = ({ asset, accountBalances,
 			<div className='flex w-full justify-between place-items-center gap-5 glassmorphic-card p-2'>
 				<div
 					key={asset.name}
-					className='text-baoWhite flex overflow-hidden rounded-2xl bg-baoBlack shadow-lg shadow-baoBlack ring-1 ring-black ring-opacity-5 focus:outline-none select-none border-baoBlack px-2 py-3 text-sm'
+					className='w-[200px] text-baoWhite flex overflow-hidden rounded-2xl bg-baoBlack shadow-lg shadow-baoBlack ring-1 ring-black ring-opacity-5 focus:outline-none select-none border-baoBlack px-2 py-3 text-sm'
 				>
 					<div className='mx-0 my-auto flex h-full justify-center items-center gap-4 w-[180px]'>
 						<div className='col-span-3'>
@@ -70,7 +70,7 @@ const SupplyListItem: React.FC<SupplyListItemProps> = ({ asset, accountBalances,
 						</div>
 					</div>
 				</div>
-				<table className='table-fixed justify-between w-2/3 text-left md:table hidden'>
+				<table className='table-fixed justify-between w-[500px] text-left md:table hidden'>
 					<thead>
 						<tr className=''>
 							<th className='w-[250px]'>Total market supply</th>
@@ -88,14 +88,22 @@ const SupplyListItem: React.FC<SupplyListItemProps> = ({ asset, accountBalances,
 				<div className='m-auto mr-2 flex space-x-2'>
 					{asset.supply === true && (
 						<>
-							<Button onClick={() => setShowSupplyModal(true)}>Supply</Button>
-							<Button onClick={() => setShowWithdrawModal(true)}>Withdraw</Button>
+							<Button className='w-[135px]' onClick={() => setShowSupplyModal(true)}>
+								Supply
+							</Button>
+							<Button className='w-[135px]' onClick={() => setShowWithdrawModal(true)}>
+								Withdraw
+							</Button>
 						</>
 					)}
 					{asset.borrow === true && (
 						<>
-							<Button onClick={() => setShowBorrowModal(true)}>Borrow</Button>
-							<Button onClick={() => setShowRepayModal(true)}>Repay</Button>
+							<Button className='w-[135px]' onClick={() => setShowBorrowModal(true)}>
+								Borrow
+							</Button>
+							<Button className='w-[135px]' onClick={() => setShowRepayModal(true)}>
+								Repay
+							</Button>
 						</>
 					)}
 				</div>
