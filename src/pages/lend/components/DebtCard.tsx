@@ -2,7 +2,7 @@ import { ActiveLendMarket, ActiveSupportedVault } from '@/bao/lib/types'
 import Typography from '@/components/Typography'
 import useBao from '@/hooks/base/useBao'
 import { useAccountLiquidity } from '@/hooks/vaults/useAccountLiquidity'
-import { useBorrowBalances } from '@/hooks/vaults/useBalances'
+import { useBorrowBalances } from '@/hooks/lend/useBorrowBalances'
 import useHealthFactor from '@/hooks/vaults/useHealthFactor'
 import { decimate, exponentiate, getDisplayBalance } from '@/utils/numberFormat'
 import { useWeb3React } from '@web3-react/core'
@@ -22,12 +22,14 @@ type DashboardCardProps = {
 
 const DashboardCard: React.FC<DashboardCardProps> = ({ marketName, mintVal, depositVal }: DashboardCardProps) => {
 	const bao = useBao()
-	const { account } = useWeb3React()
+	const { account, chainId } = useWeb3React()
 	const borrowBalances = useBorrowBalances(marketName)
 	const asset = useActiveLendMarket(marketName)
 
 	const borrowed = useMemo(
-		() => asset && borrowBalances && borrowBalances.find(balance => balance.address === asset.marketAddress).balance,
+		() =>
+			//asset && borrowBalances && borrowBalances.find(balance => balance.address === asset.underlyingAddress[chainId]).balance,
+			BigNumber.from(0),
 		[borrowBalances, asset],
 	)
 

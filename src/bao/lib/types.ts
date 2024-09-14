@@ -254,6 +254,9 @@ export interface ActiveLendMarket {
 export interface Asset {
 	id: number
 	active: boolean
+	marketAddress: {
+		[network: number]: string
+	}
 	underlyingAddress: {
 		[network: number]: string
 	}
@@ -268,5 +271,12 @@ export type Balance = {
 	address: string
 	symbol: string
 	balance: BigNumber
+	decimals: number
+}
+
+export type TotalSupply = {
+	address: string
+	symbol: string
+	totalSupply: BigNumber
 	decimals: number
 }

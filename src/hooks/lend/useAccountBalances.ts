@@ -1,4 +1,3 @@
-import { BigNumber } from 'ethers'
 import useBao from '@/hooks/base/useBao'
 import { useWeb3React } from '@web3-react/core'
 import { useQuery } from '@tanstack/react-query'
@@ -6,16 +5,8 @@ import { providerKey } from '@/utils/index'
 import { Contract } from '@ethersproject/contracts'
 import { Erc20__factory } from '@/typechain/factories'
 import MultiCall from '@/utils/multicall'
-import { useBlockUpdater } from '@/hooks/base/useBlock'
-import { useTxReceiptUpdater } from '@/hooks/base/useTransactionProvider'
 import Config from '@/bao/lib/config'
-
-export type Balance = {
-	address: string
-	symbol: string
-	balance: BigNumber
-	decimals: number
-}
+import { Balance } from '@/bao/lib/types'
 
 export const useAccountBalances = (marketName: string): Balance[] => {
 	const bao = useBao()

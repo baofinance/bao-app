@@ -822,6 +822,9 @@ export default {
 				{
 					id: 1,
 					active: true,
+					marketAddress: {
+						1: '0x353A07b25c84a522356aF2D9a7c0d7FF481733e9',
+					},
 					underlyingAddress: {
 						1: '0xCd5fE23C85820F7B72D0926FC9b05b43E359b7ee',
 					},
@@ -834,8 +837,11 @@ export default {
 				{
 					id: 2,
 					active: true,
-					underlyingAddress: {
+					marketAddress: {
 						1: '0x085c35278fDC840b9Ca74AAB226bA8E2f95C446F',
+					},
+					underlyingAddress: {
+						1: '0x7945b0A6674b175695e5d1D08aE1e6F13744Abb0',
 					},
 					underlyingDecimals: 18,
 					name: 'BaoUSD',
@@ -846,8 +852,11 @@ export default {
 				{
 					id: 3,
 					active: true,
-					underlyingAddress: {
+					marketAddress: {
 						1: '0xdC39e6365AA75D762729513004c956D1475bED20',
+					},
+					underlyingAddress: {
+						1: '0xf4edfad26EE0D23B69CA93112eccE52704E0006f',
 					},
 					underlyingDecimals: 18,
 					name: 'BaoETH',

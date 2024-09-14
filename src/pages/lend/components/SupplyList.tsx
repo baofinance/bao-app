@@ -1,10 +1,10 @@
 import Loader from '@/components/Loader'
 import Typography from '@/components/Typography'
 import Image from 'next/future/image'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import Config from '@/bao/lib/config'
 import { getDisplayBalance } from '@/utils/numberFormat'
-import { Asset, Balance } from '@/bao/lib/types'
+import { Asset, Balance, TotalSupply } from '@/bao/lib/types'
 import { useWeb3React } from '@web3-react/core'
 import Button from '@/components/Button'
 import SupplyModal from '@/pages/lend/components/Modals/SupplyModal'
@@ -13,7 +13,7 @@ import WithdrawModal from '@/pages/lend/components/Modals/WithdrawModal'
 import RepayModal from '@/pages/lend/components/Modals/RepayModal'
 import { BigNumber } from 'ethers'
 
-export const SupplyList: React.FC<SupplyListProps> = ({ accountBalances, marketName }) => {
+export const SupplyList: React.FC<SupplyListProps> = ({ accountBalances, marketName, borrowBalances, totalSupplies }) => {
 	const assets = Config.lendMarkets[marketName].assets
 
 	return (
@@ -21,22 +21,49 @@ export const SupplyList: React.FC<SupplyListProps> = ({ accountBalances, marketN
 			<div className='flex flex-col gap-1'>
 				<div className='flex flex-col gap-4'>
 					{assets &&
-						assets.map(asset => <SupplyListItem asset={asset} key={asset.id} accountBalances={accountBalances} marketName={marketName} />)}
+						assets.map(asset => (
+							<SupplyListItem
+								asset={asset}
+								key={asset.id}
+								accountBalances={accountBalances}
+								borrowBalances={borrowBalances}
+								totalSupplies={totalSupplies}
+								marketName={marketName}
+							/>
+						))}
 				</div>
 			</div>
 		</>
 	)
 }
 
-const SupplyListItem: React.FC<SupplyListItemProps> = ({ asset, accountBalances, marketName }) => {
+const SupplyListItem: React.FC<SupplyListItemProps> = ({ asset, accountBalances, marketName, borrowBalances, totalSupplies }) => {
 	const { chainId } = useWeb3React()
-	const [totalMarketSupply, setTotalMarketSupply] = useState(getDisplayBalance(BigNumber.from(0), 18))
-	const [yourPosition, setYourPosition] = useState(getDisplayBalance(BigNumber.from(0), 18))
 	const [balance, setBalance] = useState(null)
 	const [showSupplyModal, setShowSupplyModal] = useState(false)
 	const [showWithdrawModal, setShowWithdrawModal] = useState(false)
 	const [showBorrowModal, setShowBorrowModal] = useState(false)
 	const [showRepayModal, setShowRepayModal] = useState(false)
+
+	const yourPosition = useMemo(
+		() =>
+			borrowBalances &&
+			getDisplayBalance(
+				borrowBalances.find(balance => balance.address === asset.underlyingAddress[chainId]).balance,
+				asset.underlyingDecimals,
+			),
+		[borrowBalances, asset],
+	)
+
+	const totalMarketSupply = useMemo(
+		() =>
+			totalSupplies &&
+			getDisplayBalance(
+				totalSupplies.find(totalSupply => totalSupply.address === asset.underlyingAddress[chainId]).totalSupply,
+				asset.underlyingDecimals,
+			),
+		[totalSupplies, asset],
+	)
 
 	/*
 	function fetchBalance(asset: Asset) {
@@ -134,9 +161,13 @@ type SupplyListItemProps = {
 	asset: Asset
 	accountBalances: Balance[]
 	marketName: string
+	borrowBalances: Balance[]
+	totalSupplies: TotalSupply[]
 }
 
 type SupplyListProps = {
 	accountBalances: Balance[]
 	marketName: string
+	borrowBalances: Balance[]
+	totalSupplies: TotalSupply[]
 }

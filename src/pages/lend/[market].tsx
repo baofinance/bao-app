@@ -10,6 +10,8 @@ import Config from '@/bao/lib/config'
 import AssetsCard from '@/pages/lend/components/AssetsCard'
 import { useAccountBalances } from '@/hooks/lend/useAccountBalances'
 import DebtCard from '@/pages/lend/components/DebtCard'
+import { useBorrowBalances } from '@/hooks/lend/useBorrowBalances'
+import { useTotalSupplies } from '@/hooks/lend/useTotalSupplies'
 
 export async function getStaticPaths() {
 	const paths: { params: { market: string } }[] = []
@@ -35,6 +37,8 @@ const Market: NextPage<{
 	marketName: string
 }> = ({ marketName }) => {
 	const accountBalances = useAccountBalances(marketName)
+	const borrowBalances = useBorrowBalances(marketName)
+	const totalSupplies = useTotalSupplies(marketName)
 	const [supplyVal, setSupplyVal] = useState('0')
 	const [borrowVal, setBorrowVal] = useState('0')
 
@@ -131,7 +135,12 @@ const Market: NextPage<{
 
 						<div className='mt-6 grid gap-6 lg:grid-cols-1 lg:gap-16'>
 							<div className='lg:col-span-1'>
-								<AssetsCard accountBalances={accountBalances} marketName={marketName} />
+								<AssetsCard
+									accountBalances={accountBalances}
+									borrowBalances={borrowBalances}
+									totalSupplies={totalSupplies}
+									marketName={marketName}
+								/>
 							</div>
 						</div>
 					</>
