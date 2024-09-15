@@ -156,9 +156,14 @@ export const MintCard = ({
 								</Button>
 							</div>
 							<div className='m-auto mr-2'>
-								<Button onClick={() => setShowRepayModal(true)} className={!isDesktop ? '!h-10 !px-2 !text-sm' : ''}>
+								<Button
+									onClick={() => setShowRepayModal(true)}
+									disabled={!borrowed || borrowed.eq(0)} // Disable if borrowed is 0 or undefined
+									className={!isDesktop ? '!h-10 !px-2 !text-sm' : ''}
+								>
 									Repay
 								</Button>
+
 								<RepayModal asset={synth} vaultName={vaultName} show={showRepayModal} onHide={() => setShowRepayModal(false)} />
 							</div>
 						</div>
