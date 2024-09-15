@@ -52,7 +52,7 @@ const DashboardCard: React.FC<DashboardCardProps> = ({ asset, vaultName, mintVal
 	}
 
 	return decimate(accountLiquidity.usdBorrow) ? (
-		decimate(accountLiquidity.usdBorrow) <= BigNumber.from(0) ? (
+		decimate(accountLiquidity.usdBorrow) > BigNumber.from(0) ? (
 			<>
 				<div className='col-span-4 order-first lg:order-3 lg:w-full lg:mr-0'>
 					<div className='relative w-full h-6 bg-baoWhite/30 rounded-full border border-1 border-baoBlack/50 shadow-xl'>
