@@ -39,7 +39,7 @@ const MintModal = ({ asset, show, onHide, vaultName, val }: MintModalProps) => {
 			<Modal.Header onClose={hideModal}>
 				<div className='mx-0 my-auto flex h-full items-center text-baoWhite'>
 					<Typography variant='xl' className='mr-1 inline-block'>
-						Confirm Deposit
+						Confirm Borrow Amount
 					</Typography>
 				</div>
 			</Modal.Header>

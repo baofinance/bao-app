@@ -15,8 +15,8 @@ import { formatUnits, parseUnits } from 'ethers/lib/utils'
 import Image from 'next/future/image'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { isDesktop } from 'react-device-detect'
-import MintModal from './Modals/MintModal'
 import RepayModal from './Modals/RepayModal'
+import useTransactionHandler from '@/hooks/base/useTransactionHandler'
 
 export const MintCard = ({
 	vaultName,
@@ -33,9 +33,9 @@ export const MintCard = ({
 }) => {
 	const { account, library, chainId } = useWeb3React()
 	const [val, setVal] = useState<string>('')
-	const [showMintModal, setShowMintModal] = useState(false)
 	const [showRepayModal, setShowRepayModal] = useState(false)
 	const borrowBalances = useBorrowBalances(vaultName)
+	const { pendingTx, txHash, handleTx } = useTransactionHandler()
 
 	const { data: maxMintable } = useQuery(
 		['@/hooks/base/useTokenBalance', providerKey(library, account, chainId)],
@@ -78,7 +78,6 @@ export const MintCard = ({
 
 	const hide = () => {
 		setVal('')
-		setShowMintModal(false)
 	}
 
 	return (
@@ -121,26 +120,40 @@ export const MintCard = ({
 							/>
 							<div className='m-auto mr-2'>
 								<Button
-									onClick={() => setShowMintModal(true)}
+									onClick={async () => {
+										try {
+											// Check if a value is entered and initiate the mint/borrow process
+											const vaultContract = synth.vaultContract
+											const borrowAmount = parseUnits(val, synth.underlyingDecimals)
+
+											// Call the borrow function from the contract, do NOT await it here
+											const txPromise = vaultContract.borrow(borrowAmount) // This returns a Promise<ContractTransaction>
+
+											// Pass the Promise (txPromise) to handleTx, not the resolved transaction
+											handleTx(
+												txPromise, // Pass the promise here
+												`${vaultName} Vault: Mint ${getDisplayBalance(val, synth.underlyingDecimals)} ${synth.underlyingSymbol}`,
+												() => {
+													// Callback after the transaction completes, if necessary
+													hide() // Reset or clear form values after successful transaction
+												},
+											)
+										} catch (err) {
+											console.error('Mint/Borrow transaction failed', err)
+										}
+									}}
 									disabled={
-										!val ||
-										(val && parseUnits(val, synth.underlyingDecimals).gt(max())) ||
-										// FIXME: temporarily limit minting/borrowing to 5k baoUSD & 3 baoETH.
-										(val &&
-											borrowed.lt(parseUnits(vaultName === 'baoUSD' ? '5000' : '2')) &&
-											parseUnits(val, synth.underlyingDecimals).lt(parseUnits(vaultName === 'baoUSD' ? '5000' : '2')))
+										!val || // Disable if no value is entered
+										parseFloat(val) <= 0 || // Disable if the entered value is <= 0
+										parseUnits(val, synth.underlyingDecimals).gt(max()) || // Disable if the entered value exceeds the max borrowable amount
+										// Temporary minting/borrowing limits
+										(borrowed.lt(parseUnits(vaultName === 'baoUSD' ? '100' : '2')) &&
+											parseUnits(val, synth.underlyingDecimals).lt(parseUnits(vaultName === 'baoUSD' ? '100' : '2')))
 									}
 									className={!isDesktop ? '!h-10 !px-2 !text-sm' : ''}
 								>
 									Borrow
 								</Button>
-								<MintModal
-									asset={synth}
-									vaultName={vaultName}
-									val={val ? parseUnits(val, synth.underlyingDecimals) : BigNumber.from(0)}
-									show={showMintModal}
-									onHide={hide}
-								/>
 							</div>
 							<div className='m-auto mr-2'>
 								<Button onClick={() => setShowRepayModal(true)} className={!isDesktop ? '!h-10 !px-2 !text-sm' : ''}>
