@@ -25,7 +25,16 @@ export const useTotalSupplies = (marketName: string): TotalSupply[] => {
 						contracts.map(contract => ({
 							ref: contract.address,
 							contract,
-							calls: [{ method: 'symbol' }, { method: 'totalSupply' }],
+							calls: [
+								{ method: 'symbol' },
+								{
+									method: 'balanceOf',
+									params: [
+										Config.lendMarkets[marketName].assets.find(asset => asset.underlyingAddress[chainId] === contract.address)
+											.marketAddress[chainId],
+									],
+								},
+							],
 						})),
 					),
 				),

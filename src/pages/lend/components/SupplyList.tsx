@@ -48,10 +48,7 @@ const SupplyListItem: React.FC<SupplyListItemProps> = ({ asset, accountBalances,
 	const yourPosition = useMemo(
 		() =>
 			borrowBalances &&
-			getDisplayBalance(
-				borrowBalances.find(balance => balance.address === asset.underlyingAddress[chainId]).balance,
-				asset.underlyingDecimals,
-			),
+			getDisplayBalance(borrowBalances.find(balance => balance.address === asset.marketAddress[chainId]).balance, asset.underlyingDecimals),
 		[borrowBalances, asset],
 	)
 
@@ -115,20 +112,20 @@ const SupplyListItem: React.FC<SupplyListItemProps> = ({ asset, accountBalances,
 				<div className='m-auto mr-2 flex space-x-2'>
 					{asset.supply === true && (
 						<>
-							<Button className='w-[135px]' onClick={() => setShowSupplyModal(true)}>
+							<Button width={135} onClick={() => setShowSupplyModal(true)}>
 								Supply
 							</Button>
-							<Button className='w-[135px]' onClick={() => setShowWithdrawModal(true)}>
+							<Button width={135} onClick={() => setShowWithdrawModal(true)}>
 								Withdraw
 							</Button>
 						</>
 					)}
 					{asset.borrow === true && (
 						<>
-							<Button className='w-[135px]' onClick={() => setShowBorrowModal(true)}>
+							<Button width={135} onClick={() => setShowBorrowModal(true)}>
 								Borrow
 							</Button>
-							<Button className='w-[135px]' onClick={() => setShowRepayModal(true)}>
+							<Button width={135} onClick={() => setShowRepayModal(true)}>
 								Repay
 							</Button>
 						</>
