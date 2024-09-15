@@ -23,8 +23,8 @@ export const StatBlock = ({ label, stats, className = '' }: StatBlockProps) => (
 			<div className='realtive flex min-h-fit min-w-fit flex-1 flex-col rounded-3xl'>
 				{stats.map(({ label, value }) => (
 					<div className='grid grid-cols-2 break-words rounded px-2 py-2 last:pb-1 lg:px-2 lg:py-1' key={label}>
-						<Typography className='my-auto align-middle font-bakbak text-sm text-baoWhite lg:text-base'>{label}</Typography>
-						<Typography className='my-auto text-end font-bakbak text-sm text-baoWhite lg:text-base'>{value}</Typography>
+						<Typography className='my-auto align-middle font-bakbak text-md text-baoWhite lg:text-lg'>{label}</Typography>
+						<Typography className='my-auto text-end font-bakbak text-md text-baoWhite lg:text-lg'>{value}</Typography>
 					</div>
 				))}
 			</div>

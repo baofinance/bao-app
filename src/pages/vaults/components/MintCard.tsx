@@ -85,12 +85,12 @@ export const MintCard = ({
 			<Typography variant='xl' className='p-2 text-left font-bakbak'>
 				Borrow
 			</Typography>
-			<Card className='glassmorphic-card p-2'>
+			<Card className='glassmorphic-card p-2 mt-2'>
 				<Card.Body>
 					<div className='flex w-full gap-2'>
 						<div className='flex items-center gap-3 w-full py-2'>
 							<div>
-								<div className='m-2 mr-0 flex w-10 rounded-full border-none duration-300 lg:!m-2 lg:w-32 lg:bg-baoWhite/5 lg:hover:bg-transparent-300'>
+								<div className='m-2 mr-0 flex w-10 rounded-full border border-baoWhite border-opacity-20 duration-300 lg:!m-2 lg:w-32'>
 									<div className='m-auto text-baoWhite lg:py-3'>
 										<div className='items-start'>
 											<div className='inline-block lg:mr-2'>
@@ -179,7 +179,7 @@ export const MintCard = ({
 									label: 'Minimum Mint',
 									value: (
 										<>
-											<Typography className='inline-block align-middle text-sm lg:text-base'>
+											<Typography variant='lg' className='inline-block align-middle'>
 												{synth.minimumBorrow ? synth.minimumBorrow.toLocaleString() : '-'}{' '}
 											</Typography>
 											<Image
@@ -196,7 +196,7 @@ export const MintCard = ({
 									label: 'Max Mintable',
 									value: (
 										<>
-											<Typography className='inline-block align-middle text-sm lg:text-base'>
+											<Typography variant='lg' className='inline-block align-middle'>
 												{getDisplayBalance(maxMintable ? maxMintable : 0)}
 											</Typography>
 											<Image
@@ -213,7 +213,7 @@ export const MintCard = ({
 									label: 'Borrowed',
 									value: (
 										<>
-											<Typography className='m-auto inline-block align-middle font-bakbak text-baoRed'>
+											<Typography variant='lg' className='m-auto inline-block align-middle font-bakbak text-baoRed'>
 												{borrowed ? getDisplayBalance(borrowed) : 0}
 											</Typography>
 											<Image

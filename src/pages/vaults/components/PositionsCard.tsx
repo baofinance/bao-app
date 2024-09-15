@@ -46,7 +46,7 @@ export const PositionList = ({
 			<Typography variant='xl' className='p-2 text-left font-bakbak'>
 				Supply
 			</Typography>
-			<Card className='glassmorphic-card p-2'>
+			<Card className='!p-0 border-none shadow-none mt-2'>
 				<Card.Body>
 					<div className='flex flex-col gap-2'>
 						{filteredCollateral
@@ -147,21 +147,21 @@ const PositionListItem: React.FC<PositionListItemProps> = ({
 						</div>
 						<table className='table-fixed justify-between w-2/3 text-left md:table hidden'>
 							<thead>
-								<tr className='align-middle'>
+								<tr className='align-middle text-baoWhite/80'>
 									<th>Total market supply</th>
 									<th>Your Position</th>
 								</tr>
 							</thead>
-							<div className='h-1 w-[200px] bg-red-400' />
+							<div className='h-0 w-[200px] bg-red-400' />
 							<tbody>
 								<tr>
 									<td>
-										<Typography variant='lg' className='text-left leading-5'>
+										<Typography variant='xl' className='text-left font-bakbak leading-5'>
 											<span className='align-middle'>{(Number(vault.supplied) / 1000000000000000000).toFixed(2)}</span>
 										</Typography>
 									</td>
 									<td>
-										<Typography variant='lg' className='text-left leading-5'>
+										<Typography variant='xl' className='text-left font-bakbak leading-5'>
 											<span className='align-middle'>{`${getDisplayBalance(
 												!vault.isSynth ? suppliedUnderlying : borrowed,
 												vault.underlyingDecimals,
@@ -197,14 +197,31 @@ const PositionListItem: React.FC<PositionListItemProps> = ({
 			</div>
 			<WithdrawModal asset={vault} vaultName={vaultName} show={showWithdrawModal} onHide={() => setShowWithdrawModal(false)} />
 			<SupplyModal asset={vault} vaultName={vaultName} show={showSupplyModal} onHide={() => setShowSupplyModal(false)} />
-			<Transition show={showInfo} leave='transition ease-in duration-100' leaveFrom='opacity-100' leaveTo='opacity-0'>
-				<div className='flex p-2 mt-5 space-x-3'>
-					<Typography variant='xl' className=' text-left font-bakbak text-baoWhite/60'>
+			<Transition show={showInfo} leave='transition ease-in ease-out duration-300' leaveFrom='opacity-100' leaveTo='opacity-0'>
+				<div className='flex p-2 space-x-1 items-center'>
+					<div>
+						<div className='col-span-3'>
+							<Image
+								src={`/images/tokens/${vault.icon}`}
+								alt={`${vault.underlyingSymbol}`}
+								width={isDesktop ? 24 : 32}
+								height={isDesktop ? 24 : 32}
+								className='inline-block select-none'
+							/>
+							<span className='hidden text-left align-middle lg:inline-block'>
+								<Typography variant='xl' className='ml-2 text-left font-bakbak text-baoWhite/60'>
+									{vault.underlyingSymbol}
+								</Typography>
+							</span>
+						</div>
+					</div>
+					<Typography variant='xl' className='text-left font-bakbak text-baoWhite/60'>
 						Collateral Info
 					</Typography>
 				</div>
 
 				<StatBlock
+					className='mb-3'
 					label=''
 					stats={[
 						{
