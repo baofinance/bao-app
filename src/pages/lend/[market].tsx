@@ -5,13 +5,20 @@ import { NextPage } from 'next'
 import { NextSeo } from 'next-seo'
 import Image from 'next/future/image'
 import Link from 'next/link'
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import Config from '@/bao/lib/config'
 import AssetsCard from '@/pages/lend/components/AssetsCard'
 import { useAccountBalances } from '@/hooks/lend/useAccountBalances'
 import DebtCard from '@/pages/lend/components/DebtCard'
 import { useBorrowBalances } from '@/hooks/lend/useBorrowBalances'
 import { useTotalSupplies } from '@/hooks/lend/useTotalSupplies'
+import { useOraclePrice } from '@/hooks/lend/useOraclePrice'
+import { decimate, getDisplayBalance } from '@/utils/numberFormat'
+import Loader from '@/components/Loader'
+import { useTotalCollateral } from '@/hooks/lend/useTotalCollateral'
+import { BigNumber } from 'ethers'
+import { useTotalDebt } from '@/hooks/lend/useTotalDebt'
+import { useBorrowApy } from '@/hooks/lend/useBorrowApy'
 
 export async function getStaticPaths() {
 	const paths: { params: { market: string } }[] = []
@@ -39,8 +46,29 @@ const Market: NextPage<{
 	const accountBalances = useAccountBalances(marketName)
 	const borrowBalances = useBorrowBalances(marketName)
 	const totalSupplies = useTotalSupplies(marketName)
+	const oraclePrice = useOraclePrice(marketName)
+	const totalCollateral = useTotalCollateral(marketName)
+	const borrowApy = useBorrowApy(marketName)
+	const totalDebt = useTotalDebt(marketName)
 	const [supplyVal, setSupplyVal] = useState('0')
 	const [borrowVal, setBorrowVal] = useState('0')
+
+	const formattedOraclePrice = useMemo(() => oraclePrice && '$' + getDisplayBalance(oraclePrice, 18), [oraclePrice])
+	const formattedTotalCollateral = useMemo(
+		() => totalCollateral && oraclePrice && '$' + getDisplayBalance(totalCollateral.mul(decimate(oraclePrice)), 18),
+		[totalCollateral, oraclePrice],
+	)
+	const utilization = useMemo(() => getDisplayBalance(getUtilization()) + '%', [totalDebt, totalCollateral])
+
+	function getUtilization() {
+		if (totalDebt && totalCollateral && decimate(totalCollateral) > BigNumber.from(0)) {
+			return totalDebt.div(decimate(totalCollateral)).mul(100)
+		}
+
+		return BigNumber.from(0)
+	}
+
+	const formattedBorrowApy = useMemo(() => borrowApy && getDisplayBalance(borrowApy, 18, 2) + '%', [borrowApy])
 
 	const handleSupplyVal = useCallback(
 		(updatedState: any) => {
@@ -96,7 +124,7 @@ const Market: NextPage<{
 												Oracle Price
 											</Typography>
 											<Typography variant='h3' className='inline-block font-bakbak text-left leading-5'>
-												$123.00 {/*getDisplayBalance(synth.price)*/}
+												{formattedOraclePrice ? formattedOraclePrice : <Loader />}
 											</Typography>
 										</div>
 										<div className='col-span-1 break-words'>
@@ -104,7 +132,7 @@ const Market: NextPage<{
 												Total Collateral
 											</Typography>
 											<Typography variant='h3' className='inline-block font-bakbak leading-5'>
-												$1000.00 {/*getDisplayBalance(decimate(totalCollateral), synth.underlyingDecimals)*/}
+												{formattedTotalCollateral ? formattedTotalCollateral : <Loader />}
 											</Typography>
 										</div>
 										<div className='col-span-1 break-words text-left'>
@@ -112,7 +140,7 @@ const Market: NextPage<{
 												Utilization
 											</Typography>
 											<Typography variant='h3' className='inline-block font-bakbak leading-5'>
-												{/*getDisplayBalance(totalDebt.div(decimate(totalCollateral)).mul(100))*/} 12.3%
+												{utilization ? utilization : <Loader />}
 											</Typography>
 										</div>
 										<div className='col-span-1 break-words text-left'>
@@ -120,7 +148,7 @@ const Market: NextPage<{
 												Borrow Rate
 											</Typography>
 											<Typography variant='h3' className='inline-block font-bakbak leading-5'>
-												{/*getDisplayBalance(synth.borrowApy, 18, 2)*/}50%
+												{formattedBorrowApy ? formattedBorrowApy : <Loader />}
 											</Typography>
 											<Typography className='ml-1 inline-block font-bakbak leading-5 text-baoWhite'>vAPY</Typography>
 										</div>
