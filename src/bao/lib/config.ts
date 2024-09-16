@@ -227,6 +227,7 @@ export default {
 					icon: 'bSTBL.png',
 					coingeckoId: 'dai',
 					underlyingDecimals: 18,
+					archived: true,
 				},
 				{
 					mid: 2,
@@ -322,6 +323,7 @@ export default {
 					coingeckoId: 'weth',
 					underlyingDecimals: 18,
 					isBasket: true,
+					archived: true,
 				},
 				{
 					mid: 3,

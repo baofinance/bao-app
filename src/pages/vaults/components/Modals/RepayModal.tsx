@@ -99,9 +99,8 @@ const RepayModal = ({ asset, show, onHide, vaultName }: RepayModalProps) => {
 				<Modal.Header onClose={hideModal}>
 					<div className='mx-0 my-auto flex h-full items-center text-baoWhite'>
 						<Typography variant='xl' className='mr-1 inline-block'>
-							Repay
+							Repay {asset.underlyingSymbol}
 						</Typography>
-						<Image src={`/images/tokens/${asset.icon}`} width={32} height={32} alt={asset.underlyingSymbol} />
 					</div>
 				</Modal.Header>
 				<>

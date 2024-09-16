@@ -15,7 +15,8 @@ import { formatUnits, parseUnits } from 'ethers/lib/utils'
 import Image from 'next/future/image'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { isDesktop } from 'react-device-detect'
-import MintModal from './Modals/MintModal'
+import RepayModal from './Modals/RepayModal'
+import useTransactionHandler from '@/hooks/base/useTransactionHandler'
 
 export const MintCard = ({
 	vaultName,
@@ -32,8 +33,9 @@ export const MintCard = ({
 }) => {
 	const { account, library, chainId } = useWeb3React()
 	const [val, setVal] = useState<string>('')
-	const [showMintModal, setShowMintModal] = useState(false)
+	const [showRepayModal, setShowRepayModal] = useState(false)
 	const borrowBalances = useBorrowBalances(vaultName)
+	const { pendingTx, txHash, handleTx } = useTransactionHandler()
 
 	const { data: maxMintable } = useQuery(
 		['@/hooks/base/useTokenBalance', providerKey(library, account, chainId)],
@@ -76,20 +78,19 @@ export const MintCard = ({
 
 	const hide = () => {
 		setVal('')
-		setShowMintModal(false)
 	}
 
 	return (
 		<>
-			<Typography variant='xl' className='p-4 text-left font-bakbak'>
+			<Typography variant='xl' className='p-2 text-left font-bakbak'>
 				Borrow
 			</Typography>
-			<Card className='glassmorphic-card p-6'>
+			<Card className='glassmorphic-card p-2 mt-2'>
 				<Card.Body>
 					<div className='flex w-full gap-2'>
 						<div className='flex items-center gap-3 w-full py-2'>
 							<div>
-								<div className='m-2 mr-0 flex w-10 rounded-full border-none duration-300 lg:!m-2 lg:w-32 lg:bg-baoWhite/5 lg:hover:bg-transparent-300'>
+								<div className='m-2 mr-0 flex w-10 rounded-full border border-baoWhite border-opacity-20 duration-300 lg:!m-2 lg:w-32'>
 									<div className='m-auto text-baoWhite lg:py-3'>
 										<div className='items-start'>
 											<div className='inline-block lg:mr-2'>
@@ -119,26 +120,51 @@ export const MintCard = ({
 							/>
 							<div className='m-auto mr-2'>
 								<Button
-									onClick={() => setShowMintModal(true)}
+									onClick={async () => {
+										try {
+											// Check if a value is entered and initiate the mint/borrow process
+											const vaultContract = synth.vaultContract
+											const borrowAmount = parseUnits(val, synth.underlyingDecimals)
+
+											// Call the borrow function from the contract, do NOT await it here
+											const txPromise = vaultContract.borrow(borrowAmount) // This returns a Promise<ContractTransaction>
+
+											// Pass the Promise (txPromise) to handleTx, not the resolved transaction
+											handleTx(
+												txPromise, // Pass the promise here
+												`${vaultName} Vault: Mint ${getDisplayBalance(val, synth.underlyingDecimals)} ${synth.underlyingSymbol}`,
+												() => {
+													// Callback after the transaction completes, if necessary
+													hide() // Reset or clear form values after successful transaction
+												},
+											)
+										} catch (err) {
+											console.error('Mint/Borrow transaction failed', err)
+										}
+									}}
 									disabled={
-										!val ||
-										(val && parseUnits(val, synth.underlyingDecimals).gt(max())) ||
-										// FIXME: temporarily limit minting/borrowing to 5k baoUSD & 3 baoETH.
-										(val &&
-											borrowed.lt(parseUnits(vaultName === 'baoUSD' ? '5000' : '3')) &&
-											parseUnits(val, synth.underlyingDecimals).lt(parseUnits(vaultName === 'baoUSD' ? '5000' : '3')))
+										!val || // Disable if no value is entered
+										parseFloat(val) <= 0 || // Disable if the entered value is <= 0
+										parseUnits(val, synth.underlyingDecimals).gt(max()) || // Disable if the entered value exceeds the max borrowable amount
+										// Temporary minting/borrowing limits
+										(borrowed.lt(parseUnits(vaultName === 'baoUSD' ? '100' : '2')) &&
+											parseUnits(val, synth.underlyingDecimals).lt(parseUnits(vaultName === 'baoUSD' ? '100' : '2')))
 									}
 									className={!isDesktop ? '!h-10 !px-2 !text-sm' : ''}
 								>
 									Borrow
 								</Button>
-								<MintModal
-									asset={synth}
-									vaultName={vaultName}
-									val={val ? parseUnits(val, synth.underlyingDecimals) : BigNumber.from(0)}
-									show={showMintModal}
-									onHide={hide}
-								/>
+							</div>
+							<div className='m-auto mr-2'>
+								<Button
+									onClick={() => setShowRepayModal(true)}
+									disabled={!borrowed || borrowed.eq(0)} // Disable if borrowed is 0 or undefined
+									className={!isDesktop ? '!h-10 !px-2 !text-sm' : ''}
+								>
+									Repay
+								</Button>
+
+								<RepayModal asset={synth} vaultName={vaultName} show={showRepayModal} onHide={() => setShowRepayModal(false)} />
 							</div>
 						</div>
 					</div>
@@ -153,7 +179,7 @@ export const MintCard = ({
 									label: 'Minimum Mint',
 									value: (
 										<>
-											<Typography className='inline-block align-middle text-sm lg:text-base'>
+											<Typography variant='lg' className='inline-block align-middle'>
 												{synth.minimumBorrow ? synth.minimumBorrow.toLocaleString() : '-'}{' '}
 											</Typography>
 											<Image
@@ -170,11 +196,28 @@ export const MintCard = ({
 									label: 'Max Mintable',
 									value: (
 										<>
-											<Typography className='inline-block align-middle text-sm lg:text-base'>
+											<Typography variant='lg' className='inline-block align-middle'>
 												{getDisplayBalance(maxMintable ? maxMintable : 0)}
 											</Typography>
 											<Image
 												className='z-10 ml-1 inline-block select-none'
+												src={synth && `/images/tokens/${synth.underlyingSymbol}.png`}
+												alt={synth && synth.underlyingSymbol}
+												width={16}
+												height={16}
+											/>
+										</>
+									),
+								},
+								{
+									label: 'Borrowed',
+									value: (
+										<>
+											<Typography variant='lg' className='m-auto inline-block align-middle font-bakbak text-baoRed'>
+												{borrowed ? getDisplayBalance(borrowed) : 0}
+											</Typography>
+											<Image
+												className='z-10 m-auto ml-1 inline-block select-none align-middle'
 												src={synth && `/images/tokens/${synth.underlyingSymbol}.png`}
 												alt={synth && synth.underlyingSymbol}
 												width={16}

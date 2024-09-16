@@ -120,7 +120,7 @@ export const DepositCard = ({
 													'text-baoWhite flex overflow-hidden rounded-2xl border border-baoWhite/20 bg-baoBlack shadow-lg shadow-baoBlack ring-1 ring-black ring-opacity-5 focus:outline-none select-none border-baoBlack px-2 py-3 text-sm'
 												}
 											>
-												<div className='mx-0 my-auto flex h-full justify-center items-center gap-4 w-[180px]'>
+												<div className='mx-0 my-auto flex h-full justify-center items-center gap-4 w-[200px]'>
 													<div className='col-span-3'>
 														<Image
 															className='z-10 inline-block select-none'
@@ -141,12 +141,20 @@ export const DepositCard = ({
 										<table className='table-fixed justify-between w-2/3 text-left md:table hidden'>
 											<thead>
 												<tr className=''>
-													<th>Supplied</th>
+													<th>Total market supply</th>
+													<th>Your Position</th>
 												</tr>
 											</thead>
 											<div className='h-1 w-[200px] bg-red-400' />
 											<tbody>
 												<tr>
+													<td>
+														{(
+															Number(
+																collateral.find(assetToFind => assetToFind.underlyingAddress === currentAsset.underlyingAddress)?.supplied,
+															) / 1000000000000000000
+														).toFixed(2)}
+													</td>
 													<td>
 														{(
 															Number(
@@ -169,6 +177,10 @@ export const DepositCard = ({
 											</Button>
 											<Button onClick={() => setShowSupplyModal(index + 1)} className={!isDesktop ? '!h-10 !px-2 !text-sm' : ''}>
 												Supply
+											</Button>
+											<SupplyModal asset={currentAsset} vaultName={vaultName} show={showSupplyModal == index + 1} onHide={hide} />
+											<Button onClick={() => setShowSupplyModal(index + 1)} className={!isDesktop ? '!h-10 !px-2 !text-sm' : ''}>
+												Withdraw
 											</Button>
 											<SupplyModal asset={currentAsset} vaultName={vaultName} show={showSupplyModal == index + 1} onHide={hide} />
 										</div>

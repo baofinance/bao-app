@@ -9,8 +9,8 @@ const Vaults: React.FC = () => {
 	return (
 		<>
 			<NextSeo title={'Vaults'} description={'Provide different collateral types to mint synthetics.'} />
-			<div className=' space-y-12'>
-				<div className='lg:col-span-2 flex flex-wrap'>
+			<div className='space-y-12'>
+				<div className='lg:col-span-2'>
 					<Typography variant='hero' className='stroke'>
 						Vaults
 					</Typography>

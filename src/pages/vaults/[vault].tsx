@@ -7,7 +7,7 @@ import { useExchangeRates } from '@/hooks/vaults/useExchangeRates'
 import { useVaultPrices } from '@/hooks/vaults/usePrices'
 import { useAccountVaults, useVaults } from '@/hooks/vaults/useVaults'
 import { decimate, getDisplayBalance } from '@/utils/numberFormat'
-import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
+import { faArrowLeft, faDashboard } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { BigNumber } from 'ethers'
 import { NextPage } from 'next'
@@ -79,14 +79,6 @@ const Vault: NextPage<{
 			})
 	}, [_vaults, supplyBalances])
 
-	const userVaults = useMemo(() => {
-		if (!(accountVaults && supplyBalances)) return
-		return accountVaults.sort((a, b) => {
-			void a
-			return supplyBalances.find(balance => balance.address.toLowerCase() === b.vaultAddress.toLowerCase()).balance.gt(0) ? 1 : 0
-		})
-	}, [accountVaults, supplyBalances])
-
 	const synth = useMemo(() => {
 		if (!_vaults) return
 		return _vaults.find(vault => vault.isSynth)
@@ -124,7 +116,7 @@ const Vault: NextPage<{
 										</Typography>
 									</span>
 								</div>
-								<div className='h-10 w-[1px] ml-5 bg-baoWhite bg-opacity-40 my-auto' />
+								<div className='h-10 w-[2px] ml-5 bg-baoWhite bg-opacity-40 my-auto' />
 
 								<div className='mx-auto my-0 flex w-full items-center justify-between place-content-between'>
 									<div className='flex gap-5 flex-wrap w-full justify-between place-content-between'>
@@ -210,45 +202,21 @@ const Vault: NextPage<{
 							</div>
 						</div>
 
-						<div className='mt-6 space-y-12'>
-							<div>
-								<DepositCard
-									vaultName={vaultName}
-									balances={balances}
-									collateral={collateral}
-									accountBalances={accountBalances}
-									onUpdate={handleDepositVal}
-								/>
-							</div>
+						<div style={{ marginTop: '8px', marginBottom: '16px' }}>
+							<DebtCard vaultName={vaultName} asset={synth} depositVal={depositVal} mintVal={mintVal} />
+						</div>
 
-							{accountVaults.length >= 1 && !accountLiquidity.usdSupply.lte(0) && !accountLiquidity.usdBorrowable.lte(0) && (
-								<div className='mt-6 grid gap-6'>
-									<div>
-										<DebtCard vaultName={vaultName} asset={synth} depositVal={depositVal} mintVal={mintVal} />
-									</div>
-									<div>
-										<PositionList
-											vaultName={vaultName}
-											supplyBalances={supplyBalances}
-											collateral={userVaults}
-											exchangeRates={exchangeRates}
-											accountBalances={accountBalances}
-											accountVaults={accountVaults}
-											borrowBalances={borrowBalances}
-										/>
-									</div>
-								</div>
-							)}
-
-							<div>
-								<MintCard
-									vaultName={vaultName}
-									prices={prices}
-									accountLiquidity={accountLiquidity}
-									synth={synth}
-									onUpdate={handleMintVal}
-								/>
-							</div>
+						<div style={{ marginTop: '8px', marginBottom: '0' }}>
+							<PositionList
+								vaultName={vaultName}
+								supplyBalances={supplyBalances}
+								collateral={collateral}
+								exchangeRates={exchangeRates}
+								accountBalances={accountBalances}
+								accountVaults={accountVaults}
+								borrowBalances={borrowBalances}
+							/>
+							<MintCard vaultName={vaultName} prices={prices} accountLiquidity={accountLiquidity} synth={synth} onUpdate={handleMintVal} />
 						</div>
 					</>
 				) : (
