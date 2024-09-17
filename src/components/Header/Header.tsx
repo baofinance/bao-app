@@ -42,7 +42,7 @@ const Header: FC = () => {
 	return (
 		<header>
 			<nav>
-				<Container className='relative z-50 flex !max-w-full justify-between py-8'>
+				<Container className='relative z-50 flex !max-w-full justify-between pb-8 pt-3'>
 					<div className='relative z-10 flex items-center gap-3'>
 						<Link href='/' aria-label='Home'>
 							<Logo className='h-10 w-auto' />

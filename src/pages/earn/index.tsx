@@ -8,7 +8,7 @@ import GaugeList from './components/GaugeList'
 const Gauges: React.FC = () => {
 	return (
 		<>
-			<NextSeo title={'Gauges'} description={'Stake LP tokens to earn BAO.'} />
+			<NextSeo title={'Gauges'} description={'Lock LP tokens to earn BAO.'} />
 			<div className='space-y-12'>
 				<div className='lg:col-span-2 flex flex-wrap flex-col'>
 					<Typography variant='hero' className='stroke'>

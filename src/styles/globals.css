@@ -6,7 +6,7 @@ html {
 }
 
 body {
-	background: #1e2022;
+	background: #16181a;
 	font-family: 'Inter', sans-serif;
 	color: #faf2e3;
 	margin: 0;
@@ -190,8 +190,10 @@ input[type='number'] {
 	backdrop-filter: blur(25px);
 	-webkit-backdrop-filter: blur(25px);
 	box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.18);
-	border-radius: 1.5rem;
+	border-radius: 0.75rem;
 	border: 1px solid #faf2e318;
+	animation-duration: 1s;
+	transition-duration: 0.2s;
 }
 
 .stroke {
