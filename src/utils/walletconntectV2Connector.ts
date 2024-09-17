@@ -3,7 +3,7 @@ import { EthereumProviderOptions } from '@walletconnect/ethereum-provider/dist/t
 import { AbstractConnector } from '@web3-react/abstract-connector'
 
 interface ConnectorUpdate {
-	provider?: any
+	provider?: unknown
 	chainId?: number
 	account?: null | string
 }

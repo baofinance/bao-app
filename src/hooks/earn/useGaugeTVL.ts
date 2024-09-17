@@ -8,16 +8,14 @@ import Multicall from '@/utils/multicall'
 import { useQuery } from '@tanstack/react-query'
 import { useWeb3React } from '@web3-react/core'
 import { BigNumber } from 'ethers'
-import { formatUnits, parseEther } from 'ethers/lib/utils'
-import { useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import useBao from '../base/useBao'
 import usePrice from '../base/usePrice'
-import { useVaultPrice } from '../vaults/useVaultPrice'
 import useGaugeInfo from './useGaugeInfo'
 import usePoolInfo from './usePoolInfo'
 
 const useGaugeTVL = (gauge: ActiveSupportedGauge) => {
-	const { library, chainId } = useWeb3React()
+	const { library } = useWeb3React()
 	const bao = useBao()
 	const poolInfo = usePoolInfo(gauge)
 	const gaugeInfo = useGaugeInfo(gauge)

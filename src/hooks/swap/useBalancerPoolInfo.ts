@@ -1,15 +1,14 @@
 import Config from '@/bao/lib/config'
 import { useBlockUpdater } from '@/hooks/base/useBlock'
 import { useTxReceiptUpdater } from '@/hooks/base/useTransactionProvider'
-import { PoolInfo__factory, SaddlePool__factory, Uni_v2_lp__factory, BalancerVault__factory } from '@/typechain/index'
+import { BalancerVault__factory } from '@/typechain/index'
 import { providerKey } from '@/utils/index'
 import Multicall from '@/utils/multicall'
 import { useQuery } from '@tanstack/react-query'
 import { useWeb3React } from '@web3-react/core'
 import { BigNumber } from 'ethers/lib/ethers'
-import { ActiveSupportedGauge, SwapToken } from '../../bao/lib/types'
+import { SwapToken } from '../../bao/lib/types'
 import useBao from '../base/useBao'
-import { formatUnits, parseUnits } from 'ethers/lib/utils'
 
 type BalancerPoolInfo = {
 	tokenAddress: string

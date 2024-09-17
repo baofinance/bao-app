@@ -84,13 +84,13 @@ const Actions = ({ baoBalance, lockInfo }: ActionProps) => {
 	useBlockUpdater(_refetchTimestamp, 10)
 
 	const [showModal, setShowModal] = useState(false)
-	const [seenModal, setSeenModal] = useState(false)
+	//const [seenModal, setSeenModal] = useState(false)
 
 	const modalShow = () => {
 		setShowModal(true)
 	}
 	const modalHide = () => {
-		setSeenModal(true)
+		//setSeenModal(true)
 		setShowModal(false)
 	}
 

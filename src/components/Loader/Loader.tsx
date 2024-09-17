@@ -27,6 +27,6 @@ export const PageLoader: React.FC<LoaderProps> = ({ block, text }) => {
 	)
 }
 
-export const PendingTransaction: React.FC<LoaderProps> = ({ text }) => {
+export const PendingTransaction: React.FC<LoaderProps> = () => {
 	return <MoonLoader size={16} speedMultiplier={0.8} color={isDesktop ? '#e21a53' : '#faf2e3'} className='mr-2 mt-1 align-middle' />
 }

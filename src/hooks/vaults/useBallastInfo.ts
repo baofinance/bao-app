@@ -3,7 +3,7 @@ import useBao from '@/hooks/base/useBao'
 import { useBlockUpdater } from '@/hooks/base/useBlock'
 import useContract from '@/hooks/base/useContract'
 import { useTxReceiptUpdater } from '@/hooks/base/useTransactionProvider'
-import { Dai, Lusd, Stabilizer, Weth } from '@/typechain/index'
+import { Lusd, Stabilizer, Weth } from '@/typechain/index'
 import { providerKey } from '@/utils/index'
 import Multicall from '@/utils/multicall'
 import { useQuery } from '@tanstack/react-query'
@@ -62,6 +62,7 @@ const useBallastInfo = (vaultName: string) => {
 
 	useEffect(() => {
 		_refetch()
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [vaultName])
 
 	useTxReceiptUpdater(_refetch)

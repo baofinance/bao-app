@@ -1,5 +1,4 @@
 import React from 'react'
-import { isDesktop } from 'react-device-detect'
 
 import Config from '@/bao/lib/config'
 import Typography from '@/components/Typography'

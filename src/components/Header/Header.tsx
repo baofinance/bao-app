@@ -1,8 +1,6 @@
-import Config from '@/bao/lib/config'
 import Logo from '@/components/Logo'
-import useTokenBalance from '@/hooks/base/useTokenBalance'
-import { faDiscord, faGithub, faMedium, faTwitter, faStackOverflow } from '@fortawesome/free-brands-svg-icons'
-import { faBolt, faBook, faBug, faEllipsisVertical, faVoteYea, faCircleArrowRight } from '@fortawesome/free-solid-svg-icons'
+import { faDiscord, faGithub, faMedium, faTwitter } from '@fortawesome/free-brands-svg-icons'
+import { faBolt, faBook, faEllipsisVertical, faVoteYea, faCircleArrowRight } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Menu, Popover, Transition } from '@headlessui/react'
 import classNames from 'classnames'
@@ -12,29 +10,12 @@ import { FC, Fragment, ReactNode } from 'react'
 import AccountButton from '../AccountButton'
 import Container from '../Container'
 import Nav from '../Nav'
-import Typography from '../Typography'
 
 export interface IconProps {
 	color?: string
 	children?: ReactNode
 	size?: number
 	className?: string
-}
-
-const MenuIcon: FC<IconProps> = ({ size = 24, ...props }) => {
-	return (
-		<svg viewBox='0 0 24 24' fill='none' aria-hidden='true' {...props}>
-			<path d='M5 6h14M5 18h14M5 12h14' strokeWidth={2} strokeLinecap='round' strokeLinejoin='round' />
-		</svg>
-	)
-}
-
-const ChevronUpIcon: FC<IconProps> = ({ size = 24, ...props }) => {
-	return (
-		<svg viewBox='0 0 24 24' fill='none' aria-hidden='true' {...props}>
-			<path d='M17 14l-5-5-5 5' strokeWidth={2} strokeLinecap='round' strokeLinejoin='round' />
-		</svg>
-	)
 }
 
 export interface MobileNavLinkProps {

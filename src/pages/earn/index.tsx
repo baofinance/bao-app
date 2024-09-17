@@ -1,6 +1,4 @@
-import Button from '@/components/Button'
 import { Icon } from '@/components/Icon'
-import Tooltipped from '@/components/Tooltipped'
 import Typography from '@/components/Typography'
 import { NextSeo } from 'next-seo'
 import React from 'react'

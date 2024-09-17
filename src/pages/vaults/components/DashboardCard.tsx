@@ -2,14 +2,12 @@ import { ActiveSupportedVault } from '@/bao/lib/types'
 import Typography from '@/components/Typography'
 import useBao from '@/hooks/base/useBao'
 import { useAccountLiquidity } from '@/hooks/vaults/useAccountLiquidity'
-import { useBorrowBalances } from '@/hooks/vaults/useBalances'
 import useHealthFactor from '@/hooks/vaults/useHealthFactor'
 import { decimate, exponentiate, getDisplayBalance } from '@/utils/numberFormat'
 import { useWeb3React } from '@web3-react/core'
 import { BigNumber } from 'ethers'
 import { formatUnits, parseUnits } from 'ethers/lib/utils'
-import Image from 'next/future/image'
-import React, { useMemo } from 'react'
+import React from 'react'
 import { faDashboard } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
@@ -23,13 +21,12 @@ type DashboardCardProps = {
 const DashboardCard: React.FC<DashboardCardProps> = ({ asset, vaultName, mintVal, depositVal }: DashboardCardProps) => {
 	const bao = useBao()
 	const { account } = useWeb3React()
-	const borrowBalances = useBorrowBalances(vaultName)
 	const accountLiquidity = useAccountLiquidity(vaultName)
 
-	const borrowed = useMemo(
-		() => asset && borrowBalances && borrowBalances.find(balance => balance.address === asset.vaultAddress).balance,
-		[borrowBalances, asset],
-	)
+	// const borrowed = useMemo(
+	// 	() => asset && borrowBalances && borrowBalances.find(balance => balance.address === asset.vaultAddress).balance,
+	// 	[borrowBalances, asset],
+	// )
 
 	const change = mintVal && depositVal ? BigNumber.from(mintVal).sub(BigNumber.from(depositVal)) : BigNumber.from(0)
 	const borrow = accountLiquidity ? accountLiquidity.usdBorrow : BigNumber.from(0)
@@ -40,16 +37,16 @@ const DashboardCard: React.FC<DashboardCardProps> = ({ asset, vaultName, mintVal
 	const borrowChange = borrow.add(exponentiate(change))
 	const healthFactor = useHealthFactor(vaultName, borrowChange)
 
-	const healthFactorColor = (healthFactor: BigNumber) => {
-		const c = healthFactor.eq(0)
-			? `${(props: any) => props.theme.color.text[100]}`
-			: healthFactor.lte(parseUnits('1.25'))
-				? '#e32222'
-				: healthFactor.lt(parseUnits('1.55'))
-					? '#ffdf19'
-					: '#45be31'
-		return c
-	}
+	// const healthFactorColor = (healthFactor: BigNumber) => {
+	// 	const c = healthFactor.eq(0)
+	// 		? `${(props: any) => props.theme.color.text[100]}`
+	// 		: healthFactor.lte(parseUnits('1.25'))
+	// 			? '#e32222'
+	// 			: healthFactor.lt(parseUnits('1.55'))
+	// 				? '#ffdf19'
+	// 				: '#45be31'
+	// 	return c
+	// }
 
 	return decimate(accountLiquidity.usdBorrow) ? (
 		decimate(accountLiquidity.usdBorrow) > BigNumber.from(0) ? (

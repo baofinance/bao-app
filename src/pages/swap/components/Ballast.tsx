@@ -180,7 +180,7 @@ export const Ballast = () => {
 										}
 										value={'baoUSD'}
 									>
-										{({ selected, active }) => (
+										{() => (
 											<div className='mx-0 my-auto grid h-full grid-cols-6 items-center gap-4'>
 												<div className='col-span-4'>
 													<Image
@@ -219,7 +219,7 @@ export const Ballast = () => {
 										}
 										value={'baoETH'}
 									>
-										{({ selected, active }) => (
+										{() => (
 											<div className='mx-0 my-auto grid h-full grid-cols-4 items-center gap-4'>
 												<div className='col-span-2'>
 													<Image

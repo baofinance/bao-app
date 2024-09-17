@@ -4,25 +4,20 @@ import Card from '@/components/Card/Card'
 import { StatBlock } from '@/components/Stats'
 import Tooltipped from '@/components/Tooltipped'
 import Typography from '@/components/Typography'
-import useBaskets from '@/hooks/baskets/useBaskets'
-import useComposition from '@/hooks/baskets/useComposition'
 import { Balance } from '@/hooks/vaults/useBalances'
 import { decimate, getDisplayBalance } from '@/utils/numberFormat'
 import { faAngleUp, faCircleInfo } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Transition } from '@headlessui/react'
-import { useWeb3React } from '@web3-react/core'
-import { BigNumber } from 'ethers'
-import { formatUnits, parseUnits } from 'ethers/lib/utils'
+import { parseUnits } from 'ethers/lib/utils'
 import Image from 'next/future/image'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { isDesktop } from 'react-device-detect'
 import SupplyModal from './Modals/SupplyModal'
 
 export const DepositCard = ({
 	vaultName,
 	collateral,
-	balances,
 	onUpdate,
 }: {
 	vaultName: string
@@ -31,7 +26,6 @@ export const DepositCard = ({
 	accountBalances: Balance[]
 	onUpdate: (updatedState: any) => void
 }) => {
-	const { account } = useWeb3React()
 	const [val, setVal] = useState<string>('')
 	const [selectedOption, setSelectedOption] = useState('ETH')
 	const [showSupplyModal, setShowSupplyModal] = useState(0)
@@ -43,40 +37,27 @@ export const DepositCard = ({
 			? collateral.find(asset => asset.underlyingSymbol === selectedOption)
 			: collateral.find(asset => asset.underlyingSymbol === 'wstETH'))
 
-	const baskets = useBaskets()
-	const basket =
-		asset &&
-		asset.isBasket === true &&
-		baskets &&
-		baskets.find(basket => basket.address.toLowerCase() === asset.underlyingAddress.toLowerCase())
+	// const baskets = useBaskets()
+	// const basket =
+	// 	asset &&
+	// 	asset.isBasket === true &&
+	// 	baskets &&
+	// 	baskets.find(basket => basket.address.toLowerCase() === asset.underlyingAddress.toLowerCase())
 
-	const composition = useComposition(asset && basket && asset.isBasket === true && basket)
-	const avgBasketAPY =
-		asset && asset.isBasket && composition
-			? (composition
-					.sort((a, b) => (a.percentage.lt(b.percentage) ? 1 : -1))
-					.map(component => {
-						return component.apy
-					})
-					.reduce(function (a, b) {
-						return a + parseFloat(formatUnits(b))
-					}, 0) /
-					composition.length) *
-				100
-			: 0
-
-	const max = () => {
-		return balances
-			? balances.find(_balance => _balance.address.toLowerCase() === asset.underlyingAddress.toLowerCase()).balance
-			: BigNumber.from(0)
-	}
-
-	const handleChange = useCallback(
-		(e: React.FormEvent<HTMLInputElement>) => {
-			if (e.currentTarget.value.length < 20) setVal(e.currentTarget.value)
-		},
-		[setVal],
-	)
+	// const composition = useComposition(asset && basket && asset.isBasket === true && basket)
+	// const avgBasketAPY =
+	// 	asset && asset.isBasket && composition
+	// 		? (composition
+	// 				.sort((a, b) => (a.percentage.lt(b.percentage) ? 1 : -1))
+	// 				.map(component => {
+	// 					return component.apy
+	// 				})
+	// 				.reduce(function (a, b) {
+	// 					return a + parseFloat(formatUnits(b))
+	// 				}, 0) /
+	// 				composition.length) *
+	// 			100
+	// 		: 0
 
 	useEffect(() => {
 		if (val != '') {

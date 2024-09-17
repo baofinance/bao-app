@@ -109,7 +109,7 @@ export const Dashboard = () => {
 	)
 
 	const calc = async () => {
-		const [_, boost] = await updateLiquidityLimit(depositAmount, veEstimate, totalVePower, tvl)
+		const [, boost] = await updateLiquidityLimit(depositAmount, veEstimate, totalVePower, tvl)
 		setBoost(boost)
 	}
 
@@ -239,7 +239,7 @@ export const Dashboard = () => {
 										>
 											<Listbox.Options className='absolute z-10 ml-16 origin-top-right overflow-hidden rounded-3xl bg-baoBlack p-2 shadow-lg shadow-baoBlack ring-1 ring-black ring-opacity-5 focus:outline-none'>
 												{gauges.length ? (
-													gauges.map((gauge: any, i: number) => (
+													gauges.map((gauge: any) => (
 														<Listbox.Option
 															key={gauge.name}
 															className={({ active }) =>
@@ -250,7 +250,7 @@ export const Dashboard = () => {
 															}
 															value={gauge.name}
 														>
-															{({ selected, active }) => (
+															{() => (
 																<div className='mx-0 my-auto inline-block h-full items-center'>
 																	<div className='mr-2 inline-block'>
 																		{gauge.iconA && (

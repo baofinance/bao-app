@@ -43,7 +43,7 @@ interface BackstopListItemProps {
 }
 
 const BackstopListItem: React.FC<BackstopListItemProps> = ({ backstop }) => {
-	const { library, account } = useWeb3React()
+	const { account } = useWeb3React()
 	const [showBackstopModal, setShowBackstopModal] = useState(false)
 	const tvl = useBackstopTVL(backstop)
 

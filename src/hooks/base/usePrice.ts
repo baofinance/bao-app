@@ -1,6 +1,5 @@
 import { fromDecimal } from '@/utils/numberFormat'
 import { useQuery } from '@tanstack/react-query'
-import { BigNumber } from 'ethers'
 
 // INFO: add to this to support new tokens
 

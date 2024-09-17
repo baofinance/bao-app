@@ -60,6 +60,7 @@ export const useApprovals = (vaultName: string): Approvals => {
 
 	useEffect(() => {
 		_refetch()
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [vaultName])
 
 	useBlockUpdater(_refetch, 10)

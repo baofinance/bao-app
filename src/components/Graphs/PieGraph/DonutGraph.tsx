@@ -4,14 +4,11 @@ import { BasketRates } from '@/hooks/baskets/useBasketRate'
 import { BasketComponent } from '@/hooks/baskets/useComposition'
 import { getDisplayBalance } from '@/utils/numberFormat'
 import { Group } from '@visx/group'
-import Pie, { PieArcDatum, ProvidedProps } from '@visx/shape/lib/shapes/Pie'
+import Pie from '@visx/shape/lib/shapes/Pie'
 import { Text } from '@visx/text'
 import { BigNumber } from 'ethers'
 import { formatUnits } from 'ethers/lib/utils'
-import _ from 'lodash'
 import { useState } from 'react'
-import { isDesktop } from 'react-device-detect'
-import { animated, interpolate, useTransition } from 'react-spring'
 
 interface AssetAllocationAmount {
 	symbol: string
@@ -128,84 +125,84 @@ export default function DonutGraph({ width, height, composition, rates, info, ma
 }
 
 // react-spring transition definitions
-type AnimatedStyles = { startAngle: number; endAngle: number; opacity: number }
+// type AnimatedStyles = { startAngle: number; endAngle: number; opacity: number }
 
-const fromLeaveTransition = ({ endAngle }: PieArcDatum<any>) => ({
-	// enter from 360° if end angle is > 180°
-	startAngle: endAngle > Math.PI ? 2 * Math.PI : 0,
-	endAngle: endAngle > Math.PI ? 2 * Math.PI : 0,
-	opacity: 0,
-})
-const enterUpdateTransition = ({ startAngle, endAngle }: PieArcDatum<any>) => ({
-	startAngle,
-	endAngle,
-	opacity: 1,
-})
+// const fromLeaveTransition = ({ endAngle }: PieArcDatum<any>) => ({
+// 	// enter from 360° if end angle is > 180°
+// 	startAngle: endAngle > Math.PI ? 2 * Math.PI : 0,
+// 	endAngle: endAngle > Math.PI ? 2 * Math.PI : 0,
+// 	opacity: 0,
+// })
+// const enterUpdateTransition = ({ startAngle, endAngle }: PieArcDatum<any>) => ({
+// 	startAngle,
+// 	endAngle,
+// 	opacity: 1,
+// })
 
-type AnimatedPieProps<Datum> = ProvidedProps<Datum> & {
-	animate?: boolean
-	getKey: (d: PieArcDatum<Datum>) => string
-	getColor: (d: PieArcDatum<Datum>) => string
-	onClickDatum: (d: PieArcDatum<Datum>) => void
-	delay?: number
-}
+// type AnimatedPieProps<Datum> = ProvidedProps<Datum> & {
+// 	animate?: boolean
+// 	getKey: (d: PieArcDatum<Datum>) => string
+// 	getColor: (d: PieArcDatum<Datum>) => string
+// 	onClickDatum: (d: PieArcDatum<Datum>) => void
+// 	delay?: number
+// }
 
-function AnimatedPie<Datum>({ animate, arcs, path, getKey, getColor, onClickDatum }: AnimatedPieProps<Datum>) {
-	const transitions = useTransition<PieArcDatum<Datum>, AnimatedStyles>(arcs, {
-		from: animate ? fromLeaveTransition : enterUpdateTransition,
-		enter: enterUpdateTransition,
-		update: enterUpdateTransition,
-		leave: animate ? fromLeaveTransition : enterUpdateTransition,
-		keys: getKey,
-	})
-	return transitions((props, arc, { key }) => {
-		const [centroidX, centroidY] = path.centroid(arc)
-		const hasSpaceForLabel = arc.endAngle - arc.startAngle >= 0.5
+// function AnimatedPie<Datum>({ animate, arcs, path, getKey, getColor, onClickDatum }: AnimatedPieProps<Datum>) {
+// 	const transitions = useTransition<PieArcDatum<Datum>, AnimatedStyles>(arcs, {
+// 		from: animate ? fromLeaveTransition : enterUpdateTransition,
+// 		enter: enterUpdateTransition,
+// 		update: enterUpdateTransition,
+// 		leave: animate ? fromLeaveTransition : enterUpdateTransition,
+// 		keys: getKey,
+// 	})
+// 	return transitions((props, arc, { key }) => {
+// 		const [centroidX, centroidY] = path.centroid(arc)
+// 		const hasSpaceForLabel = arc.endAngle - arc.startAngle >= 0.5
 
-		let index = 0
-		return (
-			<g key={key}>
-				<animated.path
-					// compute interpolated path d attribute from intermediate angle values
-					d={interpolate([props.startAngle, props.endAngle], (startAngle, endAngle) =>
-						path({
-							...arc,
-							startAngle,
-							endAngle,
-						}),
-					)}
-					fill={getColor(arc)}
-				/>
-				{hasSpaceForLabel && (
-					<animated.g style={{ opacity: props.opacity }}>
-						{_.map(
-							_.filter(getKey(arc).split('\n'), line => line.length > 0),
-							line => {
-								return (
-									<>
-										<text
-											fill='white'
-											x={centroidX}
-											y={centroidY + index++ * 12}
-											dy='.33em'
-											fontSize={12}
-											fontWeight='bold'
-											textAnchor='middle'
-											pointerEvents='none'
-										>
-											{line}
-										</text>
-										<br />
-									</>
-								)
-							},
-						)}
-					</animated.g>
-				)}
-			</g>
-		)
-	})
-}
+// 		let index = 0
+// 		return (
+// 			<g key={key}>
+// 				<animated.path
+// 					// compute interpolated path d attribute from intermediate angle values
+// 					d={interpolate([props.startAngle, props.endAngle], (startAngle, endAngle) =>
+// 						path({
+// 							...arc,
+// 							startAngle,
+// 							endAngle,
+// 						}),
+// 					)}
+// 					fill={getColor(arc)}
+// 				/>
+// 				{hasSpaceForLabel && (
+// 					<animated.g style={{ opacity: props.opacity }}>
+// 						{_.map(
+// 							_.filter(getKey(arc).split('\n'), line => line.length > 0),
+// 							line => {
+// 								return (
+// 									<>
+// 										<text
+// 											fill='white'
+// 											x={centroidX}
+// 											y={centroidY + index++ * 12}
+// 											dy='.33em'
+// 											fontSize={12}
+// 											fontWeight='bold'
+// 											textAnchor='middle'
+// 											pointerEvents='none'
+// 										>
+// 											{line}
+// 										</text>
+// 										<br />
+// 									</>
+// 								)
+// 							},
+// 						)}
+// 					</animated.g>
+// 				)}
+// 			</g>
+// 		)
+// 	})
+// }
 
 /*
 interface AssetAllocation {

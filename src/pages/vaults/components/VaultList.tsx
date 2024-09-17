@@ -31,7 +31,7 @@ export const VaultList: React.FC = () => {
 		}
 
 		return () => clearInterval(intervalId)
-	}, [tick])
+	}, [tick, _vaults])
 
 	return (
 		<>
