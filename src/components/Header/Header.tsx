@@ -60,7 +60,7 @@ const Header: FC = () => {
 							{({ open }) => (
 								<>
 									<Popover.Button
-										className='relative z-10 inline-flex h-[40px] w-[40px] items-center rounded-3xl stroke-baoWhite p-2 active:stroke-gray-900 [&:not(:focus-visible)]:focus:outline-none'
+										className='relative z-10 inline-flex h-[40px] w-[40px] items-center stroke-baoWhite p-2 active:stroke-gray-900 [&:not(:focus-visible)]:focus:outline-none'
 										aria-label='Toggle site navigation'
 									>
 										<div className='flex flex-col items-center justify-center'>
@@ -105,8 +105,9 @@ const Header: FC = () => {
 													<div className='space-y-4'>
 														<MobileNavLink href='/vaults'>BORROW</MobileNavLink>
 														<MobileNavLink href='/swap'>SWAP</MobileNavLink>
+														<MobileNavLink href='/stake'>STAKE</MobileNavLink>
 														<MobileNavLink href='/earn'>EARN</MobileNavLink>
-														<MobileNavLink href='/vebao'>STAKE</MobileNavLink>
+														<MobileNavLink href='/vebao'>VEBAO</MobileNavLink>
 													</div>
 												</Popover.Panel>
 											</>
@@ -133,7 +134,7 @@ const Header: FC = () => {
 								leaveFrom='transform opacity-100 scale-100'
 								leaveTo='transform opacity-0 scale-95'
 							>
-								<Menu.Items className='absolute right-0 !z-[9999] mt-2 w-fit origin-top-right rounded-md border border-baoWhite/20 bg-baoBlack shadow-lg ring-1 ring-baoBlack ring-opacity-5 focus:outline-none'>
+								<Menu.Items className='absolute right-0 !z-[9999] mt-2 w-fit origin-top-right glassmorphic-card ring-1 ring-baoBlack ring-opacity-5 focus:outline-none'>
 									<div className='z-[9999] py-1'>
 										<Menu.Item>
 											{({ active }) => (
@@ -274,6 +275,20 @@ const Header: FC = () => {
 													)}
 												>
 													Backstops <FontAwesomeIcon icon={faCircleArrowRight} />
+												</Link>
+											)}
+										</Menu.Item>
+										<Menu.Item>
+											{({ active }) => (
+												<Link
+													href='/ballast'
+													aria-label='Ballast'
+													className={classNames(
+														active ? 'text-baoRed' : 'text-baoWhite',
+														'flex flex-1 flex-row items-center justify-between gap-4 px-4 py-2 text-sm',
+													)}
+												>
+													Ballast <FontAwesomeIcon icon={faCircleArrowRight} />
 												</Link>
 											)}
 										</Menu.Item>

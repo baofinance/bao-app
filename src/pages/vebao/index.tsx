@@ -40,7 +40,7 @@ const VeBAO: React.FC = () => {
 					</div>
 					<div className='hidden lg:block'>
 						<a href='https://info.bao.finance/docs/distribution-tokenomics' target='_blank' rel='noopener noreferrer'>
-							<Button className='!rounded-full border border-baoRed hover:bg-baoRed'>Learn More</Button>
+							<button className='glassmorphic-card px-4 py-2 font-bakbak border-baoRed hover:bg-baoRed'>Learn More</button>
 						</a>
 					</div>
 				</div>

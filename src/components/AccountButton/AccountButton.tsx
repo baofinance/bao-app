@@ -95,7 +95,7 @@ const AccountButton: React.FC<AccountButtonProps> = () => {
 								<>
 									<div>
 										<Listbox.Button className={(classNames(open ? 'text-baoRed' : 'text-baoWhite'), 'inline-flex')}>
-											<div className='m-1 flex w-fit rounded-full border border-baoWhite border-opacity-20 bg-baoWhite bg-opacity-5 px-4 py-2 duration-300 hover:border-baoRed hover:bg-transparent-300'>
+											<div className='m-1 flex w-fit glassmorphic-card px-4 py-[6px] duration-300 hover:border-baoRed hover:bg-transparent-300'>
 												<div className='w-full text-baoWhite'>
 													<div className='h-full items-start'>
 														<span className='inline-block text-left align-middle'>
@@ -123,14 +123,14 @@ const AccountButton: React.FC<AccountButtonProps> = () => {
 											leaveFrom='opacity-100'
 											leaveTo='opacity-0'
 										>
-											<Listbox.Options className='absolute z-10 origin-bottom-left overflow-hidden rounded-3xl border border-baoWhite/20 bg-baoBlack p-2 shadow-lg shadow-baoBlack ring-1 ring-black ring-opacity-5 focus:outline-none'>
+											<Listbox.Options className='absolute z-10 origin-bottom-left overflow-hidden glassmorphic-card p-2 shadow-lg shadow-baoBlack ring-1 ring-black ring-opacity-5 focus:outline-none'>
 												{assets.map(([index, symbol, balance]) => (
 													<Listbox.Option
 														key={index}
 														className={({ active }) =>
 															classNames(
 																active ? 'border !border-baoRed bg-baoWhite bg-opacity-5 text-baoRed' : 'text-baoWhite',
-																'cursor-pointer select-none rounded-3xl border border-baoBlack border-opacity-0 p-2',
+																'cursor-pointer select-none glassmorphic-card border-baoBlack border-opacity-0 p-2',
 															)
 														}
 														value={symbol}

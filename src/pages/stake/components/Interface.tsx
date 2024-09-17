@@ -143,7 +143,7 @@ export const Interface = () => {
 
 	return (
 		<>
-			<Card className='glassmorphic-card p-5 max-w-xl mx-auto mt-5'>
+			<Card className='glassmorphic-card p-5 w-full mx-auto mt-8'>
 				<Card.Body>
 					{bInput}
 					<div className='h-10' />

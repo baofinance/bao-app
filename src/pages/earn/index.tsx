@@ -14,7 +14,7 @@ const Gauges: React.FC = () => {
 					<Typography variant='hero' className='stroke'>
 						Earn
 					</Typography>
-					<div className='mt-4 flex gap-2'>
+					<div className='flex gap-2'>
 						<Icon icon='lightbulb' className='m-0 h-6 w-6 flex-none' />
 						<Typography className='m-0 pr-1 text-base font-light tracking-tight lg:mb-4'>
 							Stake Liquidity tokens and earn rewards
