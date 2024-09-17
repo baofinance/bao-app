@@ -1,4 +1,5 @@
 import Config from '@/bao/lib/config'
+import Button from '@/components/Button'
 import Card from '@/components/Card'
 import Input from '@/components/Input'
 import Loader from '@/components/Loader'
@@ -85,8 +86,14 @@ export const Interface = () => {
 								</div>
 							</Listbox.Button>
 
-							<Transition show={open} as={Fragment} leave='transition ease-in duration-100' leaveFrom='opacity-100' leaveTo='opacity-0'>
-								<Listbox.Options className='absolute z-10 p-2 -mt-1 ml-3 w-[200px] origin-left overflow-hidden !bg-baoBlack glassmorphic-card ring-1 ring-black ring-opacity-5 focus:outline-none lg:inset-x-auto'>
+							<Transition
+								show={open}
+								as={Fragment}
+								leave='transition ease-in duration-100 z-20'
+								leaveFrom='opacity-100'
+								leaveTo='opacity-0'
+							>
+								<Listbox.Options className='absolute !z-30 p-2 -mt-1 ml-3 w-[200px] origin-left overflow-hidden !bg-baoBlack glassmorphic-card ring-1 ring-black ring-opacity-5 focus:outline-none lg:inset-x-auto'>
 									<div className='text-left font-bakbak text-baoWhite pt-2 pl-4 mb-2'>
 										<Typography variant='lg'>Asset</Typography>
 									</div>
@@ -157,15 +164,8 @@ export const Interface = () => {
 								1000 sbaoUSD
 							</Typography>
 						</div>
-						<div className='flex w-full justify-between'>
-							<Typography variant='sm' className='text-left'>
-								You will recieve
-							</Typography>
-							<Typography variant='sm' className='text-right'>
-								1000 sbaoUSD
-							</Typography>
-						</div>
 					</div>
+					<Button text='STAKE' className='w-full mt-5 !-z-10' />
 				</Card.Body>
 			</Card>
 		</>
