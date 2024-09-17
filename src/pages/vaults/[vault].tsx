@@ -7,7 +7,7 @@ import { useExchangeRates } from '@/hooks/vaults/useExchangeRates'
 import { useVaultPrices } from '@/hooks/vaults/usePrices'
 import { useAccountVaults, useVaults } from '@/hooks/vaults/useVaults'
 import { decimate, getDisplayBalance } from '@/utils/numberFormat'
-import { faArrowLeft, faDashboard } from '@fortawesome/free-solid-svg-icons'
+import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { BigNumber } from 'ethers'
 import { NextPage } from 'next'
@@ -16,7 +16,6 @@ import Image from 'next/future/image'
 import Link from 'next/link'
 import { useCallback, useMemo, useState } from 'react'
 import DebtCard from './components/DashboardCard'
-import DepositCard from './components/DepositCard'
 import MintCard from './components/MintCard'
 import PositionList from './components/PositionsCard'
 
@@ -40,22 +39,23 @@ export async function getStaticProps({ params }: { params: any }) {
 const Vault: NextPage<{
 	vaultName: string
 }> = ({ vaultName }) => {
-	const [depositVal, setDepositVal] = useState('0')
+	// const [depositVal, setDepositVal] = useState('0')
 	const [mintVal, setMintVal] = useState('0')
 
-	const handleDepositVal = useCallback(
-		(updatedState: any) => {
-			// update the parent component's state with the new value
-			setDepositVal(updatedState)
-		},
-		[depositVal],
-	)
+	// const handleDepositVal = useCallback(
+	// 	(updatedState: any) => {
+	// 		// update the parent component's state with the new value
+	// 		setDepositVal(updatedState)
+	// 	},
+	// 	[depositVal],
+	// )
 
 	const handleMintVal = useCallback(
 		(updatedState: any) => {
 			// update the parent component's state with the new value
 			setMintVal(updatedState)
 		},
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 		[mintVal],
 	)
 
@@ -66,7 +66,7 @@ const Vault: NextPage<{
 	const supplyBalances = useSupplyBalances(vaultName)
 	const borrowBalances = useBorrowBalances(vaultName)
 	const { exchangeRates } = useExchangeRates(vaultName)
-	const balances = useAccountBalances(vaultName)
+	// const balances = useAccountBalances(vaultName)
 	const { prices } = useVaultPrices(vaultName)
 
 	const collateral = useMemo(() => {
@@ -203,7 +203,7 @@ const Vault: NextPage<{
 						</div>
 
 						<div style={{ marginTop: '8px', marginBottom: '16px' }}>
-							<DebtCard vaultName={vaultName} asset={synth} depositVal={depositVal} mintVal={mintVal} />
+							<DebtCard vaultName={vaultName} asset={synth} depositVal={'0'} mintVal={mintVal} />
 						</div>
 
 						<div style={{ marginTop: '8px', marginBottom: '0' }}>

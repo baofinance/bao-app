@@ -1,17 +1,12 @@
 import { getDisplayBalance } from '@/utils/numberFormat'
-import { faEthereum } from '@fortawesome/free-brands-svg-icons'
 import { faAngleDoubleRight, faLink, faReceipt } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useWeb3React } from '@web3-react/core'
 import { ethers } from 'ethers'
 import React, { Fragment, useEffect, useMemo, useState } from 'react'
-//import { utils } from 'ethers'
-import { isDesktop } from 'react-device-detect'
 import Image from 'next/future/image'
-
 import useTokenBalance, { useEthBalance } from '@/hooks/base/useTokenBalance'
 import useTransactionProvider from '@/hooks/base/useTransactionProvider'
-
 import AccountModal from '../AccountModal'
 import Button from '../Button'
 import Loader from '../Loader'
@@ -20,7 +15,6 @@ import { default as UDResolution } from '@unstoppabledomains/resolution'
 import { Listbox, Transition } from '@headlessui/react'
 import classNames from 'classnames'
 import Typography from '../Typography'
-import { ChevronDownIcon } from '@heroicons/react/20/solid'
 import Config from '@/bao/lib/config'
 
 const udResolution = new UDResolution()
@@ -63,7 +57,7 @@ const AccountButton: React.FC<AccountButtonProps> = () => {
 			.then(_ud => {
 				if (_ud) setUd(_ud)
 			})
-			.catch(_e => {
+			.catch(() => {
 				console.error('error: cannot get UD')
 			})
 	}, [account])
@@ -141,7 +135,7 @@ const AccountButton: React.FC<AccountButtonProps> = () => {
 														}
 														value={symbol}
 													>
-														{({ selected, active }) => (
+														{() => (
 															<div className='mx-0 my-auto items-end gap-4 text-right'>
 																<span className='inline-block text-right align-middle'>
 																	<Typography variant='xl' className='font-bakbak'>

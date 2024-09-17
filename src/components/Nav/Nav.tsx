@@ -9,14 +9,14 @@ interface NavLinkProps {
 	exact?: boolean
 }
 
-const Nav: FC<NavLinkProps> = ({ href, exact, className }) => {
+const Nav: FC<NavLinkProps> = ({ href, exact }) => {
 	const { pathname } = useRouter()
 	const isActive = exact ? pathname === href : pathname.startsWith(href)
 	const [hoveredIndex, setHoveredIndex] = useState(null)
 
-	if (isActive) {
-		className += 'active'
-	}
+	// if (isActive) {
+	// 	className += 'active'
+	// }
 
 	const navigation = [
 		['0', 'BORROW', '/vaults'],

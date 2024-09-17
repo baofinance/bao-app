@@ -1,8 +1,7 @@
 import { faDiscord, faGithub, faMedium, faTwitter } from '@fortawesome/free-brands-svg-icons'
-import { faBolt, faBook, faBug, faComments } from '@fortawesome/free-solid-svg-icons'
+import { faBolt, faBook, faComments } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React from 'react'
-import { isDesktop } from 'react-device-detect'
 import Tooltipped from '../../Tooltipped'
 
 const Nav: React.FC = () => {

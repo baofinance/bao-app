@@ -12,7 +12,7 @@ interface TransactionsContext {
 export default createContext<TransactionsContext>({
 	loaded: false,
 	transactions: {},
-	onAddTransaction: (tx: Transaction) => {},
-	onTxReceipt: (receipt: TransactionReceipt) => {},
+	onAddTransaction: () => {},
+	onTxReceipt: () => {},
 	onClearTransactions: () => {},
 })

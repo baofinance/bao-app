@@ -9,8 +9,8 @@
     "winBuild": "cross-env ANALYZE=true next build",
     "start": "npx next start",
     "export": "npx next export",
-    "lint": "npx next lint --fix",
-    "prettier": "npx prettier --write 'src/**/*.{ts,tsx}'",
+    "lint": "npx prettier --log-level warn --ignore-path .gitignore 'src/**/*.{ts,tsx}' --check && npx eslint 'src/**/*.{ts,tsx}'",
+    "lint:fix": "npx prettier --log-level warn --ignore-path .gitignore 'src/**/*.{ts,tsx}' --write",
     "unused": "npx next-unused",
     "typechain": "npx typechain --glob 'src/bao/lib/abi/*.json' --target ethers-v5 --out-dir src/typechain --discriminate-types --always-generate-overloads"
   },

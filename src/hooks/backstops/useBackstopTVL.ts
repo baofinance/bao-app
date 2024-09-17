@@ -2,11 +2,10 @@ import { ActiveSupportedBackstop } from '@/bao/lib/types'
 import { providerKey } from '@/utils/index'
 import { useQuery } from '@tanstack/react-query'
 import { useWeb3React } from '@web3-react/core'
-import { BigNumber } from 'ethers'
 import { useBlockUpdater } from '../base/useBlock'
 import usePrice from '../base/usePrice'
 import { useTxReceiptUpdater } from '../base/useTransactionProvider'
-import { formatUnits, parseUnits } from 'ethers/lib/utils'
+import { formatUnits } from 'ethers/lib/utils'
 
 import { useEffect, useState } from 'react'
 

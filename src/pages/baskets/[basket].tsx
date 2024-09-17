@@ -59,11 +59,11 @@ const Basket: NextPage<{
 	const nav = useNav(composition, info ? info.totalSupply : BigNumber.from(1))
 
 	let premium = null
-	let premiumColor = 'white'
+	// let premiumColor = 'white'
 	if (nav && pairPrice && rates) {
 		premium =
 			((parseFloat(nav.toString()) - parseFloat(formatUnits(rates.usd.toString()))) / parseFloat(formatUnits(rates.usd.toString()))) * 100
-		premiumColor = premium < 0 ? 'red' : 'green'
+		// premiumColor = premium < 0 ? 'red' : 'green'
 	}
 
 	let marketCap

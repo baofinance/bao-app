@@ -23,7 +23,6 @@ const Input: React.FC<InputProps> = ({
 	label,
 	disabled,
 	onSelectMax,
-	onSelectHalf,
 	endAdornment,
 	onChange,
 	placeholder,

@@ -31,6 +31,7 @@ module.exports = {
   },
   rules: {
     // Existing rules
+    "@typescript-eslint/no-explicit-any": "off",
     'comma-dangle': 'off', // https://eslint.org/docs/rules/comma-dangle
     'function-paren-newline': 'off', // https://eslint.org/docs/rules/function-paren-newline
     'global-require': 'off', // https://eslint.org/docs/rules/global-require

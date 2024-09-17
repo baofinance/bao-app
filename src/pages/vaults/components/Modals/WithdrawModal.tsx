@@ -1,9 +1,7 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { ActiveSupportedVault } from '@/bao/lib/types'
 import Input from '@/components/Input'
 import Modal from '@/components/Modal'
 import Typography from '@/components/Typography'
-import useTransactionHandler from '@/hooks/base/useTransactionHandler'
 import { useAccountLiquidity } from '@/hooks/vaults/useAccountLiquidity'
 import { useSupplyBalances } from '@/hooks/vaults/useBalances'
 import { useExchangeRates } from '@/hooks/vaults/useExchangeRates'
@@ -26,8 +24,6 @@ const WithdrawModal = ({ asset, show, onHide, vaultName }: WithdrawModalProps) =
 	const supplyBalances = useSupplyBalances(vaultName)
 	const accountLiquidity = useAccountLiquidity(vaultName)
 	const { exchangeRates } = useExchangeRates(vaultName)
-	const { pendingTx, txHash, handleTx } = useTransactionHandler()
-	const { vaultContract } = asset
 
 	const operation = 'Withdraw'
 

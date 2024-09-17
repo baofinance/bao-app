@@ -10,7 +10,6 @@ import BN from 'bignumber.js' // INFO: this is necessary for decimal display log
 import { formatUnits } from 'ethers/lib/utils'
 import Image from 'next/future/image'
 import React from 'react'
-import { isDesktop } from 'react-device-detect'
 
 type CompositionProps = {
 	composition: BasketComponent[]

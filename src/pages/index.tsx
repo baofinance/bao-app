@@ -6,6 +6,7 @@ const Home: React.FC = () => {
 
 	useEffect(() => {
 		router.push('/earn')
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
 
 	return <></>

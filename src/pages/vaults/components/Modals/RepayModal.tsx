@@ -1,20 +1,13 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { ActiveSupportedVault } from '@/bao/lib/types'
 import Input from '@/components/Input'
 import Modal from '@/components/Modal'
 import Typography from '@/components/Typography'
-import useContract from '@/hooks/base/useContract'
-import useTransactionHandler from '@/hooks/base/useTransactionHandler'
-import { useAccountLiquidity } from '@/hooks/vaults/useAccountLiquidity'
-import { useApprovals } from '@/hooks/vaults/useApprovals'
-import { useAccountBalances, useBorrowBalances, useSupplyBalances } from '@/hooks/vaults/useBalances'
-import { useExchangeRates } from '@/hooks/vaults/useExchangeRates'
-import { Erc20 } from '@/typechain/Erc20'
-import { decimate, exponentiate, getDisplayBalance, sqrt } from '@/utils/numberFormat'
+import { useAccountBalances, useBorrowBalances } from '@/hooks/vaults/useBalances'
+import { getDisplayBalance } from '@/utils/numberFormat'
 import { BigNumber } from 'ethers'
 import { formatUnits, parseUnits } from 'ethers/lib/utils'
 import Image from 'next/future/image'
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import VaultButton from '../VaultButton'
 
 export type RepayModalProps = {
@@ -28,48 +21,43 @@ const RepayModal = ({ asset, show, onHide, vaultName }: RepayModalProps) => {
 	const [val, setVal] = useState<string>('')
 	const balances = useAccountBalances(vaultName)
 	const borrowBalances = useBorrowBalances(vaultName)
-	const supplyBalances = useSupplyBalances(vaultName)
-	const accountLiquidity = useAccountLiquidity(vaultName)
-	const { exchangeRates } = useExchangeRates(vaultName)
-	const { approvals } = useApprovals(vaultName)
-	const erc20 = useContract<Erc20>('Erc20', asset.underlyingAddress)
-
-	const { pendingTx, txHash, handleTx } = useTransactionHandler()
-	const { vaultContract } = asset
+	// const supplyBalances = useSupplyBalances(vaultName)
+	// const accountLiquidity = useAccountLiquidity(vaultName)
+	// const { exchangeRates } = useExchangeRates(vaultName)
 
 	const operation = 'Repay'
 
-	const supply = useMemo(
-		() =>
-			supplyBalances &&
-			supplyBalances.find(balance => balance.address.toLowerCase() === asset.vaultAddress.toLowerCase()) &&
-			exchangeRates &&
-			exchangeRates[asset.vaultAddress]
-				? decimate(
-						supplyBalances
-							.find(balance => balance.address.toLowerCase() === asset.vaultAddress.toLowerCase())
-							.balance.mul(exchangeRates[asset.vaultAddress]),
-					)
-				: BigNumber.from(0),
-		[supplyBalances, exchangeRates, asset.vaultAddress],
-	)
+	// const supply = useMemo(
+	// 	() =>
+	// 		supplyBalances &&
+	// 		supplyBalances.find(balance => balance.address.toLowerCase() === asset.vaultAddress.toLowerCase()) &&
+	// 		exchangeRates &&
+	// 		exchangeRates[asset.vaultAddress]
+	// 			? decimate(
+	// 					supplyBalances
+	// 						.find(balance => balance.address.toLowerCase() === asset.vaultAddress.toLowerCase())
+	// 						.balance.mul(exchangeRates[asset.vaultAddress]),
+	// 				)
+	// 			: BigNumber.from(0),
+	// 	[supplyBalances, exchangeRates, asset.vaultAddress],
+	// )
 
-	let _imfFactor = asset.imfFactor
-	if (accountLiquidity) {
-		const _sqrt = sqrt(supply)
-		const num = exponentiate(parseUnits('1.1'))
-		const denom = decimate(asset.imfFactor.mul(_sqrt).add(parseUnits('1')))
-		_imfFactor = num.div(denom)
-	}
+	// let _imfFactor = asset.imfFactor
+	// if (accountLiquidity) {
+	// 	const _sqrt = sqrt(supply)
+	// 	const num = exponentiate(parseUnits('1.1'))
+	// 	const denom = decimate(asset.imfFactor.mul(_sqrt).add(parseUnits('1')))
+	// 	_imfFactor = num.div(denom)
+	// }
 
-	let withdrawable = BigNumber.from(0)
-	if (_imfFactor.gt(asset.collateralFactor) && asset.price.gt(0)) {
-		if (asset.collateralFactor.mul(asset.price).gt(0)) {
-			withdrawable = accountLiquidity && exponentiate(accountLiquidity.usdBorrowable).div(decimate(asset.collateralFactor.mul(asset.price)))
-		} else {
-			withdrawable = accountLiquidity && exponentiate(accountLiquidity.usdBorrowable).div(decimate(_imfFactor).mul(asset.price))
-		}
-	}
+	// let withdrawable = BigNumber.from(0)
+	// if (_imfFactor.gt(asset.collateralFactor) && asset.price.gt(0)) {
+	// 	if (asset.collateralFactor.mul(asset.price).gt(0)) {
+	// 		withdrawable = accountLiquidity && exponentiate(accountLiquidity.usdBorrowable).div(decimate(asset.collateralFactor.mul(asset.price)))
+	// 	} else {
+	// 		withdrawable = accountLiquidity && exponentiate(accountLiquidity.usdBorrowable).div(decimate(_imfFactor).mul(asset.price))
+	// 	}
+	// }
 
 	const max = () => {
 		if (borrowBalances && balances) {

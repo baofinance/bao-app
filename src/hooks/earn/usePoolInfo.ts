@@ -9,7 +9,6 @@ import { useWeb3React } from '@web3-react/core'
 import { BigNumber } from 'ethers/lib/ethers'
 import { ActiveSupportedGauge } from '../../bao/lib/types'
 import useBao from '../base/useBao'
-import { formatUnits, parseUnits } from 'ethers/lib/utils'
 
 type PoolInfoTypes = {
 	token0Address: string

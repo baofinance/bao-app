@@ -1,20 +1,15 @@
 import { ActiveSupportedVault } from '@/bao/lib/types'
 import Button from '@/components/Button'
-import { ListHeader } from '@/components/List'
 import Tooltipped from '@/components/Tooltipped'
 import Typography from '@/components/Typography'
-import useBaskets from '@/hooks/baskets/useBaskets'
-import useComposition from '@/hooks/baskets/useComposition'
 import { AccountLiquidity } from '@/hooks/vaults/useAccountLiquidity'
 import { Balance } from '@/hooks/vaults/useBalances'
 import { decimate, getDisplayBalance } from '@/utils/numberFormat'
 import { useWeb3React } from '@web3-react/core'
 import { BigNumber } from 'ethers'
-import { formatUnits } from 'ethers/lib/utils'
 import Image from 'next/future/image'
 import React, { useMemo, useState } from 'react'
 import { isDesktop } from 'react-device-detect'
-import RepayModal from './Modals/RepayModal'
 import WithdrawModal from './Modals/WithdrawModal'
 import Card from '@/components/Card/Card'
 import { faAngleUp, faCircleInfo } from '@fortawesome/free-solid-svg-icons'
@@ -79,8 +74,8 @@ const PositionListItem: React.FC<PositionListItemProps> = ({
 }: PositionListItemProps) => {
 	const [showWithdrawModal, setShowWithdrawModal] = useState(false)
 	const [showSupplyModal, setShowSupplyModal] = useState(false)
-	const [showRepayModal, setShowRepayModal] = useState(false)
-	const [selectedOption, setSelectedOption] = useState('ETH')
+	//const [showRepayModal, setShowRepayModal] = useState(false)
+	//const [selectedOption, setSelectedOption] = useState('ETH')
 	const [showInfo, setShowInfo] = useState(false)
 	const { account } = useWeb3React()
 
@@ -103,24 +98,24 @@ const PositionListItem: React.FC<PositionListItemProps> = ({
 
 	// const [isChecked, setIsChecked] = useState(!!isInVault)
 
-	const baskets = useBaskets()
-	const basket =
-		vault.isBasket === true && baskets && baskets.find(basket => basket.address.toLowerCase() === vault.underlyingAddress.toLowerCase())
+	// const baskets = useBaskets()
+	// const basket =
+	// 	vault.isBasket === true && baskets && baskets.find(basket => basket.address.toLowerCase() === vault.underlyingAddress.toLowerCase())
 
-	const composition = useComposition(vault.isBasket === true && basket && basket)
-	const avgBasketAPY =
-		vault.isBasket && composition
-			? (composition
-					.sort((a, b) => (a.percentage.lt(b.percentage) ? 1 : -1))
-					.map(component => {
-						return component.apy
-					})
-					.reduce(function (a, b) {
-						return a + parseFloat(formatUnits(b))
-					}, 0) /
-					composition.length) *
-				100
-			: 0
+	// const composition = useComposition(vault.isBasket === true && basket && basket)
+	// const avgBasketAPY =
+	// 	vault.isBasket && composition
+	// 		? (composition
+	// 				.sort((a, b) => (a.percentage.lt(b.percentage) ? 1 : -1))
+	// 				.map(component => {
+	// 					return component.apy
+	// 				})
+	// 				.reduce(function (a, b) {
+	// 					return a + parseFloat(formatUnits(b))
+	// 				}, 0) /
+	// 				composition.length) *
+	// 			100
+	// 		: 0
 
 	return (
 		<>
@@ -175,7 +170,7 @@ const PositionListItem: React.FC<PositionListItemProps> = ({
 							<Button
 								className='!p-3'
 								onClick={() => {
-									setSelectedOption(vault.underlyingSymbol)
+									// setSelectedOption(vault.underlyingSymbol)
 									setShowInfo(prevState => !prevState) // Toggles the state
 								}}
 							>

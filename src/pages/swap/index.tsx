@@ -4,7 +4,6 @@ import { NextSeo } from 'next-seo'
 import React, { useState } from 'react'
 import BallastCard from './components/Ballast'
 import { Icon } from '@/components/Icon'
-import VaultList from '@/pages/vaults/components/VaultList'
 import SwapList from '@/pages/swap/components/SwapList'
 import ReactSwitch from 'react-switch'
 

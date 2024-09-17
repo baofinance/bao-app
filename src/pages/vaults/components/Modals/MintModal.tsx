@@ -1,16 +1,9 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { ActiveSupportedVault } from '@/bao/lib/types'
 import Badge from '@/components/Badge'
-import Button from '@/components/Button'
-import { PendingTransaction } from '@/components/Loader/Loader'
 import Modal from '@/components/Modal'
 import Typography from '@/components/Typography'
-import useTransactionHandler from '@/hooks/base/useTransactionHandler'
 import { decimate, getDisplayBalance } from '@/utils/numberFormat'
-import { faExternalLink } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { BigNumber } from 'ethers'
-import { parseUnits } from 'ethers/lib/utils'
 import Image from 'next/future/image'
 import { useCallback } from 'react'
 import VaultButton from '../VaultButton'
@@ -24,8 +17,6 @@ export type MintModalProps = {
 }
 
 const MintModal = ({ asset, show, onHide, vaultName, val }: MintModalProps) => {
-	const { pendingTx, txHash, handleTx } = useTransactionHandler()
-	const { vaultContract } = asset
 	const usdValue = val.mul(asset.price)
 
 	const operation = 'Mint'

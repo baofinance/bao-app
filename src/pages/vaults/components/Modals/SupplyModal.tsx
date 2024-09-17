@@ -1,21 +1,17 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { ActiveSupportedVault } from '@/bao/lib/types'
-import Badge from '@/components/Badge'
 import Button from '@/components/Button'
 import { PendingTransaction } from '@/components/Loader/Loader'
 import Modal from '@/components/Modal'
 import Typography from '@/components/Typography'
-import useContract from '@/hooks/base/useContract'
 import useTransactionHandler from '@/hooks/base/useTransactionHandler'
-import { useApprovals } from '@/hooks/vaults/useApprovals'
 import useAllowance from '@/hooks/base/useAllowance'
-import { Erc20 } from '@/typechain/Erc20'
 import { useAccountBalances } from '@/hooks/vaults/useBalances'
-import { decimate, getDisplayBalance, getFullDisplayBalance } from '@/utils/numberFormat'
+import { getDisplayBalance, getFullDisplayBalance } from '@/utils/numberFormat'
 import { faExternalLink } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { BigNumber, ethers } from 'ethers'
-import { formatUnits, parseUnits } from 'ethers/lib/utils'
+import { parseUnits } from 'ethers/lib/utils'
 import Image from 'next/future/image'
 import { useCallback, useState, useMemo } from 'react'
 import VaultButton from '../VaultButton'
@@ -30,9 +26,6 @@ export type SupplyModalProps = {
 
 const SupplyModal = ({ asset, show, onHide, vaultName }: SupplyModalProps) => {
 	const { pendingTx, txHash, handleTx } = useTransactionHandler()
-	const { approvals } = useApprovals(vaultName)
-	const { vaultContract } = asset
-	const erc20 = useContract<Erc20>('Erc20', asset.underlyingAddress)
 	const [val, setVal] = useState('0')
 	const operation = 'Supply'
 	const balances = useAccountBalances(vaultName)

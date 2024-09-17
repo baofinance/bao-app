@@ -1,4 +1,3 @@
-//import { useWeb3React } from '@web3-react/core'
 import { ActiveSupportedBackstop } from '@/bao/lib/types'
 import Button from '@/components/Button'
 import Input from '@/components/Input'
@@ -9,7 +8,6 @@ import useAllowance from '@/hooks/base/useAllowance'
 import useBao from '@/hooks/base/useBao'
 import useTokenBalance from '@/hooks/base/useTokenBalance'
 import useTransactionHandler from '@/hooks/base/useTransactionHandler'
-import useTransactionProvider from '@/hooks/base/useTransactionProvider'
 import { getDisplayBalance, getFullDisplayBalance } from '@/utils/numberFormat'
 import { faExternalLink } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -24,7 +22,7 @@ interface DepositProps {
 	setStep: (step: string) => void
 }
 
-export const Deposit: React.FC<DepositProps> = ({ backstop, max, onHide, setStep }) => {
+export const Deposit: React.FC<DepositProps> = ({ backstop, max, setStep }) => {
 	const [val, setVal] = useState('')
 	const { pendingTx, txHash, handleTx } = useTransactionHandler()
 
@@ -41,14 +39,10 @@ export const Deposit: React.FC<DepositProps> = ({ backstop, max, onHide, setStep
 
 	const handleSelectMax = useCallback(() => {
 		setVal(formatUnits(max))
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [fullBalance, setVal])
 
 	const allowance = useAllowance(backstop.tokenAddress, backstop.vaultAddress)
-
-	const hideModal = useCallback(() => {
-		onHide()
-		setVal('')
-	}, [onHide])
 
 	return (
 		<>
@@ -122,7 +116,6 @@ export const Withdraw: React.FC<WithdrawProps> = ({ backstop, onHide, max }) => 
 	const bao = useBao()
 	const [val, setVal] = useState('')
 	const { pendingTx, txHash, handleTx } = useTransactionHandler()
-	const { transactions } = useTransactionProvider()
 
 	const handleChange = useCallback(
 		(e: React.FormEvent<HTMLInputElement>) => {
@@ -130,11 +123,6 @@ export const Withdraw: React.FC<WithdrawProps> = ({ backstop, onHide, max }) => 
 		},
 		[setVal],
 	)
-
-	const hideModal = useCallback(() => {
-		onHide()
-		setVal('')
-	}, [onHide])
 
 	return (
 		<>
@@ -184,7 +172,7 @@ interface StakeProps {
 	setStep: (step: string) => void
 }
 
-export const Stake: React.FC<StakeProps> = ({ backstop, max, onHide, exchangeRate }) => {
+export const Stake: React.FC<StakeProps> = ({ backstop, max, onHide }) => {
 	const [val, setVal] = useState('')
 	const { pendingTx, txHash, handleTx } = useTransactionHandler()
 
@@ -206,11 +194,6 @@ export const Stake: React.FC<StakeProps> = ({ backstop, max, onHide, exchangeRat
 	}, [fullBalance, setVal])
 
 	const allowance = useAllowance(backstop.vaultAddress, backstop.backstopAddress)
-
-	const hideModal = useCallback(() => {
-		onHide()
-		setVal('')
-	}, [onHide])
 
 	return (
 		<>
@@ -283,7 +266,7 @@ interface UnstakeProps {
 	setStep: (step: string) => void
 }
 
-export const Unstake: React.FC<UnstakeProps> = ({ backstop, max, onHide, setStep }) => {
+export const Unstake: React.FC<UnstakeProps> = ({ backstop, max, setStep }) => {
 	const bao = useBao()
 	const [val, setVal] = useState('')
 	const { pendingTx, txHash, handleTx } = useTransactionHandler()
@@ -303,11 +286,6 @@ export const Unstake: React.FC<UnstakeProps> = ({ backstop, max, onHide, setStep
 	const handleSelectMax = useCallback(() => {
 		setVal(formatUnits(max))
 	}, [max])
-
-	const hideModal = useCallback(() => {
-		onHide()
-		setVal('')
-	}, [onHide])
 
 	return (
 		<>

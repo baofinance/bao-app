@@ -35,6 +35,7 @@ export const MintCard = ({
 	const [val, setVal] = useState<string>('')
 	const [showRepayModal, setShowRepayModal] = useState(false)
 	const borrowBalances = useBorrowBalances(vaultName)
+	/* eslint-disable-next-line @typescript-eslint/no-unused-vars */
 	const { pendingTx, txHash, handleTx } = useTransactionHandler()
 
 	const { data: maxMintable } = useQuery(
