@@ -1,10 +1,8 @@
-import { getDisplayBalance } from '@/utils/numberFormat'
 import { faAngleDoubleRight, faLink, faReceipt } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useWeb3React } from '@web3-react/core'
 import { ethers } from 'ethers'
 import React, { Fragment, useEffect, useMemo, useState } from 'react'
-import Image from 'next/future/image'
 import useTokenBalance, { useEthBalance } from '@/hooks/base/useTokenBalance'
 import useTransactionProvider from '@/hooks/base/useTransactionProvider'
 import AccountModal from '../AccountModal'
@@ -12,9 +10,6 @@ import Button from '../Button'
 import Loader from '../Loader'
 import WalletProviderModal from '../WalletProviderModal'
 import { default as UDResolution } from '@unstoppabledomains/resolution'
-import { Listbox, Transition } from '@headlessui/react'
-import classNames from 'classnames'
-import Typography from '../Typography'
 import Config from '@/bao/lib/config'
 
 const udResolution = new UDResolution()
@@ -89,7 +84,7 @@ const AccountButton: React.FC<AccountButtonProps> = () => {
 							)}
 						</div>
 					</Button>
-					<div className='hidden lg:block'>
+					{/* <div className='hidden lg:block'>
 						<Listbox value={selectedAsset} onChange={setSelectedAsset}>
 							{({ open }) => (
 								<>
@@ -161,7 +156,7 @@ const AccountButton: React.FC<AccountButtonProps> = () => {
 								</>
 							)}
 						</Listbox>
-					</div>
+					</div> */}
 				</>
 			)}
 			<AccountModal show={showAccountModal} onHide={() => setShowAccountModal(false)} />
