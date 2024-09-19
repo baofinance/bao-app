@@ -105,7 +105,6 @@ const Header: FC = () => {
 													<div className='space-y-4'>
 														<MobileNavLink href='/vaults'>BORROW</MobileNavLink>
 														<MobileNavLink href='/swap'>SWAP</MobileNavLink>
-														<MobileNavLink href='/stake'>STAKE</MobileNavLink>
 														<MobileNavLink href='/earn'>EARN</MobileNavLink>
 														<MobileNavLink href='/vebao'>VEBAO</MobileNavLink>
 													</div>
