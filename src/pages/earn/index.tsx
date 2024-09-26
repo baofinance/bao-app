@@ -8,13 +8,13 @@ import GaugeList from './components/GaugeList'
 const Gauges: React.FC = () => {
 	return (
 		<>
-			<NextSeo title={'Gauges'} description={'Stake LP tokens to earn BAO.'} />
+			<NextSeo title={'Gauges'} description={'Lock LP tokens to earn BAO.'} />
 			<div className='space-y-12'>
 				<div className='lg:col-span-2 flex flex-wrap flex-col'>
 					<Typography variant='hero' className='stroke'>
 						Earn
 					</Typography>
-					<div className='mt-4 flex gap-2'>
+					<div className='flex gap-2'>
 						<Icon icon='lightbulb' className='m-0 h-6 w-6 flex-none' />
 						<Typography className='m-0 pr-1 text-base font-light tracking-tight lg:mb-4'>
 							Stake Liquidity tokens and earn rewards

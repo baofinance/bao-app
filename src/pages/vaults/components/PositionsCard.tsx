@@ -87,7 +87,7 @@ const PositionListItem: React.FC<PositionListItemProps> = ({
 	}, [supplyBalances, exchangeRates, vault.vaultAddress])
 
 	const borrowed = useMemo(
-		() => vault && borrowBalances.find(balance => balance.address === vault.vaultAddress).balance,
+		() => vault && borrowBalances?.find(balance => balance.address === vault.vaultAddress)?.balance,
 		[borrowBalances, vault],
 	)
 

@@ -259,7 +259,7 @@ export const Ballast = () => {
 
 	return (
 		<>
-			<Card className='glassmorphic-card p-8'>
+			<Card className='glassmorphic-card p-8 max-w-xl mx-auto'>
 				<Card.Body>
 					{swapDirection ? bInput : aInput}
 					<div className='mt-4 block select-none text-center'>

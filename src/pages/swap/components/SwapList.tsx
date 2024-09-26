@@ -61,7 +61,9 @@ const SwapListItem: React.FC<SwapListItemProps> = ({ token }) => {
 								</div>
 							</div>
 
-							<div className='mx-auto my-0 flex w-full items-center justify-center'>{formattedBalance ? formattedBalance : <Loader />}</div>
+							<div className='mx-auto my-0 flex w-full items-center font-bakbak text-lg justify-center'>
+								{formattedBalance ? formattedBalance : <Loader />}
+							</div>
 
 							<div className='mx-auto my-0 flex w-full flex-auto items-end justify-end text-right'>
 								<Tooltipped content={platform.name} key={platform.name} placement='bottom'>
