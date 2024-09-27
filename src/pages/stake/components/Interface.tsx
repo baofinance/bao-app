@@ -2,24 +2,20 @@ import Config from '@/bao/lib/config'
 import Button from '@/components/Button'
 import Card from '@/components/Card'
 import Input from '@/components/Input'
-import Loader from '@/components/Loader'
 import Typography from '@/components/Typography'
 import useTokenBalance from '@/hooks/base/useTokenBalance'
+import { useStakedSynths } from '@/hooks/earn/useStakedSynths'
 import { useAccountBalances } from '@/hooks/vaults/useBalances'
 import useBallastInfo from '@/hooks/vaults/useBallastInfo'
 import { useVaults } from '@/hooks/vaults/useVaults'
 import { getDisplayBalance } from '@/utils/numberFormat'
-import { faSync } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Listbox, Transition } from '@headlessui/react'
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
 import { useWeb3React } from '@web3-react/core'
 import classNames from 'classnames'
-import { BigNumber } from 'ethers'
 import { formatEther } from 'ethers/lib/utils'
 import Image from 'next/future/image'
 import React, { Fragment, useMemo, useState } from 'react'
-import { isDesktop } from 'react-device-detect'
 
 const supportedSynths = ['baoETH', 'baoUSD']
 
@@ -31,11 +27,11 @@ export const Interface = () => {
 	const baoETHBalance = useTokenBalance(Config.addressMap.baoETH)
 	const ballastInfo = useBallastInfo(selectedOption)
 	const accountBalances = useAccountBalances(selectedOption)
-	const _vaults = useVaults(selectedOption)
+	const _stakedSynths = useStakedSynths(selectedOption)
 
-	const synth = useMemo(() => {
-		return _vaults?.find(vault => vault.isSynth)
-	}, [_vaults])
+	const stakedSynths = useMemo(() => {
+		return _stakedSynths
+	}, [_stakedSynths])
 
 	const bInput = (
 		<>

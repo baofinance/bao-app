@@ -162,6 +162,14 @@ export default {
 			1: 'https://data.aura.finance/graphql',
 		},
 	},
+	stakedSynths: {
+		sbaoUSD: {
+			1: '0x0000000000000000000000000000000000000000',
+		},
+		sbaoETH: {
+			1: '0x0000000000000000000000000000000000000000',
+		},
+	},
 	vaults: {
 		baoUSD: {
 			vid: 1,
