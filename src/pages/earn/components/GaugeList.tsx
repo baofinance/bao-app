@@ -36,8 +36,20 @@ const GaugeList: React.FC = () => {
 		}
 	}
 
+	// Add a deprecation notice at the top of the component
+	const DeprecationNotice = () => (
+		<div className='bg-baoBlack border-l-4 border-baoRed text-baoWhite  p-4 mb-4'>
+			<p className='font-bold'>Deprecation Notice</p>
+			<p>
+				Current gauges will be deprecated soon. Please be aware that this feature will be removed in a future update and will be replaced
+				with a new rewards system.
+			</p>
+		</div>
+	)
+
 	return (
 		<>
+			<DeprecationNotice />
 			<div className={`flex w-full flex-row gap-2 px-2 py-3`}>
 				<ReactSwitch
 					checked={active}
