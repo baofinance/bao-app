@@ -1,13 +1,10 @@
 import { ListHeader } from '@/components/List'
-import Loader from '@/components/Loader'
 import Tooltipped from '@/components/Tooltipped'
 import Typography from '@/components/Typography'
 import Image from 'next/future/image'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import Config from '@/bao/lib/config'
 import { SwapToken } from '@/bao/lib/types'
-import useBalancerPoolInfo from '@/hooks/swap/useBalancerPoolInfo'
-import { getDisplayBalance } from '@/utils/numberFormat'
 import Modal from '@/components/Modal'
 
 export const SwapList: React.FC = () => {
@@ -15,7 +12,7 @@ export const SwapList: React.FC = () => {
 
 	return (
 		<>
-			<ListHeader headers={['Token', 'Balance', 'Platform']} />
+			<ListHeader headers={['Token', 'Platform']} />
 			<div className='flex flex-col gap-4'>
 				<div className='flex flex-col gap-4'>
 					{swapTokens && swapTokens.map(swapToken => <SwapListItem token={swapToken} key={swapToken.id} />)}
@@ -26,14 +23,14 @@ export const SwapList: React.FC = () => {
 }
 
 const SwapListItem: React.FC<SwapListItemProps> = ({ token }) => {
-	const balance = useBalancerPoolInfo(token)
-	const [formattedBalance, setFormattedBalance] = useState(null)
+	// const balance = useBalancerPoolInfo(token)
+	// const [formattedBalance, setFormattedBalance] = useState(null)
 	const [showIframe, setShowIframe] = useState(false)
 	const [platform, setPlatform] = useState(null)
 
-	useEffect(() => {
-		if (balance) setFormattedBalance(getDisplayBalance(balance.tokenBalance, balance.tokenDecimals))
-	}, [balance])
+	//	useEffect(() => {
+	//		if (balance) setFormattedBalance(getDisplayBalance(balance.tokenBalance, balance.tokenDecimals))
+	//	}, [balance])
 
 	const handleClick = (platform: any) => {
 		setPlatform(platform)
@@ -45,7 +42,7 @@ const SwapListItem: React.FC<SwapListItemProps> = ({ token }) => {
 			{token.platforms.map((platform: any, index) => {
 				return (
 					<button
-						className='glassmorphic-card w-full px-4 py-2 duration-300 hover:border-baoRed hover:bg-baoRed hover:bg-opacity-20'
+						className='glassmorphic-card w-full px-4 py-3 duration-300 hover:border-baoRed hover:bg-baoRed hover:bg-opacity-20'
 						onClick={() => handleClick(platform)}
 						key={index}
 					>
@@ -61,13 +58,15 @@ const SwapListItem: React.FC<SwapListItemProps> = ({ token }) => {
 								</div>
 							</div>
 
-							<div className='mx-auto my-0 flex w-full items-center font-bakbak text-lg justify-center'>
-								{formattedBalance ? formattedBalance : <Loader />}
-							</div>
+							{/*
+								<div className='mx-auto my-0 flex w-full items-center font-bakbak text-lg justify-center'>
+									{formattedBalance ? formattedBalance : <Loader />}
+						</div>
+						*/}
 
 							<div className='mx-auto my-0 flex w-full flex-auto items-end justify-end text-right'>
 								<Tooltipped content={platform.name} key={platform.name} placement='bottom'>
-									<span className={`ml-5 inline-block select-none duration-200`}>
+									<span className={`ml-5 select-none duration-200 flex place-items-center`}>
 										<Image src={platform.icon} alt={platform.name} height={32} width={32} />
 									</span>
 								</Tooltipped>
