@@ -25,18 +25,22 @@ const GaugeList: React.FC = () => {
 	const gauges = useGauges()
 	const [active, setActive] = useState(true)
 	const [filteredGauges, setFilteredGauges] = useState(gauges.filter(gauge => gauge.active === true))
+
+	// Handle toggle switch between active/inactive gauges
 	const handleActiveToggle = () => {
 		const updateActive = !active
 		setActive(updateActive)
 
 		if (updateActive) {
+			// Show only active gauges
 			setFilteredGauges(gauges.filter(gauge => gauge.active === updateActive))
 		} else {
+			// Show all gauges
 			setFilteredGauges(gauges)
 		}
 	}
 
-	// Add a deprecation notice at the top of the component
+	// Deprecation notice component
 	const DeprecationNotice = () => (
 		<div className='bg-baoBlack border-l-4 border-baoRed text-baoWhite  p-4 mb-4'>
 			<p className='font-bold'>Deprecation Notice</p>
@@ -72,12 +76,17 @@ const GaugeList: React.FC = () => {
 			</div>
 			<div className='flex flex-col gap-4'>
 				{filteredGauges.length ? (
+					// Render the list of gauges if there are any filtered results
 					filteredGauges.map((gauge: ActiveSupportedGauge, i: number) => (
 						<React.Fragment key={i}>
 							<GaugeListItem gauge={gauge} />
 						</React.Fragment>
 					))
+				) : active && gauges.filter(gauge => gauge.active === true).length === 0 ? (
+					// If the active filter is enabled and there are no active gauges, display a message instead of the loader
+					<Typography className='text-center font-bakbak text-base lg:text-lg'>No active gauges available</Typography>
 				) : (
+					// Show the PageLoader only if there are no gauges at all
 					<PageLoader block />
 				)}
 			</div>
