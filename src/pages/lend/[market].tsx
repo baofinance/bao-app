@@ -19,6 +19,7 @@ import { useTotalCollateral } from '@/hooks/lend/useTotalCollateral'
 import { BigNumber } from 'ethers'
 import { useTotalDebt } from '@/hooks/lend/useTotalDebt'
 import { useBorrowApy } from '@/hooks/lend/useBorrowApy'
+import { useSupplyBalances } from '@/hooks/lend/useSupplyBalances'
 
 export async function getStaticPaths() {
 	const paths: { params: { market: string } }[] = []
@@ -45,6 +46,7 @@ const Market: NextPage<{
 }> = ({ marketName }) => {
 	const accountBalances = useAccountBalances(marketName)
 	const borrowBalances = useBorrowBalances(marketName)
+	const supplyBalances = useSupplyBalances(marketName)
 	const totalSupplies = useTotalSupplies(marketName)
 	const oraclePrice = useOraclePrice(marketName)
 	const totalCollateral = useTotalCollateral(marketName)
@@ -158,7 +160,13 @@ const Market: NextPage<{
 						</div>
 
 						<div style={{ marginTop: '8px', marginBottom: '16px' }}>
-							<DebtCard marketName={marketName} depositVal={'0'} mintVal={'0'} />
+							<DebtCard
+								marketName={marketName}
+								borrowBalances={borrowBalances}
+								supplyBalances={supplyBalances}
+								depositVal={'0'}
+								mintVal={'0'}
+							/>
 						</div>
 
 						<div className='mt-6 grid gap-6 lg:grid-cols-1 lg:gap-16'>

@@ -112,20 +112,20 @@ const SupplyListItem: React.FC<SupplyListItemProps> = ({ asset, accountBalances,
 				<div className='m-auto mr-2 flex space-x-2'>
 					{asset.supply === true && (
 						<>
-							<Button width={135} onClick={() => setShowSupplyModal(true)}>
+							<Button width={130} onClick={() => setShowSupplyModal(true)}>
 								Supply
 							</Button>
-							<Button width={135} onClick={() => setShowWithdrawModal(true)}>
+							<Button width={130} onClick={() => setShowWithdrawModal(true)}>
 								Withdraw
 							</Button>
 						</>
 					)}
 					{asset.borrow === true && (
 						<>
-							<Button width={135} onClick={() => setShowBorrowModal(true)}>
+							<Button width={130} onClick={() => setShowBorrowModal(true)}>
 								Borrow
 							</Button>
-							<Button width={135} onClick={() => setShowRepayModal(true)}>
+							<Button width={130} onClick={() => setShowRepayModal(true)}>
 								Repay
 							</Button>
 						</>
