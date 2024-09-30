@@ -22,23 +22,23 @@ import ReactSwitch from 'react-switch'
 import { Icon } from '@/components/Icon'
 
 const GaugeList: React.FC = () => {
-	const gauges = useGauges();
-	const [active, setActive] = useState(true);
-	const [filteredGauges, setFilteredGauges] = useState(gauges.filter(gauge => gauge.active === true));
+	const gauges = useGauges()
+	const [active, setActive] = useState(true)
+	const [filteredGauges, setFilteredGauges] = useState(gauges.filter(gauge => gauge.active === true))
 
 	// Handle toggle switch between active/inactive gauges
 	const handleActiveToggle = () => {
-		const updateActive = !active;
-		setActive(updateActive);
+		const updateActive = !active
+		setActive(updateActive)
 
 		if (updateActive) {
 			// Show only active gauges
-			setFilteredGauges(gauges.filter(gauge => gauge.active === updateActive));
+			setFilteredGauges(gauges.filter(gauge => gauge.active === updateActive))
 		} else {
 			// Show all gauges
-			setFilteredGauges(gauges);
+			setFilteredGauges(gauges)
 		}
-	};
+	}
 
 	// Deprecation notice component
 	const DeprecationNotice = () => (
@@ -49,7 +49,7 @@ const GaugeList: React.FC = () => {
 				with a new rewards system.
 			</p>
 		</div>
-	);
+	)
 
 	return (
 		<>
@@ -91,8 +91,8 @@ const GaugeList: React.FC = () => {
 				)}
 			</div>
 		</>
-	);
-};
+	)
+}
 
 interface GaugeListItemProps {
 	gauge: ActiveSupportedGauge
