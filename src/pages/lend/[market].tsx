@@ -54,7 +54,6 @@ const Market: NextPage<{
 	const totalDebt = useTotalDebt(marketName)
 	const [supplyVal, setSupplyVal] = useState('0')
 	const [borrowVal, setBorrowVal] = useState('0')
-
 	const formattedOraclePrice = useMemo(() => oraclePrice && '$' + getDisplayBalance(oraclePrice, 18), [oraclePrice])
 	const formattedTotalCollateral = useMemo(
 		() => totalCollateral && oraclePrice && '$' + getDisplayBalance(totalCollateral.mul(decimate(oraclePrice)), 18),
@@ -160,13 +159,17 @@ const Market: NextPage<{
 						</div>
 
 						<div style={{ marginTop: '8px', marginBottom: '16px' }}>
-							<DebtCard
-								marketName={marketName}
-								borrowBalances={borrowBalances}
-								supplyBalances={supplyBalances}
-								depositVal={'0'}
-								mintVal={'0'}
-							/>
+							{borrowBalances && borrowBalances.length > 0 ? (
+								<DebtCard
+									marketName={marketName}
+									borrowBalances={borrowBalances}
+									supplyBalances={supplyBalances}
+									depositVal={'0'}
+									mintVal={'0'}
+								/>
+							) : (
+								'test'
+							)}
 						</div>
 
 						<div className='mt-6 grid gap-6 lg:grid-cols-1 lg:gap-16'>

@@ -30,7 +30,7 @@ const DashboardCard: React.FC<DashboardCardProps> = ({
 	const bao = useBao()
 	const { account, chainId } = useWeb3React()
 	const asset = useActiveLendMarket(marketName)
-	const accountLiquidity = useAccountLiquidity(marketName, borrowBalances, supplyBalances)
+	const accountLiquidity = useAccountLiquidity(marketName, supplyBalances, borrowBalances)
 
 	const change = mintVal && depositVal ? BigNumber.from(mintVal).sub(BigNumber.from(depositVal)) : BigNumber.from(0)
 	const borrow = accountLiquidity ? accountLiquidity.usdBorrow : BigNumber.from(0)
@@ -39,7 +39,7 @@ const DashboardCard: React.FC<DashboardCardProps> = ({
 	const newBorrowable = asset && decimate(borrowable).sub(BigNumber.from(parseUnits(formatUnits(change, 36 - 18))))
 
 	const borrowChange = borrow.add(exponentiate(change))
-	const healthFactor = useHealthFactor(marketName, borrowBalances, supplyBalances, borrowChange)
+	const healthFactor = useHealthFactor(marketName, borrowBalances, borrowChange)
 
 	const barPercentage = parseFloat(
 		getDisplayBalance(
@@ -61,7 +61,7 @@ const DashboardCard: React.FC<DashboardCardProps> = ({
 		return c
 	}
 
-	return (
+	return borrow.gt(BigNumber.from(0)) ? (
 		<>
 			<div className='col-span-4 order-first lg:order-3 lg:w-full lg:mr-0'>
 				<div className='relative w-full h-6 bg-gray-300 rounded'>
@@ -133,6 +133,8 @@ const DashboardCard: React.FC<DashboardCardProps> = ({
 				</div>
 			</div>
 		</>
+	) : (
+		<></>
 	)
 }
 

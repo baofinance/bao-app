@@ -1,29 +1,25 @@
-import Multicall from '@/utils/multicall'
 import { useWeb3React } from '@web3-react/core'
 import { BigNumber } from 'ethers'
 import { parseUnits } from 'ethers/lib/utils'
 import { useCallback, useEffect, useState } from 'react'
 import useBao from '../base/useBao'
-import { useAccountLiquidity } from './useAccountLiquidity'
 import { exponentiate } from '@/utils/numberFormat'
 import Config from '@/bao/lib/config'
 import { Balance } from '@/bao/lib/types'
 import { useOraclePrice } from '@/hooks/lend/useOraclePrice'
-import useContract from '@/hooks/base/useContract'
-import type { Comptroller } from '@/typechain/Comptroller'
+import { Comptroller__factory } from '@/typechain/factories'
 
-const useHealthFactor = (marketName: string, borrowBalances: Balance[], supplyBalances: Balance[], borrowChange: BigNumber) => {
+const useHealthFactor = (marketName: string, borrowBalances: Balance[], borrowChange: BigNumber) => {
 	const [healthFactor, setHealthFactor] = useState<BigNumber | undefined>()
 	const bao = useBao()
 	const { account, chainId, library } = useWeb3React()
 	const market = Config.lendMarkets[marketName]
-	const accountLiquidity = useAccountLiquidity(marketName, borrowBalances, supplyBalances)
 	const price = useOraclePrice(marketName)
-	const comptroller = useContract<Comptroller>('Comptroller', market.comptroller)
+	const signerOrProvider = account ? library.getSigner() : library
+	const comptroller = Comptroller__factory.connect(market.comptroller, signerOrProvider)
+	const [collateralFactor, setCollateralFactor] = useState(null)
 
 	const fetchHealthFactor = useCallback(async () => {
-		const collateralFactor = await comptroller.markets(market.marketAddresses[chainId])
-
 		if (Object.keys(borrowBalances).length === 0) return setHealthFactor(BigNumber.from(0))
 
 		const collateralSummation = BigNumber.from(price)
@@ -38,13 +34,22 @@ const useHealthFactor = (marketName: string, borrowBalances: Balance[], supplyBa
 		} catch {
 			setHealthFactor(BigNumber.from(0))
 		}
-	}, [market, bao, account, price, borrowChange])
+	}, [market, bao, account, price, borrowChange, comptroller])
+
+	const fetchCollateralFactor = useCallback(async () => {
+		try {
+			const _collateralFactor = await comptroller.callStatic.markets(market.marketAddresses[chainId])
+			setCollateralFactor(_collateralFactor)
+		} catch {}
+	}, [comptroller])
 
 	useEffect(() => {
-		if (!(market && accountLiquidity && bao && account && price)) return
+		if (!!comptroller && !collateralFactor) fetchCollateralFactor()
+	}, [comptroller])
 
-		fetchHealthFactor()
-	}, [market, accountLiquidity, bao, account, price, fetchHealthFactor, borrowChange])
+	useEffect(() => {
+		if (!!market && !!collateralFactor && !!borrowBalances && !!bao && !!account && !!price && !healthFactor) fetchHealthFactor()
+	}, [collateralFactor, borrowBalances, price, market, bao, account])
 
 	return healthFactor
 }

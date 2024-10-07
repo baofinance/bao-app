@@ -28,7 +28,7 @@ export const useSupplyRate = (marketName: string): BigNumber => {
 			)
 			const res = MultiCall.parseCallResults(await bao.multicall.call(multiCallContext))
 
-			return res[address][1].values[0]
+			return res[address][0].values[0]
 		},
 		{
 			enabled,

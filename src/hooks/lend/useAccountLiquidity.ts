@@ -9,7 +9,6 @@ import { providerKey } from '@/utils/index'
 import { useQuery } from '@tanstack/react-query'
 import { useExchangeRates } from './useExchangeRate'
 import { useSupplyRate } from '@/hooks/lend/useSupplyRate'
-import { useBorrowRate } from '@/hooks/lend/useBorrowRate'
 import { useOraclePrice } from '@/hooks/lend/useOraclePrice'
 
 export type AccountLiquidity = {
@@ -25,10 +24,10 @@ export const useAccountLiquidity = (marketName: string, supplyBalances: Balance[
 	const { exchangeRates } = useExchangeRates(marketName)
 	const price = useOraclePrice(marketName)
 	const supplyRate = useSupplyRate(marketName)
-	const borrowRate = useBorrowRate(marketName)
 	const comptroller = useContract<Comptroller>('Comptroller', market.comptroller)
 
-	const enabled = !!comptroller && !!account && !!market && !!supplyBalances && !!borrowBalances && !!exchangeRates && !!price
+	const enabled =
+		!!comptroller && !!account && !!market && !!supplyBalances && !!borrowBalances && !!exchangeRates && !!price && !!supplyRate
 	const { data: accountLiquidity } = useQuery(
 		[
 			'@/hooks/vaults/useAccountLiquidity',
@@ -45,25 +44,35 @@ export const useAccountLiquidity = (marketName: string, supplyBalances: Balance[
 		async () => {
 			const compAccountLiqudity = await comptroller.getAccountLiquidity(account)
 
-			const usdSupply = Object.keys(exchangeRates).reduce((prev: BigNumber, addr: string) => {
-				const supply = supplyBalances.find(balance => balance.address === addr)
-				return prev.add(decimate(supply.balance.mul(exchangeRates[addr]).mul(price)))
-			}, BigNumber.from(0))
+			const usdSupply =
+				supplyBalances && supplyBalances.length > 0
+					? Object.keys(exchangeRates).reduce((prev: BigNumber, addr: string) => {
+							const supply = supplyBalances.find(balance => balance.address === addr)
+							if (!supply) return
+							return prev.add(decimate(supply.balance.mul(exchangeRates[addr]).mul(price)))
+						}, BigNumber.from(0))
+					: BigNumber.from(0)
 
 			const usdBorrow = Object.entries(borrowBalances).reduce((prev: BigNumber, [, { address, balance }]) => {
 				return prev.add(balance.mul(price))
 			}, BigNumber.from(0))
 
-			const supplyApy = supplyBalances
-				.find(balance => balance.address === market.marketAddresses[chainId])
-				.balance.mul(exchangeRates[market.marketAddresses[chainId]])
-				.mul(price)
-				.mul(supplyRate)
+			const supplyApy =
+				supplyBalances && supplyBalances.length > 0
+					? supplyBalances
+							.find(balance => balance.address === market.underlyingAddresses[chainId])
+							.balance.mul(exchangeRates[market.marketAddresses[chainId]])
+							.mul(price)
+							.mul(supplyRate)
+					: BigNumber.from(0)
 
-			const borrowApy = borrowBalances
-				.find(balance => balance.address === market.marketAddresses[chainId])
-				.balance.mul(price)
-				.mul(supplyRate)
+			const borrowApy =
+				borrowBalances && borrowBalances.length > 0
+					? borrowBalances
+							.find(balance => balance.address === market.marketAddresses[chainId])
+							.balance.mul(price)
+							.mul(supplyRate)
+					: BigNumber.from(0)
 
 			const netApy =
 				supplyApy.gt(borrowApy) && !usdSupply.eq(0)
