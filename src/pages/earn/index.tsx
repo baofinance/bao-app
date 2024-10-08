@@ -28,7 +28,10 @@ const Gauges: React.FC = () => {
 					<Typography variant='base' className='pb-2 text-center leading-5 m-0 pr-1 font-light tracking-tight lg:mb-4'>
 						Deposit synth liquidity tokens to earn rewards in our partner pools
 					</Typography>
+
 					<ExternalFarms />
+					<div className='mt-8' />
+					<GaugeList />
 				</div>
 			</div>
 		</>
