@@ -1,22 +1,23 @@
 import { Icon } from '@/components/Icon'
 import Typography from '@/components/Typography'
-import VaultList from '@/pages/vaults/components/VaultList'
+import VaultList from '@/pages/synths/components/VaultList'
 import { NextSeo } from 'next-seo'
 import React from 'react'
 
-const Vaults: React.FC = () => {
+const Synths: React.FC = () => {
 	return (
 		<div className='max-w-3xl mx-auto'>
 			<NextSeo title={'Vaults'} description={'Provide different collateral types to mint synthetics.'} />
 			<div className='space-y-12'>
 				<div className='lg:col-span-2'>
 					<Typography variant='hero' className='stroke'>
-						Vaults
+						Synths
 					</Typography>
 					<div className='flex gap-2'>
 						<Icon icon='lightbulb' className='m-0 h-6 w-6 flex-none' />
 						<Typography className='m-0 pr-1 text-base font-light tracking-tight lg:mb-4'>
-							Mint price-stable synthetic assets instantly and on your terms, utilizing our yield-bearing Bao Baskets or ETH as collateral.
+							Create synthetic assets pegged to real-world or crypto asset prices, backed by a variety of supported collateral types. Prices
+							are maintained through accurate, decentralized oracle networks.
 						</Typography>
 					</div>
 
@@ -39,4 +40,4 @@ const Vaults: React.FC = () => {
 	)
 }
 
-export default Vaults
+export default Synths

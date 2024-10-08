@@ -35,7 +35,7 @@ export const VaultList: React.FC = () => {
 
 	return (
 		<>
-			<ListHeader headers={isDesktop ? ['Vault Name', 'Collateral Assets', 'Borrow vAPR'] : ['Name', 'Assets', 'vAPR']} />
+			<ListHeader headers={isDesktop ? ['Name', 'Collateral Assets', 'Borrow vAPR'] : ['Name', 'Assets', 'vAPR']} />
 			<div className='flex flex-col gap-4'>
 				{loading && <PageLoader block />}
 				<VaultListItem vaultName={'baoUSD'} />
