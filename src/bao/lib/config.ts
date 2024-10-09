@@ -810,6 +810,8 @@ export default {
 		weETH: {
 			id: 1,
 			active: true,
+			name: 'weETH',
+			desc: 'Wrapped eETH',
 			comptroller: '0xc2eA0F9856B58CF182Cc72B8FaEc51351479232e',
 			oracle: '0xc7D8b6b170E0FCf4182fa29b47F35F48C402bF0F',
 			marketAddresses: {
@@ -869,6 +871,8 @@ export default {
 		USDe: {
 			id: 1,
 			active: true,
+			name: 'USDe',
+			desc: 'Ethena USDe',
 			comptroller: '0xc2eA0F9856B58CF182Cc72B8FaEc51351479232e',
 			oracle: '0xc7D8b6b170E0FCf4182fa29b47F35F48C402bF0F',
 			marketAddresses: {

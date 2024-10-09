@@ -235,6 +235,8 @@ export interface LendMarket {
 	active: boolean
 	comptroller: string
 	oracle: string
+	name: string
+	desc: string
 	marketAddresses: {
 		[network: number]: string
 	}

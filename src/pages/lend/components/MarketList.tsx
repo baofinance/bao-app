@@ -29,18 +29,18 @@ export const MarketListItem: React.FC<MarketListProps> = ({ marketName }: Market
 
 	return (
 		market && (
-			<Link href={account ? `/lend/${marketName}` : `#`} key={marketName}>
-				<button
-					className='glassmorphic-card w-full px-4 py-2 duration-300 hover:border-baoRed hover:bg-baoRed hover:bg-opacity-20'
-					disabled={!account}
-				>
+			<Link href={account ? `/lend/${market.name}` : `#`} key={market.name}>
+				<button className='glassmorphic-card w-full px-4 py-2 duration-300 hover:border-baoRed hover:bg-baoRed hover:bg-opacity-20'>
 					<div className='flex w-full flex-row'>
 						<div className='flex w-full'>
 							<div className='my-auto'>
-								<Image src={`/images/tokens/${marketName}.png`} alt={marketName} className={`inline-block`} height={32} width={32} />
+								<Image src={`/images/tokens/${market.name}.png`} alt={market.name} className={`inline-block`} height={38} width={38} />
 								<span className='inline-block text-left align-middle'>
 									<Typography variant='lg' className='ml-2 font-bakbak'>
-										{marketName}
+										{market.name}
+									</Typography>
+									<Typography variant='sm' className={`ml-2 text-baoWhite`}>
+										{market.desc}
 									</Typography>
 								</span>
 							</div>
