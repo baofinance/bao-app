@@ -17,19 +17,7 @@ export const AssetsCard = ({
 }) => {
 	return (
 		<>
-			<Typography variant='xl' className='p-4 text-left font-bakbak'>
-				Assets
-			</Typography>
-			<Card className='glassmorphic-card p-6'>
-				<Card.Body>
-					<SupplyList
-						accountBalances={accountBalances}
-						borrowBalances={borrowBalances}
-						totalSupplies={totalSupplies}
-						marketName={marketName}
-					/>
-				</Card.Body>
-			</Card>
+			<SupplyList accountBalances={accountBalances} borrowBalances={borrowBalances} totalSupplies={totalSupplies} marketName={marketName} />
 		</>
 	)
 }

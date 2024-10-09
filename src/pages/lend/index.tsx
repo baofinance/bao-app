@@ -23,12 +23,7 @@ const Markets: React.FC = () => {
 					</div>
 
 					<div className='flex lg:block mr-auto'>
-						<a
-							className='mr-auto'
-							href='https://info.bao.finance/docs/franchises/bao-markets-hard-synths'
-							target='_blank'
-							rel='noopener noreferrer'
-						>
+						<a className='mr-auto' href='https://info.bao.finance/docs/' target='_blank' rel='noopener noreferrer'>
 							<button className='glassmorphic-card px-4 py-2 font-bakbak border-baoRed hover:bg-baoRed'>Learn More</button>
 						</a>
 					</div>

@@ -12,7 +12,7 @@ export const MarketList: React.FC = () => {
 
 	return (
 		<>
-			<ListHeader headers={['Market', 'Assets']} />
+			<ListHeader headers={['Market', '']} />
 			<div className='flex flex-col gap-4'>
 				{markets == null && <PageLoader block />}
 				{Object.keys(markets).map((marketName, index) => (

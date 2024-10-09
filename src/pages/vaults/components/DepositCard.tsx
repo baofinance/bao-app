@@ -91,7 +91,7 @@ export const DepositCard = ({
 									>
 										<Tooltipped
 											content={false !== asset.archived ? 'Deprecated' : 'Active'}
-											key={currentAsset.underlyingSymbol}
+											key={currentAsset.toString()}
 											placement='top'
 											className='rounded-full bg-baoRed '
 										>
