@@ -21,6 +21,7 @@ import type { AppProps } from 'next/app'
 import dynamic from 'next/dynamic'
 import Head from 'next/head'
 import React, { ReactNode } from 'react'
+import { Analytics } from '@vercel/analytics/react'
 
 function getLibrary(provider: any): Web3Provider {
 	const library = new Web3Provider(provider)
@@ -80,6 +81,7 @@ function App({ Component, pageProps }: AppProps) {
 					<Footer />
 				</div>
 			</Providers>
+			<Analytics />
 		</>
 	)
 }
