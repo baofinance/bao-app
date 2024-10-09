@@ -6,10 +6,9 @@ import { providerKey } from '@/utils/index'
 import { useQuery } from '@tanstack/react-query'
 import { useBlockUpdater } from '@/hooks/base/useBlock'
 import { useTxReceiptUpdater } from '@/hooks/base/useTransactionProvider'
-import { useEffect } from 'react'
-import { ActiveLendMarket, LendMarket } from '@/bao/lib/types'
+import { useCallback, useEffect } from 'react'
+import { ActiveLendMarket } from '@/bao/lib/types'
 import { Contract } from '@ethersproject/contracts'
-import { Erc20__factory } from '@/typechain/factories'
 
 type LendMarketApprovals = {
 	approvals: { [key: string]: BigNumber }
@@ -59,13 +58,13 @@ export const useLendMarketApprovals = (lendMarket: ActiveLendMarket): LendMarket
 		},
 	)
 
-	const _refetch = () => {
+	const _refetch = useCallback(() => {
 		if (enabled) refetch()
-	}
+	}, [enabled, refetch])
 
 	useEffect(() => {
 		_refetch()
-	}, [lendMarket])
+	}, [lendMarket, _refetch])
 
 	useBlockUpdater(_refetch, 10)
 	useTxReceiptUpdater(_refetch)

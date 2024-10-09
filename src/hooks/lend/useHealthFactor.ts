@@ -34,22 +34,24 @@ const useHealthFactor = (marketName: string, borrowBalances: Balance[], borrowCh
 		} catch {
 			setHealthFactor(BigNumber.from(0))
 		}
-	}, [market, bao, account, price, borrowChange, comptroller])
+	}, [market, price, borrowChange, borrowBalances, chainId, collateralFactor]) // Added missing dependencies
 
 	const fetchCollateralFactor = useCallback(async () => {
 		try {
 			const _collateralFactor = await comptroller.callStatic.markets(market.marketAddresses[chainId])
 			setCollateralFactor(_collateralFactor)
-		} catch {}
-	}, [comptroller])
+		} catch {
+			// Intentionally left empty
+		}
+	}, [comptroller, chainId, market.marketAddresses]) // Added missing dependency
 
 	useEffect(() => {
 		if (!!comptroller && !collateralFactor) fetchCollateralFactor()
-	}, [comptroller])
+	}, [comptroller, collateralFactor, fetchCollateralFactor]) // Added collateralFactor to dependencies
 
 	useEffect(() => {
 		if (!!market && !!collateralFactor && !!borrowBalances && !!bao && !!account && !!price && !healthFactor) fetchHealthFactor()
-	}, [collateralFactor, borrowBalances, price, market, bao, account])
+	}, [collateralFactor, borrowBalances, price, market, bao, account, healthFactor, fetchHealthFactor]) // Added healthFactor to dependencies
 
 	return healthFactor
 }

@@ -2,7 +2,7 @@ import useBao from '@/hooks/base/useBao'
 import { useWeb3React } from '@web3-react/core'
 import { useQuery } from '@tanstack/react-query'
 import { providerKey } from '@/utils/index'
-import { Ctoken__factory, VaultOracle__factory } from '@/typechain/factories'
+import { VaultOracle__factory } from '@/typechain/factories'
 import Config from '@/bao/lib/config'
 import { BigNumber } from 'ethers'
 
