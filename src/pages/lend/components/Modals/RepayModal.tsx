@@ -3,7 +3,11 @@ import { Asset } from '@/bao/lib/types'
 import Modal from '@/components/Modal'
 import Typography from '@/components/Typography'
 import Image from 'next/future/image'
-import React, { useCallback } from 'react'
+import React, { useCallback, useState } from 'react'
+import Input from '@/components/Input'
+import { parseUnits } from 'ethers/lib/utils'
+import { BigNumber } from 'ethers'
+import RepayButton from '@/pages/lend/components/Buttons/RepayButton'
 
 export type RepayModalProps = {
 	asset: Asset
@@ -15,9 +19,22 @@ export type RepayModalProps = {
 const RepayModal = ({ asset, show, onHide, marketName }: RepayModalProps) => {
 	const operation = 'Repay'
 
+	const [val, setVal] = useState('0')
+
 	const hideModal = useCallback(() => {
 		onHide()
 	}, [onHide])
+
+	const handleChange = useCallback(
+		(e: React.FormEvent<HTMLInputElement>) => {
+			setVal(e.currentTarget.value)
+		},
+		[setVal],
+	)
+
+	const handleSelectMax = useCallback(() => {
+		return setVal('0')
+	}, [])
 
 	return (
 		<>
@@ -25,7 +42,7 @@ const RepayModal = ({ asset, show, onHide, marketName }: RepayModalProps) => {
 				<Modal.Header onClose={hideModal}>
 					<div className='mx-0 my-auto flex h-full items-center text-baoWhite'>
 						<Typography variant='xl' className='mr-1 inline-block'>
-							Repay
+							Repay {asset.name}
 						</Typography>
 						<Image src={asset.icon} width={32} height={32} alt={asset.name} />
 					</div>
@@ -39,14 +56,33 @@ const RepayModal = ({ asset, show, onHide, marketName }: RepayModalProps) => {
 										Available:
 									</Typography>
 									<Typography variant='sm' className='font-bakbak'>
+										{'0.00'}
 										<Image src={asset.icon} width={32} height={32} alt={asset.name} className='inline p-1' />
-										{asset.name}
+										<span className='hover:text-baoRed'>{asset.name}</span>
 									</Typography>
 								</div>
 							</div>
+							<Typography variant='lg' className='py-5 w-full text-center font-bakbak'>
+								<Input
+									onSelectMax={handleSelectMax}
+									onChange={handleChange}
+									value={val}
+									max={0}
+									symbol={asset.name}
+									className='h-12 min-w-[150px] z-20 w-full bg-baoBlack lg:h-auto'
+								/>
+							</Typography>
 						</div>
 					</Modal.Body>
-					<Modal.Actions></Modal.Actions>
+					<Modal.Actions>
+						<RepayButton
+							asset={asset}
+							val={val ? parseUnits(val, asset.underlyingDecimals) : BigNumber.from(0)}
+							isDisabled={!val}
+							onHide={onHide}
+							marketName={marketName}
+						/>
+					</Modal.Actions>
 				</>
 			</Modal>
 		</>

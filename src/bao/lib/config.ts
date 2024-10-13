@@ -848,7 +848,7 @@ export default {
 					underlyingDecimals: 18,
 					name: 'BaoUSD',
 					icon: '/images/tokens/baoUSD.png',
-					supply: false,
+					supply: true,
 					borrow: true,
 				},
 				{

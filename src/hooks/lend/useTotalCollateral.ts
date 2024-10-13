@@ -7,17 +7,20 @@ import { Ctoken__factory } from '@/typechain/factories'
 import MultiCall from '@/utils/multicall'
 import Config from '@/bao/lib/config'
 import { BigNumber } from 'ethers'
+import { useOraclePrices } from './useOraclePrices'
+import { decimate, getDisplayBalance } from '../../utils/numberFormat'
 
 export const useTotalCollateral = (marketName: string): BigNumber => {
 	const bao = useBao()
 	const { account, library, chainId } = useWeb3React()
+	const prices = useOraclePrices(marketName)
 
-	const enabled = !!bao && !!account && !!chainId
+	const enabled = !!bao && !!account && !!chainId && !!prices
 	const { data: totalCollateral } = useQuery(
 		['@/hooks/lend/useTotalCollateral', providerKey(library, account, chainId), { enabled }],
 		async () => {
-			const address = Config.lendMarkets[marketName].marketAddresses[chainId]
-			const contracts: Contract[] = [Ctoken__factory.connect(address, library)]
+			const addresses = Config.lendMarkets[marketName].assets.map(asset => asset.marketAddress[chainId])
+			const contracts: Contract[] = addresses.map(address => Ctoken__factory.connect(address, library))
 
 			const res = MultiCall.parseCallResults(
 				await bao.multicall.call(
@@ -36,7 +39,12 @@ export const useTotalCollateral = (marketName: string): BigNumber => {
 				),
 			)
 
-			return res[address][1].values[0]
+			let totalCollateral = BigNumber.from(0)
+			Object.keys(res).map(
+				address => (totalCollateral = totalCollateral.add(decimate(res[address][1].values[0].mul(BigNumber.from(prices[address]))))),
+			)
+
+			return totalCollateral
 		},
 		{
 			enabled,

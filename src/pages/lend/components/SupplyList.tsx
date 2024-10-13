@@ -1,7 +1,7 @@
 import Loader from '@/components/Loader'
 import Typography from '@/components/Typography'
 import Image from 'next/future/image'
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import Config from '@/bao/lib/config'
 import { getDisplayBalance } from '@/utils/numberFormat'
 import { Asset, Balance, TotalSupply } from '@/bao/lib/types'
@@ -11,15 +11,9 @@ import SupplyModal from '@/pages/lend/components/Modals/SupplyModal'
 import BorrowModal from '@/pages/lend/components/Modals/BorrowModal'
 import WithdrawModal from '@/pages/lend/components/Modals/WithdrawModal'
 import RepayModal from '@/pages/lend/components/Modals/RepayModal'
-import { BigNumber } from 'ethers'
 import Tooltipped from '@/components/Tooltipped'
-import { StatBlock } from '@/components/Stats'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faAngleUp, faCircleInfo } from '@fortawesome/free-solid-svg-icons'
-import { Transition } from '@headlessui/react'
-import Card from '@/components/Card'
 
-export const SupplyList: React.FC<SupplyListProps> = ({ accountBalances, marketName, borrowBalances, totalSupplies }) => {
+export const SupplyList: React.FC<SupplyListProps> = ({ marketName, borrowBalances, totalSupplies }) => {
 	const assets = Config.lendMarkets[marketName].assets
 
 	return (
@@ -34,7 +28,6 @@ export const SupplyList: React.FC<SupplyListProps> = ({ accountBalances, marketN
 							<SupplyListItem
 								asset={asset}
 								key={asset.id}
-								accountBalances={accountBalances}
 								borrowBalances={borrowBalances}
 								totalSupplies={totalSupplies}
 								marketName={marketName}
@@ -46,15 +39,13 @@ export const SupplyList: React.FC<SupplyListProps> = ({ accountBalances, marketN
 	)
 }
 
-const SupplyListItem: React.FC<SupplyListItemProps> = ({ asset, accountBalances, marketName, borrowBalances, totalSupplies }) => {
+const SupplyListItem: React.FC<SupplyListItemProps> = ({ asset, marketName, borrowBalances, totalSupplies }) => {
 	const { chainId } = useWeb3React()
 	const [balance, setBalance] = useState(null)
 	const [showSupplyModal, setShowSupplyModal] = useState(false)
 	const [showWithdrawModal, setShowWithdrawModal] = useState(false)
 	const [showBorrowModal, setShowBorrowModal] = useState(false)
 	const [showRepayModal, setShowRepayModal] = useState(false)
-	const [showInfo, setShowInfo] = useState(false)
-	const [selectedOption, setSelectedOption] = useState('ETH')
 
 	const yourPosition = useMemo(
 		() =>
@@ -73,20 +64,6 @@ const SupplyListItem: React.FC<SupplyListItemProps> = ({ asset, accountBalances,
 		[totalSupplies, asset],
 	)
 
-	/*
-	function fetchBalance(asset: Asset) {
-		if (accountBalances !== null && accountBalances !== undefined)
-			return accountBalances.find(({ address }) => address === asset.underlyingAddress[chainId])
-	}
-
-	useEffect(() => {
-		const balance = fetchBalance(asset)
-		if (balance !== null && balance !== undefined) {
-			setBalance(balance)
-			setFormattedBalance(getDisplayBalance(balance.balance, balance.decimals))
-		}
-	}, [accountBalances])
-	*/
 	return (
 		<>
 			<div className={'flex w-full justify-between place-items-center gap-5 glassmorphic-card p-2'} key={asset.toString()}>
@@ -94,7 +71,7 @@ const SupplyListItem: React.FC<SupplyListItemProps> = ({ asset, accountBalances,
 					content={false !== !asset.active ? 'Inactive' : 'Active'}
 					key={asset.name}
 					placement='top'
-					className='rounded-full bg-baoRed '
+					className='rounded-full bg-baoRed w-[20%]'
 				>
 					<div
 						key={asset.toString()}
@@ -102,7 +79,7 @@ const SupplyListItem: React.FC<SupplyListItemProps> = ({ asset, accountBalances,
 							'text-baoWhite flex overflow-hidden rounded-2xl border border-baoWhite/20 bg-baoBlack shadow-lg shadow-baoBlack ring-1 ring-black ring-opacity-5 focus:outline-none select-none border-baoBlack px-2 py-3 text-sm'
 						}
 					>
-						<div className='mx-0 my-auto flex h-full justify-center items-center gap-4 w-[200px]'>
+						<div className='mx-0 my-auto flex h-full justify-center items-center gap-4 w-[150px]'>
 							<div className='col-span-3'>
 								<Image className='z-10 inline-block select-none' src={`${asset.icon}`} alt={asset.name} width={28} height={28} />
 								<span className='ml-2 inline-block text-left align-middle'>
@@ -114,40 +91,39 @@ const SupplyListItem: React.FC<SupplyListItemProps> = ({ asset, accountBalances,
 						</div>
 					</div>
 				</Tooltipped>
-				<table className='table-fixed justify-between w-2/3  text-left md:table hidden'>
+				<table className='table-fixed justify-between w-[30%]  text-left md:table hidden'>
 					<thead>
-						<tr className='text-baoWhite/60'>
+						<tr className='font-light text-baoWhite/60 text-base'>
 							<th>Total market supply</th>
 							<th>Your Position</th>
 						</tr>
 					</thead>
 					<tbody>
 						<tr>
-							<td className='font-bakbak text-xl'>{totalMarketSupply ? totalMarketSupply : <Loader />}</td>
-							<td className='font-bakbak text-xl'>{yourPosition ? yourPosition : <Loader />}</td>
+							<td className='font-bakbak text-base'>{totalMarketSupply ? totalMarketSupply : <Loader />}</td>
+							<td className='font-bakbak text-base'>{yourPosition ? yourPosition : <Loader />}</td>
 						</tr>
 					</tbody>
 				</table>
-				<div className='m-auto mr-2 flex space-x-2'>
-					{/* <Button
-						className='!p-3'
-						onClick={() => {
-							setSelectedOption(asset.name)
-							setShowInfo(true)
-						}}
-					>
-						<FontAwesomeIcon icon={faCircleInfo} width={24} height={24} />
-					</Button> */}
+				<div className='m-auto mr-2 flex space-x-2 w-[50%] justify-end'>
 					{asset.supply === true && (
 						<>
-							<Button onClick={() => setShowSupplyModal(true)}>Supply</Button>
-							<Button onClick={() => setShowWithdrawModal(true)}>Withdraw</Button>
+							<Button width={'w-[130px]'} onClick={() => setShowSupplyModal(true)}>
+								Supply
+							</Button>
+							<Button width={'w-[130px]'} onClick={() => setShowWithdrawModal(true)}>
+								Withdraw
+							</Button>
 						</>
 					)}
 					{asset.borrow === true && (
 						<>
-							<Button onClick={() => setShowBorrowModal(true)}>Borrow</Button>
-							<Button onClick={() => setShowRepayModal(true)}>Repay</Button>
+							<Button width={'w-[130px]'} onClick={() => setShowBorrowModal(true)}>
+								Borrow
+							</Button>
+							<Button width={'w-[130px]'} onClick={() => setShowRepayModal(true)}>
+								Repay
+							</Button>
 						</>
 					)}
 				</div>
@@ -165,7 +141,7 @@ const SupplyListItem: React.FC<SupplyListItemProps> = ({ asset, accountBalances,
 					onHide={() => setShowWithdrawModal(!showWithdrawModal)}
 					marketName={marketName}
 				/>
-				<BorrowModal asset={asset} show={showBorrowModal} onHide={() => setShowBorrowModal(!showBorrowModal)} />
+				<BorrowModal asset={asset} show={showBorrowModal} onHide={() => setShowBorrowModal(!showBorrowModal)} marketName={marketName} />
 				<RepayModal asset={asset} show={showRepayModal} onHide={() => setShowRepayModal(!showRepayModal)} marketName={marketName} />
 			</div>
 		</>
@@ -176,14 +152,12 @@ export default SupplyList
 
 type SupplyListItemProps = {
 	asset: Asset
-	accountBalances: Balance[]
 	marketName: string
 	borrowBalances: Balance[]
 	totalSupplies: TotalSupply[]
 }
 
 type SupplyListProps = {
-	accountBalances: Balance[]
 	marketName: string
 	borrowBalances: Balance[]
 	totalSupplies: TotalSupply[]

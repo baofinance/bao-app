@@ -19,7 +19,7 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
 	children?: ReactNode
 	size?: ButtonSize
 	fullWidth?: boolean
-	width?: number | boolean
+	width?: string | boolean
 	pendingTx?: string | boolean
 	txHash?: string
 	inline?: boolean
@@ -59,7 +59,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 					Size[size],
 					inline ? 'inline-block' : 'flex',
 					fullWidth ? 'w-full' : '',
-					width ? 'w-[' + width + 'px]' : 'w-fit',
+					width ? width : 'w-fit',
 					disabled ? 'cursor-not-allowed opacity-50' : '',
 					`relative flex items-center justify-center overflow-hidden glassmorphic-card border border-baoWhite border-opacity-20
 				bg-baoWhite bg-opacity-5 px-4 py-2 font-bakbak text-lg text-baoWhite duration-300 hover:border-baoRed hover:bg-baoRed hover:bg-opacity-20`,

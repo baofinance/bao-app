@@ -3,7 +3,7 @@ import { ActiveSupportedVault, Asset, Balance } from '@/bao/lib/types'
 import Modal from '@/components/Modal'
 import { BigNumber } from 'ethers'
 import { parseUnits } from 'ethers/lib/utils'
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import Input from '@/components/Input'
 import Typography from '@/components/Typography'
 import SupplyButton from '@/pages/lend/components/Buttons/SupplyButton'
@@ -23,6 +23,7 @@ export type SupplyModalProps = {
 const SupplyModal = ({ asset, show, onHide, marketName, fullBalance }: SupplyModalProps) => {
 	const [val, setVal] = useState('0')
 	const operation = 'Supply'
+	const [formattedBalance, setFormattedBalance] = useState('0.00')
 
 	const handleChange = useCallback(
 		(e: React.FormEvent<HTMLInputElement>) => {
@@ -32,12 +33,18 @@ const SupplyModal = ({ asset, show, onHide, marketName, fullBalance }: SupplyMod
 	)
 
 	const handleSelectMax = useCallback(() => {
+		if (!fullBalance) return setVal('0')
 		setVal(fullBalance.balance.toString())
 	}, [fullBalance, setVal])
 
 	const hideModal = useCallback(() => {
 		onHide()
 	}, [onHide])
+
+	useEffect(() => {
+		if (!fullBalance) return
+		setFormattedBalance(getDisplayBalance(fullBalance.balance, fullBalance.decimals))
+	}, [fullBalance])
 
 	return (
 		<Modal isOpen={show} onDismiss={() => {}}>
@@ -57,7 +64,8 @@ const SupplyModal = ({ asset, show, onHide, marketName, fullBalance }: SupplyMod
 								Balance:
 							</Typography>
 							<Typography variant='sm' className='font-bold'>
-								{fullBalance && getDisplayBalance(fullBalance.balance, fullBalance.decimals)}{' '}
+								{formattedBalance}
+								<Image src={asset.icon} width={32} height={32} alt={asset.name} className='inline p-1' />
 								<span className='hover:text-baoRed'>{asset.name}</span>
 							</Typography>
 						</div>

@@ -14,6 +14,8 @@ export const useActiveLendMarket = (marketName: string): ActiveLendMarket => {
 		async (marketName: string) => {
 			const signerOrProvider = account ? library.getSigner() : library
 			const lendMarket = Config.lendMarkets[marketName]
+
+			if (!lendMarket) return false
 			const marketAddress = lendMarket.marketAddresses[chainId]
 			const underlyingAddress = lendMarket.underlyingAddresses[chainId]
 			const marketContract = Ctoken__factory.connect(marketAddress, signerOrProvider)

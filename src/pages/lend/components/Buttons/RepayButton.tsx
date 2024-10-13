@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { Asset } from '@/bao/lib/types'
+import { ActiveSupportedVault, Asset } from '@/bao/lib/types'
 import Button from '@/components/Button'
 import { PendingTransaction } from '@/components/Loader/Loader'
 import useContract from '@/hooks/base/useContract'
@@ -10,11 +10,11 @@ import { getDisplayBalance } from '@/utils/numberFormat'
 import { faExternalLink } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { BigNumber, ethers } from 'ethers'
-import { useWeb3React } from '@web3-react/core'
 import { useActiveLendMarket } from '@/hooks/lend/useActiveLendMarket'
 import { useLendMarketApprovals } from '@/hooks/lend/useLendMarketApprovals'
+import { useWeb3React } from '@web3-react/core'
 
-type SupplyButtonProps = {
+type RepayButtonProps = {
 	asset: Asset
 	val: BigNumber
 	isDisabled: boolean
@@ -22,7 +22,7 @@ type SupplyButtonProps = {
 	marketName: string
 }
 
-const SupplyButton = ({ asset, val, isDisabled, onHide, marketName }: SupplyButtonProps) => {
+const RepayButton = ({ asset, val, isDisabled, onHide, marketName }: RepayButtonProps) => {
 	const activeLendMarket = useActiveLendMarket(marketName)
 	const { pendingTx, handleTx, txHash } = useTransactionHandler()
 	const { approvals } = useLendMarketApprovals(activeLendMarket)
@@ -40,19 +40,17 @@ const SupplyButton = ({ asset, val, isDisabled, onHide, marketName }: SupplyButt
 			</a>
 		)
 	} else {
-		return typeof approvals != 'undefined' &&
-			approvals[asset.underlyingAddress[chainId]] &&
-			approvals[asset.underlyingAddress[chainId]].gt(0) ? (
+		return approvals && approvals[asset.underlyingAddress[chainId]] && approvals[asset.underlyingAddress[chainId]].gt(0) ? (
 			<Button
 				fullWidth
 				disabled={isDisabled}
-				onClick={async () => {
-					// @ts-ignore
-					const mintTx = activeLendMarket.marketContract.mint(val, true) // TODO- Give the user the option in the SupplyModal to tick collateral on/off
-					handleTx(mintTx, `${marketName} Supply ${getDisplayBalance(val, 18).toString()} ${asset.name}`, () => onHide())
+				onClick={() => {
+					const repayTx = activeLendMarket.marketContract.repayBorrow(val)
+
+					handleTx(repayTx, `${marketName} Repay ${getDisplayBalance(val, asset.underlyingDecimals)} ${asset.name}`, () => onHide())
 				}}
 			>
-				Supply
+				Repay
 			</Button>
 		) : (
 			<Button
@@ -60,14 +58,14 @@ const SupplyButton = ({ asset, val, isDisabled, onHide, marketName }: SupplyButt
 				disabled={!approvals}
 				onClick={() => {
 					// TODO- give the user a notice that we're approving max uint and instruct them how to change this value.
-					const tx = erc20.approve(asset.underlyingAddress[chainId], ethers.constants.MaxUint256)
+					const tx = erc20.approve(activeLendMarket.marketContract.address, ethers.constants.MaxUint256)
 					handleTx(tx, `${marketName} Approve ${asset.name}`)
 				}}
 			>
-				Approve {asset.name}
+				Repay
 			</Button>
 		)
 	}
 }
 
-export default SupplyButton
+export default RepayButton

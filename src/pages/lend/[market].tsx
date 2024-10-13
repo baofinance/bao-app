@@ -44,7 +44,6 @@ export async function getStaticProps({ params }: { params: any }) {
 const Market: NextPage<{
 	marketName: string
 }> = ({ marketName }) => {
-	const accountBalances = useAccountBalances(marketName)
 	const borrowBalances = useBorrowBalances(marketName)
 	const supplyBalances = useSupplyBalances(marketName)
 	const totalSupplies = useTotalSupplies(marketName)
@@ -56,7 +55,7 @@ const Market: NextPage<{
 	const [borrowVal, setBorrowVal] = useState('0')
 	const formattedOraclePrice = useMemo(() => oraclePrice && '$' + getDisplayBalance(oraclePrice, 18), [oraclePrice])
 	const formattedTotalCollateral = useMemo(
-		() => totalCollateral && oraclePrice && '$' + getDisplayBalance(totalCollateral.mul(decimate(oraclePrice)), 18),
+		() => totalCollateral && oraclePrice && '$' + getDisplayBalance(totalCollateral),
 		[totalCollateral, oraclePrice],
 	)
 	const utilization = useMemo(() => getDisplayBalance(getUtilization()) + '%', [totalDebt, totalCollateral])
@@ -174,12 +173,7 @@ const Market: NextPage<{
 
 						<div className='mt-6 grid gap-6 lg:grid-cols-1 lg:gap-16'>
 							<div className='lg:col-span-1'>
-								<AssetsCard
-									accountBalances={accountBalances}
-									borrowBalances={borrowBalances}
-									totalSupplies={totalSupplies}
-									marketName={marketName}
-								/>
+								<AssetsCard borrowBalances={borrowBalances} totalSupplies={totalSupplies} marketName={marketName} />
 							</div>
 						</div>
 					</>
