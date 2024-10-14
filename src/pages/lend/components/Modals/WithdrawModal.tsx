@@ -5,13 +5,15 @@ import Typography from '@/components/Typography'
 import Image from 'next/future/image'
 import React, { useCallback, useMemo, useState } from 'react'
 import Input from '@/components/Input'
-import { decimate } from '@/utils/numberFormat'
+import { decimate, getDisplayBalance } from '@/utils/numberFormat'
 import { BigNumber } from 'ethers'
 import { useWeb3React } from '@web3-react/core'
 import { useExchangeRates } from '@/hooks/lend/useExchangeRate'
 import { parseUnits } from 'ethers/lib/utils'
 import WithdrawButton from '@/pages/lend/components/Buttons/WithdrawButton'
 import { useSupplyBalances } from '@/hooks/lend/useSupplyBalances'
+import { useComptrollerData } from '@/hooks/lend/useComptrollerData'
+import Loader from '@/components/Loader'
 
 export type WithdrawModalProps = {
 	asset: Asset
@@ -26,7 +28,7 @@ const WithdrawModal = ({ asset, show, onHide, marketName }: WithdrawModalProps) 
 	const { exchangeRates } = useExchangeRates(marketName)
 	const [val, setVal] = useState('0')
 	const operation = 'Withdraw'
-	const [formattedBalance, setFormattedBalance] = useState('0.00')
+	const comptrollerData = useComptrollerData(marketName)
 
 	const handleChange = useCallback(
 		(e: React.FormEvent<HTMLInputElement>) => {
@@ -35,25 +37,20 @@ const WithdrawModal = ({ asset, show, onHide, marketName }: WithdrawModalProps) 
 		[setVal],
 	)
 
-	const supplied = useMemo(
+	const formattedSupplied = useMemo(
 		() =>
 			supplyBalances &&
-			supplyBalances.find(balance => balance.address.toLowerCase() === asset.marketAddress[chainId].toLowerCase()) &&
-			exchangeRates &&
-			exchangeRates[asset.marketAddress[chainId]]
-				? decimate(
-						supplyBalances
-							.find(balance => balance.address.toLowerCase() === asset.marketAddress[chainId].toLowerCase())
-							.balance.mul(exchangeRates[asset.marketAddress[chainId]]),
-					)
-				: BigNumber.from(0),
-		[supplyBalances, exchangeRates, asset.marketAddress[chainId]],
+			supplyBalances.find(supply => supply.address === asset.underlyingAddress[chainId]) &&
+			getDisplayBalance(
+				supplyBalances.find(supply => supply.address === asset.underlyingAddress[chainId]).balance,
+				asset.underlyingDecimals,
+			),
+		[supplyBalances, asset],
 	)
 
 	const handleSelectMax = useCallback(() => {
-		if (!supplied) return setVal('0')
-		setVal(supplied.toString())
-	}, [supplied])
+		formattedSupplied && setVal(formattedSupplied.toString())
+	}, [formattedSupplied])
 
 	const hideModal = useCallback(() => {
 		onHide()
@@ -79,7 +76,7 @@ const WithdrawModal = ({ asset, show, onHide, marketName }: WithdrawModalProps) 
 										Withdrawable:
 									</Typography>
 									<Typography variant='sm' className='font-bakbak'>
-										{formattedBalance}
+										{formattedSupplied ? formattedSupplied : <Loader />}
 										<Image src={asset.icon} width={32} height={32} alt={asset.name} className='inline p-1' />
 										<span className='hover:text-baoRed'>{asset.name}</span>
 									</Typography>
@@ -90,7 +87,7 @@ const WithdrawModal = ({ asset, show, onHide, marketName }: WithdrawModalProps) 
 									onSelectMax={handleSelectMax}
 									onChange={handleChange}
 									value={val}
-									max={supplied && supplied.toString()}
+									max={formattedSupplied && formattedSupplied.toString()}
 									symbol={asset.name}
 									className='h-12 min-w-[150px] z-20 w-full bg-baoBlack lg:h-auto'
 								/>
