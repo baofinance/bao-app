@@ -11,12 +11,12 @@ const Vaults: React.FC = () => {
 			<div className='space-y-12'>
 				<div className='lg:col-span-2'>
 					<Typography variant='hero' className='stroke'>
-						Vaults
+						Borrow
 					</Typography>
 					<div className='flex gap-2'>
 						<Icon icon='lightbulb' className='m-0 h-6 w-6 flex-none' />
 						<Typography className='m-0 pr-1 text-base font-light tracking-tight lg:mb-4'>
-							Mint price-stable synthetic assets instantly and on your terms, utilizing our yield-bearing Bao Baskets or ETH as collateral.
+							Access price-stable synthetic assets instantly, leveraging yield-bearing ETH-based collaterals on your own terms.
 						</Typography>
 					</div>
 
