@@ -16,6 +16,7 @@ export const useOraclePrices = (marketName: string): { [p: string]: BigNumber } 
 	const { data: prices } = useQuery(
 		['@/hooks/lend/useOraclePrices', providerKey(library, account, chainId), { enabled }],
 		async () => {
+			/*
 			const multicall = new Multicall({ ethersProvider: library, tryAggregate: true })
 			const multicallContext: ContractCallContext[] = []
 			const oracle = VaultOracle__factory.connect(Config.lendMarkets[marketName].oracle, signerOrProvider)
@@ -44,6 +45,33 @@ export const useOraclePrices = (marketName: string): { [p: string]: BigNumber } 
 						?.returnValues[0],
 				}),
 				{},
+			)
+
+			 */
+			if (!enabled) return null
+
+			const oracle = VaultOracle__factory.connect(Config.lendMarkets[marketName].oracle, signerOrProvider)
+			const multicall = new Multicall({ ethersProvider: library, tryAggregate: true })
+			const multicallContext = Config.lendMarkets[marketName].assets.map(asset => ({
+				reference: asset.marketAddress[chainId],
+				contractAddress: oracle.address,
+				abi: VaultOracle__factory.abi,
+				calls: [
+					{
+						reference: 'getUnderlyingPrice',
+						methodName: 'getUnderlyingPrice',
+						methodParameters: [asset.marketAddress[chainId]],
+					},
+				],
+			}))
+
+			const multicallResults = await multicall.call(multicallContext)
+
+			return Object.fromEntries(
+				Object.entries(multicallResults.results).map(([address, result]) => [
+					address,
+					result.callsReturnContext.find(call => call.reference === 'getUnderlyingPrice')?.returnValues[0],
+				]),
 			)
 		},
 

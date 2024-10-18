@@ -23,7 +23,7 @@ type WithdrawButtonProps = {
 }
 
 const WithdrawButton = ({ asset, val, isDisabled, onHide, marketName }: WithdrawButtonProps) => {
-	const activeLendMarket = useActiveLendMarket(marketName)
+	const activeLendMarket = useActiveLendMarket(asset)
 	const { pendingTx, handleTx, txHash } = useTransactionHandler()
 	const { approvals } = useLendMarketApprovals(activeLendMarket)
 	const { chainId } = useWeb3React()

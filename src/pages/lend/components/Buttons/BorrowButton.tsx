@@ -23,7 +23,7 @@ type BorrowButtonProps = {
 }
 
 const BorrowButton = ({ asset, val, isDisabled, onHide, marketName }: BorrowButtonProps) => {
-	const activeLendMarket = useActiveLendMarket(marketName)
+	const activeLendMarket = useActiveLendMarket(asset)
 	const { pendingTx, handleTx, txHash } = useTransactionHandler()
 	const { approvals } = useLendMarketApprovals(activeLendMarket)
 	const { chainId } = useWeb3React()

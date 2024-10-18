@@ -17,7 +17,7 @@ export type SupplyModalProps = {
 	show: boolean
 	onHide: () => void
 	marketName: string
-	fullBalance: Balance
+	fullBalance: BigNumber
 }
 
 const SupplyModal = ({ asset, show, onHide, marketName, fullBalance }: SupplyModalProps) => {
@@ -33,9 +33,9 @@ const SupplyModal = ({ asset, show, onHide, marketName, fullBalance }: SupplyMod
 	)
 
 	const handleSelectMax = useCallback(() => {
-		if (!fullBalance) return setVal('0')
-		setVal(fullBalance.balance.toString())
-	}, [fullBalance, setVal])
+		if (!formattedBalance) return setVal('0')
+		setVal(formattedBalance)
+	}, [formattedBalance, setVal])
 
 	const hideModal = useCallback(() => {
 		onHide()
@@ -43,7 +43,7 @@ const SupplyModal = ({ asset, show, onHide, marketName, fullBalance }: SupplyMod
 
 	useEffect(() => {
 		if (!fullBalance) return
-		setFormattedBalance(getDisplayBalance(fullBalance.balance, fullBalance.decimals))
+		setFormattedBalance(getDisplayBalance(fullBalance, 18))
 	}, [fullBalance])
 
 	return (
@@ -75,7 +75,7 @@ const SupplyModal = ({ asset, show, onHide, marketName, fullBalance }: SupplyMod
 							onSelectMax={handleSelectMax}
 							onChange={handleChange}
 							value={val}
-							max={fullBalance && fullBalance.balance.toString()}
+							max={0}
 							symbol={asset.name}
 							className='h-12 min-w-[150px] z-20 w-full bg-baoBlack lg:h-auto'
 						/>

@@ -23,7 +23,7 @@ type RepayButtonProps = {
 }
 
 const RepayButton = ({ asset, val, isDisabled, onHide, marketName }: RepayButtonProps) => {
-	const activeLendMarket = useActiveLendMarket(marketName)
+	const activeLendMarket = useActiveLendMarket(asset)
 	const { pendingTx, handleTx, txHash } = useTransactionHandler()
 	const { approvals } = useLendMarketApprovals(activeLendMarket)
 	const { chainId } = useWeb3React()

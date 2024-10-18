@@ -29,7 +29,7 @@ const DashboardCard: React.FC<DashboardCardProps> = ({
 }: DashboardCardProps) => {
 	const bao = useBao()
 	const { account, chainId } = useWeb3React()
-	const asset = useActiveLendMarket(marketName)
+	const asset = useActiveLendMarket(asset)
 	const accountLiquidity = useAccountLiquidity(marketName, supplyBalances, borrowBalances)
 
 	const change = mintVal && depositVal ? BigNumber.from(mintVal).sub(BigNumber.from(depositVal)) : BigNumber.from(0)

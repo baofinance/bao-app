@@ -23,11 +23,10 @@ type SupplyButtonProps = {
 }
 
 const SupplyButton = ({ asset, val, isDisabled, onHide, marketName }: SupplyButtonProps) => {
-	const activeLendMarket = useActiveLendMarket(marketName)
+	const activeLendMarket = useActiveLendMarket(asset)
 	const { pendingTx, handleTx, txHash } = useTransactionHandler()
 	const { approvals } = useLendMarketApprovals(activeLendMarket)
 	const { chainId } = useWeb3React()
-
 	const erc20 = useContract<Erc20>('Erc20', asset.underlyingAddress[chainId])
 
 	if (pendingTx) {
@@ -60,7 +59,7 @@ const SupplyButton = ({ asset, val, isDisabled, onHide, marketName }: SupplyButt
 				disabled={!approvals}
 				onClick={() => {
 					// TODO- give the user a notice that we're approving max uint and instruct them how to change this value.
-					const tx = erc20.approve(asset.underlyingAddress[chainId], ethers.constants.MaxUint256)
+					const tx = erc20.approve(asset.marketAddress[chainId], val)
 					handleTx(tx, `${marketName} Approve ${asset.name}`)
 				}}
 			>

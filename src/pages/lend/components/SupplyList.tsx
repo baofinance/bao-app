@@ -1,7 +1,7 @@
 import Loader from '@/components/Loader'
 import Typography from '@/components/Typography'
 import Image from 'next/future/image'
-import React, { useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import Config from '@/bao/lib/config'
 import { getDisplayBalance } from '@/utils/numberFormat'
 import { Asset, Balance, TotalSupply } from '@/bao/lib/types'
@@ -12,6 +12,8 @@ import BorrowModal from '@/pages/lend/components/Modals/BorrowModal'
 import WithdrawModal from '@/pages/lend/components/Modals/WithdrawModal'
 import RepayModal from '@/pages/lend/components/Modals/RepayModal'
 import Tooltipped from '@/components/Tooltipped'
+import { useSupplyBalances } from '@/hooks/lend/useSupplyBalances'
+import { useAccountBalances } from '@/hooks/lend/useAccountBalances'
 
 export const SupplyList: React.FC<SupplyListProps> = ({ marketName, borrowBalances, totalSupplies }) => {
 	const assets = Config.lendMarkets[marketName].assets
@@ -41,28 +43,35 @@ export const SupplyList: React.FC<SupplyListProps> = ({ marketName, borrowBalanc
 
 const SupplyListItem: React.FC<SupplyListItemProps> = ({ asset, marketName, borrowBalances, totalSupplies }) => {
 	const { chainId } = useWeb3React()
-	const [balance, setBalance] = useState(null)
+	const accountBalances = useAccountBalances(marketName)
 	const [showSupplyModal, setShowSupplyModal] = useState(false)
 	const [showWithdrawModal, setShowWithdrawModal] = useState(false)
 	const [showBorrowModal, setShowBorrowModal] = useState(false)
 	const [showRepayModal, setShowRepayModal] = useState(false)
 
-	const yourPosition = useMemo(
-		() =>
-			borrowBalances &&
-			getDisplayBalance(borrowBalances.find(balance => balance.address === asset.marketAddress[chainId]).balance, asset.underlyingDecimals),
-		[borrowBalances, asset],
-	)
+	const yourPosition = useMemo(() => {
+		if (!borrowBalances || !asset || !asset.marketAddress[chainId]) return null
 
-	const totalMarketSupply = useMemo(
-		() =>
-			totalSupplies &&
-			getDisplayBalance(
-				totalSupplies.find(totalSupply => totalSupply.address === asset.underlyingAddress[chainId]).totalSupply,
-				asset.underlyingDecimals,
-			),
-		[totalSupplies, asset],
-	)
+		const balance = borrowBalances.find(balance => balance.address === asset.marketAddress[chainId])
+
+		return balance ? getDisplayBalance(balance.balance, asset.underlyingDecimals) : null
+	}, [borrowBalances, asset, chainId])
+
+	const totalMarketSupply = useMemo(() => {
+		if (!totalSupplies || !asset || !asset.underlyingAddress[chainId]) return null
+
+		const totalSupplyItem = totalSupplies.find(totalSupply => totalSupply.address === asset.underlyingAddress[chainId])
+
+		return totalSupplyItem ? getDisplayBalance(totalSupplyItem.totalSupply, asset.underlyingDecimals) : null
+	}, [totalSupplies, asset, chainId])
+
+	const balance = useMemo(() => {
+		if (!accountBalances || !asset || !asset.underlyingAddress[chainId]) return null
+
+		const accountBalance = accountBalances.find(({ address }) => address === asset.underlyingAddress[chainId])
+
+		return accountBalance?.balance || null
+	}, [accountBalances, asset, chainId])
 
 	return (
 		<>

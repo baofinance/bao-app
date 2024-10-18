@@ -157,19 +157,7 @@ const Market: NextPage<{
 							</div>
 						</div>
 
-						<div style={{ marginTop: '8px', marginBottom: '16px' }}>
-							{borrowBalances && borrowBalances.length > 0 ? (
-								<DebtCard
-									marketName={marketName}
-									borrowBalances={borrowBalances}
-									supplyBalances={supplyBalances}
-									depositVal={'0'}
-									mintVal={'0'}
-								/>
-							) : (
-								'test'
-							)}
-						</div>
+						<div style={{ marginTop: '8px', marginBottom: '16px' }}></div>
 
 						<div className='mt-6 grid gap-6 lg:grid-cols-1 lg:gap-16'>
 							<div className='lg:col-span-1'>
