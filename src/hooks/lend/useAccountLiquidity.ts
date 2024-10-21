@@ -10,12 +10,13 @@ import { useQuery } from '@tanstack/react-query'
 import { useExchangeRates } from './useExchangeRate'
 import { useSupplyRate } from '@/hooks/lend/useSupplyRate'
 import { useOraclePrice } from '@/hooks/lend/useOraclePrice'
+import { useTxReceiptUpdater } from '@/hooks/base/useTransactionProvider'
 
 export type AccountLiquidity = {
 	netApy: BigNumber
-	usdSupply: BigNumber
-	usdBorrow: BigNumber
-	usdBorrowable: BigNumber
+	supply: BigNumber
+	borrow: BigNumber
+	borrowable: BigNumber
 }
 
 export const useAccountLiquidity = (marketName: string, supplyBalances: Balance[], borrowBalances: Balance[]): AccountLiquidity => {
@@ -28,76 +29,70 @@ export const useAccountLiquidity = (marketName: string, supplyBalances: Balance[
 
 	const enabled =
 		!!comptroller && !!account && !!market && !!supplyBalances && !!borrowBalances && !!exchangeRates && !!price && !!supplyRate
-	const { data: accountLiquidity } = useQuery(
+	const { data: accountLiquidity, refetch } = useQuery(
 		[
 			'@/hooks/vaults/useAccountLiquidity',
 			providerKey(library, account, chainId),
-			{
-				enabled,
-				supplyBalances,
-				borrowBalances,
-				exchangeRates,
-				price,
-				marketName,
-			},
+			{ enabled, supplyBalances, borrowBalances, exchangeRates, price, marketName },
 		],
 		async () => {
-			const compAccountLiqudity = await comptroller.getAccountLiquidity(account)
+			const compAccountLiquidity = await comptroller.getAccountLiquidity(account)
 
-			const usdSupply =
-				supplyBalances && supplyBalances.length > 0
-					? Object.keys(exchangeRates).reduce((prev: BigNumber, addr: string) => {
-							const supply = supplyBalances.find(balance => balance.address === addr)
-							if (!supply) return
-							return prev.add(decimate(supply.balance.mul(exchangeRates[addr]).mul(price)))
-						}, BigNumber.from(0))
-					: BigNumber.from(0)
+			const calculateSupply = () => {
+				if (!supplyBalances || supplyBalances.length === 0) return BigNumber.from(0)
+				return Object.keys(exchangeRates).reduce((prev, addr) => {
+					const supply = supplyBalances.find(balance => balance.address === addr)
+					if (!supply) return prev
+					return prev.add(decimate(supply.balance.mul(exchangeRates[addr]).mul(price)))
+				}, BigNumber.from(0))
+			}
 
-			const usdBorrow = Object.entries(borrowBalances).reduce((prev: BigNumber, [, { address, balance }]) => {
-				return prev.add(balance.mul(price))
-			}, BigNumber.from(0))
+			const calculateBorrow = () => {
+				return Object.entries(borrowBalances).reduce((prev, [, { balance }]) => {
+					return prev.add(balance.mul(price))
+				}, BigNumber.from(0))
+			}
 
-			const supplyApy =
-				supplyBalances && supplyBalances.length > 0
-					? supplyBalances
-							.find(balance => balance.address === market.underlyingAddresses[chainId])
-							.balance.mul(exchangeRates[market.marketAddresses[chainId]])
-							.mul(price)
-							.mul(supplyRate)
-					: BigNumber.from(0)
+			const calculateApy = (balances: Balance[], rate: BigNumber, marketAddress: string) => {
+				const balance = balances.find(balance => balance.address === marketAddress)
+				return balance ? balance.balance.mul(price).mul(rate) : BigNumber.from(0)
+			}
 
-			const borrowApy =
-				borrowBalances && borrowBalances.length > 0
-					? borrowBalances
-							.find(balance => balance.address === market.marketAddresses[chainId])
-							.balance.mul(price)
-							.mul(supplyRate)
-					: BigNumber.from(0)
+			const supply = calculateSupply()
+			const borrow = calculateBorrow()
+			const supplyApy = calculateApy(supplyBalances, supplyRate, market.marketAddresses[chainId])
+			const borrowApy = calculateApy(borrowBalances, supplyRate, market.marketAddresses[chainId])
 
 			const netApy =
-				supplyApy.gt(borrowApy) && !usdSupply.eq(0)
-					? supplyApy.sub(borrowApy).div(usdSupply)
-					: borrowApy.gt(supplyApy) && !usdBorrow.eq(0)
-						? supplyApy.sub(borrowApy).div(usdBorrow)
+				supplyApy.gt(borrowApy) && !supply.isZero()
+					? supplyApy.sub(borrowApy).div(supply)
+					: borrowApy.gt(supplyApy) && !borrow.isZero()
+						? supplyApy.sub(borrowApy).div(borrow)
 						: BigNumber.from(0)
 
 			return {
 				netApy,
-				usdSupply,
-				usdBorrow,
-				usdBorrowable: compAccountLiqudity[1],
+				supply,
+				borrow,
+				borrowable: compAccountLiquidity[1],
 			}
 		},
 		{
 			enabled,
 			placeholderData: {
 				netApy: BigNumber.from(0),
-				usdSupply: BigNumber.from(0),
-				usdBorrow: BigNumber.from(0),
-				usdBorrowable: BigNumber.from(0),
+				supply: BigNumber.from(0),
+				borrow: BigNumber.from(0),
+				borrowable: BigNumber.from(0),
 			},
 		},
 	)
+
+	const _refetch = () => {
+		if (enabled) refetch()
+	}
+
+	useTxReceiptUpdater(_refetch)
 
 	return accountLiquidity
 }

@@ -45,7 +45,6 @@ const Market: NextPage<{
 	marketName: string
 }> = ({ marketName }) => {
 	const borrowBalances = useBorrowBalances(marketName)
-	const supplyBalances = useSupplyBalances(marketName)
 	const totalSupplies = useTotalSupplies(marketName)
 	const oraclePrice = useOraclePrice(marketName)
 	const totalCollateral = useTotalCollateral(marketName)

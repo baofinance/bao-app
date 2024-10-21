@@ -9,15 +9,16 @@ import Config from '@/bao/lib/config'
 import { BigNumber } from 'ethers'
 import { useOraclePrices } from './useOraclePrices'
 import { decimate, getDisplayBalance } from '../../utils/numberFormat'
+import { useTxReceiptUpdater } from '@/hooks/base/useTransactionProvider'
 
 export const useTotalCollateral = (marketName: string): BigNumber => {
 	const bao = useBao()
 	const { account, library, chainId } = useWeb3React()
 	const prices = useOraclePrices(marketName)
 
-	const enabled = !!bao && !!account && !!chainId && !!prices
-	const { data: totalCollateral } = useQuery(
-		['@/hooks/lend/useTotalCollateral', providerKey(library, account, chainId), { enabled }],
+	const enabled = !!bao && !!account && !!chainId && !!prices && !!marketName
+	const { data: totalCollateral, refetch } = useQuery(
+		['@/hooks/lend/useTotalCollateral', providerKey(library, account, chainId), { enabled, prices, marketName }],
 		async () => {
 			const addresses = Config.lendMarkets[marketName].assets.map(asset => asset.marketAddress[chainId])
 			const contracts: Contract[] = addresses.map(address => Ctoken__factory.connect(address, library))
@@ -50,6 +51,12 @@ export const useTotalCollateral = (marketName: string): BigNumber => {
 			enabled,
 		},
 	)
+
+	const _refetch = () => {
+		if (enabled) refetch()
+	}
+
+	useTxReceiptUpdater(_refetch)
 
 	return totalCollateral
 }

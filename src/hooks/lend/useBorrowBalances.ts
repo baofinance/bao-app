@@ -8,14 +8,15 @@ import MultiCall from '@/utils/multicall'
 import Config from '@/bao/lib/config'
 import { Balance } from '@/bao/lib/types'
 import { BigNumber } from 'ethers'
+import { useTxReceiptUpdater } from '@/hooks/base/useTransactionProvider'
 
 export const useBorrowBalances = (marketName: string): Balance[] => {
 	const bao = useBao()
 	const { account, library, chainId } = useWeb3React()
 
-	const enabled = !!bao && !!account && !!chainId
-	const { data: balances } = useQuery(
-		['@/hooks/lend/useBorrowBalances', providerKey(library, account, chainId), { enabled }],
+	const enabled = !!bao && !!account && !!chainId && !!marketName
+	const { data: balances, refetch } = useQuery(
+		['@/hooks/lend/useBorrowBalances', providerKey(library, account, chainId), { enabled, marketName }],
 		async () => {
 			const tokens = Config.lendMarkets[marketName].assets.map(asset => asset.marketAddress[chainId])
 			const contracts: Contract[] = tokens.map(address => Ctoken__factory.connect(address, library))
@@ -47,6 +48,12 @@ export const useBorrowBalances = (marketName: string): Balance[] => {
 			enabled,
 		},
 	)
+
+	const _refetch = () => {
+		if (enabled) refetch()
+	}
+
+	useTxReceiptUpdater(_refetch)
 
 	return balances
 }

@@ -8,6 +8,7 @@ import MultiCall from '@/utils/multicall'
 import Config from '@/bao/lib/config'
 import { BigNumber } from 'ethers'
 import { parseUnits } from 'ethers/lib/utils'
+import { useTxReceiptUpdater } from '@/hooks/base/useTransactionProvider'
 
 export const SECONDS_PER_BLOCK = 12
 export const SECONDS_PER_DAY = 24 * 60 * 60
@@ -21,9 +22,9 @@ export const useBorrowApy = (marketName: string): BigNumber => {
 	const bao = useBao()
 	const { account, library, chainId } = useWeb3React()
 
-	const enabled = !!bao && !!account && !!chainId
-	const { data: borrowApy } = useQuery(
-		['@/hooks/lend/useBorrowApy', providerKey(library, account, chainId), { enabled }],
+	const enabled = !!bao && !!account && !!chainId && !!marketName
+	const { data: borrowApy, refetch } = useQuery(
+		['@/hooks/lend/useBorrowApy', providerKey(library, account, chainId), { enabled, marketName }],
 		async () => {
 			const address = Config.lendMarkets[marketName].marketAddresses[chainId]
 			const contracts: Contract[] = [Ctoken__factory.connect(address, library)]
@@ -51,6 +52,12 @@ export const useBorrowApy = (marketName: string): BigNumber => {
 			enabled,
 		},
 	)
+
+	const _refetch = () => {
+		if (enabled) refetch()
+	}
+
+	useTxReceiptUpdater(_refetch)
 
 	return borrowApy
 }

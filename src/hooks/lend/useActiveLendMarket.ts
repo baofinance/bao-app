@@ -1,4 +1,3 @@
-import useTransactionProvider from '@/hooks/base/useTransactionProvider'
 import { Ctoken__factory, Erc20__factory } from '@/typechain/factories'
 import { useWeb3React } from '@web3-react/core'
 import { ActiveLendMarket, Asset } from '@/bao/lib/types'
@@ -6,7 +5,6 @@ import { useCallback, useEffect, useState } from 'react'
 
 export const useActiveLendMarket = (asset: Asset): ActiveLendMarket => {
 	const { library, account, chainId } = useWeb3React()
-	const { transactions } = useTransactionProvider()
 	const [lendMarket, setLendMarket] = useState<ActiveLendMarket>(null)
 
 	const fetchLendMarket = useCallback(async () => {

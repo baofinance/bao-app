@@ -7,14 +7,15 @@ import { Ctoken__factory } from '@/typechain/factories'
 import MultiCall from '@/utils/multicall'
 import Config from '@/bao/lib/config'
 import { TotalSupply } from '@/bao/lib/types'
+import { useTxReceiptUpdater } from '@/hooks/base/useTransactionProvider'
 
 export const useTotalSupplies = (marketName: string): TotalSupply[] => {
 	const bao = useBao()
 	const { account, library, chainId } = useWeb3React()
 
-	const enabled = !!bao && !!account && !!chainId
-	const { data: totalSupplies } = useQuery(
-		['@/hooks/lend/useTotalSupplies', providerKey(library, account, chainId), { enabled }],
+	const enabled = !!bao && !!account && !!chainId && !!marketName
+	const { data: totalSupplies, refetch } = useQuery(
+		['@/hooks/lend/useTotalSupplies', providerKey(library, account, chainId), { enabled, marketName }],
 		async () => {
 			const tokens = Config.lendMarkets[marketName].assets.map(asset => asset.underlyingAddress[chainId])
 			const contracts: Contract[] = tokens.map(address => Ctoken__factory.connect(address, library))
@@ -56,6 +57,12 @@ export const useTotalSupplies = (marketName: string): TotalSupply[] => {
 			enabled,
 		},
 	)
+
+	const _refetch = () => {
+		if (enabled) refetch()
+	}
+
+	useTxReceiptUpdater(_refetch)
 
 	return totalSupplies
 }

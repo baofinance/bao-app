@@ -36,12 +36,16 @@ const WithdrawModal = ({ asset, show, onHide, marketName }: WithdrawModalProps) 
 		},
 		[setVal],
 	)
-	const formattedSupplied = useMemo(() => {
-		if (!supplyBalances) return null
 
-		const supply = supplyBalances.find(supply => supply.address === asset.underlyingAddress[chainId])
-		return supply ? getDisplayBalance(supply.balance, asset.underlyingDecimals) : null
+	const supply = useMemo(() => {
+		if (!supplyBalances) return null
+		return supplyBalances.find(supply => supply.address === asset.marketAddress[chainId])
 	}, [supplyBalances, asset, chainId])
+
+	const formattedSupplied = useMemo(() => {
+		if (!supply) return null
+		return supply ? getDisplayBalance(supply.balance, asset.underlyingDecimals) : null
+	}, [supply, asset, chainId])
 
 	const handleSelectMax = useCallback(() => {
 		formattedSupplied && setVal(formattedSupplied.toString())

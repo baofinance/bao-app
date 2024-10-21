@@ -7,14 +7,15 @@ import { Ctoken__factory } from '@/typechain/factories'
 import MultiCall from '@/utils/multicall'
 import Config from '@/bao/lib/config'
 import { BigNumber } from 'ethers'
+import { useTxReceiptUpdater } from '@/hooks/base/useTransactionProvider'
 
 export const useTotalDebt = (marketName: string): BigNumber => {
 	const bao = useBao()
 	const { account, library, chainId } = useWeb3React()
 
-	const enabled = !!bao && !!account && !!chainId
-	const { data: totalDebt } = useQuery(
-		['@/hooks/lend/useTotalDebts', providerKey(library, account, chainId), { enabled }],
+	const enabled = !!bao && !!account && !!chainId && !!marketName
+	const { data: totalDebt, refetch } = useQuery(
+		['@/hooks/lend/useTotalDebts', providerKey(library, account, chainId), { enabled, marketName }],
 		async () => {
 			const address = Config.lendMarkets[marketName].marketAddresses[chainId]
 			const contracts: Contract[] = [Ctoken__factory.connect(address, library)]
@@ -41,6 +42,12 @@ export const useTotalDebt = (marketName: string): BigNumber => {
 			enabled,
 		},
 	)
+
+	const _refetch = () => {
+		if (enabled) refetch()
+	}
+
+	useTxReceiptUpdater(_refetch)
 
 	return totalDebt
 }

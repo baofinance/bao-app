@@ -12,7 +12,6 @@ import BorrowModal from '@/pages/lend/components/Modals/BorrowModal'
 import WithdrawModal from '@/pages/lend/components/Modals/WithdrawModal'
 import RepayModal from '@/pages/lend/components/Modals/RepayModal'
 import Tooltipped from '@/components/Tooltipped'
-import { useSupplyBalances } from '@/hooks/lend/useSupplyBalances'
 import { useAccountBalances } from '@/hooks/lend/useAccountBalances'
 
 export const SupplyList: React.FC<SupplyListProps> = ({ marketName, borrowBalances, totalSupplies }) => {
