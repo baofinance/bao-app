@@ -11,6 +11,7 @@ import { faDashboard } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useActiveLendMarket } from '@/hooks/lend/useActiveLendMarket'
 import useHealthFactor from '@/hooks/lend/useHealthFactor'
+import Config from '@/bao/lib/config'
 
 type DashboardCardProps = {
 	marketName: string
@@ -29,14 +30,17 @@ const DashboardCard: React.FC<DashboardCardProps> = ({
 }: DashboardCardProps) => {
 	const bao = useBao()
 	const { account, chainId } = useWeb3React()
-	const asset = useActiveLendMarket(asset)
+	const asset = Config.lendMarkets[marketName].assets.find(
+		asset => asset.marketAddress[chainId] === Config.lendMarkets[marketName].marketAddresses[chainId],
+	)
+	const activeLendMarket = useActiveLendMarket(asset)
 	const accountLiquidity = useAccountLiquidity(marketName, supplyBalances, borrowBalances)
 
 	const change = mintVal && depositVal ? BigNumber.from(mintVal).sub(BigNumber.from(depositVal)) : BigNumber.from(0)
-	const borrow = accountLiquidity ? accountLiquidity.usdBorrow : BigNumber.from(0)
+	const borrow = accountLiquidity ? accountLiquidity.borrow : BigNumber.from(0)
 	const newBorrow = borrow ? borrow.sub(change.gt(0) ? change : 0) : BigNumber.from(0)
-	const borrowable = accountLiquidity ? accountLiquidity.usdBorrow.add(exponentiate(accountLiquidity.usdBorrowable)) : BigNumber.from(0)
-	const newBorrowable = asset && decimate(borrowable).sub(BigNumber.from(parseUnits(formatUnits(change, 36 - 18))))
+	const borrowable = accountLiquidity ? accountLiquidity.borrow.add(exponentiate(accountLiquidity.borrowable)) : BigNumber.from(0)
+	const newBorrowable = activeLendMarket && decimate(borrowable).sub(BigNumber.from(parseUnits(formatUnits(change, 36 - 18))))
 
 	const borrowChange = borrow.add(exponentiate(change))
 	const healthFactor = useHealthFactor(marketName, borrowBalances, borrowChange)
@@ -44,7 +48,7 @@ const DashboardCard: React.FC<DashboardCardProps> = ({
 	const barPercentage = parseFloat(
 		getDisplayBalance(
 			accountLiquidity && newBorrowable && !newBorrowable.eq(0)
-				? (parseFloat(accountLiquidity.usdBorrow.toString()) / parseFloat(newBorrowable.toString())) * 100
+				? (parseFloat(accountLiquidity.borrow.toString()) / parseFloat(newBorrowable.toString())) * 100
 				: 0,
 			18,
 			2,
@@ -99,7 +103,7 @@ const DashboardCard: React.FC<DashboardCardProps> = ({
 									$
 									{`${
 										bao && account && accountLiquidity
-											? getDisplayBalance(decimate(BigNumber.from(accountLiquidity.usdSupply.toString())), 18, 2)
+											? getDisplayBalance(decimate(BigNumber.from(accountLiquidity.supply.toString())), 18, 2)
 											: 0
 									}`}{' '}
 								</Typography>
@@ -109,7 +113,7 @@ const DashboardCard: React.FC<DashboardCardProps> = ({
 									Your Debt
 								</Typography>
 								<Typography variant='h3' className='inline-block text-left font-bakbak leading-5'>
-									${accountLiquidity ? getDisplayBalance(decimate(accountLiquidity.usdBorrow), 18, 2) : 0}
+									${accountLiquidity ? getDisplayBalance(decimate(accountLiquidity.borrow), 18, 2) : 0}
 								</Typography>
 							</div>
 							<div className='col-span-1 break-words text-left'>
@@ -125,7 +129,7 @@ const DashboardCard: React.FC<DashboardCardProps> = ({
 									Debt Limit Remaining
 								</Typography>
 								<Typography variant='h3' className='inline-block font-bakbak leading-5'>
-									${getDisplayBalance(accountLiquidity ? accountLiquidity.usdBorrowable.sub(change) : BigNumber.from(0))}
+									${getDisplayBalance(accountLiquidity ? accountLiquidity.borrowable.sub(change) : BigNumber.from(0))}
 								</Typography>
 							</div>
 						</div>

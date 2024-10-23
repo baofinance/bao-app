@@ -1,10 +1,9 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { ActiveSupportedVault, Asset } from '@/bao/lib/types'
+import { Asset } from '@/bao/lib/types'
 import Button from '@/components/Button'
 import { PendingTransaction } from '@/components/Loader/Loader'
 import useContract from '@/hooks/base/useContract'
 import useTransactionHandler from '@/hooks/base/useTransactionHandler'
-import { useApprovals } from '@/hooks/vaults/useApprovals'
 import type { Erc20 } from '@/typechain/index'
 import { getDisplayBalance } from '@/utils/numberFormat'
 import { faExternalLink } from '@fortawesome/free-solid-svg-icons'
