@@ -3,11 +3,18 @@ import { Asset } from '@/bao/lib/types'
 import Modal from '@/components/Modal'
 import Typography from '@/components/Typography'
 import Image from 'next/future/image'
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import Input from '@/components/Input'
-import { parseUnits } from 'ethers/lib/utils'
-import { BigNumber } from 'ethers'
+import { formatUnits, parseUnits } from 'ethers/lib/utils'
+import { BigNumber, FixedNumber } from 'ethers'
 import BorrowButton from '@/pages/lend/components/Buttons/BorrowButton'
+import { useActiveLendMarket } from '@/hooks/lend/useActiveLendMarket'
+import { useAccountLiquidity } from '@/hooks/lend/useAccountLiquidity'
+import { useSupplyBalances } from '@/hooks/lend/useSupplyBalances'
+import { useBorrowBalances } from '@/hooks/lend/useBorrowBalances'
+import { decimate, getDisplayBalance, getFullDisplayBalance } from '@/utils/numberFormat'
+import { useOraclePrices } from '@/hooks/lend/useOraclePrices'
+import { useWeb3React } from '@web3-react/core'
 
 export type BorrowModalProps = {
 	asset: Asset
@@ -17,7 +24,13 @@ export type BorrowModalProps = {
 }
 
 const BorrowModal = ({ asset, show, onHide, marketName }: BorrowModalProps) => {
+	const { chainId } = useWeb3React()
 	const [val, setVal] = useState('0')
+	const activeLendMarket = useActiveLendMarket(asset)
+	const supplyBalances = useSupplyBalances(marketName)
+	const borrowBalances = useBorrowBalances(marketName)
+	const accountliquidity = useAccountLiquidity(marketName, supplyBalances, borrowBalances)
+	const prices = useOraclePrices(marketName)
 	const operation = 'Borrow'
 
 	const hideModal = useCallback(() => {
@@ -31,9 +44,22 @@ const BorrowModal = ({ asset, show, onHide, marketName }: BorrowModalProps) => {
 		[setVal],
 	)
 
+	const borrowable = useMemo(() => {
+		if (!prices || !accountliquidity) return null
+
+		const marketPrice = prices[asset.marketAddress[chainId]]
+		if (!marketPrice) return null
+
+		return BigNumber.from(FixedNumber.from(formatUnits(accountliquidity.borrowable)).divUnsafe(FixedNumber.from(formatUnits(marketPrice))))q
+	}, [accountliquidity, asset, chainId, prices])
+
+	const formattedBorrowable = useMemo(() => {
+		return borrowable ? getDisplayBalance(borrowable) : null
+	}, [borrowable])
+
 	const handleSelectMax = useCallback(() => {
-		return setVal('0')
-	}, [])
+		setVal(formattedBorrowable || '0.00')
+	}, [formattedBorrowable])
 
 	return (
 		<Modal isOpen={show} onDismiss={hideModal}>
@@ -53,7 +79,7 @@ const BorrowModal = ({ asset, show, onHide, marketName }: BorrowModalProps) => {
 								Available:
 							</Typography>
 							<Typography variant='sm' className='font-bakbak'>
-								{'0.00'}
+								{formattedBorrowable ? formattedBorrowable : '0.00'}
 								<Image src={asset.icon} width={32} height={32} alt={asset.name} className='inline p-1' />
 								<span className='hover:text-baoRed'>{asset.name}</span>
 							</Typography>
