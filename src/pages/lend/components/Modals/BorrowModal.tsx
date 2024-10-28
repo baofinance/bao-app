@@ -50,7 +50,7 @@ const BorrowModal = ({ asset, show, onHide, marketName }: BorrowModalProps) => {
 		const marketPrice = prices[asset.marketAddress[chainId]]
 		if (!marketPrice) return null
 
-		return BigNumber.from(FixedNumber.from(formatUnits(accountliquidity.borrowable)).divUnsafe(FixedNumber.from(formatUnits(marketPrice))))q
+		return BigNumber.from(FixedNumber.from(formatUnits(accountliquidity.borrowable)).divUnsafe(FixedNumber.from(formatUnits(marketPrice))))
 	}, [accountliquidity, asset, chainId, prices])
 
 	const formattedBorrowable = useMemo(() => {
