@@ -23,19 +23,15 @@ const Gauges: React.FC = () => {
 				</div>
 				<div className='lg:col-span-3'>
 					<Typography variant='h3' className='pt-8 pb-2 text-center font-bakbak'>
-						Revenue Share Staking
-					</Typography>
-					<Typography variant='base' className='pb-2 text-center leading-5 m-0 pr-1 font-light tracking-tight lg:mb-4'>
-						Stake BAO liquidity tokens to earn a share of BAO buybacks from project revenue
-					</Typography>
-					<GaugeList />
-					<Typography variant='h3' className='pt-8 pb-2 text-center font-bakbak'>
 						External Farms
 					</Typography>
 					<Typography variant='base' className='pb-2 text-center leading-5 m-0 pr-1 font-light tracking-tight lg:mb-4'>
 						Deposit synth liquidity tokens to earn rewards in our partner pools
 					</Typography>
+
 					<ExternalFarms />
+					<div className='mt-8' />
+					<GaugeList />
 				</div>
 			</div>
 		</>

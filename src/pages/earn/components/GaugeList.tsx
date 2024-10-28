@@ -23,52 +23,48 @@ import { Icon } from '@/components/Icon'
 
 const GaugeList: React.FC = () => {
 	const gauges = useGauges()
-	const [active, setActive] = useState(true)
-	const [filteredGauges, setFilteredGauges] = useState(gauges.filter(gauge => gauge.active === true))
-	const handleActiveToggle = () => {
-		const updateActive = !active
-		setActive(updateActive)
-
-		if (updateActive) {
-			setFilteredGauges(gauges.filter(gauge => gauge.active === updateActive))
-		} else {
-			setFilteredGauges(gauges)
-		}
-	}
+	const [active, setActive] = useState(false)
+	const [filteredGauges, setFilteredGauges] = useState(gauges.filter(gauge => gauge.active === false))
 
 	return (
 		<>
 			<div className={`flex w-full flex-row gap-2 px-2 py-3`}>
 				<ReactSwitch
 					checked={active}
-					onChange={handleActiveToggle}
+					onChange={() => setActive(!active)}
 					offColor={`#1e2022`}
 					onColor={`#e21a31`}
 					className={`border border-baoWhite border-opacity-20`}
 				/>
-				<Typography className='text-center font-bakbak text-base lg:text-lg'>Active gauges only</Typography>
+				<Typography className='text-center font-bakbak text-base lg:text-lg'>Display Inactive Gauges</Typography>
 			</div>
-			<div className={`flex w-full flex-row px-2 py-3`}>
-				<Typography className='flex w-full basis-1/3 flex-col items-center px-4 pb-0 font-bakbak text-base first:items-start lg:basis-2/5 lg:text-lg'>
-					{isDesktop && 'Gauge'} Name
-				</Typography>
-				<Typography className='text-center font-bakbak text-base lg:basis-1/5 lg:text-lg'>APR</Typography>
-				<Typography className='text-center font-bakbak text-base lg:basis-1/5 lg:text-lg'></Typography>
-				<Typography className='flex w-full basis-1/3 flex-col items-center px-4 pb-0 font-bakbak text-base last:items-end lg:basis-1/5 lg:text-lg'>
-					TVL
-				</Typography>
-			</div>
-			<div className='flex flex-col gap-4'>
-				{filteredGauges.length ? (
-					filteredGauges.map((gauge: ActiveSupportedGauge, i: number) => (
-						<React.Fragment key={i}>
-							<GaugeListItem gauge={gauge} />
-						</React.Fragment>
-					))
-				) : (
-					<PageLoader block />
-				)}
-			</div>
+			{!active ? (
+				<></>
+			) : (
+				<>
+					<div className={`flex w-full flex-row px-2 py-3`}>
+						<Typography className='flex w-full basis-1/3 flex-col items-center px-4 pb-0 font-bakbak text-base first:items-start lg:basis-2/5 lg:text-lg'>
+							{isDesktop && 'Gauge'} Name
+						</Typography>
+						<Typography className='text-center font-bakbak text-base lg:basis-1/5 lg:text-lg'>APR</Typography>
+						<Typography className='text-center font-bakbak text-base lg:basis-1/5 lg:text-lg'></Typography>
+						<Typography className='flex w-full basis-1/3 flex-col items-center px-4 pb-0 font-bakbak text-base last:items-end lg:basis-1/5 lg:text-lg'>
+							TVL
+						</Typography>
+					</div>
+					<div className='flex flex-col gap-4'>
+						{gauges.filter(gauge => gauge.active === true).length === 0 ? (
+							filteredGauges.map((gauge: ActiveSupportedGauge, i: number) => (
+								<React.Fragment key={i}>
+									<GaugeListItem gauge={gauge} />
+								</React.Fragment>
+							))
+						) : (
+							<></>
+						)}
+					</div>
+				</>
+			)}
 		</>
 	)
 }
@@ -187,5 +183,4 @@ const GaugeListItem: React.FC<GaugeListItemProps> = ({ gauge }) => {
 		</>
 	)
 }
-
 export default GaugeList
