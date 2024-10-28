@@ -4,34 +4,127 @@ import Card from '@/components/Card'
 import Input from '@/components/Input'
 import Typography from '@/components/Typography'
 import useTokenBalance from '@/hooks/base/useTokenBalance'
-import { useStakedSynths } from '@/hooks/earn/useStakedSynths'
-import { useAccountBalances } from '@/hooks/vaults/useBalances'
-import useBallastInfo from '@/hooks/vaults/useBallastInfo'
-import { useVaults } from '@/hooks/vaults/useVaults'
+import useTransactionProvider from '@/hooks/base/useTransactionProvider'
 import { getDisplayBalance } from '@/utils/numberFormat'
 import { Listbox, Transition } from '@headlessui/react'
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
 import { useWeb3React } from '@web3-react/core'
 import classNames from 'classnames'
-import { formatEther } from 'ethers/lib/utils'
+import { BigNumber, Contract, ethers } from 'ethers'
+import { formatEther, parseEther } from 'ethers/lib/utils'
 import Image from 'next/future/image'
-import React, { Fragment, useMemo, useState } from 'react'
+import React, { Fragment, useCallback, useEffect, useMemo, useState } from 'react'
+import sBaoSynthABI from '@/bao/lib/abi/sBaoSynth.json'
+import { Erc20__factory } from '@/typechain/factories'
 
 const supportedSynths = ['baoETH', 'baoUSD']
 
 export const Interface = () => {
 	const [selectedOption, setSelectedOption] = useState('baoUSD')
 	const [inputVal, setInputVal] = useState('')
-	const { account } = useWeb3React()
+	const [allowance, setAllowance] = useState<BigNumber>(BigNumber.from(0))
+	const [apr, setApr] = useState<string>('0')
+	const { account, library } = useWeb3React()
+	const { onAddTransaction } = useTransactionProvider()
 	const baoUSDBalance = useTokenBalance(Config.addressMap.baoUSD)
 	const baoETHBalance = useTokenBalance(Config.addressMap.baoETH)
-	const ballastInfo = useBallastInfo(selectedOption)
-	const accountBalances = useAccountBalances(selectedOption)
-	const _stakedSynths = useStakedSynths(selectedOption)
 
-	const stakedSynths = useMemo(() => {
-		return _stakedSynths
-	}, [_stakedSynths])
+	const selectedTokenAddress = useMemo(() => {
+		return Config.addressMap[selectedOption as keyof typeof Config.addressMap]
+	}, [selectedOption])
+
+	const stakingContractAddress = useMemo(() => {
+		return Config.addressMap.sBaoSynth
+	}, [])
+
+	// Get contract instances
+	const getContracts = useCallback(() => {
+		if (!library || !account) return null
+
+		const signer = library.getSigner()
+		const tokenContract = Erc20__factory.connect(selectedTokenAddress, signer)
+		const stakingContract = new Contract(stakingContractAddress, sBaoSynthABI, signer)
+
+		return { tokenContract, stakingContract }
+	}, [library, account, selectedTokenAddress, stakingContractAddress])
+
+	// Fetch allowance and APR
+	useEffect(() => {
+		const fetchData = async () => {
+			const contracts = getContracts()
+			if (!contracts || !account) return
+
+			const { tokenContract, stakingContract } = contracts
+
+			// Get allowance
+			const allowance = await tokenContract.allowance(account, stakingContractAddress)
+			setAllowance(allowance)
+
+			// Calculate APR from weekly revenue
+			const currentWeek = Math.floor(Date.now() / (7 * 24 * 60 * 60 * 1000))
+			const weeklyRevenue = await stakingContract.weeklyRevenue(currentWeek)
+			const totalAssets = await stakingContract.totalAssets()
+
+			if (totalAssets.gt(0)) {
+				const yearlyRevenue = weeklyRevenue.mul(52)
+				const aprBN = yearlyRevenue.mul(10000).div(totalAssets)
+				setApr(aprBN.toNumber() / 100 + '')
+			}
+		}
+
+		fetchData()
+	}, [account, getContracts, stakingContractAddress]) // Added stakingContractAddress to dependencies
+
+	// Handle approval
+	const handleApprove = async () => {
+		const contracts = getContracts()
+		if (!contracts || !account) return
+
+		const { tokenContract } = contracts
+		try {
+			const tx = await tokenContract.approve(stakingContractAddress, ethers.constants.MaxUint256)
+			onAddTransaction({
+				hash: tx.hash,
+				description: 'Approve ' + selectedOption,
+			})
+			await tx.wait()
+			setAllowance(ethers.constants.MaxUint256)
+		} catch (error) {
+			console.error('Approval failed:', error)
+		}
+	}
+
+	// Handle deposit
+	const handleDeposit = async () => {
+		const contracts = getContracts()
+		if (!contracts || !account || !inputVal) return
+
+		const { stakingContract } = contracts
+		try {
+			const amount = parseEther(inputVal)
+			const tx = await stakingContract.deposit(amount, account)
+			onAddTransaction({
+				hash: tx.hash,
+				description: 'Stake ' + selectedOption,
+			})
+			await tx.wait()
+			setInputVal('')
+		} catch (error) {
+			console.error('Deposit failed:', error)
+		}
+	}
+
+	const handleAction = async () => {
+		if (!account) return
+		const amount = parseEther(inputVal)
+		if (allowance.lt(amount)) {
+			await handleApprove()
+		} else {
+			await handleDeposit()
+		}
+	}
+
+	const currentBalance = selectedOption === 'baoUSD' ? baoUSDBalance : baoETHBalance
 
 	const bInput = (
 		<>
@@ -39,13 +132,15 @@ export const Interface = () => {
 				<div className='float-left mb-1 flex w-full items-center justify-end gap-1'>
 					<Typography className='font-bold text-baoRed'>Balance:</Typography>
 					<Typography variant='sm' className='font-bold'>
-						{selectedOption === 'baoUSD' ? `${getDisplayBalance(baoUSDBalance)}` : `${getDisplayBalance(baoETHBalance)}`}
+						{getDisplayBalance(currentBalance)}
 					</Typography>
-					{selectedOption === 'baoUSD' ? (
-						<Image className='z-10 inline-block select-none' src='/images/tokens/baoUSD.png' alt='baoUSD' width={16} height={16} />
-					) : (
-						<Image className='z-10 inline-block select-none' src='/images/tokens/baoETH.png' alt='baoETH' width={16} height={16} />
-					)}
+					<Image
+						className='z-10 inline-block select-none'
+						src={`/images/tokens/${selectedOption}.png`}
+						alt={selectedOption}
+						width={16}
+						height={16}
+					/>
 				</div>
 			</div>
 			<div className='m-auto flex w-full glassmorphic-card'>
@@ -128,14 +223,117 @@ export const Interface = () => {
 				<Input
 					onSelectMax={() => setInputVal(formatEther(selectedOption === 'baoUSD' ? baoUSDBalance : baoETHBalance).toString())}
 					onChange={(e: { currentTarget: { value: React.SetStateAction<string> } }) => setInputVal(e.currentTarget.value)}
-					// Fee calculation not ideal, fix.
-					value={ballastInfo && inputVal ? (parseFloat(inputVal) - parseFloat(inputVal) * (100 / 10000)).toString() : inputVal}
+					value={inputVal}
 					placeholder={`${formatEther(selectedOption === 'baoUSD' ? baoUSDBalance : baoETHBalance).toString()}`}
 					className='!pl-0 !rounded-3xl !border-0'
 				/>
 			</div>
 		</>
 	)
+
+	const StakingPosition: React.FC<{ selectedOption: string }> = ({ selectedOption }) => {
+		const [stakedBalance, setStakedBalance] = useState<BigNumber>(BigNumber.from(0))
+		const [withdrawAmount, setWithdrawAmount] = useState('')
+		const { account, library } = useWeb3React()
+		const { onAddTransaction } = useTransactionProvider()
+		const stakingContractAddress = Config.addressMap.sBaoSynth
+
+		const getStakingContract = useCallback(() => {
+			if (!library || !account) return null
+			return new Contract(stakingContractAddress, sBaoSynthABI, library.getSigner())
+		}, [library, account, stakingContractAddress])
+
+		// Fetch staked balance
+		useEffect(() => {
+			const fetchStakedBalance = async () => {
+				const contract = getStakingContract()
+				if (!contract || !account) return
+				try {
+					const balance = await contract.balanceOf(account)
+					setStakedBalance(balance)
+				} catch (error) {
+					console.error('Failed to fetch staked balance:', error)
+					setStakedBalance(BigNumber.from(0))
+				}
+			}
+
+			if (account) {
+				fetchStakedBalance()
+			}
+
+			// Set up an interval to refresh the balance periodically
+			const interval = setInterval(fetchStakedBalance, 15000) // refresh every 15 seconds
+
+			return () => clearInterval(interval)
+		}, [account, getStakingContract])
+
+		const handleWithdraw = async () => {
+			const contract = getStakingContract()
+			if (!contract || !account || !withdrawAmount) return
+
+			try {
+				const amount = parseEther(withdrawAmount)
+				const tx = await contract.withdraw(amount, account, account)
+				onAddTransaction({
+					hash: tx.hash,
+					description: `Unstake ${selectedOption}`,
+				})
+				await tx.wait()
+				setWithdrawAmount('')
+			} catch (error) {
+				console.error('Withdrawal failed:', error)
+			}
+		}
+
+		if (!account || stakedBalance.eq(0)) return null
+
+		return (
+			<Card className='glassmorphic-card p-5 w-full mx-auto mt-4'>
+				<Card.Body>
+					<Typography variant='lg' className='font-bold mb-4'>
+						Your Staked Position
+					</Typography>
+					<div className='flex w-full justify-between mb-4'>
+						<Typography variant='sm' className='text-left'>
+							Staked Balance
+						</Typography>
+						<div className='flex items-center gap-2'>
+							<Typography variant='sm' className='text-right'>
+								{formatEther(stakedBalance)} s{selectedOption}
+							</Typography>
+							<Image
+								className='inline-block select-none'
+								src={`/images/tokens/${selectedOption}.png`}
+								alt={selectedOption}
+								width={16}
+								height={16}
+							/>
+						</div>
+					</div>
+					<div className='flex gap-4'>
+						<Input
+							value={withdrawAmount}
+							onChange={(e: { currentTarget: { value: string } }) => setWithdrawAmount(e.currentTarget.value)}
+							onSelectMax={() => setWithdrawAmount(formatEther(stakedBalance))}
+							placeholder='Amount to unstake'
+							className='!rounded-3xl'
+						/>
+						<Button
+							onClick={handleWithdraw}
+							disabled={!withdrawAmount || parseEther(withdrawAmount || '0').eq(0) || parseEther(withdrawAmount).gt(stakedBalance)}
+							text='Unstake'
+							className={classNames(
+								'min-w-[120px]',
+								!withdrawAmount || parseEther(withdrawAmount || '0').eq(0) || parseEther(withdrawAmount).gt(stakedBalance)
+									? 'cursor-not-allowed opacity-50'
+									: 'cursor-pointer hover:bg-baoRed/50 active:bg-baoRed/50',
+							)}
+						/>
+					</div>
+				</Card.Body>
+			</Card>
+		)
+	}
 
 	return (
 		<>
@@ -146,24 +344,36 @@ export const Interface = () => {
 					<div className='space-y-3'>
 						<div className='flex w-full justify-between'>
 							<Typography variant='sm' className='text-left'>
-								Annual percentage rate (APR)
+								Projected APR
 							</Typography>
 							<Typography variant='sm' className='text-right'>
-								22%
+								{apr}%
 							</Typography>
 						</div>
 						<div className='flex w-full justify-between'>
 							<Typography variant='sm' className='text-left'>
-								You will recieve
+								You will receive
 							</Typography>
 							<Typography variant='sm' className='text-right'>
-								1000 sbaoUSD
+								{inputVal ? `${inputVal} s${selectedOption}` : `0 s${selectedOption}`}
 							</Typography>
 						</div>
 					</div>
-					<Button text='STAKE' className='w-full mt-5 !-z-10' />
+					<Button
+						onClick={handleAction}
+						disabled={!account || !inputVal || parseEther(inputVal || '0').eq(0)}
+						text={!account ? 'Connect Wallet' : allowance.lt(parseEther(inputVal || '0')) ? 'Approve' : 'Stake'}
+						className={classNames(
+							'w-full mt-5',
+							'relative',
+							!account || !inputVal || parseEther(inputVal || '0').eq(0)
+								? 'cursor-not-allowed opacity-50'
+								: 'cursor-pointer hover:bg-baoRed/50 active:bg-baoRed/50',
+						)}
+					/>
 				</Card.Body>
 			</Card>
+			<StakingPosition selectedOption={selectedOption} />
 		</>
 	)
 }

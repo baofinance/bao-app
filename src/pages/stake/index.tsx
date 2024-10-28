@@ -3,7 +3,6 @@ import React from 'react'
 import { Icon } from '@/components/Icon'
 import { Interface } from './components/Interface'
 import { NextSeo } from 'next-seo'
-import Button from '@/components/Button'
 
 const Stake: React.FC = () => {
 	return (
