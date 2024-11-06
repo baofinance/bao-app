@@ -1,7 +1,7 @@
 import Loader from '@/components/Loader'
 import Typography from '@/components/Typography'
 import Image from 'next/future/image'
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import Config from '@/bao/lib/config'
 import { getDisplayBalance } from '@/utils/numberFormat'
 import { Asset, Balance, TotalSupply } from '@/bao/lib/types'
@@ -14,7 +14,7 @@ import RepayModal from '@/pages/lend/components/Modals/RepayModal'
 import Tooltipped from '@/components/Tooltipped'
 import { useAccountBalances } from '@/hooks/lend/useAccountBalances'
 
-export const SupplyList: React.FC<SupplyListProps> = ({ marketName, borrowBalances, totalSupplies }) => {
+export const SupplyList: React.FC<SupplyListProps> = ({ marketName, supplyBalances, totalSupplies }) => {
 	const assets = Config.lendMarkets[marketName].assets
 
 	return (
@@ -29,7 +29,7 @@ export const SupplyList: React.FC<SupplyListProps> = ({ marketName, borrowBalanc
 							<SupplyListItem
 								asset={asset}
 								key={asset.id}
-								borrowBalances={borrowBalances}
+								supplyBalances={supplyBalances}
 								totalSupplies={totalSupplies}
 								marketName={marketName}
 							/>
@@ -40,7 +40,7 @@ export const SupplyList: React.FC<SupplyListProps> = ({ marketName, borrowBalanc
 	)
 }
 
-const SupplyListItem: React.FC<SupplyListItemProps> = ({ asset, marketName, borrowBalances, totalSupplies }) => {
+const SupplyListItem: React.FC<SupplyListItemProps> = ({ asset, marketName, supplyBalances, totalSupplies }) => {
 	const { chainId } = useWeb3React()
 	const accountBalances = useAccountBalances(marketName)
 	const [showSupplyModal, setShowSupplyModal] = useState(false)
@@ -49,12 +49,12 @@ const SupplyListItem: React.FC<SupplyListItemProps> = ({ asset, marketName, borr
 	const [showRepayModal, setShowRepayModal] = useState(false)
 
 	const yourPosition = useMemo(() => {
-		if (!borrowBalances || !asset || !asset.marketAddress[chainId]) return null
+		if (!supplyBalances || !asset || !asset.marketAddress[chainId]) return null
 
-		const balance = borrowBalances.find(balance => balance.address === asset.marketAddress[chainId])
+		const balance = supplyBalances.find(balance => balance.address === asset.marketAddress[chainId])
 
 		return balance ? getDisplayBalance(balance.balance, asset.underlyingDecimals) : null
-	}, [borrowBalances, asset, chainId])
+	}, [supplyBalances, asset, chainId])
 
 	const totalMarketSupply = useMemo(() => {
 		if (!totalSupplies || !asset || !asset.underlyingAddress[chainId]) return null
@@ -161,12 +161,12 @@ export default SupplyList
 type SupplyListItemProps = {
 	asset: Asset
 	marketName: string
-	borrowBalances: Balance[]
+	supplyBalances: Balance[]
 	totalSupplies: TotalSupply[]
 }
 
 type SupplyListProps = {
 	marketName: string
-	borrowBalances: Balance[]
+	supplyBalances: Balance[]
 	totalSupplies: TotalSupply[]
 }

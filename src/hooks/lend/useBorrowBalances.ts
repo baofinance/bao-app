@@ -27,7 +27,7 @@ export const useBorrowBalances = (marketName: string): Balance[] => {
 						contracts.map(contract => ({
 							ref: contract.address,
 							contract,
-							calls: [{ method: 'symbol' }, { method: 'balanceOfUnderlying', params: [account] }],
+							calls: [{ method: 'symbol' }, { method: 'borrowBalanceStored', params: [account] }],
 						})),
 					),
 				),

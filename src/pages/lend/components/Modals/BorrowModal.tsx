@@ -12,7 +12,7 @@ import { useActiveLendMarket } from '@/hooks/lend/useActiveLendMarket'
 import { useAccountLiquidity } from '@/hooks/lend/useAccountLiquidity'
 import { useSupplyBalances } from '@/hooks/lend/useSupplyBalances'
 import { useBorrowBalances } from '@/hooks/lend/useBorrowBalances'
-import { decimate, getDisplayBalance, getFullDisplayBalance } from '@/utils/numberFormat'
+import { getDisplayBalance } from '@/utils/numberFormat'
 import { useOraclePrices } from '@/hooks/lend/useOraclePrices'
 import { useWeb3React } from '@web3-react/core'
 
@@ -29,7 +29,7 @@ const BorrowModal = ({ asset, show, onHide, marketName }: BorrowModalProps) => {
 	const activeLendMarket = useActiveLendMarket(asset)
 	const supplyBalances = useSupplyBalances(marketName)
 	const borrowBalances = useBorrowBalances(marketName)
-	const accountliquidity = useAccountLiquidity(marketName, supplyBalances, borrowBalances)
+	const accountLiquidity = useAccountLiquidity(marketName, supplyBalances, borrowBalances)
 	const prices = useOraclePrices(marketName)
 	const operation = 'Borrow'
 
@@ -45,13 +45,13 @@ const BorrowModal = ({ asset, show, onHide, marketName }: BorrowModalProps) => {
 	)
 
 	const borrowable = useMemo(() => {
-		if (!prices || !accountliquidity) return null
+		if (!prices || !accountLiquidity) return null
 
 		const marketPrice = prices[asset.marketAddress[chainId]]
 		if (!marketPrice) return null
 
-		return BigNumber.from(FixedNumber.from(formatUnits(accountliquidity.borrowable)).divUnsafe(FixedNumber.from(formatUnits(marketPrice))))
-	}, [accountliquidity, asset, chainId, prices])
+		return BigNumber.from(FixedNumber.from(formatUnits(accountLiquidity.borrowable)).divUnsafe(FixedNumber.from(formatUnits(marketPrice))))
+	}, [accountLiquidity, asset, chainId, prices])
 
 	const formattedBorrowable = useMemo(() => {
 		return borrowable ? getDisplayBalance(borrowable) : null

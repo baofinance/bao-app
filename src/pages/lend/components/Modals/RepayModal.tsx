@@ -3,11 +3,15 @@ import { Asset } from '@/bao/lib/types'
 import Modal from '@/components/Modal'
 import Typography from '@/components/Typography'
 import Image from 'next/future/image'
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import Input from '@/components/Input'
 import { parseUnits } from 'ethers/lib/utils'
 import { BigNumber } from 'ethers'
 import RepayButton from '@/pages/lend/components/Buttons/RepayButton'
+import { useBorrowBalances } from '@/hooks/lend/useBorrowBalances'
+import { useAccountBalances } from '@/hooks/lend/useAccountBalances'
+import { getDisplayBalance } from '@/utils/numberFormat'
+import { useWeb3React } from '@web3-react/core'
 
 export type RepayModalProps = {
 	asset: Asset
@@ -17,7 +21,29 @@ export type RepayModalProps = {
 }
 
 const RepayModal = ({ asset, show, onHide, marketName }: RepayModalProps) => {
+	const { chainId } = useWeb3React()
 	const operation = 'Repay'
+	const accountBalances = useAccountBalances(marketName)
+	const borrowBalances = useBorrowBalances(marketName)
+
+	const maxRepay = useMemo(() => {
+		if (!borrowBalances || !accountBalances) return BigNumber.from(0)
+
+		const borrowBalance = borrowBalances.find(
+			balance => balance.address.toLowerCase() === asset.marketAddress[chainId].toLowerCase(),
+		)?.balance
+		const accountBalance = accountBalances.find(
+			balance => balance.address.toLowerCase() === asset.underlyingAddress[chainId].toLowerCase(),
+		)?.balance
+
+		if (!borrowBalance || !accountBalances) return BigNumber.from(0)
+
+		return accountBalance.lt(borrowBalance) ? accountBalance : borrowBalance
+	}, [borrowBalances, accountBalances])
+
+	const maxRepayFormatted = useMemo(() => {
+		return maxRepay ? getDisplayBalance(maxRepay) : null
+	}, [maxRepay])
 
 	const [val, setVal] = useState('0')
 
@@ -33,8 +59,8 @@ const RepayModal = ({ asset, show, onHide, marketName }: RepayModalProps) => {
 	)
 
 	const handleSelectMax = useCallback(() => {
-		return setVal('0')
-	}, [])
+		setVal(maxRepayFormatted || '0.00')
+	}, [maxRepayFormatted])
 
 	return (
 		<>
@@ -56,7 +82,7 @@ const RepayModal = ({ asset, show, onHide, marketName }: RepayModalProps) => {
 										Available:
 									</Typography>
 									<Typography variant='sm' className='font-bakbak'>
-										{'0.00'}
+										{maxRepayFormatted ? maxRepayFormatted : '0.00'}
 										<Image src={asset.icon} width={32} height={32} alt={asset.name} className='inline p-1' />
 										<span className='hover:text-baoRed'>{asset.name}</span>
 									</Typography>
@@ -67,7 +93,7 @@ const RepayModal = ({ asset, show, onHide, marketName }: RepayModalProps) => {
 									onSelectMax={handleSelectMax}
 									onChange={handleChange}
 									value={val}
-									max={0}
+									max={maxRepayFormatted}
 									symbol={asset.name}
 									className='h-12 min-w-[150px] z-20 w-full bg-baoBlack lg:h-auto'
 								/>

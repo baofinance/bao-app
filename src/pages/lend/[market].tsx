@@ -8,9 +8,6 @@ import Link from 'next/link'
 import React, { useCallback, useMemo, useState } from 'react'
 import Config from '@/bao/lib/config'
 import AssetsCard from '@/pages/lend/components/AssetsCard'
-import { useAccountBalances } from '@/hooks/lend/useAccountBalances'
-import DebtCard from '@/pages/lend/components/DebtCard'
-import { useBorrowBalances } from '@/hooks/lend/useBorrowBalances'
 import { useTotalSupplies } from '@/hooks/lend/useTotalSupplies'
 import { useOraclePrice } from '@/hooks/lend/useOraclePrice'
 import { decimate, getDisplayBalance } from '@/utils/numberFormat'
@@ -44,7 +41,7 @@ export async function getStaticProps({ params }: { params: any }) {
 const Market: NextPage<{
 	marketName: string
 }> = ({ marketName }) => {
-	const borrowBalances = useBorrowBalances(marketName)
+	const supplyBalances = useSupplyBalances(marketName)
 	const totalSupplies = useTotalSupplies(marketName)
 	const oraclePrice = useOraclePrice(marketName)
 	const totalCollateral = useTotalCollateral(marketName)
@@ -71,7 +68,6 @@ const Market: NextPage<{
 
 	const handleSupplyVal = useCallback(
 		(updatedState: any) => {
-			// update the parent component's state with the new value
 			setSupplyVal(updatedState)
 		},
 		[supplyVal],
@@ -79,7 +75,6 @@ const Market: NextPage<{
 
 	const handleBorrowVal = useCallback(
 		(updatedState: any) => {
-			// update the parent component's state with the new value
 			setBorrowVal(updatedState)
 		},
 		[borrowVal],
@@ -160,7 +155,7 @@ const Market: NextPage<{
 
 						<div className='mt-6 grid gap-6 lg:grid-cols-1 lg:gap-16'>
 							<div className='lg:col-span-1'>
-								<AssetsCard borrowBalances={borrowBalances} totalSupplies={totalSupplies} marketName={marketName} />
+								<AssetsCard supplyBalances={supplyBalances} totalSupplies={totalSupplies} marketName={marketName} />
 							</div>
 						</div>
 					</>

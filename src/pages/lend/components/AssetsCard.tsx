@@ -4,16 +4,16 @@ import { Balance, TotalSupply } from '@/bao/lib/types'
 
 export const AssetsCard = ({
 	marketName,
-	borrowBalances,
+	supplyBalances,
 	totalSupplies,
 }: {
 	marketName: string
-	borrowBalances: Balance[]
+	supplyBalances: Balance[]
 	totalSupplies: TotalSupply[]
 }) => {
 	return (
 		<>
-			<SupplyList borrowBalances={borrowBalances} totalSupplies={totalSupplies} marketName={marketName} />
+			<SupplyList supplyBalances={supplyBalances} totalSupplies={totalSupplies} marketName={marketName} />
 		</>
 	)
 }
