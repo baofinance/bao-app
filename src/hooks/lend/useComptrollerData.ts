@@ -16,48 +16,6 @@ export const useComptrollerData = (marketName: string): ComptrollerData[] => {
 	const { data: comptrollerData } = useQuery(
 		['@/hooks/lend/useComptrollerData', providerKey(library, account, chainId), { enabled }],
 		async () => {
-			/*
-			const multicall = new Multicall({ ethersProvider: library, tryAggregate: true })
-			const multicallContext: ContractCallContext[] = []
-			const comptroller = Comptroller__factory.connect(Config.lendMarkets[marketName].comptroller, signerOrProvider)
-
-			forEach(Config.lendMarkets[marketName].assets, asset => {
-				multicallContext.push({
-					reference: asset.marketAddress[chainId],
-					contractAddress: comptroller.address,
-					abi: Comptroller__factory.abi,
-					calls: [
-						{
-							reference: 'markets',
-							methodName: 'markets',
-							methodParameters: [asset.marketAddress[chainId]],
-						},
-						{
-							reference: 'compBorrowState',
-							methodName: 'compBorrowState',
-							methodParameters: [asset.marketAddress[chainId]],
-						},
-						{
-							reference: 'borrowRestricted',
-							methodName: 'borrowRestricted',
-							methodParameters: [asset.marketAddress[chainId]],
-						},
-					],
-				})
-			})
-
-			const multicallResults: ContractCallResults = await multicall.call(multicallContext)
-
-			return Object.values(multicallResults.results).map(data => {
-				return {
-					address: data.originalContractCallContext.reference,
-					collateralFactor: data.callsReturnContext.find(call => call.reference === 'markets')?.returnValues[1],
-					imfFactor: data.callsReturnContext.find(call => call.reference === 'markets')?.returnValues[2],
-				}
-			})
-
-			 */
-
 			if (!enabled) return null
 
 			const multicall = new Multicall({ ethersProvider: library, tryAggregate: true })

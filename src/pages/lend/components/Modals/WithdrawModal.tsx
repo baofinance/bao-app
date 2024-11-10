@@ -5,7 +5,7 @@ import Typography from '@/components/Typography'
 import Image from 'next/future/image'
 import React, { useCallback, useMemo, useState } from 'react'
 import Input from '@/components/Input'
-import { decimate, getDisplayBalance } from '@/utils/numberFormat'
+import { decimate, exponentiate, getDisplayBalance, sqrt } from '@/utils/numberFormat'
 import { BigNumber } from 'ethers'
 import { useWeb3React } from '@web3-react/core'
 import { useExchangeRates } from '@/hooks/lend/useExchangeRate'
@@ -14,6 +14,10 @@ import WithdrawButton from '@/pages/lend/components/Buttons/WithdrawButton'
 import { useSupplyBalances } from '@/hooks/lend/useSupplyBalances'
 import { useComptrollerData } from '@/hooks/lend/useComptrollerData'
 import Loader from '@/components/Loader'
+import { useAccountLiquidity } from '@/hooks/lend/useAccountLiquidity'
+import { useBorrowBalances } from '@/hooks/lend/useBorrowBalances'
+import { useOraclePrice } from '@/hooks/lend/useOraclePrice'
+import { useOraclePrices } from '@/hooks/lend/useOraclePrices'
 
 export type WithdrawModalProps = {
 	asset: Asset
@@ -25,10 +29,13 @@ export type WithdrawModalProps = {
 const WithdrawModal = ({ asset, show, onHide, marketName }: WithdrawModalProps) => {
 	const { chainId } = useWeb3React()
 	const supplyBalances = useSupplyBalances(marketName)
+	const borrowBalances = useBorrowBalances(marketName)
 	const { exchangeRates } = useExchangeRates(marketName)
 	const [val, setVal] = useState('0')
 	const operation = 'Withdraw'
 	const comptrollerData = useComptrollerData(marketName)
+	const accountLiquidity = useAccountLiquidity(marketName, supplyBalances, borrowBalances)
+	const prices = useOraclePrices(marketName)
 
 	const handleChange = useCallback(
 		(e: React.FormEvent<HTMLInputElement>) => {
@@ -38,17 +45,54 @@ const WithdrawModal = ({ asset, show, onHide, marketName }: WithdrawModalProps) 
 	)
 
 	const supply = useMemo(() => {
-		if (!supplyBalances) return null
-		return supplyBalances.find(supply => supply.address === asset.marketAddress[chainId])
+		return supplyBalances?.find(supply => supply.address === asset.marketAddress[chainId]) || null
 	}, [supplyBalances, asset, chainId])
 
 	const formattedSupplied = useMemo(() => {
 		if (!supply) return null
-		return supply ? getDisplayBalance(supply.balance, asset.underlyingDecimals) : null
+		return getDisplayBalance(supply.balance, asset.underlyingDecimals)
 	}, [supply, asset, chainId])
 
+	const assetComptrollerData = useMemo(() => {
+		return comptrollerData?.find(data => data.address === asset.marketAddress) || null
+	}, [comptrollerData, asset])
+
+	const imfFactor = useMemo(() => {
+		if (!assetComptrollerData || !accountLiquidity) return null
+
+		let imfFactor = assetComptrollerData.imfFactor
+
+		if (accountLiquidity) {
+			const sqrtBalance = sqrt(supply.balance)
+			const num = exponentiate(parseUnits('1.1'))
+			const denom = decimate(imfFactor.mul(sqrtBalance).add(parseUnits('1')))
+			imfFactor = num.div(denom)
+		}
+		return imfFactor
+	}, [assetComptrollerData, accountLiquidity])
+
+	const price = useMemo(() => {
+		return prices?.[asset.marketAddress[chainId]] || null
+	}, [prices, asset, chainId])
+
+	const withdrawable = useMemo(() => {
+		if (!assetComptrollerData || !accountLiquidity || !imfFactor || !price) return BigNumber.from(0)
+
+		const collateralFactor = assetComptrollerData.collateralFactor
+		const borrowable = accountLiquidity.borrowable
+
+		if (imfFactor.gt(collateralFactor) && price.gt(0)) {
+			const factor = collateralFactor.mul(price).gt(0) ? decimate(collateralFactor.mul(price)) : decimate(imfFactor).mul(price)
+
+			return exponentiate(borrowable).div(factor)
+		}
+
+		return BigNumber.from(0)
+	}, [assetComptrollerData, accountLiquidity, imfFactor, price])
+
 	const handleSelectMax = useCallback(() => {
-		formattedSupplied && setVal(formattedSupplied.toString())
+		const max = !(accountLiquidity && accountLiquidity.borrowable) || withdrawable.gt(supply.balance) ? supply.balance : withdrawable
+		setVal(getDisplayBalance(max))
 	}, [formattedSupplied])
 
 	const hideModal = useCallback(() => {
