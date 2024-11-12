@@ -12,31 +12,25 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useActiveLendMarket } from '@/hooks/lend/useActiveLendMarket'
 import useHealthFactor from '@/hooks/lend/useHealthFactor'
 import Config from '@/bao/lib/config'
+import { useBorrowBalances } from '@/hooks/lend/useBorrowBalances'
+import { useSupplyBalances } from '@/hooks/lend/useSupplyBalances'
 
 type DashboardCardProps = {
 	marketName: string
-	borrowBalances: Balance[]
-	supplyBalances: Balance[]
-	mintVal: string
-	depositVal: string
 }
 
-const DashboardCard: React.FC<DashboardCardProps> = ({
-	marketName,
-	mintVal,
-	borrowBalances,
-	supplyBalances,
-	depositVal,
-}: DashboardCardProps) => {
+const DashboardCard: React.FC<DashboardCardProps> = ({ marketName }: DashboardCardProps) => {
 	const bao = useBao()
 	const { account, chainId } = useWeb3React()
 	const asset = Config.lendMarkets[marketName].assets.find(
 		asset => asset.marketAddress[chainId] === Config.lendMarkets[marketName].marketAddresses[chainId],
 	)
 	const activeLendMarket = useActiveLendMarket(asset)
+	const borrowBalances = useBorrowBalances(marketName)
+	const supplyBalances = useSupplyBalances(marketName)
 	const accountLiquidity = useAccountLiquidity(marketName, supplyBalances, borrowBalances)
 
-	const change = mintVal && depositVal ? BigNumber.from(mintVal).sub(BigNumber.from(depositVal)) : BigNumber.from(0)
+	const change = BigNumber.from(0)
 	const borrow = accountLiquidity ? accountLiquidity.borrow : BigNumber.from(0)
 	const newBorrow = borrow ? borrow.sub(change.gt(0) ? change : 0) : BigNumber.from(0)
 	const borrowable = accountLiquidity ? accountLiquidity.borrow.add(exponentiate(accountLiquidity.borrowable)) : BigNumber.from(0)

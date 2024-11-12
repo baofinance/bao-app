@@ -17,6 +17,7 @@ import { BigNumber } from 'ethers'
 import { useTotalDebt } from '@/hooks/lend/useTotalDebt'
 import { useBorrowApy } from '@/hooks/lend/useBorrowApy'
 import { useSupplyBalances } from '@/hooks/lend/useSupplyBalances'
+import DebtCard from '@/pages/lend/components/DebtCard'
 
 export async function getStaticPaths() {
 	const paths: { params: { market: string } }[] = []
@@ -151,7 +152,9 @@ const Market: NextPage<{
 							</div>
 						</div>
 
-						<div style={{ marginTop: '8px', marginBottom: '16px' }}></div>
+						<div style={{ marginTop: '8px', marginBottom: '16px' }}>
+							<DebtCard marketName={marketName} />
+						</div>
 
 						<div className='mt-6 grid gap-6 lg:grid-cols-1 lg:gap-16'>
 							<div className='lg:col-span-1'>
