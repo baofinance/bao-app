@@ -45,7 +45,7 @@ const RepayModal = ({ asset, show, onHide, marketName }: RepayModalProps) => {
 		return maxRepay ? getDisplayBalance(maxRepay) : null
 	}, [maxRepay])
 
-	const [val, setVal] = useState('0')
+	const [val, setVal] = useState(BigNumber.from(0))
 
 	const hideModal = useCallback(() => {
 		onHide()
@@ -53,14 +53,22 @@ const RepayModal = ({ asset, show, onHide, marketName }: RepayModalProps) => {
 
 	const handleChange = useCallback(
 		(e: React.FormEvent<HTMLInputElement>) => {
-			setVal(e.currentTarget.value)
+			setVal(BigNumber.from(e.currentTarget.value))
 		},
 		[setVal],
 	)
 
 	const handleSelectMax = useCallback(() => {
-		setVal(maxRepayFormatted || '0.00')
-	}, [maxRepayFormatted])
+		setVal(maxRepay)
+	}, [maxRepay])
+
+	const formattedVal = useMemo(() => {
+		return getDisplayBalance(val)
+	}, [val])
+
+	const disabled = useMemo(() => {
+		return val.eq(BigNumber.from(0))
+	}, [val])
 
 	return (
 		<>
@@ -92,7 +100,7 @@ const RepayModal = ({ asset, show, onHide, marketName }: RepayModalProps) => {
 								<Input
 									onSelectMax={handleSelectMax}
 									onChange={handleChange}
-									value={val}
+									value={formattedVal}
 									max={maxRepayFormatted}
 									symbol={asset.name}
 									className='h-12 min-w-[150px] z-20 w-full bg-baoBlack lg:h-auto'
@@ -101,13 +109,7 @@ const RepayModal = ({ asset, show, onHide, marketName }: RepayModalProps) => {
 						</div>
 					</Modal.Body>
 					<Modal.Actions>
-						<RepayButton
-							asset={asset}
-							val={val ? parseUnits(val, asset.underlyingDecimals) : BigNumber.from(0)}
-							isDisabled={!val}
-							onHide={onHide}
-							marketName={marketName}
-						/>
+						<RepayButton asset={asset} val={val} isDisabled={disabled} onHide={onHide} marketName={marketName} />
 					</Modal.Actions>
 				</>
 			</Modal>

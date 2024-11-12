@@ -74,7 +74,7 @@ export const useAccountLiquidity = (marketName: string, supplyBalances: Balance[
 				netApy,
 				supply,
 				borrow,
-				borrowable: compAccountLiquidity[1],
+				borrowable: BigNumber.from(compAccountLiquidity[1]),
 			}
 		},
 		{

@@ -36,8 +36,8 @@ export const useComptrollerData = (marketName: string): ComptrollerData[] => {
 
 			return Object.entries(multicallResults.results).map(([address, data]) => ({
 				address,
-				collateralFactor: data.callsReturnContext.find(call => call.reference === 'markets')?.returnValues[1],
-				imfFactor: data.callsReturnContext.find(call => call.reference === 'markets')?.returnValues[2],
+				collateralFactor: BigNumber.from(data.callsReturnContext.find(call => call.reference === 'markets')?.returnValues[1]),
+				imfFactor: BigNumber.from(data.callsReturnContext.find(call => call.reference === 'markets')?.returnValues[2]),
 			}))
 		},
 

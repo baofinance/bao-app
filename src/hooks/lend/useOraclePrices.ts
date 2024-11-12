@@ -39,7 +39,7 @@ export const useOraclePrices = (marketName: string): { [p: string]: BigNumber } 
 			return Object.fromEntries(
 				Object.entries(multicallResults.results).map(([address, result]) => [
 					address,
-					result.callsReturnContext.find(call => call.reference === 'getUnderlyingPrice')?.returnValues[0],
+					BigNumber.from(result.callsReturnContext.find(call => call.reference === 'getUnderlyingPrice')?.returnValues[0]),
 				]),
 			)
 		},

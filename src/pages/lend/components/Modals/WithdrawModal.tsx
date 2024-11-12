@@ -31,7 +31,7 @@ const WithdrawModal = ({ asset, show, onHide, marketName }: WithdrawModalProps) 
 	const supplyBalances = useSupplyBalances(marketName)
 	const borrowBalances = useBorrowBalances(marketName)
 	const { exchangeRates } = useExchangeRates(marketName)
-	const [val, setVal] = useState('0')
+	const [val, setVal] = useState(BigNumber.from(0))
 	const operation = 'Withdraw'
 	const comptrollerData = useComptrollerData(marketName)
 	const accountLiquidity = useAccountLiquidity(marketName, supplyBalances, borrowBalances)
@@ -39,7 +39,7 @@ const WithdrawModal = ({ asset, show, onHide, marketName }: WithdrawModalProps) 
 
 	const handleChange = useCallback(
 		(e: React.FormEvent<HTMLInputElement>) => {
-			setVal(e.currentTarget.value)
+			setVal(BigNumber.from(e.currentTarget.value))
 		},
 		[setVal],
 	)
@@ -54,11 +54,11 @@ const WithdrawModal = ({ asset, show, onHide, marketName }: WithdrawModalProps) 
 	}, [supply, asset, chainId])
 
 	const assetComptrollerData = useMemo(() => {
-		return comptrollerData?.find(data => data.address === asset.marketAddress) || null
+		return comptrollerData?.find(data => data.address === asset.marketAddress[chainId]) || null
 	}, [comptrollerData, asset])
 
 	const imfFactor = useMemo(() => {
-		if (!assetComptrollerData || !accountLiquidity) return null
+		if (!assetComptrollerData || !accountLiquidity || !supply) return null
 
 		let imfFactor = assetComptrollerData.imfFactor
 
@@ -66,10 +66,10 @@ const WithdrawModal = ({ asset, show, onHide, marketName }: WithdrawModalProps) 
 			const sqrtBalance = sqrt(supply.balance)
 			const num = exponentiate(parseUnits('1.1'))
 			const denom = decimate(imfFactor.mul(sqrtBalance).add(parseUnits('1')))
-			imfFactor = num.div(denom)
+			return num.div(denom)
 		}
 		return imfFactor
-	}, [assetComptrollerData, accountLiquidity])
+	}, [supply, assetComptrollerData, accountLiquidity])
 
 	const price = useMemo(() => {
 		return prices?.[asset.marketAddress[chainId]] || null
@@ -83,21 +83,37 @@ const WithdrawModal = ({ asset, show, onHide, marketName }: WithdrawModalProps) 
 
 		if (imfFactor.gt(collateralFactor) && price.gt(0)) {
 			const factor = collateralFactor.mul(price).gt(0) ? decimate(collateralFactor.mul(price)) : decimate(imfFactor).mul(price)
-
 			return exponentiate(borrowable).div(factor)
 		}
 
 		return BigNumber.from(0)
 	}, [assetComptrollerData, accountLiquidity, imfFactor, price])
 
+	const max = useMemo(() => {
+		if (!accountLiquidity || !withdrawable || !supply) return BigNumber.from(0)
+
+		return !(accountLiquidity && accountLiquidity.borrowable) || withdrawable.gt(supply.balance) ? supply.balance : withdrawable
+	}, [accountLiquidity, withdrawable, supply])
+
+	const formattedMax = useMemo(() => {
+		return getDisplayBalance(max)
+	}, [max])
+
 	const handleSelectMax = useCallback(() => {
-		const max = !(accountLiquidity && accountLiquidity.borrowable) || withdrawable.gt(supply.balance) ? supply.balance : withdrawable
-		setVal(getDisplayBalance(max))
-	}, [formattedSupplied])
+		setVal(max)
+	}, [max])
 
 	const hideModal = useCallback(() => {
 		onHide()
 	}, [onHide])
+
+	const disabled = useMemo(() => {
+		return val.eq(BigNumber.from(0))
+	}, [val])
+
+	const formattedVal = useMemo(() => {
+		return getDisplayBalance(val)
+	}, [val])
 
 	return (
 		<>
@@ -129,8 +145,8 @@ const WithdrawModal = ({ asset, show, onHide, marketName }: WithdrawModalProps) 
 								<Input
 									onSelectMax={handleSelectMax}
 									onChange={handleChange}
-									value={val}
-									max={formattedSupplied && formattedSupplied.toString()}
+									value={formattedVal}
+									max={formattedMax}
 									symbol={asset.name}
 									className='h-12 min-w-[150px] z-20 w-full bg-baoBlack lg:h-auto'
 								/>
@@ -138,13 +154,7 @@ const WithdrawModal = ({ asset, show, onHide, marketName }: WithdrawModalProps) 
 						</div>
 					</Modal.Body>
 					<Modal.Actions>
-						<WithdrawButton
-							asset={asset}
-							val={val ? parseUnits(val, asset.underlyingDecimals) : BigNumber.from(0)}
-							isDisabled={!val}
-							onHide={onHide}
-							marketName={marketName}
-						/>
+						<WithdrawButton asset={asset} val={val} isDisabled={disabled} onHide={onHide} marketName={marketName} />
 					</Modal.Actions>
 				</>
 			</Modal>

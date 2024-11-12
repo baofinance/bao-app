@@ -25,7 +25,7 @@ export type BorrowModalProps = {
 
 const BorrowModal = ({ asset, show, onHide, marketName }: BorrowModalProps) => {
 	const { chainId } = useWeb3React()
-	const [val, setVal] = useState('0')
+	const [val, setVal] = useState(BigNumber.from(0))
 	const activeLendMarket = useActiveLendMarket(asset)
 	const supplyBalances = useSupplyBalances(marketName)
 	const borrowBalances = useBorrowBalances(marketName)
@@ -39,7 +39,7 @@ const BorrowModal = ({ asset, show, onHide, marketName }: BorrowModalProps) => {
 
 	const handleChange = useCallback(
 		(e: React.FormEvent<HTMLInputElement>) => {
-			setVal(e.currentTarget.value)
+			setVal(BigNumber.from(e.currentTarget.value))
 		},
 		[setVal],
 	)
@@ -58,8 +58,16 @@ const BorrowModal = ({ asset, show, onHide, marketName }: BorrowModalProps) => {
 	}, [borrowable])
 
 	const handleSelectMax = useCallback(() => {
-		setVal(formattedBorrowable || '0.00')
-	}, [formattedBorrowable])
+		setVal(borrowable)
+	}, [borrowable])
+
+	const formattedVal = useMemo(() => {
+		return getDisplayBalance(val)
+	}, [val])
+
+	const disabled = useMemo(() => {
+		return val.eq(BigNumber.from(0))
+	}, [val])
 
 	return (
 		<Modal isOpen={show} onDismiss={hideModal}>
@@ -89,8 +97,8 @@ const BorrowModal = ({ asset, show, onHide, marketName }: BorrowModalProps) => {
 						<Input
 							onSelectMax={handleSelectMax}
 							onChange={handleChange}
-							value={val}
-							max={0}
+							value={formattedVal}
+							max={formattedBorrowable}
 							symbol={asset.name}
 							className='h-12 min-w-[150px] z-20 w-full bg-baoBlack lg:h-auto'
 						/>
@@ -98,13 +106,7 @@ const BorrowModal = ({ asset, show, onHide, marketName }: BorrowModalProps) => {
 				</div>
 			</Modal.Body>
 			<Modal.Actions>
-				<BorrowButton
-					asset={asset}
-					val={val ? parseUnits(val, asset.underlyingDecimals) : BigNumber.from(0)}
-					isDisabled={!val}
-					onHide={onHide}
-					marketName={marketName}
-				/>
+				<BorrowButton asset={asset} val={val} isDisabled={disabled} onHide={onHide} marketName={marketName} />
 			</Modal.Actions>
 		</Modal>
 	)

@@ -3,7 +3,7 @@ import { ActiveSupportedVault, Asset, Balance } from '@/bao/lib/types'
 import Modal from '@/components/Modal'
 import { BigNumber } from 'ethers'
 import { parseUnits } from 'ethers/lib/utils'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import Input from '@/components/Input'
 import Typography from '@/components/Typography'
 import SupplyButton from '@/pages/lend/components/Buttons/SupplyButton'
@@ -21,30 +21,36 @@ export type SupplyModalProps = {
 }
 
 const SupplyModal = ({ asset, show, onHide, marketName, fullBalance }: SupplyModalProps) => {
-	const [val, setVal] = useState('0')
+	const [val, setVal] = useState(BigNumber.from(0))
 	const operation = 'Supply'
-	const [formattedBalance, setFormattedBalance] = useState('0.00')
 
 	const handleChange = useCallback(
 		(e: React.FormEvent<HTMLInputElement>) => {
-			setVal(e.currentTarget.value)
+			setVal(BigNumber.from(e.currentTarget.value))
 		},
 		[setVal],
 	)
 
+	const formattedBalance = useMemo(() => {
+		if (!fullBalance) return '0'
+		return getDisplayBalance(fullBalance)
+	}, [fullBalance])
+
 	const handleSelectMax = useCallback(() => {
-		if (!formattedBalance) return setVal('0')
-		setVal(formattedBalance)
-	}, [formattedBalance, setVal])
+		setVal(fullBalance)
+	}, [fullBalance, setVal])
 
 	const hideModal = useCallback(() => {
 		onHide()
 	}, [onHide])
 
-	useEffect(() => {
-		if (!fullBalance) return
-		setFormattedBalance(getDisplayBalance(fullBalance, 18))
-	}, [fullBalance])
+	const formattedVal = useMemo(() => {
+		return getDisplayBalance(val)
+	}, [val])
+
+	const disabled = useMemo(() => {
+		return val.eq(BigNumber.from(0))
+	}, [val])
 
 	return (
 		<Modal isOpen={show} onDismiss={() => {}}>
@@ -74,8 +80,8 @@ const SupplyModal = ({ asset, show, onHide, marketName, fullBalance }: SupplyMod
 						<Input
 							onSelectMax={handleSelectMax}
 							onChange={handleChange}
-							value={val}
-							max={0}
+							value={formattedVal}
+							max={formattedBalance}
 							symbol={asset.name}
 							className='h-12 min-w-[150px] z-20 w-full bg-baoBlack lg:h-auto'
 						/>
@@ -83,13 +89,7 @@ const SupplyModal = ({ asset, show, onHide, marketName, fullBalance }: SupplyMod
 				</div>
 			</Modal.Body>
 			<Modal.Actions>
-				<SupplyButton
-					asset={asset}
-					val={val ? parseUnits(val, asset.underlyingDecimals) : BigNumber.from(0)}
-					isDisabled={!val}
-					onHide={onHide}
-					marketName={marketName}
-				/>
+				<SupplyButton asset={asset} val={val} isDisabled={disabled} onHide={onHide} marketName={marketName} />
 			</Modal.Actions>
 		</Modal>
 	)
