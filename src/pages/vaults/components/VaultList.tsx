@@ -60,10 +60,7 @@ export const VaultListItem: React.FC<VaultListProps> = ({ vaultName }: VaultList
 	return (
 		synth && (
 			<Link href={account ? `/vaults/${vaultName}` : `#`} key={vaultName}>
-				<button
-					className='glassmorphic-card w-full px-4 py-2 duration-300 hover:border-baoRed hover:bg-baoRed hover:bg-opacity-20'
-					disabled={!account}
-				>
+				<button className='glassmorphic-card w-full px-4 py-2 duration-300 hover:border-baoRed hover:bg-baoRed hover:bg-opacity-20'>
 					<div className='flex w-full flex-row'>
 						<div className='flex w-full'>
 							<div className='my-auto'>
