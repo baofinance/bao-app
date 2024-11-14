@@ -60,7 +60,7 @@ const WithdrawModal = ({ asset, show, onHide, marketName }: WithdrawModalProps) 
 	const imfFactor = useMemo(() => {
 		if (!assetComptrollerData || !accountLiquidity || !supply) return null
 
-		let imfFactor = assetComptrollerData.imfFactor
+		const imfFactor = assetComptrollerData.imfFactor
 
 		if (accountLiquidity) {
 			const sqrtBalance = sqrt(supply.balance)
