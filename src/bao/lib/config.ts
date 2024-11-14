@@ -37,6 +37,7 @@ export default {
 		//BasePools
 		baoUSDLUSD: '0x08cC92fEdc1cE2D8525176a63FcfF404450f2998',
 		baoETHETH: '0x3B9Fb87F7d081CEDdb1289258FA5660d955317b6',
+		sBaoSynth: '0x69378e2142BE773C86c78320EAc929770d3d740E',
 	},
 	llamaIds: {
 		wstETH: '747c1d2a-c668-4682-b9f9-296708a3dd90',
@@ -160,6 +161,14 @@ export default {
 		},
 		aura: {
 			1: 'https://data.aura.finance/graphql',
+		},
+	},
+	stakedSynths: {
+		sbaoUSD: {
+			1: '0x0000000000000000000000000000000000000000',
+		},
+		sbaoETH: {
+			1: '0x0000000000000000000000000000000000000000',
 		},
 	},
 	vaults: {
