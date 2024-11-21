@@ -889,6 +889,7 @@ export default {
 					icon: '/images/tokens/weETH.png',
 					supply: true,
 					borrow: false,
+					group: 'Pendle weETH'
 				},
 				{
 					id: 5,
@@ -904,6 +905,7 @@ export default {
 					icon: '/images/tokens/weETH.png',
 					supply: true,
 					borrow: false,
+					group: 'Pendle weETH'
 				},
 				{
 					id: 6,
@@ -919,6 +921,7 @@ export default {
 					icon: '/images/tokens/weETH.png',
 					supply: true,
 					borrow: false,
+					group: 'Pendle weETH'
 				},
 			],
 		},
@@ -1010,6 +1013,7 @@ export default {
 					icon: '/images/tokens/USDe.png',
 					supply: true,
 					borrow: false,
+					group: 'Pendle USDe'
 				},
 				{
 					id: 6,
@@ -1025,6 +1029,7 @@ export default {
 					icon: '/images/tokens/sUSDe.png',
 					supply: true,
 					borrow: false,
+					group: 'Pendle USDe'
 				},
 			],
 		},

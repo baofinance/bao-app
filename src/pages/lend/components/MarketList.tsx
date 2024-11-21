@@ -1,6 +1,7 @@
 import { ListHeader } from '@/components/List'
-import { PageLoader } from '@/components/Loader'
+import Loader, { PageLoader } from '@/components/Loader'
 import Typography from '@/components/Typography'
+import Tooltipped from '@/components/Tooltipped'
 import { useWeb3React } from '@web3-react/core'
 import Image from 'next/future/image'
 import Link from 'next/link'
@@ -27,6 +28,23 @@ export const MarketListItem: React.FC<MarketListProps> = ({ marketName }: Market
 	const { account } = useWeb3React()
 	const market = Config.lendMarkets[marketName]
 
+	// Filter active and supply-enabled assets
+	const collateral = market.assets.filter(asset => asset.supply && asset.active)
+
+	// Group assets by their `group` property (or fallback to `name`)
+	const groupedCollateral = Object.values(
+		collateral.reduce((groups, asset) => {
+			const groupName = asset.group || asset.name
+			if (!groups[groupName]) {
+				groups[groupName] = {
+					icon: asset.icon,
+					groupName,
+				}
+			}
+			return groups
+		}, {} as Record<string, { icon: string; groupName: string }>)
+	)
+
 	return (
 		market && (
 			<Link href={account ? `/lend/${market.name}` : `#`} key={market.name}>
@@ -34,7 +52,8 @@ export const MarketListItem: React.FC<MarketListProps> = ({ marketName }: Market
 					<div className='flex w-full flex-row'>
 						<div className='flex w-full'>
 							<div className='my-auto'>
-								<Image src={`/images/tokens/${market.name}.png`} alt={market.name} className={`inline-block`} height={38} width={38} />
+								{/* Market Name and Description */}
+								<Image src={market.assets[0]?.icon || ''} alt={market.name} className={`inline-block`} height={38} width={38} />
 								<span className='inline-block text-left align-middle'>
 									<Typography variant='lg' className='ml-2 font-bakbak'>
 										{market.name}
@@ -45,6 +64,27 @@ export const MarketListItem: React.FC<MarketListProps> = ({ marketName }: Market
 								</span>
 							</div>
 						</div>
+					</div>
+
+					{/* Collateral Display */}
+					<div className='mx-auto my-2 flex w-full items-center justify-center'>
+						{groupedCollateral.length > 0 ? (
+							groupedCollateral.map(asset => (
+								<Tooltipped content={asset.groupName} key={asset.groupName} placement='bottom'>
+									<span className={`-ml-2 inline-block select-none duration-200 first:ml-0`}>
+										<Image
+											src={asset.icon}
+											alt={asset.groupName}
+											className={`inline-block`}
+											height={32}
+											width={32}
+										/>
+									</span>
+								</Tooltipped>
+							))
+						) : (
+							<Loader />
+						)}
 					</div>
 				</button>
 			</Link>
