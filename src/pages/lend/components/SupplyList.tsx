@@ -533,7 +533,7 @@ export const SupplyListItem: React.FC<SupplyListItemProps> = ({ asset, marketNam
 
 				{/* Max LTV */}
 				<div className='flex-1 text-right'>
-					<Typography>
+					<Typography variant='xs'>
 						{mode === 'supply' && Config.lendMarkets[marketName].collateralFactor
 							? getDisplayBalance(Config.lendMarkets[marketName].collateralFactor.mul(100), 18, 0) + '%'
 							: '-'}
