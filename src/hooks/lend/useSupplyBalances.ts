@@ -3,10 +3,10 @@ import { useWeb3React } from '@web3-react/core'
 import { useQuery } from '@tanstack/react-query'
 import { providerKey } from '@/utils/index'
 import { Contract } from '@ethersproject/contracts'
-import { Ctoken__factory, Erc20__factory } from '@/typechain/factories'
+import { Ctoken__factory } from '@/typechain/factories'
 import MultiCall from '@/utils/multicall'
-import { Balance } from '@/bao/lib/types'
 import Config from '@/bao/lib/config'
+import { Balance } from '@/bao/lib/types'
 import { useTxReceiptUpdater } from '@/hooks/base/useTransactionProvider'
 
 export const useSupplyBalances = (marketName: string): Balance[] => {

@@ -1,139 +1,172 @@
-import { Balance } from '@/bao/lib/types'
 import Typography from '@/components/Typography'
-import useBao from '@/hooks/base/useBao'
-import { useAccountLiquidity } from '@/hooks/lend/useAccountLiquidity'
-import { decimate, exponentiate, getDisplayBalance } from '@/utils/numberFormat'
 import { useWeb3React } from '@web3-react/core'
 import { BigNumber } from 'ethers'
-import { formatUnits, parseUnits } from 'ethers/lib/utils'
-import React, { useMemo } from 'react'
-import { faDashboard } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { useActiveLendMarket } from '@/hooks/lend/useActiveLendMarket'
-import useHealthFactor from '@/hooks/lend/useHealthFactor'
-import Config from '@/bao/lib/config'
-import { useBorrowBalances } from '@/hooks/lend/useBorrowBalances'
-import { useSupplyBalances } from '@/hooks/lend/useSupplyBalances'
-
-type DashboardCardProps = {
-	marketName: string
-}
+import { getDisplayBalance } from '@/utils/numberFormat'
 
 const DashboardCard: React.FC<DashboardCardProps> = ({ marketName }: DashboardCardProps) => {
-	const bao = useBao()
-	const { account, chainId } = useWeb3React()
-	const asset = Config.lendMarkets[marketName].assets.find(
-		asset => asset.marketAddress[chainId] === Config.lendMarkets[marketName].marketAddresses[chainId],
-	)
-	const activeLendMarket = useActiveLendMarket(asset)
-	const borrowBalances = useBorrowBalances(marketName)
-	const supplyBalances = useSupplyBalances(marketName)
-	const accountLiquidity = useAccountLiquidity(marketName, supplyBalances, borrowBalances)
-
-	const change = BigNumber.from(0)
-	const borrow = accountLiquidity ? accountLiquidity.borrow : BigNumber.from(0)
-	const newBorrow = borrow ? borrow.sub(change.gt(0) ? change : 0) : BigNumber.from(0)
-	const borrowable = accountLiquidity ? accountLiquidity.borrow.add(exponentiate(accountLiquidity.borrowable)) : BigNumber.from(0)
-	const newBorrowable = activeLendMarket && decimate(borrowable).sub(BigNumber.from(parseUnits(formatUnits(change, 36 - 18))))
-
-	const borrowChange = borrow.add(exponentiate(change))
-	const healthFactor = useHealthFactor(marketName, borrowBalances, borrowChange)
-
-	const barPercentage = parseFloat(
-		getDisplayBalance(
-			accountLiquidity && newBorrowable && !newBorrowable.eq(0)
-				? (parseFloat(accountLiquidity.borrow.toString()) / parseFloat(newBorrowable.toString())) * 100
-				: 0,
-			18,
-			2,
-		),
-	)
-	const healthFactorColor = (healthFactor: BigNumber) => {
-		const c = healthFactor.eq(0)
-			? `${(props: any) => props.theme.color.text[100]}`
-			: healthFactor.lte(parseUnits('1.25'))
-				? '#e32222'
-				: healthFactor.lt(parseUnits('1.55'))
-					? '#ffdf19'
-					: '#45be31'
-		return c
+	// DEBUG: Add dummy data
+	const dummyData = {
+		collateral: BigNumber.from('20000000000000000000000'), // $20,000
+		debt: BigNumber.from('4000000000000000000000'), // $4,000
+		healthFactor: BigNumber.from('1750000000000000000'), // 1.75
+		supplyYield: 250, // $250 per year
+		borrowCost: 100, // $100 per year
+		supplyAPR: 1.25, // 1.25%
+		borrowAPR: 2.5, // Changed from borrowAPY to borrowAPR
 	}
 
-	return borrow.gt(BigNumber.from(0)) ? (
-		<>
-			<div className='col-span-4 order-first lg:order-3 lg:w-full lg:mr-0'>
-				<div className='relative w-full h-6 bg-gray-300 rounded'>
-					<div
-						className='absolute top-0 left-0 h-6 rounded bg-baoRed'
-						style={{
-							width: `${barPercentage}%`,
-						}}
-					></div>
-					<div className='absolute inset-0 flex flex-col items-center justify-center'>
-						<Typography variant='base' className='font-bakbak text-baoBlack whitespace-nowrap'>
-							Debt Health:{' '}
-							{healthFactor &&
-								(healthFactor.lte(BigNumber.from(0)) ? '-' : healthFactor.gt(parseUnits('10000')) ? '∞' : getDisplayBalance(healthFactor))}
-						</Typography>
-					</div>
+	// Use dummy data instead of real data for testing
+	const totalCollateral = dummyData.collateral
+	const totalDebt = dummyData.debt
+	const dummyHealthFactor = dummyData.healthFactor
+	const barPercentage = 20 // 20% utilization for dummy data
+
+	// Calculate net values
+	const netPositionCost = dummyData.supplyYield - dummyData.borrowCost
+	const netAPR = dummyData.supplyAPR - dummyData.borrowAPR
+
+	// Determine health bar color based on utilization
+	const getHealthBarColor = (percentage: number) => {
+		if (percentage < 60) return 'bg-baoGreen'
+		if (percentage < 80) return 'bg-baoOrange'
+		return 'bg-baoRed'
+	}
+
+	// Get text color class based on utilization
+	const getTextColor = (percentage: number) => {
+		if (percentage < 60) return 'text-baoGreen'
+		if (percentage < 80) return 'text-baoOrange'
+		return 'text-baoRed'
+	}
+
+	return (
+		<div className='glassmorphic-card p-6 my-8 border border-baoRed/10 bg-baoRed/[0.15]'>
+			{/* Health Bar */}
+			<div className='relative w-full h-6 bg-gray-300 rounded mb-8 mt-2'>
+				<div
+					className={`absolute top-0 left-0 h-6 rounded ${getHealthBarColor(barPercentage)}`}
+					style={{
+						width: `${barPercentage}%`,
+					}}
+				></div>
+				<div className='absolute inset-0 flex flex-col items-center justify-center'>
+					<Typography variant='lg' className='font-bakbak text-baoBlack whitespace-nowrap'>
+						Debt Health: {getDisplayBalance(dummyHealthFactor)}
+					</Typography>
 				</div>
 			</div>
 
-			<div className='mb-2 flex w-full flex-row items-center gap-4 rounded border-0 align-middle'>
-				<div className='glassmorphic-card flex h-fit w-fit flex-row items-center p-4 align-middle duration-200 hover:bg-baoRed'>
-					<FontAwesomeIcon icon={faDashboard} size='lg' />
-				</div>
-				{/*Desktop*/}
-				<div className='hidden w-full !px-4 !py-4 lg:flex gap-12'>
-					<div className='h-10 w-[2px] ml-5 bg-baoWhite bg-opacity-40 my-auto' />
-
-					<div className='mx-auto my-0 flex w-full items-center justify-between place-content-between'>
-						<div className='flex gap-5 flex-wrap w-full justify-between place-content-between'>
-							<div className='col-span-1 break-words text-left'>
-								<Typography variant='sm' className='font-bakbak text-baoRed'>
+			<div className='flex gap-8'>
+				{/* Position Info Section */}
+				<div className='flex-1'>
+					{/* Top Row - Collateral and Debt */}
+					<div className='flex gap-4 mb-4'>
+						<div className='flex-1 glassmorphic-card p-6 border border-baoRed/10'>
+							<div className='text-center py-4'>
+								<Typography variant='xs' className='font-bakbak text-baoWhite/60 uppercase tracking-wider mb-2'>
 									Your Collateral
 								</Typography>
-								<Typography variant='h3' className='inline-block font-bakbak text-left leading-5'>
-									$
-									{`${
-										bao && account && accountLiquidity
-											? getDisplayBalance(decimate(BigNumber.from(accountLiquidity.supply.toString())), 18, 2)
-											: 0
-									}`}{' '}
+								<Typography variant='xl' className='font-bakbak'>
+									${getDisplayBalance(totalCollateral, 18, 2)}
 								</Typography>
 							</div>
-							<div className='col-span-1 break-words'>
-								<Typography variant='sm' className='font-bakbak text-baoRed'>
+						</div>
+
+						<div className='flex-1 glassmorphic-card p-6 border border-baoRed/10'>
+							<div className='text-center py-4'>
+								<Typography variant='xs' className='font-bakbak text-baoWhite/60 uppercase tracking-wider mb-2'>
 									Your Debt
 								</Typography>
-								<Typography variant='h3' className='inline-block text-left font-bakbak leading-5'>
-									${accountLiquidity ? getDisplayBalance(decimate(accountLiquidity.borrow), 18, 2) : 0}
+								<Typography variant='xl' className='font-bakbak'>
+									${getDisplayBalance(totalDebt, 18, 2)}
 								</Typography>
 							</div>
-							<div className='col-span-1 break-words text-left'>
-								<Typography variant='sm' className='font-bakbak text-baoRed text-left'>
+						</div>
+					</div>
+
+					{/* Bottom Row - Debt Limit Used and Remaining */}
+					<div className='flex gap-4'>
+						<div className='flex-1 glassmorphic-card p-6 border border-baoRed/10'>
+							<div className='text-center py-4'>
+								<Typography variant='xs' className='font-bakbak text-baoWhite/60 uppercase tracking-wider mb-2'>
 									Debt Limit Used
 								</Typography>
-								<Typography variant='h3' className='inline-block font-bakbak leading-5'>
-									{newBorrowable && getDisplayBalance(!newBorrowable.eq(0) ? newBorrow.div(newBorrowable).mul(100) : 0, 18, 2)}%
+								<Typography variant='xl' className={`font-bakbak ${getTextColor(barPercentage)}`}>
+									{barPercentage}%
 								</Typography>
 							</div>
-							<div className='col-span-1 break-words text-left'>
-								<Typography variant='sm' className='font-bakbak text-baoRed text-left'>
+						</div>
+
+						<div className='flex-1 glassmorphic-card p-6 border border-baoRed/10'>
+							<div className='text-center py-4'>
+								<Typography variant='xs' className='font-bakbak text-baoWhite/60 uppercase tracking-wider mb-2'>
 									Debt Limit Remaining
 								</Typography>
-								<Typography variant='h3' className='inline-block font-bakbak leading-5'>
-									${getDisplayBalance(accountLiquidity ? accountLiquidity.borrowable.sub(change) : BigNumber.from(0))}
+								<Typography variant='xl' className='font-bakbak'>
+									${getDisplayBalance(totalCollateral.sub(totalDebt), 18, 2)}
 								</Typography>
 							</div>
 						</div>
 					</div>
 				</div>
+
+				{/* APR Info Section */}
+				<div className='flex-1 flex flex-col gap-4'>
+					{/* Top Row - Supply and Borrow side by side */}
+					<div className='flex gap-4'>
+						{/* Supply Yield Box */}
+						<div className='flex-1 glassmorphic-card p-6 border border-baoRed/10'>
+							<div className='text-center'>
+								<Typography variant='xs' className='font-bakbak text-baoWhite/60 uppercase tracking-wider mb-2'>
+									Supply Yield
+								</Typography>
+								<Typography variant='xl' className='font-bakbak'>
+									{dummyData.supplyAPR}% APR
+								</Typography>
+								<Typography variant='sm' className='text-baoWhite/60 mt-1'>
+									${dummyData.supplyYield}/y
+								</Typography>
+							</div>
+						</div>
+
+						{/* Borrow Cost Box */}
+						<div className='flex-1 glassmorphic-card p-6 border border-baoRed/10'>
+							<div className='text-center'>
+								<Typography variant='xs' className='font-bakbak text-baoWhite/60 uppercase tracking-wider mb-2'>
+									Borrow Cost
+								</Typography>
+								<Typography variant='xl' className='font-bakbak'>
+									{dummyData.borrowAPR}% APR
+								</Typography>
+								<Typography variant='sm' className='text-baoWhite/60 mt-1'>
+									${dummyData.borrowCost}/y
+								</Typography>
+							</div>
+						</div>
+					</div>
+
+					{/* Bottom Row - Net Position */}
+					<div className='flex-1 glassmorphic-card p-6 border border-baoRed/10'>
+						<div className='text-center'>
+							<Typography variant='xs' className='font-bakbak text-baoWhite/60 uppercase tracking-wider mb-2'>
+								Net Position
+							</Typography>
+							<Typography variant='xl' className='font-bakbak'>
+								{netAPR}% Net APR
+							</Typography>
+							<Typography variant='sm' className='text-baoWhite/60 mt-1'>
+								${netPositionCost}/y
+							</Typography>
+						</div>
+					</div>
+				</div>
 			</div>
-		</>
-	) : (
-		<></>
+		</div>
 	)
+}
+
+interface DashboardCardProps {
+	marketName: string
 }
 
 export default DashboardCard

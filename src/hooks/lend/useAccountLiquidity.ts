@@ -1,98 +1,68 @@
-import Config from '@/bao/lib/config'
-import { Balance } from '@/bao/lib/types'
-import useContract from '@/hooks/base/useContract'
-import type { Comptroller } from '@/typechain/index'
-import { decimate } from '@/utils/numberFormat'
-import { useWeb3React } from '@web3-react/core'
+import { useEffect, useState } from 'react'
 import { BigNumber } from 'ethers'
-import { providerKey } from '@/utils/index'
-import { useQuery } from '@tanstack/react-query'
+import { useWeb3React } from '@web3-react/core'
+import Config from '@/bao/lib/config'
+import { useSupplyBalances } from './useSupplyBalances'
 import { useExchangeRates } from './useExchangeRate'
-import { useSupplyRate } from '@/hooks/lend/useSupplyRate'
-import { useOraclePrice } from '@/hooks/lend/useOraclePrice'
-import { useTxReceiptUpdater } from '@/hooks/base/useTransactionProvider'
+import { useOraclePrice } from './useOraclePrice'
+import { decimate } from '@/utils/numberFormat'
+import { Balance } from '@/bao/lib/types'
 
-export type AccountLiquidity = {
-	netApy: BigNumber
-	supply: BigNumber
+type ExchangeRates = Record<string, BigNumber>
+
+interface AccountLiquidity {
+	liquidity: BigNumber
 	borrow: BigNumber
-	borrowable: BigNumber
 }
 
-export const useAccountLiquidity = (marketName: string, supplyBalances: Balance[], borrowBalances: Balance[]): AccountLiquidity => {
-	const { library, account, chainId } = useWeb3React()
+export const useAccountLiquidity = (marketName: string): AccountLiquidity => {
+	const { chainId } = useWeb3React()
 	const market = Config.lendMarkets[marketName]
-	const { exchangeRates } = useExchangeRates(marketName)
-	const price = useOraclePrice(marketName)
-	const supplyRate = useSupplyRate(marketName)
-	const comptroller = useContract<Comptroller>('Comptroller', market.comptroller)
+	const [liquidity, setLiquidity] = useState<BigNumber>(BigNumber.from(0))
+	const [borrow, setBorrow] = useState<BigNumber>(BigNumber.from(0))
 
-	const enabled =
-		!!comptroller && !!account && !!market && !!supplyBalances && !!borrowBalances && !!exchangeRates && !!price && !!supplyRate
-	const { data: accountLiquidity, refetch } = useQuery(
-		[
-			'@/hooks/vaults/useAccountLiquidity',
-			providerKey(library, account, chainId),
-			{ enabled, supplyBalances, borrowBalances, exchangeRates, price, marketName },
-		],
-		async () => {
-			const compAccountLiquidity = await comptroller.getAccountLiquidity(account)
+	const supplyBalances = useSupplyBalances(marketName)
+	const exchangeRates = useExchangeRates(marketName) as ExchangeRates
 
-			const calculateSupply = () => {
-				if (!supplyBalances || supplyBalances.length === 0) return BigNumber.from(0)
-				return Object.keys(exchangeRates).reduce((prev, addr) => {
-					const supply = supplyBalances.find(balance => balance.address === addr)
-					if (!supply) return prev
-					return prev.add(decimate(supply.balance.mul(exchangeRates[addr]).mul(price)))
-				}, BigNumber.from(0))
+	// Get all market addresses
+	const marketAddresses = market.assets.map(asset => asset.marketAddress[chainId])
+	const prices = useOraclePrice(marketName, marketAddresses)
+
+	useEffect(() => {
+		if (!supplyBalances || !exchangeRates || !prices || !chainId) {
+			setLiquidity(BigNumber.from(0))
+			setBorrow(BigNumber.from(0))
+			return
+		}
+
+		try {
+			if (Object.keys(supplyBalances).length === 0) {
+				setLiquidity(BigNumber.from(0))
+				setBorrow(BigNumber.from(0))
+				return
 			}
 
-			const calculateBorrow = () => {
-				return Object.entries(borrowBalances).reduce((prev, [, { balance }]) => {
-					return prev.add(balance.mul(price))
-				}, BigNumber.from(0))
-			}
+			const totalLiquidity = market.assets.reduce((prev, asset) => {
+				const addr = asset.marketAddress[chainId]
+				const price = prices[addr]
+				if (!price) return prev
 
-			const calculateApy = (balances: Balance[], rate: BigNumber, marketAddress: string) => {
-				const balance = balances.find(balance => balance.address === marketAddress)
-				return balance ? balance.balance.mul(price).mul(rate) : BigNumber.from(0)
-			}
+				const supply = supplyBalances.find(balance => balance.address === addr)
+				if (!supply) return prev
 
-			const supply = calculateSupply()
-			const borrow = calculateBorrow()
-			const supplyApy = calculateApy(supplyBalances, supplyRate, market.marketAddresses[chainId])
-			const borrowApy = calculateApy(borrowBalances, supplyRate, market.marketAddresses[chainId])
+				return prev.add(decimate(supply.balance.mul(exchangeRates[addr]).mul(price)))
+			}, BigNumber.from(0))
 
-			const netApy =
-				supplyApy.gt(borrowApy) && !supply.isZero()
-					? supplyApy.sub(borrowApy).div(supply)
-					: borrowApy.gt(supplyApy) && !borrow.isZero()
-						? supplyApy.sub(borrowApy).div(borrow)
-						: BigNumber.from(0)
+			setLiquidity(totalLiquidity)
+			setBorrow(totalLiquidity.mul(market.collateralFactor).div(BigNumber.from(10).pow(18)))
+		} catch (error) {
+			console.error('Error calculating account liquidity:', error)
+			setLiquidity(BigNumber.from(0))
+			setBorrow(BigNumber.from(0))
+		}
+	}, [supplyBalances, exchangeRates, prices, chainId, market])
 
-			return {
-				netApy,
-				supply,
-				borrow,
-				borrowable: BigNumber.from(compAccountLiquidity[1]),
-			}
-		},
-		{
-			enabled,
-			placeholderData: {
-				netApy: BigNumber.from(0),
-				supply: BigNumber.from(0),
-				borrow: BigNumber.from(0),
-				borrowable: BigNumber.from(0),
-			},
-		},
-	)
-
-	const _refetch = () => {
-		if (enabled) refetch()
-	}
-
-	useTxReceiptUpdater(_refetch)
-
-	return accountLiquidity
+	return { liquidity, borrow }
 }
+
+export default useAccountLiquidity

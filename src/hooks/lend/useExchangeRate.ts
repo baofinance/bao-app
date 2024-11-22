@@ -1,28 +1,32 @@
-import { BigNumber } from 'ethers'
-import { ActiveSupportedVault } from '@/bao/lib/types'
-import MultiCall from '@/utils/multicall'
-import useBao from '../base/useBao'
-import { useVaults } from '@/hooks/vaults/useVaults'
 import { useWeb3React } from '@web3-react/core'
-import { providerKey } from '@/utils/index'
 import { useQuery } from '@tanstack/react-query'
-import { useBlockUpdater } from '@/hooks/base/useBlock'
-import { useTxReceiptUpdater } from '@/hooks/base/useTransactionProvider'
-import { useEffect } from 'react'
+import { providerKey } from '@/utils/index'
 import Config from '@/bao/lib/config'
+import { BigNumber } from 'ethers'
+import MultiCall from '@/utils/multicall'
 import { Contract } from '@ethersproject/contracts'
-import { Ctoken__factory, Erc20__factory } from '@/typechain/factories'
+import { Ctoken__factory } from '@/typechain/factories'
+import useBao from '@/hooks/base/useBao'
 
-type ExchangeRates = {
-	exchangeRates: { [key: string]: BigNumber }
+interface CallReturnContext {
+	reference: string
+	returnValues: any[]
 }
 
-export const useExchangeRates = (marketName: string): ExchangeRates => {
-	const bao = useBao()
+interface MultiCallResults {
+	results: {
+		[address: string]: {
+			callsReturnContext: CallReturnContext[]
+		}
+	}
+}
+
+export const useExchangeRates = (marketName: string): Record<string, BigNumber> => {
 	const { library, account, chainId } = useWeb3React()
 	const market = Config.lendMarkets[marketName]
+	const bao = useBao()
 
-	const enabled = !!market && !!bao && !!account
+	const enabled = !!market && !!account && !!bao && !!chainId
 	const { data: exchangeRates } = useQuery(
 		['@/hooks/lend/useExchangeRates', providerKey(library, account, chainId), { enabled, marketName }],
 		async () => {
@@ -34,22 +38,17 @@ export const useExchangeRates = (marketName: string): ExchangeRates => {
 					calls: [{ method: 'exchangeRateStored' }],
 				})),
 			)
-			const data = MultiCall.parseCallResults(await bao.multicall.call(multiCallContext))
+			const data = (await bao.multicall.call(multiCallContext)) as MultiCallResults
 
-			return Object.keys(data).reduce(
-				(exchangeRate: { [key: string]: BigNumber }, address: string) => ({
-					...exchangeRate,
-					[address]: data[address][0].values[0],
-				}),
-				{},
-			)
+			return Object.keys(data.results).reduce((exchangeRate: Record<string, BigNumber>, address: string) => {
+				exchangeRate[address] = data.results[address].callsReturnContext[0].returnValues[0]
+				return exchangeRate
+			}, {})
 		},
 		{
 			enabled,
 		},
 	)
 
-	return {
-		exchangeRates,
-	}
+	return exchangeRates || {}
 }

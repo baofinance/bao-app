@@ -9,16 +9,16 @@ import Config from '@/bao/lib/config'
 import { BigNumber } from 'ethers'
 import { useTxReceiptUpdater } from '@/hooks/base/useTransactionProvider'
 
-export const useTotalDebt = (marketName: string): BigNumber => {
+export const useTotalDebt = (marketName: string, assetAddresses?: string[]): Record<string, BigNumber> => {
 	const bao = useBao()
 	const { account, library, chainId } = useWeb3React()
 
 	const enabled = !!bao && !!account && !!chainId && !!marketName
-	const { data: totalDebt, refetch } = useQuery(
-		['@/hooks/lend/useTotalDebts', providerKey(library, account, chainId), { enabled, marketName }],
+	const { data: totalDebts, refetch } = useQuery(
+		['@/hooks/lend/useTotalDebts', providerKey(library, account, chainId), { enabled, marketName, assetAddresses }],
 		async () => {
-			const address = Config.lendMarkets[marketName].marketAddresses[chainId]
-			const contracts: Contract[] = [Ctoken__factory.connect(address, library)]
+			const addresses = assetAddresses || [Config.lendMarkets[marketName].marketAddresses[chainId]]
+			const contracts: Contract[] = addresses.map(address => Ctoken__factory.connect(address, library))
 
 			const res = MultiCall.parseCallResults(
 				await bao.multicall.call(
@@ -26,17 +26,19 @@ export const useTotalDebt = (marketName: string): BigNumber => {
 						contracts.map(contract => ({
 							ref: contract.address,
 							contract,
-							calls: [
-								{ method: 'symbol' },
-								{
-									method: 'totalBorrows',
-								},
-							],
+							calls: [{ method: 'symbol' }, { method: 'totalBorrows' }],
 						})),
 					),
 				),
 			)
-			return res[address][1].values[0]
+
+			return Object.keys(res).reduce(
+				(acc, address) => {
+					acc[address] = res[address][1].values[0]
+					return acc
+				},
+				{} as Record<string, BigNumber>,
+			)
 		},
 		{
 			enabled,
@@ -49,5 +51,5 @@ export const useTotalDebt = (marketName: string): BigNumber => {
 
 	useTxReceiptUpdater(_refetch)
 
-	return totalDebt
+	return totalDebts || {}
 }

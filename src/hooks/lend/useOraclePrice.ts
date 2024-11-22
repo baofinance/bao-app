@@ -7,19 +7,28 @@ import Config from '@/bao/lib/config'
 import { BigNumber } from 'ethers'
 import { useTxReceiptUpdater } from '@/hooks/base/useTransactionProvider'
 
-export const useOraclePrice = (marketName: string): BigNumber => {
+export const useOraclePrice = (marketName: string, assetAddresses?: string[]): Record<string, BigNumber> => {
 	const bao = useBao()
 	const { account, library, chainId } = useWeb3React()
 	const signerOrProvider = account ? library.getSigner() : library
 
 	const enabled = !!bao && !!account && !!chainId && !!marketName
-	const { data: price, refetch } = useQuery(
-		['@/hooks/lend/useOraclePrice', providerKey(library, account, chainId), { enabled, marketName }],
+	const { data: prices, refetch } = useQuery(
+		['@/hooks/lend/useOraclePrice', providerKey(library, account, chainId), { enabled, marketName, assetAddresses }],
 		async () => {
 			const oracle = VaultOracle__factory.connect(Config.lendMarkets[marketName].oracle, signerOrProvider)
-			const address = Config.lendMarkets[marketName].marketAddresses[chainId]
+			const addresses = assetAddresses || [Config.lendMarkets[marketName].marketAddresses[chainId]]
 
-			return await oracle.callStatic.getUnderlyingPrice(address)
+			const pricePromises = addresses.map(address => oracle.callStatic.getUnderlyingPrice(address))
+			const prices = await Promise.all(pricePromises)
+
+			return addresses.reduce(
+				(acc, address, index) => {
+					acc[address] = prices[index]
+					return acc
+				},
+				{} as Record<string, BigNumber>,
+			)
 		},
 		{
 			enabled,
@@ -32,5 +41,5 @@ export const useOraclePrice = (marketName: string): BigNumber => {
 
 	useTxReceiptUpdater(_refetch)
 
-	return price
+	return prices || {}
 }

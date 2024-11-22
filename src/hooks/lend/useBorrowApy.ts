@@ -7,27 +7,18 @@ import { Ctoken__factory } from '@/typechain/factories'
 import MultiCall from '@/utils/multicall'
 import Config from '@/bao/lib/config'
 import { BigNumber } from 'ethers'
-import { parseUnits } from 'ethers/lib/utils'
 import { useTxReceiptUpdater } from '@/hooks/base/useTransactionProvider'
 
-export const SECONDS_PER_BLOCK = 12
-export const SECONDS_PER_DAY = 24 * 60 * 60
-export const BLOCKS_PER_SECOND = 1 / SECONDS_PER_BLOCK
-export const BLOCKS_PER_DAY = BLOCKS_PER_SECOND * SECONDS_PER_DAY
-export const DAYS_PER_YEAR = 365
-
-const toApy = (rate: BigNumber) => ((Math.pow((rate.toNumber() / 1e18) * BLOCKS_PER_DAY + 1, DAYS_PER_YEAR) - 1) * 100).toFixed(18)
-
-export const useBorrowApy = (marketName: string): BigNumber => {
+export const useBorrowApy = (marketName: string): Record<string, BigNumber | null> => {
 	const bao = useBao()
 	const { account, library, chainId } = useWeb3React()
 
-	const enabled = !!bao && !!account && !!chainId && !!marketName
+	const enabled = Boolean(bao && library && chainId && marketName)
 	const { data: borrowApy, refetch } = useQuery(
-		['@/hooks/lend/useBorrowApy', providerKey(library, account, chainId), { enabled, marketName }],
+		['@/hooks/lend/useBorrowApy', providerKey(library, account, chainId), { marketName }],
 		async () => {
-			const address = Config.lendMarkets[marketName].marketAddresses[chainId]
-			const contracts: Contract[] = [Ctoken__factory.connect(address, library)]
+			const assets = Config.lendMarkets[marketName].assets
+			const contracts: Contract[] = assets.map(asset => Ctoken__factory.connect(asset.marketAddress[chainId], library))
 
 			const res = MultiCall.parseCallResults(
 				await bao.multicall.call(
@@ -35,21 +26,37 @@ export const useBorrowApy = (marketName: string): BigNumber => {
 						contracts.map(contract => ({
 							ref: contract.address,
 							contract,
-							calls: [
-								{ method: 'symbol' },
-								{
-									method: 'borrowRatePerBlock',
-								},
-							],
+							calls: [{ method: 'borrowRatePerBlock' }],
 						})),
 					),
 				),
 			)
 
-			return parseUnits(toApy(res[address][1].values[0]).toString())
+			// Convert block rate to APR
+			// APR = Rate per block * blocks per day * days per year
+			const BLOCKS_PER_DAY = 7200 // ~12 seconds per block
+			const DAYS_PER_YEAR = 365
+			const SCALE = BigNumber.from(10).pow(18)
+
+			return Object.keys(res).reduce(
+				(acc, address) => {
+					try {
+						const ratePerBlock = BigNumber.from(res[address][0].values[0])
+						const apr = ratePerBlock.mul(BLOCKS_PER_DAY).mul(DAYS_PER_YEAR).div(SCALE)
+						acc[address.toLowerCase()] = apr
+					} catch (error) {
+						console.error(`Error calculating APR for ${address}:`, error)
+						acc[address.toLowerCase()] = null
+					}
+					return acc
+				},
+				{} as Record<string, BigNumber | null>,
+			)
 		},
 		{
 			enabled,
+			retry: false,
+			refetchOnWindowFocus: false,
 		},
 	)
 
@@ -59,5 +66,5 @@ export const useBorrowApy = (marketName: string): BigNumber => {
 
 	useTxReceiptUpdater(_refetch)
 
-	return borrowApy
+	return borrowApy || {}
 }

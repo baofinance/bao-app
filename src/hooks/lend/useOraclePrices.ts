@@ -5,45 +5,55 @@ import { providerKey } from '@/utils/index'
 import { VaultOracle__factory } from '@/typechain/factories'
 import Config from '@/bao/lib/config'
 import { BigNumber } from 'ethers'
-import { ContractCallContext, ContractCallResults, Multicall } from 'ethereum-multicall'
-import { forEach } from 'lodash'
 import { useTxReceiptUpdater } from '@/hooks/base/useTransactionProvider'
+import MultiCall from '@/utils/multicall'
 
-export const useOraclePrices = (marketName: string): { [p: string]: BigNumber } => {
+interface CallReturnContext {
+	reference: string
+	returnValues: any[]
+}
+
+interface MultiCallResults {
+	results: {
+		[address: string]: {
+			callsReturnContext: CallReturnContext[]
+		}
+	}
+}
+
+export const useOraclePrices = (marketName: string, assetAddresses?: string[]): Record<string, BigNumber> => {
 	const bao = useBao()
 	const { account, library, chainId } = useWeb3React()
 	const signerOrProvider = account ? library.getSigner() : library
+
 	const enabled = !!bao && !!account && !!chainId && !!marketName
 	const { data: prices, refetch } = useQuery(
-		['@/hooks/lend/useOraclePrices', providerKey(library, account, chainId), { enabled, marketName }],
+		['@/hooks/lend/useOraclePrices', providerKey(library, account, chainId), { enabled, marketName, assetAddresses }],
 		async () => {
-			if (!enabled) return null
-
 			const oracle = VaultOracle__factory.connect(Config.lendMarkets[marketName].oracle, signerOrProvider)
-			const multicall = new Multicall({ ethersProvider: library, tryAggregate: true })
-			const multicallContext = Config.lendMarkets[marketName].assets.map(asset => ({
-				reference: asset.marketAddress[chainId],
-				contractAddress: oracle.address,
-				abi: VaultOracle__factory.abi,
-				calls: [
-					{
-						reference: 'getUnderlyingPrice',
-						methodName: 'getUnderlyingPrice',
-						methodParameters: [asset.marketAddress[chainId]],
-					},
-				],
-			}))
+			const addresses = assetAddresses || Config.lendMarkets[marketName].assets.map(asset => asset.marketAddress[chainId])
 
-			const multicallResults = await multicall.call(multicallContext)
+			const multicallContext = MultiCall.createCallContext([
+				{
+					ref: oracle.address,
+					contract: oracle,
+					calls: addresses.map(address => ({
+						method: 'getUnderlyingPrice',
+						params: [address],
+					})),
+				},
+			])
 
-			return Object.fromEntries(
-				Object.entries(multicallResults.results).map(([address, result]) => [
-					address,
-					BigNumber.from(result.callsReturnContext.find(call => call.reference === 'getUnderlyingPrice')?.returnValues[0]),
-				]),
+			const multicallResults = (await bao.multicall.call(multicallContext)) as MultiCallResults
+
+			return addresses.reduce(
+				(acc, address, index) => {
+					acc[address] = multicallResults.results[oracle.address].callsReturnContext[index].returnValues[0]
+					return acc
+				},
+				{} as Record<string, BigNumber>,
 			)
 		},
-
 		{
 			enabled,
 		},
@@ -55,5 +65,5 @@ export const useOraclePrices = (marketName: string): { [p: string]: BigNumber } 
 
 	useTxReceiptUpdater(_refetch)
 
-	return prices
+	return prices || {}
 }

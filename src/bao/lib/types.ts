@@ -260,6 +260,7 @@ export interface LendMarket {
 		[network: number]: string
 	}
 	assets: Asset[]
+	collateralFactor: BigNumber
 }
 
 export interface ActiveLendMarket {

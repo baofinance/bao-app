@@ -8,7 +8,7 @@ import MultiCall from '@/utils/multicall'
 import Config from '@/bao/lib/config'
 import { BigNumber } from 'ethers'
 import { useOraclePrices } from './useOraclePrices'
-import { decimate, getDisplayBalance } from '../../utils/numberFormat'
+import { decimate } from '../../utils/numberFormat'
 import { useTxReceiptUpdater } from '@/hooks/base/useTransactionProvider'
 
 export const useTotalCollateral = (marketName: string): BigNumber => {
