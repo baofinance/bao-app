@@ -34,6 +34,13 @@ export interface SupportedBackstop {
 	icon: string
 }
 
+export interface SupportedStakedSynth {
+	stid: number
+	stakedSynthAddresses: {
+		[network: number]: string
+	}
+}
+
 export interface SupportedGauge {
 	gid: number
 	name: string
@@ -116,6 +123,15 @@ export interface SupportedVault {
 }
 
 export interface ActiveSupportedBackstop extends SupportedBackstop {
+	backstopAddress: string
+	vaultAddress: string
+	tokenAddress: string
+	backstopContract: Bamm
+	vaultContract: Ctoken
+	tokenContract?: Erc20
+}
+
+export interface ActiveSupportedStakedSynth extends SupportedStakedSynth {
 	backstopAddress: string
 	vaultAddress: string
 	tokenAddress: string
