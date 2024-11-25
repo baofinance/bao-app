@@ -35,7 +35,7 @@ const WithdrawModal = ({ asset, show, onHide, marketName }: WithdrawModalProps) 
 	const [formattedVal, setFormattedVal] = useState('0.00')
 	const operation = 'Withdraw'
 	const comptrollerData = useComptrollerData(marketName)
-	const accountLiquidity = useAccountLiquidity(marketName, supplyBalances, borrowBalances)
+	const accountLiquidity = useAccountLiquidity(marketName)
 	const prices = useOraclePrices(marketName)
 
 	const handleChange = useCallback(

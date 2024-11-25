@@ -30,7 +30,7 @@ const BorrowModal = ({ asset, show, onHide, marketName }: BorrowModalProps) => {
 	const activeLendMarket = useActiveLendMarket(asset)
 	const supplyBalances = useSupplyBalances(marketName)
 	const borrowBalances = useBorrowBalances(marketName)
-	const accountLiquidity = useAccountLiquidity(marketName, supplyBalances, borrowBalances)
+	const accountLiquidity = useAccountLiquidity(marketName)
 	const prices = useOraclePrices(marketName)
 	const operation = 'Borrow'
 
