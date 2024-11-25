@@ -22,13 +22,23 @@ export type SupplyModalProps = {
 
 const SupplyModal = ({ asset, show, onHide, marketName, fullBalance }: SupplyModalProps) => {
 	const [val, setVal] = useState(BigNumber.from(0))
+	const [formattedVal, setFormattedVal] = useState('0.00')
+
 	const operation = 'Supply'
 
 	const handleChange = useCallback(
 		(e: React.FormEvent<HTMLInputElement>) => {
-			setVal(BigNumber.from(e.currentTarget.value))
+			const value = e.currentTarget.value
+
+			setFormattedVal(value)
+
+			if (!value || isNaN(Number(value))) {
+				return
+			}
+
+			setVal(parseUnits(value, asset.underlyingDecimals))
 		},
-		[setVal],
+		[setVal, setFormattedVal, asset],
 	)
 
 	const formattedBalance = useMemo(() => {
@@ -38,15 +48,12 @@ const SupplyModal = ({ asset, show, onHide, marketName, fullBalance }: SupplyMod
 
 	const handleSelectMax = useCallback(() => {
 		setVal(fullBalance)
-	}, [fullBalance, setVal])
+		setFormattedVal(getDisplayBalance(fullBalance))
+	}, [fullBalance, setVal, setFormattedVal])
 
 	const hideModal = useCallback(() => {
 		onHide()
 	}, [onHide])
-
-	const formattedVal = useMemo(() => {
-		return getDisplayBalance(val)
-	}, [val])
 
 	const disabled = useMemo(() => {
 		return val.eq(BigNumber.from(0))

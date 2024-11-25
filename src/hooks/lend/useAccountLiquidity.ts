@@ -11,6 +11,9 @@ import { useExchangeRates } from './useExchangeRate'
 import { useSupplyRate } from '@/hooks/lend/useSupplyRate'
 import { useOraclePrice } from '@/hooks/lend/useOraclePrice'
 import { useTxReceiptUpdater } from '@/hooks/base/useTransactionProvider'
+import { useSupplyBalances } from '@/hooks/lend/useSupplyBalances'
+import { useOraclePrices } from '@/hooks/lend/useOraclePrices'
+import { useBorrowBalances } from '@/hooks/lend/useBorrowBalances'
 
 export type AccountLiquidity = {
 	netApy: BigNumber
@@ -19,12 +22,15 @@ export type AccountLiquidity = {
 	borrowable: BigNumber
 }
 
-export const useAccountLiquidity = (marketName: string, supplyBalances: Balance[], borrowBalances: Balance[]): AccountLiquidity => {
+export const useAccountLiquidity = (marketName: string): AccountLiquidity => {
 	const { library, account, chainId } = useWeb3React()
 	const market = Config.lendMarkets[marketName]
 	const { exchangeRates } = useExchangeRates(marketName)
 	const price = useOraclePrice(marketName)
+	const prices = useOraclePrices(marketName)
 	const supplyRate = useSupplyRate(marketName)
+	const supplyBalances = useSupplyBalances(marketName)
+	const borrowBalances = useBorrowBalances(marketName)
 	const comptroller = useContract<Comptroller>('Comptroller', market.comptroller)
 
 	const enabled =
@@ -40,16 +46,17 @@ export const useAccountLiquidity = (marketName: string, supplyBalances: Balance[
 
 			const calculateSupply = () => {
 				if (!supplyBalances || supplyBalances.length === 0) return BigNumber.from(0)
-				return Object.keys(exchangeRates).reduce((prev, addr) => {
-					const supply = supplyBalances.find(balance => balance.address === addr)
+				return supplyBalances.reduce((prev, supply) => {
 					if (!supply) return prev
-					return prev.add(decimate(supply.balance.mul(exchangeRates[addr]).mul(price)))
+					return prev.add(decimate(supply.balance.mul(prices[supply.address])))
 				}, BigNumber.from(0))
 			}
 
 			const calculateBorrow = () => {
-				return Object.entries(borrowBalances).reduce((prev, [, { balance }]) => {
-					return prev.add(balance.mul(price))
+				if (!borrowBalances || borrowBalances.length === 0) return BigNumber.from(0)
+				return borrowBalances.reduce((prev, borrow) => {
+					if (!borrow) return prev
+					return prev.add(borrow.balance.mul(prices[borrow.address]))
 				}, BigNumber.from(0))
 			}
 

@@ -5,11 +5,11 @@ import { useCallback, useEffect, useState } from 'react'
 import useBao from '../base/useBao'
 import { exponentiate } from '@/utils/numberFormat'
 import Config from '@/bao/lib/config'
-import { Balance } from '@/bao/lib/types'
 import { useOraclePrice } from '@/hooks/lend/useOraclePrice'
 import { Comptroller__factory } from '@/typechain/factories'
+import { useBorrowBalances } from '@/hooks/lend/useBorrowBalances'
 
-const useHealthFactor = (marketName: string, borrowBalances: Balance[], borrowChange: BigNumber) => {
+const useHealthFactor = (marketName: string, borrowChange: BigNumber) => {
 	const [healthFactor, setHealthFactor] = useState<BigNumber | undefined>()
 	const bao = useBao()
 	const { account, chainId, library } = useWeb3React()
@@ -18,15 +18,20 @@ const useHealthFactor = (marketName: string, borrowBalances: Balance[], borrowCh
 	const signerOrProvider = account ? library.getSigner() : library
 	const comptroller = Comptroller__factory.connect(market.comptroller, signerOrProvider)
 	const [collateralFactor, setCollateralFactor] = useState(null)
+	const borrowBalances = useBorrowBalances(marketName)
 
 	const fetchHealthFactor = useCallback(async () => {
 		if (Object.keys(borrowBalances).length === 0) return setHealthFactor(BigNumber.from(0))
 
-		const collateralSummation = BigNumber.from(price)
-			.div(BigNumber.from(10).pow(36 - 18))
-			.mul(parseUnits(borrowBalances.find(balance => balance.address === market.marketAddresses[chainId]).balance.toString()))
-			.div(BigNumber.from(10).pow(18))
-			.mul(parseUnits(collateralFactor[1].toString()))
+		let collateralSummation = BigNumber.from(0)
+		market.assets.map(
+			asset =>
+				(collateralSummation = collateralSummation
+					.div(BigNumber.from(10).pow(18))
+					.mul(parseUnits(borrowBalances.find(balance => balance.address === asset.marketAddress[chainId]).balance.toString()))
+					.div(BigNumber.from(10).pow(18))
+					.mul(parseUnits(collateralFactor[1].toString()))),
+		)
 
 		try {
 			const _healthFactor = collateralSummation.div(exponentiate(borrowChange).toString())
@@ -34,7 +39,7 @@ const useHealthFactor = (marketName: string, borrowBalances: Balance[], borrowCh
 		} catch {
 			setHealthFactor(BigNumber.from(0))
 		}
-	}, [market, price, borrowChange, borrowBalances, chainId, collateralFactor]) // Added missing dependencies
+	}, [market, price, borrowChange, borrowBalances, chainId, collateralFactor])
 
 	const fetchCollateralFactor = useCallback(async () => {
 		try {
@@ -43,7 +48,7 @@ const useHealthFactor = (marketName: string, borrowBalances: Balance[], borrowCh
 		} catch {
 			// Intentionally left empty
 		}
-	}, [comptroller, chainId, market.marketAddresses]) // Added missing dependency
+	}, [comptroller, chainId, market.marketAddresses])
 
 	useEffect(() => {
 		if (!!comptroller && !collateralFactor) fetchCollateralFactor()

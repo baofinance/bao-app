@@ -32,6 +32,7 @@ const WithdrawModal = ({ asset, show, onHide, marketName }: WithdrawModalProps) 
 	const borrowBalances = useBorrowBalances(marketName)
 	const { exchangeRates } = useExchangeRates(marketName)
 	const [val, setVal] = useState(BigNumber.from(0))
+	const [formattedVal, setFormattedVal] = useState('0.00')
 	const operation = 'Withdraw'
 	const comptrollerData = useComptrollerData(marketName)
 	const accountLiquidity = useAccountLiquidity(marketName, supplyBalances, borrowBalances)
@@ -39,9 +40,17 @@ const WithdrawModal = ({ asset, show, onHide, marketName }: WithdrawModalProps) 
 
 	const handleChange = useCallback(
 		(e: React.FormEvent<HTMLInputElement>) => {
-			setVal(BigNumber.from(e.currentTarget.value))
+			const value = e.currentTarget.value
+
+			setFormattedVal(value)
+
+			if (!value || isNaN(Number(value))) {
+				return
+			}
+
+			setVal(parseUnits(value, asset.underlyingDecimals))
 		},
-		[setVal],
+		[setVal, setFormattedVal, asset],
 	)
 
 	const supply = useMemo(() => {
@@ -101,6 +110,7 @@ const WithdrawModal = ({ asset, show, onHide, marketName }: WithdrawModalProps) 
 
 	const handleSelectMax = useCallback(() => {
 		setVal(max)
+		setFormattedVal(formattedMax)
 	}, [max])
 
 	const hideModal = useCallback(() => {
@@ -109,10 +119,6 @@ const WithdrawModal = ({ asset, show, onHide, marketName }: WithdrawModalProps) 
 
 	const disabled = useMemo(() => {
 		return val.eq(BigNumber.from(0))
-	}, [val])
-
-	const formattedVal = useMemo(() => {
-		return getDisplayBalance(val)
 	}, [val])
 
 	return (

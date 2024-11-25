@@ -25,6 +25,7 @@ export type BorrowModalProps = {
 
 const BorrowModal = ({ asset, show, onHide, marketName }: BorrowModalProps) => {
 	const { chainId } = useWeb3React()
+	const [formattedVal, setFormattedVal] = useState('0.00')
 	const [val, setVal] = useState(BigNumber.from(0))
 	const activeLendMarket = useActiveLendMarket(asset)
 	const supplyBalances = useSupplyBalances(marketName)
@@ -39,9 +40,17 @@ const BorrowModal = ({ asset, show, onHide, marketName }: BorrowModalProps) => {
 
 	const handleChange = useCallback(
 		(e: React.FormEvent<HTMLInputElement>) => {
-			setVal(BigNumber.from(e.currentTarget.value))
+			const value = e.currentTarget.value
+
+			setFormattedVal(value)
+
+			if (!value || isNaN(Number(value))) {
+				return
+			}
+
+			setVal(parseUnits(value, asset.underlyingDecimals))
 		},
-		[setVal],
+		[setVal, setFormattedVal, asset],
 	)
 
 	const borrowable = useMemo(() => {
@@ -58,12 +67,9 @@ const BorrowModal = ({ asset, show, onHide, marketName }: BorrowModalProps) => {
 	}, [borrowable])
 
 	const handleSelectMax = useCallback(() => {
+		setFormattedVal(getDisplayBalance(borrowable))
 		setVal(borrowable)
 	}, [borrowable])
-
-	const formattedVal = useMemo(() => {
-		return getDisplayBalance(val)
-	}, [val])
 
 	const disabled = useMemo(() => {
 		return val.eq(BigNumber.from(0))

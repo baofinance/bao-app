@@ -14,6 +14,7 @@ import useHealthFactor from '@/hooks/lend/useHealthFactor'
 import Config from '@/bao/lib/config'
 import { useBorrowBalances } from '@/hooks/lend/useBorrowBalances'
 import { useSupplyBalances } from '@/hooks/lend/useSupplyBalances'
+import Loader from '@/components/Loader'
 
 type DashboardCardProps = {
 	marketName: string
@@ -26,9 +27,7 @@ const DashboardCard: React.FC<DashboardCardProps> = ({ marketName }: DashboardCa
 		asset => asset.marketAddress[chainId] === Config.lendMarkets[marketName].marketAddresses[chainId],
 	)
 	const activeLendMarket = useActiveLendMarket(asset)
-	const borrowBalances = useBorrowBalances(marketName)
-	const supplyBalances = useSupplyBalances(marketName)
-	const accountLiquidity = useAccountLiquidity(marketName, supplyBalances, borrowBalances)
+	const accountLiquidity = useAccountLiquidity(marketName)
 
 	const change = BigNumber.from(0)
 	const borrow = accountLiquidity ? accountLiquidity.borrow : BigNumber.from(0)
@@ -37,7 +36,12 @@ const DashboardCard: React.FC<DashboardCardProps> = ({ marketName }: DashboardCa
 	const newBorrowable = activeLendMarket && decimate(borrowable).sub(BigNumber.from(parseUnits(formatUnits(change, 36 - 18))))
 
 	const borrowChange = borrow.add(exponentiate(change))
-	const healthFactor = useHealthFactor(marketName, borrowBalances, borrowChange)
+	const healthFactor = useHealthFactor(marketName, borrowChange)
+
+	const formattedCollateral = useMemo(() => {
+		if (!accountLiquidity) return null
+		return '$' + getDisplayBalance(accountLiquidity.supply)
+	}, [accountLiquidity])
 
 	const barPercentage = parseFloat(
 		getDisplayBalance(
@@ -48,6 +52,7 @@ const DashboardCard: React.FC<DashboardCardProps> = ({ marketName }: DashboardCa
 			2,
 		),
 	)
+
 	const healthFactorColor = (healthFactor: BigNumber) => {
 		const c = healthFactor.eq(0)
 			? `${(props: any) => props.theme.color.text[100]}`
@@ -94,12 +99,7 @@ const DashboardCard: React.FC<DashboardCardProps> = ({ marketName }: DashboardCa
 									Your Collateral
 								</Typography>
 								<Typography variant='h3' className='inline-block font-bakbak text-left leading-5'>
-									$
-									{`${
-										bao && account && accountLiquidity
-											? getDisplayBalance(decimate(BigNumber.from(accountLiquidity.supply.toString())), 18, 2)
-											: 0
-									}`}{' '}
+									{formattedCollateral ? formattedCollateral : <Loader />}
 								</Typography>
 							</div>
 							<div className='col-span-1 break-words'>

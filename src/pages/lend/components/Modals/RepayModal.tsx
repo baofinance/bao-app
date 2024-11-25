@@ -46,6 +46,7 @@ const RepayModal = ({ asset, show, onHide, marketName }: RepayModalProps) => {
 	}, [maxRepay])
 
 	const [val, setVal] = useState(BigNumber.from(0))
+	const [formattedVal, setFormattedVal] = useState('0.00')
 
 	const hideModal = useCallback(() => {
 		onHide()
@@ -53,18 +54,23 @@ const RepayModal = ({ asset, show, onHide, marketName }: RepayModalProps) => {
 
 	const handleChange = useCallback(
 		(e: React.FormEvent<HTMLInputElement>) => {
-			setVal(BigNumber.from(e.currentTarget.value))
+			const value = e.currentTarget.value
+
+			setFormattedVal(value)
+
+			if (!value || isNaN(Number(value))) {
+				return
+			}
+
+			setVal(parseUnits(value, asset.underlyingDecimals))
 		},
-		[setVal],
+		[setVal, setFormattedVal, asset],
 	)
 
 	const handleSelectMax = useCallback(() => {
 		setVal(maxRepay)
+		setFormattedVal(getDisplayBalance(maxRepay))
 	}, [maxRepay])
-
-	const formattedVal = useMemo(() => {
-		return getDisplayBalance(val)
-	}, [val])
 
 	const disabled = useMemo(() => {
 		return val.eq(BigNumber.from(0))
