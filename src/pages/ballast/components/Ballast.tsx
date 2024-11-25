@@ -6,10 +6,11 @@ import Typography from '@/components/Typography'
 import useTokenBalance from '@/hooks/base/useTokenBalance'
 import { useAccountBalances } from '@/hooks/vaults/useBalances'
 import useBallastInfo from '@/hooks/vaults/useBallastInfo'
-import { useVaults } from '@/hooks/vaults/useVaults'
+import { useVaultsByType } from '@/hooks/vaults/useVaults'
 import { getDisplayBalance } from '@/utils/numberFormat'
 import { faSync } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import type { IconProp } from '@fortawesome/fontawesome-svg-core'
 import { Listbox, Transition } from '@headlessui/react'
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
 import { useWeb3React } from '@web3-react/core'
@@ -32,7 +33,7 @@ export const Ballast = () => {
 	const baoETHBalance = useTokenBalance(Config.addressMap.baoETH)
 	const ballastInfo = useBallastInfo(selectedOption)
 	const accountBalances = useAccountBalances(selectedOption)
-	const _vaults = useVaults(selectedOption)
+	const _vaults = useVaultsByType(selectedOption)
 
 	const synth = useMemo(() => {
 		return _vaults?.find(vault => vault.isSynth)
@@ -267,7 +268,7 @@ export const Ballast = () => {
 							className='m-auto mb-2 flex w-fit items-center justify-center gap-1 rounded-full border-none bg-baoRed p-2 hover:cursor-pointer hover:bg-baoRed hover:bg-opacity-80'
 							onClick={() => setSwapDirection(!swapDirection)}
 						>
-							<FontAwesomeIcon icon={faSync} size='sm' className='m-auto' />
+							<FontAwesomeIcon icon={faSync as unknown as IconProp} size='sm' className='m-auto' />
 							<Typography variant='sm' className='inline font-bold'>
 								Fee: {ballastInfo ? `${(100 / 10000) * 100}%` : <Loader />}
 							</Typography>

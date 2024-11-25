@@ -14,6 +14,8 @@ import Image from 'next/future/image'
 import React, { useEffect, useState } from 'react'
 import { isDesktop } from 'react-device-detect'
 import SupplyModal from './Modals/SupplyModal'
+import type { IconProp } from '@fortawesome/fontawesome-svg-core'
+import { Icon } from '@/components/Icon'
 
 export const DepositCard = ({
 	vaultName,
@@ -154,7 +156,7 @@ export const DepositCard = ({
 													setShowInfo(true)
 												}}
 											>
-												<FontAwesomeIcon icon={faCircleInfo} width={24} height={24} />
+												<Icon icon={faCircleInfo} className='w-6 h-6' />
 											</Button>
 											<Button onClick={() => setShowSupplyModal(index + 1)} className={!isDesktop ? '!h-10 !px-2 !text-sm' : ''}>
 												Supply
@@ -172,7 +174,7 @@ export const DepositCard = ({
 					<Transition show={showInfo} leave='transition ease-in duration-100' leaveFrom='opacity-100' leaveTo='opacity-0'>
 						<div className='flex p-2 mt-5 space-x-3'>
 							<button onClick={() => setShowInfo(false)} className=''>
-								<FontAwesomeIcon icon={faAngleUp} width={32} height={32} />
+								<Icon icon={faAngleUp} className='w-8 h-8' />
 							</button>
 							<Typography variant='xl' className=' text-left font-bakbak text-baoWhite/60'>
 								Collateral Info

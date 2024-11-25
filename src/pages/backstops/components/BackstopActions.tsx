@@ -14,6 +14,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { BigNumber, ethers } from 'ethers'
 import { formatUnits, parseUnits } from 'ethers/lib/utils'
 import { default as React, useCallback, useMemo, useState } from 'react'
+import { IconProp } from '@fortawesome/fontawesome-svg-core'
 
 interface DepositProps {
 	backstop: ActiveSupportedBackstop
@@ -68,7 +69,7 @@ export const Deposit: React.FC<DepositProps> = ({ backstop, max, setStep }) => {
 							<a href={`https://etherscan.io/tx/${txHash}`} target='_blank' aria-label='View Transaction on Etherscan' rel='noreferrer'>
 								<Button fullWidth className='!rounded-full'>
 									<PendingTransaction /> Pending Transaction
-									<FontAwesomeIcon icon={faExternalLink} className='ml-2 text-baoRed' />
+									<FontAwesomeIcon icon={faExternalLink as IconProp} className='ml-2 text-baoRed' />
 								</Button>
 							</a>
 						) : (
@@ -219,7 +220,7 @@ export const Stake: React.FC<StakeProps> = ({ backstop, max, onHide }) => {
 							<a href={`https://etherscan.io/tx/${txHash}`} target='_blank' aria-label='View Transaction on Etherscan' rel='noreferrer'>
 								<Button fullWidth className='!rounded-full'>
 									<PendingTransaction /> Pending Transaction
-									<FontAwesomeIcon icon={faExternalLink} className='ml-2 text-baoRed' />
+									<FontAwesomeIcon icon={faExternalLink as IconProp} className='ml-2 text-baoRed' />
 								</Button>
 							</a>
 						) : (

@@ -27,6 +27,7 @@ import Link from 'next/link'
 import { default as React, useCallback, useMemo, useState } from 'react'
 import { isDesktop } from 'react-device-detect'
 import CountdownTimer from './CountdownTimer'
+import type { IconProp } from '@fortawesome/fontawesome-svg-core'
 
 interface StakeProps {
 	gauge: ActiveSupportedGauge
@@ -72,7 +73,7 @@ export const Stake: React.FC<StakeProps> = ({ gauge, max, onHide }) => {
 							<Typography variant='sm' className='font-bold'>
 								{fullBalance}{' '}
 								<a href={gauge.pairUrl} target='_blank' rel='noopener noreferrer' className='hover:text-baoRed'>
-									{gauge.name} <FontAwesomeIcon icon={faExternalLinkAlt} className='h-3 w-3' />
+									{gauge.name} <FontAwesomeIcon icon={faExternalLinkAlt as unknown as IconProp} className='h-3 w-3' />
 								</a>
 							</Typography>
 						</div>
@@ -87,7 +88,7 @@ export const Stake: React.FC<StakeProps> = ({ gauge, max, onHide }) => {
 							<a href={`https://etherscan.io/tx/${txHash}`} target='_blank' aria-label='View Transaction on Etherscan' rel='noreferrer'>
 								<Button fullWidth className='!rounded-full'>
 									<PendingTransaction /> Pending Transaction
-									<FontAwesomeIcon icon={faExternalLink} className='ml-2 text-baoRed' />
+									<FontAwesomeIcon icon={faExternalLink as unknown as IconProp} className='ml-2 text-baoRed' />
 								</Button>
 							</a>
 						) : (
@@ -175,7 +176,7 @@ export const Unstake: React.FC<UnstakeProps> = ({ gauge, max, onHide }) => {
 								{getDisplayBalance(fullBalance, 0)}{' '}
 								<Link href={gauge.pairUrl} target='_blank' rel='noopener noreferrer' className='hover:text-baoRed'>
 									<a>
-										{gauge.name} <FontAwesomeIcon icon={faExternalLinkAlt} className='h-3 w-3' />
+										{gauge.name} <FontAwesomeIcon icon={faExternalLinkAlt as unknown as IconProp} className='h-3 w-3' />
 									</a>
 								</Link>
 							</Typography>

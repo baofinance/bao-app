@@ -22,6 +22,7 @@ import { BigNumber, ethers } from 'ethers'
 import { formatUnits, parseUnits } from 'ethers/lib/utils'
 import Image from 'next/future/image'
 import React, { useMemo, useState } from 'react'
+import type { IconProp } from '@fortawesome/fontawesome-svg-core'
 
 type ModalProps = {
 	basket: ActiveSupportedBasket
@@ -136,7 +137,7 @@ const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal 
 							<>
 								<div className='mb-2 text-center'>
 									<Badge>
-										1 {basket.symbol} = <FontAwesomeIcon icon={faEthereum} /> {rates && getDisplayBalance(rates.eth)}
+										1 {basket.symbol} = <FontAwesomeIcon icon={faEthereum as unknown as IconProp} /> {rates && getDisplayBalance(rates.eth)}
 										{' = $'}
 										{rates && getDisplayBalance(rates.dai)}
 									</Badge>
@@ -156,7 +157,7 @@ const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal 
 									<Typography variant='sm' className='m-0 pr-1'>
 										When you redeem {basket.name}, you will receive the underlying tokens. Alternatively, you can swap {basket.name}{' '}
 										<a href={`${swapLink}`} target='blank' className='font-bold hover:text-baoRed'>
-											here <FontAwesomeIcon size='xs' icon={faExternalLinkAlt} />
+											here <FontAwesomeIcon size='xs' icon={faExternalLinkAlt as unknown as IconProp} />
 										</a>
 										.
 									</Typography>
@@ -204,7 +205,7 @@ const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal 
 														}}
 														className='mr-1'
 													>
-														<FontAwesomeIcon icon={faSync} />
+														<FontAwesomeIcon icon={faSync as unknown as IconProp} />
 													</Button>
 												</Tooltipped>
 											</>
@@ -290,7 +291,7 @@ const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal 
 						<a href={`https://etherscan.io/tx/${txHash}`} target='_blank' aria-label='View Transaction on Etherscan' rel='noreferrer'>
 							<Button fullWidth className='!rounded-full'>
 								<PendingTransaction /> Pending Transaction
-								<FontAwesomeIcon icon={faExternalLink} className='ml-2 text-baoRed' />
+								<FontAwesomeIcon icon={faExternalLink as unknown as IconProp} className='ml-2 text-baoRed' />
 							</Button>
 						</a>
 					) : (

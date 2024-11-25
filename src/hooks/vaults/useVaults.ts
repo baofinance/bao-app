@@ -9,15 +9,27 @@ import { useQuery } from '@tanstack/react-query'
 import { useWeb3React } from '@web3-react/core'
 import { useContext } from 'react'
 
-export const useVaults = (vaultName: string): ActiveSupportedVault[] | undefined => {
+export const useVaults = (vaultTypes: string[]): ActiveSupportedVault[] | undefined => {
 	const { vaults }: VaultsContext = useContext(Context)
-	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-	//@ts-ignore
-	return vaults[vaultName]
+
+	if (!vaultTypes || vaultTypes.length === 0) {
+		return Object.values(vaults).flat()
+	}
+
+	return vaultTypes.reduce<ActiveSupportedVault[]>((acc, vaultType) => {
+		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+		//@ts-ignore
+		const vaultsOfType = vaults[vaultType] || []
+		return [...acc, ...vaultsOfType]
+	}, [])
+}
+
+export const useVaultsByType = (vaultType: string): ActiveSupportedVault[] | undefined => {
+	return useVaults([vaultType])
 }
 
 export const useAccountVaults = (vaultName: string): ActiveSupportedVault[] | undefined => {
-	const vaults = useVaults(vaultName)
+	const vaults = useVaultsByType(vaultName)
 	const { library, account, chainId } = useWeb3React()
 
 	const enabled = vaults?.length > 0 && !!library

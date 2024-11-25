@@ -3,6 +3,14 @@ import { useWeb3React } from '@web3-react/core'
 import { BigNumber } from 'ethers'
 import { getDisplayBalance } from '@/utils/numberFormat'
 
+// Add a consistent number formatting function
+const formatNumber = (value: number | BigNumber, decimals = 2) => {
+	if (BigNumber.isBigNumber(value)) {
+		return getDisplayBalance(value, 18, decimals)
+	}
+	return value.toFixed(decimals)
+}
+
 const DashboardCard: React.FC<DashboardCardProps> = ({ marketName }: DashboardCardProps) => {
 	// DEBUG: Add dummy data
 	const dummyData = {
@@ -12,7 +20,7 @@ const DashboardCard: React.FC<DashboardCardProps> = ({ marketName }: DashboardCa
 		supplyYield: 250, // $250 per year
 		borrowCost: 100, // $100 per year
 		supplyAPR: 1.25, // 1.25%
-		borrowAPR: 2.5, // Changed from borrowAPY to borrowAPR
+		borrowAPR: 2.5, // 2.5%
 	}
 
 	// Use dummy data instead of real data for testing
@@ -67,7 +75,7 @@ const DashboardCard: React.FC<DashboardCardProps> = ({ marketName }: DashboardCa
 									Your Collateral
 								</Typography>
 								<Typography variant='xl' className='font-bakbak'>
-									${getDisplayBalance(totalCollateral, 18, 2)}
+									${formatNumber(dummyData.collateral)}
 								</Typography>
 							</div>
 						</div>
@@ -78,7 +86,7 @@ const DashboardCard: React.FC<DashboardCardProps> = ({ marketName }: DashboardCa
 									Your Debt
 								</Typography>
 								<Typography variant='xl' className='font-bakbak'>
-									${getDisplayBalance(totalDebt, 18, 2)}
+									${formatNumber(dummyData.debt)}
 								</Typography>
 							</div>
 						</div>
@@ -103,7 +111,7 @@ const DashboardCard: React.FC<DashboardCardProps> = ({ marketName }: DashboardCa
 									Debt Limit Remaining
 								</Typography>
 								<Typography variant='xl' className='font-bakbak'>
-									${getDisplayBalance(totalCollateral.sub(totalDebt), 18, 2)}
+									${formatNumber(totalCollateral.sub(totalDebt))}
 								</Typography>
 							</div>
 						</div>
@@ -121,10 +129,10 @@ const DashboardCard: React.FC<DashboardCardProps> = ({ marketName }: DashboardCa
 									Supply Yield
 								</Typography>
 								<Typography variant='xl' className='font-bakbak'>
-									{dummyData.supplyAPR}% APR
+									{dummyData.supplyAPR.toFixed(2)}% APR
 								</Typography>
 								<Typography variant='sm' className='text-baoWhite/60 mt-1'>
-									${dummyData.supplyYield}/y
+									${dummyData.supplyYield.toFixed(2)}/y
 								</Typography>
 							</div>
 						</div>
@@ -136,10 +144,10 @@ const DashboardCard: React.FC<DashboardCardProps> = ({ marketName }: DashboardCa
 									Borrow Cost
 								</Typography>
 								<Typography variant='xl' className='font-bakbak'>
-									{dummyData.borrowAPR}% APR
+									{dummyData.borrowAPR.toFixed(2)}% APR
 								</Typography>
 								<Typography variant='sm' className='text-baoWhite/60 mt-1'>
-									${dummyData.borrowCost}/y
+									${dummyData.borrowCost.toFixed(2)}/y
 								</Typography>
 							</div>
 						</div>

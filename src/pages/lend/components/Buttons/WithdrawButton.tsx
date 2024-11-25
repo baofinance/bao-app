@@ -13,6 +13,7 @@ import { BigNumber, ethers } from 'ethers'
 import { useWeb3React } from '@web3-react/core'
 import { useActiveLendMarket } from '@/hooks/lend/useActiveLendMarket'
 import { useLendMarketApprovals } from '@/hooks/lend/useLendMarketApprovals'
+import type { IconProp } from '@fortawesome/fontawesome-svg-core'
 
 type WithdrawButtonProps = {
 	asset: Asset
@@ -35,7 +36,7 @@ const WithdrawButton = ({ asset, val, isDisabled, onHide, marketName }: Withdraw
 			<a href={`https://etherscan.io/tx/${txHash}`} target='_blank' aria-label='View Transaction on Etherscan' rel='noreferrer'>
 				<Button fullWidth className='!rounded-full'>
 					<PendingTransaction /> Pending Transaction
-					<FontAwesomeIcon icon={faExternalLink} className='ml-2 text-baoRed' />
+					<FontAwesomeIcon icon={faExternalLink as unknown as IconProp} className='ml-2 text-baoRed' />
 				</Button>
 			</a>
 		)

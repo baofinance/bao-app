@@ -10,6 +10,7 @@ import { formatUnits, parseUnits } from 'ethers/lib/utils'
 import React from 'react'
 import { faDashboard } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import type { IconProp } from '@fortawesome/fontawesome-svg-core'
 
 type DashboardCardProps = {
 	asset: ActiveSupportedVault
@@ -83,7 +84,7 @@ const DashboardCard: React.FC<DashboardCardProps> = ({ asset, vaultName, mintVal
 
 				<div className='mb-2 flex w-full flex-row items-center gap-4 rounded border-0 align-middle'>
 					<div className='flex h-fit w-fit flex-row items-center p-4 align-middled'>
-						<FontAwesomeIcon icon={faDashboard} size='lg' />
+						<FontAwesomeIcon icon={faDashboard as unknown as IconProp} size='lg' />
 					</div>
 					{/*Desktop*/}
 					<div className='hidden w-full !px-4 !py-4 lg:flex gap-12'>

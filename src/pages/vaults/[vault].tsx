@@ -5,10 +5,11 @@ import { useAccountLiquidity } from '@/hooks/vaults/useAccountLiquidity'
 import { useAccountBalances, useBorrowBalances, useSupplyBalances } from '@/hooks/vaults/useBalances'
 import { useExchangeRates } from '@/hooks/vaults/useExchangeRates'
 import { useVaultPrices } from '@/hooks/vaults/usePrices'
-import { useAccountVaults, useVaults } from '@/hooks/vaults/useVaults'
+import { useAccountVaults, useVaultsByType } from '@/hooks/vaults/useVaults'
 import { decimate, getDisplayBalance } from '@/utils/numberFormat'
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import type { IconProp } from '@fortawesome/fontawesome-svg-core'
 import { BigNumber } from 'ethers'
 import { NextPage } from 'next'
 import { NextSeo } from 'next-seo'
@@ -59,7 +60,7 @@ const Vault: NextPage<{
 		[mintVal],
 	)
 
-	const _vaults = useVaults(vaultName)
+	const _vaults = useVaultsByType(vaultName)
 	const accountBalances = useAccountBalances(vaultName)
 	const accountVaults = useAccountVaults(vaultName)
 	const accountLiquidity = useAccountLiquidity(vaultName)
@@ -97,7 +98,7 @@ const Vault: NextPage<{
 						<div className='mb-4 flex w-full flex-row items-center gap-4 rounded border-0 align-middle'>
 							<Link href='/vaults'>
 								<div className='glassmorphic-card flex h-fit w-fit flex-row items-center p-4 align-middle duration-200 hover:bg-baoRed'>
-									<FontAwesomeIcon icon={faArrowLeft} size='lg' />
+									<FontAwesomeIcon icon={faArrowLeft as unknown as IconProp} size='lg' />
 								</div>
 							</Link>
 							{/*Desktop*/}

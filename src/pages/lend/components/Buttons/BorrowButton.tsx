@@ -13,6 +13,8 @@ import { BigNumber, ethers } from 'ethers'
 import { useActiveLendMarket } from '@/hooks/lend/useActiveLendMarket'
 import { useLendMarketApprovals } from '@/hooks/lend/useLendMarketApprovals'
 import { useWeb3React } from '@web3-react/core'
+import type { IconProp } from '@fortawesome/fontawesome-svg-core'
+import { Icon } from '@/components/Icon'
 
 type BorrowButtonProps = {
 	asset: Asset
@@ -35,7 +37,7 @@ const BorrowButton = ({ asset, val, isDisabled, onHide, marketName }: BorrowButt
 			<a href={`https://etherscan.io/tx/${txHash}`} target='_blank' aria-label='View Transaction on Etherscan' rel='noreferrer'>
 				<Button fullWidth className='!rounded-full'>
 					<PendingTransaction /> Pending Transaction
-					<FontAwesomeIcon icon={faExternalLink} className='ml-2 text-baoRed' />
+					<Icon icon={faExternalLink} className='ml-2 text-baoRed' />
 				</Button>
 			</a>
 		)

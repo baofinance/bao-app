@@ -1,1 +1,1 @@
-export { ListHeader } from './List'
+export { List, ListHeader } from './List'

@@ -18,14 +18,7 @@
     "incremental": true,
     "baseUrl": ".",
     "paths": {
-      "@/bao/*": ["src/bao/*"],
-      "@/components/*": ["src/components/*"],
-      "@/contexts/*": ["src/contexts/*"],
-      "@/hooks/*": ["src/hooks/*"],
-      "@/pages/*": ["src/pages/*"],
-      "@/styles/*": ["src/styles/*"],
-      "@/utils/*": ["src/utils/*"],
-      "@/typechain/*": ["src/typechain/*"],
+      "@/*": ["src/*"]
     },
     "noFallthroughCasesInSwitch": true
   },

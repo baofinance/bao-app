@@ -1,6 +1,7 @@
 import Typography from '@/components/Typography'
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import type { IconProp } from '@fortawesome/fontawesome-svg-core'
 import { NextPage } from 'next'
 import { NextSeo } from 'next-seo'
 import Link from 'next/link'
@@ -48,7 +49,7 @@ const Market: NextPage<{
 				<div className='flex items-center justify-between'>
 					<Link href='/lend'>
 						<div className='glassmorphic-card flex h-fit w-fit flex-row items-center p-4 align-middle duration-200 hover:bg-baoRed'>
-							<FontAwesomeIcon icon={faArrowLeft} size='lg' />
+							<FontAwesomeIcon icon={faArrowLeft as unknown as IconProp} size='lg' />
 						</div>
 					</Link>
 					<Typography variant='h1' className='font-bakbak flex-grow text-center'>

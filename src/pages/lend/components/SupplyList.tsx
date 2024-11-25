@@ -20,17 +20,27 @@ import { useDefiLlamaApr } from '@/hooks/lend/useDefiLlamaApr'
 import Tooltipped from '@/components/Tooltipped'
 import { useTotalSupplies } from '@/hooks/lend/useTotalSupplies'
 import { useTotalDebt } from '@/hooks/lend/useTotalDebt'
+import { Icon } from '@/components/Icon'
+import { faExternalLink } from '@fortawesome/free-solid-svg-icons'
+
+// Add a consistent number formatting function
+const formatNumber = (value: BigNumber | number, decimals = 2) => {
+	if (BigNumber.isBigNumber(value)) {
+		return getDisplayBalance(value, 18, decimals)
+	}
+	return value.toFixed(decimals)
+}
 
 export const SupplyList: React.FC<SupplyListProps> = ({ marketName, supplyBalances }) => {
 	const { chainId } = useWeb3React()
-	const assets = Config.lendMarkets[marketName].assets
-	const supplyAssets = assets.filter(asset => asset.supply && asset.active)
-	const borrowableAssets = assets.filter(asset => asset.supply && asset.borrow && asset.active)
-	const defiLlamaAprs = useDefiLlamaApr()
 
-	// Get APRs
+	// Move all hooks to the top, before any conditionals
+	const defiLlamaAprs = useDefiLlamaApr()
 	const supplyRates = useSupplyRate(marketName)
 	const borrowApy = useBorrowApy(marketName)
+	const totalSupplies = useTotalSupplies(marketName)
+	const totalDebts = useTotalDebt(marketName)
+	const oraclePrices = useOraclePrice(marketName)
 
 	// Add state for modals
 	const [showSupplyModal, setShowSupplyModal] = useState(false)
@@ -38,12 +48,15 @@ export const SupplyList: React.FC<SupplyListProps> = ({ marketName, supplyBalanc
 	const [showBorrowModal, setShowBorrowModal] = useState(false)
 	const [showRepayModal, setShowRepayModal] = useState(false)
 
-	// Get total supplies and debts
-	const totalSupplies = useTotalSupplies(marketName)
-	const totalDebts = useTotalDebt(marketName)
+	// Add defensive checks after all hooks
+	if (!marketName || !Config.lendMarkets || !Config.lendMarkets[marketName]) {
+		console.warn(`Market ${marketName} not found in config`)
+		return null
+	}
 
-	// Get oracle prices
-	const oraclePrices = useOraclePrice(marketName)
+	const assets = Config.lendMarkets[marketName].assets || []
+	const supplyAssets = assets.filter(asset => asset.supply && asset.active)
+	const borrowableAssets = assets.filter(asset => asset.supply && asset.borrow && asset.active)
 
 	const renderAprTooltip = (asset: Asset, mode: 'supply' | 'borrow') => {
 		const underlyingApr = defiLlamaAprs.data?.[asset.name] ?? 0
@@ -251,23 +264,22 @@ export const SupplyList: React.FC<SupplyListProps> = ({ marketName, supplyBalanc
 						</Typography>
 						{/* Supply Headers */}
 						<div className='flex w-full px-4 mb-2'>
-							<div className='w-[40%]'></div>
-							<div className='flex-1 text-right px-6'>
+							<div className='w-[35%]'>
+								<Typography variant='xs' className='text-baoWhite/60 tracking-tighter'>
+									Asset
+								</Typography>
+							</div>
+							<div className='w-[20%] text-right'>
 								<Typography variant='xs' className='text-baoWhite/60 tracking-tighter'>
 									APR
 								</Typography>
 							</div>
-							<div className='flex-1 text-right px-6'>
+							<div className='w-[25%] text-right'>
 								<Typography variant='xs' className='text-baoWhite/60 tracking-tighter'>
-									Total Supplied
+									Total Supply
 								</Typography>
 							</div>
-							<div className='flex-1 text-right px-6'>
-								<Typography variant='xs' className='text-baoWhite/60 tracking-tighter'>
-									Max LTV
-								</Typography>
-							</div>
-							<div className='w-[30%]'></div>
+							<div className='w-[20%]'></div>
 						</div>
 						<div className='flex flex-col gap-2'>
 							{supplyAssets.map(asset => {
@@ -280,54 +292,35 @@ export const SupplyList: React.FC<SupplyListProps> = ({ marketName, supplyBalanc
 
 								return (
 									<div key={asset.marketAddress[chainId]} className='flex w-full glassmorphic-card p-2'>
-										<div className='w-[40%]'>
+										<div className='w-[35%]'>
 											<div className='flex items-center gap-2'>
 												<Image className='inline-block select-none' src={`${asset.icon}`} alt={asset.name} width={28} height={28} />
-												<div className='flex flex-col'>
-													<Typography variant='base' className='font-bakbak truncate'>
-														{asset.name}
-													</Typography>
-												</div>
+												<Typography variant='base' className='font-bakbak'>
+													{asset.name}
+												</Typography>
 											</div>
 										</div>
-										<div className='flex-1 text-right px-6'>
+										<div className='w-[20%] text-right'>
 											<Tooltipped content={renderAprTooltip(asset, 'supply')} placement='top'>
 												<Typography variant='xs'>
-													{(underlyingApr + (assetSupplyRate?.gt(0) ? parseFloat(getDisplayBalance(assetSupplyRate, 18, 2)) : 0)).toFixed(
-														2,
-													) + '%'}
+													{formatNumber(underlyingApr + parseFloat(getDisplayBalance(assetSupplyRate || BigNumber.from(0), 18, 2)))}%
 												</Typography>
 											</Tooltipped>
 										</div>
-										<div className='flex-1 text-center px-6'>
-											<div>
-												<div>{getDisplayBalance(assetTotalSupply?.totalSupply || BigNumber.from(0), asset.underlyingDecimals)}</div>
-												<div className='text-sm text-baoWhite/60'>
-													$
-													{getDisplayBalance(
-														(assetTotalSupply?.totalSupply || BigNumber.from(0)).mul(assetPrice).div(BigNumber.from(10).pow(18)),
-														asset.underlyingDecimals,
-														2,
-													)}
-												</div>
-											</div>
-										</div>
-										<div className='flex-1 text-center px-6'>
-											<Typography variant='xs'>
-												{Config.lendMarkets[marketName].collateralFactor
-													? getDisplayBalance(Config.lendMarkets[marketName].collateralFactor.mul(100), 18, 0) + '%'
-													: '-'}
+										<div className='w-[25%] text-right'>
+											<Typography variant='xs'>{formatNumber(assetTotalSupply?.totalSupply || BigNumber.from(0))}</Typography>
+											<Typography variant='xs' className='text-baoWhite/60'>
+												$
+												{formatNumber((assetTotalSupply?.totalSupply || BigNumber.from(0)).mul(assetPrice).div(BigNumber.from(10).pow(18)))}
 											</Typography>
 										</div>
-										<div className='w-[30%]'>
-											<div className='flex gap-2 justify-end'>
-												<Button width={'w-[70px]'} onClick={() => setShowSupplyModal(true)}>
-													<Typography variant='xs'>Supply</Typography>
-												</Button>
-												<Button width={'w-[70px]'} onClick={() => setShowWithdrawModal(true)}>
-													<Typography variant='xs'>Withdraw</Typography>
-												</Button>
-											</div>
+										<div className='w-[20%] flex justify-end gap-2'>
+											<Button width={'w-[70px]'} onClick={() => setShowSupplyModal(true)}>
+												<Typography variant='xs'>Supply</Typography>
+											</Button>
+											<Button width={'w-[70px]'} onClick={() => setShowWithdrawModal(true)}>
+												<Typography variant='xs'>Withdraw</Typography>
+											</Button>
 										</div>
 									</div>
 								)
@@ -345,18 +338,22 @@ export const SupplyList: React.FC<SupplyListProps> = ({ marketName, supplyBalanc
 						</Typography>
 						{/* Borrow Headers */}
 						<div className='flex w-full px-4 mb-2'>
-							<div className='w-[40%]'></div>
-							<div className='flex-1 text-right px-6'>
+							<div className='w-[35%]'>
+								<Typography variant='xs' className='text-baoWhite/60 tracking-tighter'>
+									Asset
+								</Typography>
+							</div>
+							<div className='w-[20%] text-right'>
 								<Typography variant='xs' className='text-baoWhite/60 tracking-tighter'>
 									APR
 								</Typography>
 							</div>
-							<div className='flex-1 text-right px-6'>
+							<div className='w-[25%] text-right'>
 								<Typography variant='xs' className='text-baoWhite/60 tracking-tighter'>
-									Total Borrowed
+									Total Supply
 								</Typography>
 							</div>
-							<div className='w-[30%]'></div>
+							<div className='w-[20%]'></div>
 						</div>
 						<div className='flex flex-col gap-2'>
 							{borrowableAssets.map(asset => {
@@ -369,47 +366,35 @@ export const SupplyList: React.FC<SupplyListProps> = ({ marketName, supplyBalanc
 
 								return (
 									<div key={asset.marketAddress[chainId]} className='flex w-full glassmorphic-card p-2'>
-										<div className='w-[25%]'>
+										<div className='w-[35%]'>
 											<div className='flex items-center gap-2'>
 												<Image className='inline-block select-none' src={`${asset.icon}`} alt={asset.name} width={28} height={28} />
-												<div className='flex flex-col'>
-													<Typography variant='sm' className='font-bakbak'>
-														{asset.name}
-													</Typography>
-												</div>
+												<Typography variant='base' className='font-bakbak'>
+													{asset.name}
+												</Typography>
 											</div>
 										</div>
-										<div className='flex-1 text-right px-6'>
+										<div className='w-[20%] text-right'>
 											<Tooltipped content={renderAprTooltip(asset, 'borrow')} placement='top'>
 												<Typography variant='xs'>
-													{(underlyingApr + (assetSupplyRate?.gt(0) ? parseFloat(getDisplayBalance(assetSupplyRate, 18, 2)) : 0)).toFixed(
-														2,
-													) + '%'}
+													{formatNumber(underlyingApr + parseFloat(getDisplayBalance(assetSupplyRate || BigNumber.from(0), 18, 2)))}%
 												</Typography>
 											</Tooltipped>
 										</div>
-										<div className='flex-1 text-center px-6'>
-											<div>
-												<div>{getDisplayBalance(assetTotalSupply?.totalSupply || BigNumber.from(0), asset.underlyingDecimals)}</div>
-												<div className='text-sm text-baoWhite/60'>
-													$
-													{getDisplayBalance(
-														(assetTotalSupply?.totalSupply || BigNumber.from(0)).mul(assetPrice).div(BigNumber.from(10).pow(18)),
-														asset.underlyingDecimals,
-														2,
-													)}
-												</div>
-											</div>
+										<div className='w-[25%] text-right'>
+											<Typography variant='xs'>{formatNumber(assetTotalSupply?.totalSupply || BigNumber.from(0))}</Typography>
+											<Typography variant='xs' className='text-baoWhite/60'>
+												$
+												{formatNumber((assetTotalSupply?.totalSupply || BigNumber.from(0)).mul(assetPrice).div(BigNumber.from(10).pow(18)))}
+											</Typography>
 										</div>
-										<div className='w-[35%]'>
-											<div className='flex gap-2 justify-end'>
-												<Button width={'w-[70px]'} onClick={() => setShowSupplyModal(true)}>
-													<Typography variant='xs'>Supply</Typography>
-												</Button>
-												<Button width={'w-[70px]'} onClick={() => setShowWithdrawModal(true)}>
-													<Typography variant='xs'>Withdraw</Typography>
-												</Button>
-											</div>
+										<div className='w-[20%] flex justify-end gap-2'>
+											<Button width={'w-[70px]'} onClick={() => setShowSupplyModal(true)}>
+												<Typography variant='xs'>Supply</Typography>
+											</Button>
+											<Button width={'w-[70px]'} onClick={() => setShowWithdrawModal(true)}>
+												<Typography variant='xs'>Withdraw</Typography>
+											</Button>
 										</div>
 									</div>
 								)

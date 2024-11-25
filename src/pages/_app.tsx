@@ -23,13 +23,15 @@ import Head from 'next/head'
 import React, { ReactNode } from 'react'
 import { Analytics } from '@vercel/analytics/react'
 
+const Web3ReactNetworkProvider = dynamic(() => import('@/components/Web3NetworkProvider'), { ssr: false })
+
+const WalletProviderModal = dynamic(() => import('../components/WalletProviderModal'), { ssr: false })
+
 function getLibrary(provider: any): Web3Provider {
 	const library = new Web3Provider(provider)
 	library.pollingInterval = 12000
 	return library
 }
-
-const Web3ReactNetworkProvider = dynamic(() => import('@/components/Web3NetworkProvider'), { ssr: false })
 
 function App({ Component, pageProps }: AppProps) {
 	return (

@@ -1,15 +1,5 @@
-import { useRouter } from 'next/router'
-import React, { useEffect } from 'react'
+import { FC } from 'react'
 
-const Home: React.FC = () => {
-	const router = useRouter()
-
-	useEffect(() => {
-		router.push('/earn')
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [])
-
-	return <></>
-}
+const Home: FC = () => null
 
 export default Home

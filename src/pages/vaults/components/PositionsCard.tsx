@@ -17,6 +17,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import SupplyModal from './Modals/SupplyModal'
 import { Transition } from '@headlessui/react'
 import { StatBlock } from '@/components/Stats'
+import { Icon } from '@/components/Icon'
 
 export const PositionList = ({
 	vaultName,
@@ -174,11 +175,7 @@ const PositionListItem: React.FC<PositionListItemProps> = ({
 									setShowInfo(prevState => !prevState) // Toggles the state
 								}}
 							>
-								{showInfo ? (
-									<FontAwesomeIcon icon={faAngleUp} width={72} height={24} />
-								) : (
-									<FontAwesomeIcon icon={faCircleInfo} width={72} height={24} />
-								)}
+								{showInfo ? <Icon icon={faAngleUp} className='w-[72px] h-6' /> : <Icon icon={faCircleInfo} className='w-[72px] h-6' />}
 							</Button>
 							<Button fullWidth size='xs' onClick={() => setShowSupplyModal(true)} disabled={!account} className='!p-3 !h-12'>
 								Supply

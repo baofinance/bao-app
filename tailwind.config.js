@@ -3,8 +3,7 @@ module.exports = {
 	content: ['./src/**/*.{js,ts,jsx,tsx}'],
 	theme: {
 		fontFamily: {
-			bakbak: ['Bakbak One', 'sans-serif'],
-			inter: ['Inter', 'sans-serif'],
+			bakbak: ['Bakbak One', 'cursive'],
 		},
 		accordion: {
 			styles: {

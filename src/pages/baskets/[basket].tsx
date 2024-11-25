@@ -10,6 +10,7 @@ import usePairPrice from '@/hooks/baskets/usePairPrice'
 import { decimate, getDisplayBalance } from '@/utils/numberFormat'
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import type { IconProp } from '@fortawesome/fontawesome-svg-core'
 import { BigNumber } from 'ethers'
 import { formatUnits } from 'ethers/lib/utils'
 import { NextPage } from 'next'
@@ -77,7 +78,7 @@ const Basket: NextPage<{
 			<div className='mb-4 flex w-full flex-row items-center gap-4 rounded border-0 align-middle'>
 				<Link href='/baskets'>
 					<div className='glassmorphic-card flex h-fit w-fit flex-row items-center p-4 align-middle duration-200 hover:bg-baoRed lg:p-7'>
-						<FontAwesomeIcon icon={faArrowLeft} size='lg' />
+						<FontAwesomeIcon icon={faArrowLeft as unknown as IconProp} size='lg' />
 					</div>
 				</Link>
 				{/*Desktop*/}

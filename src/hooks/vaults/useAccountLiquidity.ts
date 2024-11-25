@@ -24,7 +24,7 @@ export type AccountLiquidity = {
 // FIXME: this should be refactored to use ethers.BigNumber.. not JavaScript floats
 export const useAccountLiquidity = (vaultName: string): AccountLiquidity => {
 	const { library, account, chainId } = useWeb3React()
-	const vaults = useVaults(vaultName)
+	const vaults = useVaults([vaultName])
 	const supplyBalances = useSupplyBalances(vaultName)
 	const borrowBalances = useBorrowBalances(vaultName)
 	const { exchangeRates } = useExchangeRates(vaultName)

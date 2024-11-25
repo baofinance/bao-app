@@ -6,10 +6,12 @@ import { Menu, Popover, Transition } from '@headlessui/react'
 import classNames from 'classnames'
 import { AnimatePresence, motion } from 'framer-motion'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 import { FC, Fragment, ReactNode } from 'react'
 import AccountButton from '../AccountButton'
 import Container from '../Container'
 import Nav from '../Nav'
+import { IconProp } from '@fortawesome/fontawesome-svg-core'
 
 export interface IconProps {
 	color?: string
@@ -33,7 +35,7 @@ const MobileNavLink: FC<MobileNavLinkProps> = ({ href, children, target, ...prop
 			className='block font-bakbak text-lg leading-7 tracking-tight text-baoWhite'
 			{...props}
 		>
-			{children}
+			<div>{children}</div>
 		</Popover.Button>
 	)
 }
@@ -45,11 +47,10 @@ const Header: FC = () => {
 				<Container className='relative z-50 flex !max-w-full justify-between pb-8 pt-3'>
 					<div className='relative z-10 flex items-center gap-3'>
 						<Link href='/' aria-label='Home'>
-							<Logo className='h-10 w-auto' />
+							<div>
+								<Logo className='h-10 w-auto' />
+							</div>
 						</Link>
-						{/* <h1 className='font-bakbak text-xl'>
-							TVL: {tvl}
-						</h1> */}
 					</div>
 					<div className='flex items-center gap-2'>
 						<div className='hidden gap-6 lg:flex mr-2'>
@@ -123,7 +124,7 @@ const Header: FC = () => {
 						<Menu as='div' className='relative !z-[9999] hidden text-left lg:inline-block'>
 							<Menu.Button className='h-10 rounded'>
 								<span className='sr-only'>Open options</span>
-								<FontAwesomeIcon icon={faEllipsisVertical} className='h-5 w-5 text-baoWhite' aria-hidden='true' />
+								<FontAwesomeIcon icon={faEllipsisVertical as IconProp} className='h-5 w-5 text-baoWhite' aria-hidden='true' />
 							</Menu.Button>
 
 							<Transition
@@ -149,7 +150,7 @@ const Header: FC = () => {
 														'flex flex-1 flex-row items-center justify-between gap-4 px-4 py-2 text-sm',
 													)}
 												>
-													Documentation <FontAwesomeIcon icon={faBook} />
+													Documentation <FontAwesomeIcon icon={faBook as IconProp} />
 												</a>
 											)}
 										</Menu.Item>
@@ -165,7 +166,7 @@ const Header: FC = () => {
 														'flex flex-1 flex-row items-center justify-between gap-4 px-4 py-2 text-sm',
 													)}
 												>
-													Governance <FontAwesomeIcon icon={faVoteYea} />
+													Governance <FontAwesomeIcon icon={faVoteYea as IconProp} />
 												</a>
 											)}
 										</Menu.Item>
@@ -181,7 +182,7 @@ const Header: FC = () => {
 														'flex flex-1 flex-row items-center justify-between gap-4 px-4 py-2 text-sm',
 													)}
 												>
-													Snapshot <FontAwesomeIcon icon={faBolt} />
+													Snapshot <FontAwesomeIcon icon={faBolt as IconProp} />
 												</a>
 											)}
 										</Menu.Item>
@@ -197,7 +198,7 @@ const Header: FC = () => {
 														'flex flex-1 flex-row items-center justify-between gap-4 px-4 py-2 text-sm',
 													)}
 												>
-													Discord <FontAwesomeIcon icon={faDiscord} className='text-end' />
+													Discord <FontAwesomeIcon icon={faDiscord as IconProp} className='text-end' />
 												</a>
 											)}
 										</Menu.Item>
@@ -213,7 +214,7 @@ const Header: FC = () => {
 														'flex flex-1 flex-row items-center justify-between gap-4 px-4 py-2 text-sm',
 													)}
 												>
-													GitHub <FontAwesomeIcon icon={faGithub} />
+													GitHub <FontAwesomeIcon icon={faGithub as IconProp} />
 												</a>
 											)}
 										</Menu.Item>
@@ -245,7 +246,7 @@ const Header: FC = () => {
 														'flex flex-1 flex-row items-center justify-between gap-4 px-4 py-2 text-sm',
 													)}
 												>
-													Twitter <FontAwesomeIcon icon={faTwitter} />
+													Twitter <FontAwesomeIcon icon={faTwitter as IconProp} />
 												</a>
 											)}
 										</Menu.Item>
@@ -261,7 +262,7 @@ const Header: FC = () => {
 														'flex flex-1 flex-row items-center justify-between gap-4 px-4 py-2 text-sm',
 													)}
 												>
-													Medium <FontAwesomeIcon icon={faMedium} />
+													Medium <FontAwesomeIcon icon={faMedium as IconProp} />
 												</a>
 											)}
 										</Menu.Item>
@@ -275,7 +276,10 @@ const Header: FC = () => {
 														'flex flex-1 flex-row items-center justify-between gap-4 px-4 py-2 text-sm',
 													)}
 												>
-													Backstops <FontAwesomeIcon icon={faCircleArrowRight} />
+													<div className='flex justify-between w-full'>
+														<span>Backstops</span>
+														<FontAwesomeIcon icon={faCircleArrowRight as IconProp} />
+													</div>
 												</Link>
 											)}
 										</Menu.Item>
@@ -289,7 +293,10 @@ const Header: FC = () => {
 														'flex flex-1 flex-row items-center justify-between gap-4 px-4 py-2 text-sm',
 													)}
 												>
-													Ballast <FontAwesomeIcon icon={faCircleArrowRight} />
+													<div className='flex justify-between w-full'>
+														<span>Ballast</span>
+														<FontAwesomeIcon icon={faCircleArrowRight as IconProp} />
+													</div>
 												</Link>
 											)}
 										</Menu.Item>
@@ -303,7 +310,10 @@ const Header: FC = () => {
 														'flex flex-1 flex-row items-center justify-between gap-4 px-4 py-2 text-sm',
 													)}
 												>
-													Baskets <FontAwesomeIcon icon={faCircleArrowRight} />
+													<div className='flex justify-between w-full'>
+														<span>Baskets</span>
+														<FontAwesomeIcon icon={faCircleArrowRight as IconProp} />
+													</div>
 												</Link>
 											)}
 										</Menu.Item>

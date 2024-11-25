@@ -16,6 +16,7 @@ import Image from 'next/future/image'
 import { useCallback, useState, useMemo } from 'react'
 import VaultButton from '../VaultButton'
 import Input from '@/components/Input'
+import { Icon } from '@/components/Icon'
 
 export type SupplyModalProps = {
 	asset: ActiveSupportedVault
@@ -103,7 +104,7 @@ const SupplyModal = ({ asset, show, onHide, vaultName }: SupplyModalProps) => {
 							<a href={`https://etherscan.io/tx/${txHash}`} target='_blank' aria-label='View Transaction on Etherscan' rel='noreferrer'>
 								<Button fullWidth className='!rounded-full'>
 									<PendingTransaction /> Pending Transaction
-									<FontAwesomeIcon icon={faExternalLink} className='ml-2 text-baoRed' />
+									<Icon icon={faExternalLink} className='ml-2 text-baoRed' />
 								</Button>
 							</a>
 						) : (

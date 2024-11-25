@@ -1,5 +1,6 @@
 import { faCircleCheck, faCircleXmark, faExternalLinkAlt, faReceipt } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { IconProp } from '@fortawesome/fontawesome-svg-core'
 import { useWeb3React } from '@web3-react/core'
 //import { utils } from 'ethers'
 import Config from '@/bao/lib/config'
@@ -26,23 +27,30 @@ interface AccountModalProps {
 
 const AccountModal: FC<AccountModalProps> = ({ show, onHide }) => {
 	const { account, chainId, deactivate } = useWeb3React()
+
+	// Move hooks to the top level - don't conditionally call them
 	const lockInfo = useLockInfo()
+	const baoAddress = Config.contracts.Baov2[chainId]?.address
+	const baoBalance = useTokenBalance(baoAddress)
+
+	// Handle the conditional logic in the hooks themselves or when using the values
+	const effectiveLockInfo = show && account ? lockInfo : null
+	const effectiveBaoBalance = show && account ? baoBalance : null
+
+	const [tx, setTx] = useState({})
+	const { transactions, onClearTransactions } = useTransactionProvider()
+
+	useEffect(() => {
+		const _tx = localStorage.getItem('transactions')
+		if (_tx) {
+			setTx(JSON.parse(_tx))
+		}
+	}, [transactions])
 
 	const handleSignOutClick = useCallback(() => {
 		onHide()
 		deactivate()
 	}, [onHide, deactivate])
-
-	const { transactions, onClearTransactions } = useTransactionProvider()
-	const baoBalance = useTokenBalance(Config.contracts.Baov2[chainId].address)
-	const [tx, setTx] = useState({})
-
-	useEffect(() => {
-		const _tx = localStorage.getItem('transactions')
-		if (tx) {
-			setTx(_tx)
-		}
-	}, [transactions, tx])
 
 	return (
 		<Modal isOpen={show} onDismiss={onHide}>
@@ -55,7 +63,7 @@ const AccountModal: FC<AccountModalProps> = ({ show, onHide }) => {
 						</div>
 						<div className='ml-2'>
 							<Typography variant='lg' className='font-bakbak'>
-								{getDisplayBalance(baoBalance)}
+								{getDisplayBalance(effectiveBaoBalance || BigNumber.from(0))}
 							</Typography>
 							<Typography variant='sm' className='font-bakbak text-baoRed'>
 								BAO {isDesktop && 'Balance'}
@@ -67,20 +75,22 @@ const AccountModal: FC<AccountModalProps> = ({ show, onHide }) => {
 						<div className='flex min-h-[36px] min-w-[36px] items-center rounded-full bg-transparent-100 lg:min-h-[48px] lg:min-w-[48px]'>
 							<Image src='/images/tokens/BAO.png' alt='ETH' width={isDesktop ? 32 : 24} height={isDesktop ? 32 : 24} className='m-auto' />
 						</div>
-						<div className='ml-2'>
-							<Typography variant='lg' className='font-bakbak'>
-								{getDisplayBalance(lockInfo ? lockInfo.balance : BigNumber.from(0))}
-							</Typography>
-							<Typography variant='sm' className='font-bakbak text-baoRed'>
-								veBAO {isDesktop && 'Balance'}
-							</Typography>
-						</div>
+						{account && (
+							<div className='ml-2'>
+								<Typography variant='lg' className='font-bakbak'>
+									{getDisplayBalance(effectiveLockInfo ? effectiveLockInfo.balance : BigNumber.from(0))}
+								</Typography>
+								<Typography variant='sm' className='font-bakbak text-baoRed'>
+									veBAO {isDesktop && 'Balance'}
+								</Typography>
+							</div>
+						)}
 					</div>
 				</div>
 				<>
 					<div className='mt-4 flex-1 rounded-3xl border border-baoWhite border-opacity-20 bg-baoBlack bg-opacity-5 pb-3 text-baoWhite'>
 						<Typography variant='lg' className='float-left mt-2 px-3 py-2 font-bakbak'>
-							Recent Transactions <FontAwesomeIcon icon={faReceipt} className='mx-1 text-baoRed' size='sm' />
+							Recent Transactions <FontAwesomeIcon icon={faReceipt as IconProp} className='mx-1 text-baoRed' size='sm' />
 						</Typography>
 
 						{Object.keys(transactions).length > 0 && (
@@ -103,9 +113,9 @@ const AccountModal: FC<AccountModalProps> = ({ show, onHide }) => {
 										<div key={txHash} className=' flex w-full items-center justify-between px-3 py-1'>
 											{transactions[txHash].receipt ? (
 												transactions[txHash].receipt.status === 1 ? (
-													<FontAwesomeIcon icon={faCircleCheck} className='text-baoRed' size={isDesktop ? 'lg' : 'sm'} />
+													<FontAwesomeIcon icon={faCircleCheck as IconProp} className='text-baoRed' size={isDesktop ? 'lg' : 'sm'} />
 												) : (
-													<FontAwesomeIcon icon={faCircleXmark} className='text-baoRed' size={isDesktop ? 'lg' : 'sm'} />
+													<FontAwesomeIcon icon={faCircleXmark as IconProp} className='text-baoRed' size={isDesktop ? 'lg' : 'sm'} />
 												)
 											) : (
 												<PendingTransaction />
@@ -115,7 +125,7 @@ const AccountModal: FC<AccountModalProps> = ({ show, onHide }) => {
 													<Typography className='text-end text-sm text-baoWhite hover:text-baoRed lg:text-base'>
 														{transactions[txHash].description}
 														<Tooltipped content='View on Etherscan'>
-															<FontAwesomeIcon icon={faExternalLinkAlt} className='ml-1 text-baoRed' size='sm' />
+															<FontAwesomeIcon icon={faExternalLinkAlt as IconProp} className='ml-1 text-baoRed' size='sm' />
 														</Tooltipped>
 													</Typography>
 												</a>

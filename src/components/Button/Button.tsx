@@ -2,6 +2,7 @@
 /* eslint-disable react/display-name */
 import { faExternalLink } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { IconProp } from '@fortawesome/fontawesome-svg-core'
 import classNames from 'classnames'
 import React, { ReactNode, useMemo } from 'react'
 import { PendingTransaction } from '../Loader/Loader'
@@ -90,7 +91,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 				>
 					<>
 						<PendingTransaction /> Pending Transaction
-						<FontAwesomeIcon icon={faExternalLink} className='ml-2 text-baoRed' />
+						<FontAwesomeIcon icon={faExternalLink as IconProp} className='ml-2 text-baoRed' />
 					</>
 				</button>
 			</a>

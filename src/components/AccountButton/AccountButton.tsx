@@ -1,5 +1,6 @@
 import { faAngleDoubleRight, faLink, faReceipt } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { IconProp } from '@fortawesome/fontawesome-svg-core'
 import { useWeb3React } from '@web3-react/core'
 import { ethers } from 'ethers'
 import React, { Fragment, useEffect, useMemo, useState } from 'react'
@@ -56,7 +57,7 @@ const AccountButton: React.FC<AccountButtonProps> = () => {
 		<>
 			{!account ? (
 				<Button onClick={() => setShowWalletProviderModal(true)} size='sm'>
-					Connect <FontAwesomeIcon icon={faLink} className='ml-1' />
+					Connect <FontAwesomeIcon icon={faLink as IconProp} className='ml-1' />
 				</Button>
 			) : (
 				<>
@@ -65,10 +66,10 @@ const AccountButton: React.FC<AccountButtonProps> = () => {
 							{displayId}
 							{pendingTxs > 0 && (
 								<>
-									<FontAwesomeIcon icon={faAngleDoubleRight} className='mx-2 mt-1 text-baoRed' />
+									<FontAwesomeIcon icon={faAngleDoubleRight as IconProp} className='mx-2 mt-1 text-baoRed' />
 									<Loader />
 									<span className='ml-2'>{pendingTxs}</span>
-									<FontAwesomeIcon icon={faReceipt} className='mx-2 mt-1 text-baoRed' />
+									<FontAwesomeIcon icon={faReceipt as IconProp} className='mx-2 mt-1 text-baoRed' />
 								</>
 							)}
 						</div>

@@ -1,5 +1,6 @@
-import { faArrowLeft, faClose } from '@fortawesome/free-solid-svg-icons'
+import { faArrowLeft, faXmark } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { IconProp } from '@fortawesome/fontawesome-svg-core'
 import React, { FC, ReactNode } from 'react'
 
 import Typography from '@/components/Typography'
@@ -19,7 +20,14 @@ const ModalHeader: FC<ModalHeaderProps> = ({ header, subheader, children, onBack
 			<div className='mb-4 flex h-8'>
 				<div className='flex flex-col items-center gap-1'>
 					<Typography variant='h3' className='font-bakbak'>
-						{onBack && <FontAwesomeIcon icon={faArrowLeft} onClick={onBack} size='sm' className='mr-2 cursor-pointer hover:text-baoRed' />}
+						{onBack && (
+							<FontAwesomeIcon
+								icon={faArrowLeft as IconProp}
+								onClick={onBack}
+								size='sm'
+								className='mr-2 cursor-pointer hover:text-baoRed'
+							/>
+						)}
 						{header ? header : children}
 					</Typography>
 					{subheader && <Typography variant='sm'>{subheader}</Typography>}
@@ -28,7 +36,7 @@ const ModalHeader: FC<ModalHeaderProps> = ({ header, subheader, children, onBack
 			<div className='absolute right-0 top-0 hidden pr-4 pt-4 sm:block'>
 				{onClose && (
 					<Button onClick={onClose} className='m-auto h-auto !px-3 !py-1'>
-						<FontAwesomeIcon icon={faClose} width={6} height={6} />
+						<FontAwesomeIcon icon={faXmark as IconProp} width={6} height={6} />
 					</Button>
 				)}
 			</div>

@@ -5,7 +5,7 @@ import Typography from '@/components/Typography'
 import { useAccountLiquidity } from '@/hooks/vaults/useAccountLiquidity'
 import { useSupplyBalances } from '@/hooks/vaults/useBalances'
 import { useExchangeRates } from '@/hooks/vaults/useExchangeRates'
-import { useVaults } from '@/hooks/vaults/useVaults'
+import { useVaultsByType } from '@/hooks/vaults/useVaults'
 import { decimate, exponentiate, sqrt } from '@/utils/numberFormat'
 import { BigNumber } from 'ethers'
 import { parseUnits } from 'ethers/lib/utils'
@@ -23,7 +23,7 @@ const BackstopModal: React.FC<BackstopModalProps> = ({ backstop, show, onHide })
 	const operations = ['Deposit', 'Withdraw']
 	const [operation, setOperation] = useState(operations[0])
 
-	const _vaults = useVaults(backstop.name)
+	const _vaults = useVaultsByType(backstop.name)
 	const supplyBalances = useSupplyBalances(backstop.name)
 	const { exchangeRates } = useExchangeRates(backstop.name)
 	const exchangeRate = exchangeRates && exchangeRates[backstop.vaultAddress]

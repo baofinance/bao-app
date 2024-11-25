@@ -10,6 +10,7 @@ import { getDisplayBalance } from '@/utils/numberFormat'
 import { faExternalLink } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { BigNumber, ethers } from 'ethers'
+import { Icon } from '@/components/Icon'
 
 type VaultButtonProps = {
 	operation: string
@@ -31,7 +32,7 @@ const VaultButton = ({ operation, asset, val, isDisabled, onHide, vaultName }: V
 			<a href={`https://etherscan.io/tx/${txHash}`} target='_blank' aria-label='View Transaction on Etherscan' rel='noreferrer'>
 				<Button fullWidth className='!rounded-full'>
 					<PendingTransaction /> Pending Transaction
-					<FontAwesomeIcon icon={faExternalLink} className='ml-2 text-baoRed' />
+					<Icon icon={faExternalLink} className='ml-2 text-baoRed' />
 				</Button>
 			</a>
 		)

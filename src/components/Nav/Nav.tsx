@@ -1,60 +1,58 @@
-import { AnimatePresence, motion } from 'framer-motion'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { FC, useState } from 'react'
+import { AnimatePresence, motion } from 'framer-motion'
 
-interface NavLinkProps {
-	href?: string
-	className?: string
-	exact?: boolean
-}
+const Nav: FC = () => {
+	const router = useRouter()
+	const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
 
-const Nav: FC<NavLinkProps> = ({ href, exact }) => {
-	const { pathname } = useRouter()
-	const isActive = exact ? pathname === href : pathname.startsWith(href)
-	const [hoveredIndex, setHoveredIndex] = useState(null)
-
-	// if (isActive) {
-	// 	className += 'active'
-	// }
-
-	const navigation = [
-		['0', 'BORROW', '/vaults'],
-		['1', 'STAKE', '/stake'],
-		['2', 'SWAP', '/swap'],
-		['3', 'EARN', '/earn'],
-		['4', 'VEBAO', '/vebao'],
-		['5', 'LEND', '/lend'],
+	const navItems = [
+		{ name: 'STAKE', href: '/stake' },
+		{ name: 'SWAP', href: '/swap' },
+		{ name: 'EARN', href: '/earn' },
+		{ name: 'VEBAO', href: '/vebao' },
+		{ name: 'LEND', href: '/lend' },
 	]
 
 	return (
-		<>
-			{navigation.map(([index, name, href]) => (
+		<nav className='flex items-center gap-8'>
+			{navItems.map((item, index) => (
 				<Link
-					href={href}
-					key={name}
-					className='relative -mx-3 -my-2 rounded px-3 py-2 font-bakbak text-xl transition-colors delay-150 hover:delay-[0ms]'
-					onMouseEnter={() => setHoveredIndex(index as any)}
+					key={item.name}
+					href={item.href}
+					className='relative -mx-3 -my-2 rounded px-3 py-2 text-xl'
+					onMouseEnter={() => setHoveredIndex(index)}
 					onMouseLeave={() => setHoveredIndex(null)}
 				>
-					<AnimatePresence>
-						{hoveredIndex === index && (
-							<motion.span
-								className={`absolute inset-0 rounded bg-baoRed`}
-								layoutId='hoverBackground'
-								initial={{ opacity: 0 }}
-								animate={{ opacity: 1, transition: { duration: 0.15 } }}
-								exit={{
-									opacity: 0,
-									transition: { duration: 0.15, delay: 0.2 },
-								}}
-							/>
-						)}
-					</AnimatePresence>
-					<span className={`relative z-10 ${isActive && 'bg-baoRed'}`}>{name}</span>
+					<div className='relative w-full h-full flex items-center'>
+						<AnimatePresence>
+							{hoveredIndex === index && (
+								<motion.span
+									className='absolute inset-0 border border-baoRed rounded'
+									layoutId='hoverBackground'
+									initial={{ opacity: 0 }}
+									animate={{
+										opacity: 1,
+										transition: { duration: 0.15 },
+									}}
+									exit={{
+										opacity: 0,
+										transition: { duration: 0.15, delay: 0.2 },
+									}}
+								/>
+							)}
+						</AnimatePresence>
+						<span
+							className={`relative z-10 font-bakbak transition-colors duration-200 cursor-pointer
+								${router.pathname === item.href ? 'text-baoRed' : 'text-baoWhite hover:text-baoRed'}`}
+						>
+							{item.name}
+						</span>
+					</div>
 				</Link>
 			))}
-		</>
+		</nav>
 	)
 }
 

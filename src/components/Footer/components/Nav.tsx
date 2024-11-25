@@ -1,6 +1,7 @@
 import { faDiscord, faGithub, faMedium, faTwitter } from '@fortawesome/free-brands-svg-icons'
 import { faBolt, faBook, faComments } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { IconProp } from '@fortawesome/fontawesome-svg-core'
 import React from 'react'
 import Tooltipped from '../../Tooltipped'
 
@@ -15,7 +16,7 @@ const Nav: React.FC = () => {
 					aria-label='Discord'
 					rel='noreferrer'
 				>
-					<FontAwesomeIcon icon={faDiscord} />
+					<FontAwesomeIcon icon={faDiscord as IconProp} />
 				</a>
 			</Tooltipped>
 			<Tooltipped content='Twitter' placement='top'>
@@ -26,7 +27,7 @@ const Nav: React.FC = () => {
 					aria-label='Twitter'
 					rel='noreferrer'
 				>
-					<FontAwesomeIcon icon={faTwitter} />
+					<FontAwesomeIcon icon={faTwitter as IconProp} />
 				</a>
 			</Tooltipped>
 			<Tooltipped content='Medium' placement='top'>
@@ -37,7 +38,7 @@ const Nav: React.FC = () => {
 					aria-label='Medium'
 					rel='noreferrer'
 				>
-					<FontAwesomeIcon icon={faMedium} />
+					<FontAwesomeIcon icon={faMedium as IconProp} />
 				</a>
 			</Tooltipped>
 			<Tooltipped content='Governance Forum' placement='top'>
@@ -48,7 +49,7 @@ const Nav: React.FC = () => {
 					aria-label='Governance Forum'
 					rel='noreferrer'
 				>
-					<FontAwesomeIcon icon={faComments} />
+					<FontAwesomeIcon icon={faComments as IconProp} />
 				</a>
 			</Tooltipped>
 			<Tooltipped content='Snapshot' placement='top'>
@@ -59,7 +60,7 @@ const Nav: React.FC = () => {
 					aria-label='Snapshot'
 					rel='noreferrer'
 				>
-					<FontAwesomeIcon icon={faBolt} />
+					<FontAwesomeIcon icon={faBolt as IconProp} />
 				</a>
 			</Tooltipped>
 			<Tooltipped content='Documentation' placement='top'>
@@ -70,7 +71,7 @@ const Nav: React.FC = () => {
 					aria-label='Documentation'
 					rel='noreferrer'
 				>
-					<FontAwesomeIcon icon={faBook} />
+					<FontAwesomeIcon icon={faBook as IconProp} />
 				</a>
 			</Tooltipped>
 			<Tooltipped content='GitHub' placement='top'>
@@ -81,7 +82,7 @@ const Nav: React.FC = () => {
 					aria-label='GitHub'
 					rel='noreferrer'
 				>
-					<FontAwesomeIcon icon={faGithub} />
+					<FontAwesomeIcon icon={faGithub as IconProp} />
 				</a>
 			</Tooltipped>
 			{/* <Tooltipped content='Bug Bounty Program' placement='top'>

@@ -10,11 +10,13 @@ import Image from 'next/future/image'
 import Link from 'next/link'
 import React, { useEffect, useMemo, useState } from 'react'
 import { isDesktop } from 'react-device-detect'
+import Config from '@/bao/lib/config'
 
 export const VaultList: React.FC = () => {
 	const [tick, setTick] = useState(0)
 	const [loading, setLoading] = useState(true)
-	const _vaults = useVaults('baoUSD')
+	const vaultTypes = Object.keys(Config.vaults)
+	const _vaults = useVaults(vaultTypes)
 
 	useEffect(() => {
 		const intervalId = setInterval(() => {
@@ -47,7 +49,7 @@ export const VaultList: React.FC = () => {
 
 export const VaultListItem: React.FC<VaultListProps> = ({ vaultName }: VaultListProps) => {
 	const { account } = useWeb3React()
-	const _vaults = useVaults(vaultName)
+	const _vaults = useVaults([vaultName])
 
 	const synth = useMemo(() => {
 		return _vaults?.find(vault => vault.isSynth)

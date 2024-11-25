@@ -2,7 +2,7 @@ import { BigNumber } from 'ethers'
 import { ActiveSupportedVault } from '@/bao/lib/types'
 import MultiCall from '@/utils/multicall'
 import useBao from '../base/useBao'
-import { useVaults } from '@/hooks/vaults/useVaults'
+import { useVaults, useVaultsByType } from './useVaults'
 import { useWeb3React } from '@web3-react/core'
 import { providerKey } from '@/utils/index'
 import { useQuery } from '@tanstack/react-query'
@@ -17,7 +17,7 @@ type ExchangeRates = {
 export const useExchangeRates = (vaultName: string): ExchangeRates => {
 	const bao = useBao()
 	const { library, account, chainId } = useWeb3React()
-	const vaults = useVaults(vaultName)
+	const vaults = useVaults([vaultName])
 
 	const enabled = vaults?.length > 0 && !!bao && !!account
 	const mids = vaults?.map(vault => vault.vid)

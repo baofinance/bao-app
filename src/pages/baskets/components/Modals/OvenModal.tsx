@@ -13,6 +13,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { BigNumber } from 'ethers'
 import Image from 'next/future/image'
 import React, { useState } from 'react'
+import type { IconProp } from '@fortawesome/fontawesome-svg-core'
 
 type ModalProps = {
 	basket: ActiveSupportedBasket
@@ -45,7 +46,7 @@ const OvenModal: React.FC<ModalProps> = ({ basket, show, hideModal }) => {
 									label: 'Total ETH Deposited',
 									value: (
 										<span>
-											{getDisplayBalance(ovenInfo.balance)} <FontAwesomeIcon icon={faEthereum} />
+											{getDisplayBalance(ovenInfo.balance)} <FontAwesomeIcon icon={faEthereum as unknown as IconProp} />
 										</span>
 									),
 								},
@@ -53,7 +54,7 @@ const OvenModal: React.FC<ModalProps> = ({ basket, show, hideModal }) => {
 									label: 'Your Deposit',
 									value: (
 										<span>
-											{getDisplayBalance(ovenInfo.userBalance)} <FontAwesomeIcon icon={faEthereum} />
+											{getDisplayBalance(ovenInfo.userBalance)} <FontAwesomeIcon icon={faEthereum as unknown as IconProp} />
 										</span>
 									),
 								},

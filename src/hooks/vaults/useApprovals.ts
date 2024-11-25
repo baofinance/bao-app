@@ -1,7 +1,7 @@
 import { BigNumber } from 'ethers'
 import MultiCall from '@/utils/multicall'
 import useBao from '@/hooks/base/useBao'
-import { useVaults } from './useVaults'
+import { useVaults, useVaultsByType } from './useVaults'
 import { useWeb3React } from '@web3-react/core'
 import { providerKey } from '@/utils/index'
 import { useQuery } from '@tanstack/react-query'
@@ -16,7 +16,7 @@ type Approvals = {
 export const useApprovals = (vaultName: string): Approvals => {
 	const bao = useBao()
 	const { library, account, chainId } = useWeb3React()
-	const vaults = useVaults(vaultName)
+	const vaults = useVaultsByType(vaultName)
 
 	const enabled = !!bao && !!vaults && !!account
 	const { data: approvals, refetch } = useQuery(

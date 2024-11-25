@@ -15,10 +15,6 @@ const nextConfig = {
 	reactStrictMode: true,
 	swcMinify: false,
 	productionBrowserSourceMaps: false,
-	experimental: {
-		newNextLinkBehavior: true,
-		scrollRestoration: true,
-	},
 	images: {
 		deviceSizes: [640, 768, 1024, 1280, 1536, 1600],
 		unoptimized: true,
@@ -26,6 +22,7 @@ const nextConfig = {
 	publicRuntimeConfig: {
 		breakpoints: screens,
 	},
+	distDir: '.next',
 }
 
 module.exports = withBundleAnalyzer(nextConfig)
