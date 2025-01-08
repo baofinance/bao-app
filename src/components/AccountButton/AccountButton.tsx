@@ -37,13 +37,12 @@ const AccountButton: React.FC<AccountButtonProps> = () => {
 
 	useEffect(() => {
 		if (!account) return
-		console.log(account)
 		udReverseAddress(account)
 			.then(_ud => {
 				if (_ud) setUd(_ud)
 			})
 			.catch(() => {
-				console.error('error: cannot get UD')
+				// Silently fail - UD resolution is optional
 			})
 	}, [account])
 

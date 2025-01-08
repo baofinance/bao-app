@@ -6,30 +6,42 @@ import React, { useEffect, useState, useMemo } from 'react'
 import Config from '@/bao/lib/config'
 import { getDisplayBalance } from '@/utils/numberFormat'
 import Modal from '@/components/Modal'
-import { Asset } from '@/bao/lib/types'
+import { VaultAsset } from '@/bao/lib/types'
 import { useWeb3React } from '@web3-react/core'
 import { useAccountBalances } from '@/hooks/lend/useAccountBalances'
+import { formatCompact, formatTokenAmount, formatUSD } from '@/utils/formatNumbers'
 
-export const BorrowList: React.FC<BorrowListProps> = ({ marketName }) => {
-	const assets = Config.lendMarkets[marketName].assets
+interface BorrowListProps {
+	marketName: string
+	totalBorrow?: number
+}
+
+interface BorrowListItemProps {
+	asset: VaultAsset
+	marketName: string
+}
+
+export const BorrowList: React.FC<BorrowListProps> = ({ marketName, totalBorrow }) => {
+	const market = Config.vaults[marketName]
+	if (!market) return null
 
 	return (
-		<>
-			<div className='glassmorphic-card py-4'>
-				<Typography variant='lg' className='text-base text-medium leading-5 mb-4 text-center font-bakbak text-xl'>
-					Borrowed
-				</Typography>
-				<ListHeader headers={['Asset', 'Balance', '']} />
-				<div className='flex flex-col gap-1'>
-					<div className='flex flex-col gap-4'>
-						{assets &&
-							assets
-								.filter(asset => asset.borrow === true)
-								.map(asset => <BorrowListItem asset={asset} key={asset.id} marketName={marketName} />)}
-					</div>
+		<div className='rounded-lg border border-gray-800'>
+			<div className='flex justify-between items-center p-4 bg-gray-900'>
+				<div className='text-lg font-semibold'>Borrowed</div>
+				<div className='text-gray-400'>{totalBorrow}</div>
+			</div>
+			<ListHeader headers={['Asset', 'Balance', '']} />
+			<div className='flex flex-col gap-1'>
+				<div className='flex flex-col gap-4'>
+					{market.assets
+						.filter(asset => asset.borrow === true && asset.active)
+						.map(asset => (
+							<BorrowListItem asset={asset} key={asset.id} marketName={marketName} />
+						))}
 				</div>
 			</div>
-		</>
+		</div>
 	)
 }
 
@@ -41,13 +53,12 @@ export const BorrowListItem: React.FC<BorrowListItemProps> = ({ asset, marketNam
 
 	const balance = useMemo(() => {
 		if (!accountBalances || !asset || !asset.underlyingAddress[chainId]) return null
-
 		return accountBalances.find(({ address }) => address === asset.underlyingAddress[chainId])
 	}, [accountBalances, asset, chainId])
 
 	useEffect(() => {
 		if (balance) {
-			setFormattedBalance(getDisplayBalance(balance.balance, balance.decimals))
+			setFormattedBalance(formatTokenAmount(balance.balance, 4))
 		}
 	}, [balance])
 
@@ -83,12 +94,3 @@ export const BorrowListItem: React.FC<BorrowListItemProps> = ({ asset, marketNam
 }
 
 export default BorrowList
-
-type BorrowListProps = {
-	marketName: string
-}
-
-type BorrowListItemProps = {
-	asset: Asset
-	marketName: string
-}

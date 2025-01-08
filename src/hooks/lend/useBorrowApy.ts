@@ -7,18 +7,30 @@ import { Ctoken__factory } from '@/typechain/factories'
 import MultiCall from '@/utils/multicall'
 import Config from '@/bao/lib/config'
 import { BigNumber } from 'ethers'
+import { useBlockUpdater } from '@/hooks/base/useBlock'
 import { useTxReceiptUpdater } from '@/hooks/base/useTransactionProvider'
 
-export const useBorrowApy = (marketName: string): Record<string, BigNumber | null> => {
+const BLOCKS_PER_DAY = 7200 // ~12 seconds per block
+const DAYS_PER_YEAR = 365
+
+const calculateApy = (ratePerBlock: BigNumber): number => {
+	const ratePerDay = Number(ratePerBlock.toString()) * BLOCKS_PER_DAY
+	return (Math.pow(1 + ratePerDay / 1e18, DAYS_PER_YEAR) - 1) * 100
+}
+
+export const useBorrowApy = (marketName: string): Record<string, number> => {
 	const bao = useBao()
 	const { account, library, chainId } = useWeb3React()
 
-	const enabled = Boolean(bao && library && chainId && marketName)
-	const { data: borrowApy, refetch } = useQuery(
-		['@/hooks/lend/useBorrowApy', providerKey(library, account, chainId), { marketName }],
+	const enabled = !!bao && !!account && !!chainId && !!marketName
+	const { data: apys, refetch } = useQuery(
+		['@/hooks/lend/useBorrowApy', providerKey(library, chainId?.toString()), { enabled, marketName }],
 		async () => {
-			const assets = Config.lendMarkets[marketName].assets
-			const contracts: Contract[] = assets.map(asset => Ctoken__factory.connect(asset.marketAddress[chainId], library))
+			const market = Config.vaults[marketName]
+			if (!market) throw new Error(`Market ${marketName} not found`)
+
+			const tokens = market.assets.map(asset => asset.ctokenAddress[chainId])
+			const contracts: Contract[] = tokens.map(address => Ctoken__factory.connect(address, library))
 
 			const res = MultiCall.parseCallResults(
 				await bao.multicall.call(
@@ -32,39 +44,26 @@ export const useBorrowApy = (marketName: string): Record<string, BigNumber | nul
 				),
 			)
 
-			// Convert block rate to APR
-			// APR = Rate per block * blocks per day * days per year
-			const BLOCKS_PER_DAY = 7200 // ~12 seconds per block
-			const DAYS_PER_YEAR = 365
-			const SCALE = BigNumber.from(10).pow(18)
-
 			return Object.keys(res).reduce(
 				(acc, address) => {
-					try {
-						const ratePerBlock = BigNumber.from(res[address][0].values[0])
-						const apr = ratePerBlock.mul(BLOCKS_PER_DAY).mul(DAYS_PER_YEAR).div(SCALE)
-						acc[address.toLowerCase()] = apr
-					} catch (error) {
-						console.error(`Error calculating APR for ${address}:`, error)
-						acc[address.toLowerCase()] = null
-					}
+					const asset = market.assets.find(asset => asset.ctokenAddress[chainId].toLowerCase() === address.toLowerCase())
+					if (!asset) throw new Error(`Asset not found for address ${address}`)
+
+					acc[asset.underlyingAddress[chainId]] = calculateApy(res[address][0].values[0])
 					return acc
 				},
-				{} as Record<string, BigNumber | null>,
+				{} as Record<string, number>,
 			)
 		},
 		{
 			enabled,
-			retry: false,
-			refetchOnWindowFocus: false,
+			staleTime: 30000,
+			cacheTime: 60000,
 		},
 	)
 
-	const _refetch = () => {
-		if (enabled) refetch()
-	}
+	useBlockUpdater(refetch, 10)
+	useTxReceiptUpdater(refetch)
 
-	useTxReceiptUpdater(_refetch)
-
-	return borrowApy || {}
+	return apys || {}
 }

@@ -72,7 +72,7 @@ const DashboardCard: React.FC<DashboardCardProps> = ({ marketName }: DashboardCa
 						<div className='flex-1 glassmorphic-card p-6 border border-baoRed/10'>
 							<div className='text-center py-4'>
 								<Typography variant='xs' className='font-bakbak text-baoWhite/60 uppercase tracking-wider mb-2'>
-									Your Collateral
+									Collateral
 								</Typography>
 								<Typography variant='xl' className='font-bakbak'>
 									${formatNumber(dummyData.collateral)}
@@ -83,7 +83,7 @@ const DashboardCard: React.FC<DashboardCardProps> = ({ marketName }: DashboardCa
 						<div className='flex-1 glassmorphic-card p-6 border border-baoRed/10'>
 							<div className='text-center py-4'>
 								<Typography variant='xs' className='font-bakbak text-baoWhite/60 uppercase tracking-wider mb-2'>
-									Your Debt
+									Debt
 								</Typography>
 								<Typography variant='xl' className='font-bakbak'>
 									${formatNumber(dummyData.debt)}

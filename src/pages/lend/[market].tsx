@@ -1,74 +1,67 @@
-import Typography from '@/components/Typography'
-import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import type { IconProp } from '@fortawesome/fontawesome-svg-core'
 import { NextPage } from 'next'
-import { NextSeo } from 'next-seo'
-import Link from 'next/link'
-import React from 'react'
+import { useRouter } from 'next/router'
+import Typography from '@/components/Typography'
+import { SupplyList } from './components/SupplyList'
+import { BorrowList } from './components/BorrowList'
+import { useAccountBalances } from '@/hooks/lend/useAccountBalances'
 import Config from '@/bao/lib/config'
-import AssetsCard from '@/pages/lend/components/AssetsCard'
-import { useSupplyBalances } from '@/hooks/lend/useSupplyBalances'
-import { useTotalSupplies } from '@/hooks/lend/useTotalSupplies'
-import DebtCard from '@/pages/lend/components/DebtCard'
-import { useWeb3React } from '@web3-react/core'
+import Image from 'next/future/image'
+import Link from 'next/link'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 
-export async function getStaticPaths() {
-	const paths: { params: { market: string } }[] = []
-	Object.keys(Config.lendMarkets).map(marketName => paths.push({ params: { market: marketName } }))
+const MarketPage: NextPage = () => {
+	const router = useRouter()
+	const { market: marketName } = router.query
+	const market = marketName ? Config.vaults[marketName as string] : null
+	const supplyBalances = useAccountBalances(marketName as string)
 
-	return {
-		paths: paths,
-		fallback: false,
+	if (!market) {
+		return (
+			<div className='container mx-auto px-4 py-8'>
+				<Typography variant='h1'>Market not found</Typography>
+			</div>
+		)
 	}
-}
-
-export async function getStaticProps({ params }: { params: any }) {
-	const { market } = params
-
-	return {
-		props: {
-			marketName: market,
-		},
-	}
-}
-
-const Market: NextPage<{
-	marketName: string
-}> = ({ marketName }) => {
-	const { chainId } = useWeb3React()
-	const market = Config.lendMarkets[marketName]
-	const supplyBalances = useSupplyBalances(marketName)
-	const totalSupplies = useTotalSupplies(marketName)
 
 	return (
-		<>
-			<NextSeo title={'Lend market'} description={'Provide different collateral types to mint synthetics.'} />
-			<div className='flex flex-col gap-4'>
-				{/* Back Button and Title Section - Now in a row */}
-				<div className='flex items-center justify-between'>
-					<Link href='/lend'>
-						<div className='glassmorphic-card flex h-fit w-fit flex-row items-center p-4 align-middle duration-200 hover:bg-baoRed'>
-							<FontAwesomeIcon icon={faArrowLeft as unknown as IconProp} size='lg' />
-						</div>
-					</Link>
-					<Typography variant='h1' className='font-bakbak flex-grow text-center'>
-						<span className='relative inline-block'>
-							<span className='relative z-10'>{market.name} Market</span>
-							<span className='absolute inset-0 bg-baoRed translate-y-0 px-4 -mx-4 py-1 -my-1'></span>
-						</span>
-					</Typography>
-					<div className='w-[40px]'></div> {/* Spacer to balance the back button */}
-				</div>
-
-				{/* Debt Card */}
-				<DebtCard marketName={marketName} />
-
-				{/* Assets Card */}
-				<AssetsCard marketName={marketName} supplyBalances={supplyBalances} totalSupplies={totalSupplies} />
+		<div className='container mx-auto px-4 py-8'>
+			<div className='mb-8'>
+				<Link href='/lend'>
+					<div className='flex items-center space-x-2 text-baoWhite/60 hover:text-baoWhite cursor-pointer'>
+						<FontAwesomeIcon icon={faArrowLeft} className='w-4 h-4' />
+						<Typography variant='sm'>Back to Markets</Typography>
+					</div>
+				</Link>
 			</div>
-		</>
+
+			<div className='flex items-center space-x-4 mb-8'>
+				<div className='w-16 h-16 rounded-full bg-baoBlack/60 border border-baoWhite/10 overflow-hidden'>
+					<Image src={`/images/tokens/${marketName}.png`} alt={market.name} width={64} height={64} />
+				</div>
+				<div>
+					<div className='flex items-center space-x-2'>
+						<Typography variant='h1'>{market.name}</Typography>
+						<div
+							className={`px-2 py-1 rounded text-sm ${
+								market.type === 'core market' ? 'bg-baoRed text-white' : 'bg-baoBlack/60 text-baoWhite/60'
+							}`}
+						>
+							{market.type === 'core market' ? 'Core' : 'Insured'}
+						</div>
+					</div>
+					<Typography variant='lg' className='text-baoWhite/60'>
+						{market.desc}
+					</Typography>
+				</div>
+			</div>
+
+			<div className='flex flex-col gap-8'>
+				<SupplyList marketName={marketName as string} supplyBalances={supplyBalances} />
+				<BorrowList marketName={marketName as string} />
+			</div>
+		</div>
 	)
 }
 
-export default Market
+export default MarketPage

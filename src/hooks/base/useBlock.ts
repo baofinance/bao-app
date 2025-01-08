@@ -1,9 +1,27 @@
-import { useContext, useState, useEffect, useRef } from 'react'
-import { BaoContext } from '@/contexts/BaoProvider'
+import { useWeb3React } from '@web3-react/core'
+import { useQuery } from '@tanstack/react-query'
+import { providerKey } from '@/utils/index'
+import { useEffect, useRef, useState } from 'react'
 
-const useBlock = (): number => {
-	const { block } = useContext(BaoContext)
-	return block
+export const useBlock = () => {
+	const { library, chainId } = useWeb3React()
+
+	const { data: blockNumber, refetch } = useQuery(
+		['@/hooks/base/useBlock', providerKey(library, chainId?.toString())],
+		async () => {
+			if (!library) return 0
+			return await library.getBlockNumber()
+		},
+		{
+			enabled: !!library,
+			refetchInterval: 12000, // Refetch every 12 seconds
+		},
+	)
+
+	return {
+		blockNumber: blockNumber || 0,
+		refetch,
+	}
 }
 
 /**
@@ -15,25 +33,26 @@ const useBlock = (): number => {
  * @param allowUpdate Switch the callback interval on or off
  */
 export const useBlockUpdater = (callback: (() => void) | (() => Promise<void>), interval = 1, allowUpdate = true): void => {
-	const block = useBlock()
-	const updateNumberRef = useRef<number>(block)
+	const { blockNumber } = useBlock()
+	const updateNumberRef = useRef<number>(blockNumber)
 	const [firstRender, setFirstRender] = useState(true)
 
-	// FIXME: so it won't render every remount cuz race conditions or something
+	// Prevent callback on first render
 	useEffect(() => {
 		setFirstRender(false)
-	}, [setFirstRender])
+	}, [])
 
-	if (allowUpdate) {
-		// number that only increases every (X * options.blockNumberInterval) blocks
-		const blockNumberFilter = block > 0 ? Math.floor(block / (interval ?? 1)) : undefined
+	useEffect(() => {
+		if (!allowUpdate || firstRender) return
+
+		// Calculate block number filter
+		const blockNumberFilter = blockNumber > 0 ? Math.floor(blockNumber / interval) : undefined
+
 		if (blockNumberFilter && blockNumberFilter !== updateNumberRef.current) {
 			updateNumberRef.current = blockNumberFilter
-			if (!firstRender) {
-				callback()
-			}
+			callback()
 		}
-	}
+	}, [blockNumber, interval, callback, allowUpdate, firstRender])
 }
 
 export default useBlock

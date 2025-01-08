@@ -2,6 +2,7 @@ import SEO from '@/bao/lib/seo'
 import Container from '@/components/Container'
 import Footer from '@/components/Footer'
 import Header from '@/components/Header'
+import Layout from '@/components/Layout'
 import Page from '@/components/Page'
 import TxPopup from '@/components/TxPopup'
 import '@/components/TxPopup/styles.css'
@@ -22,6 +23,7 @@ import dynamic from 'next/dynamic'
 import Head from 'next/head'
 import React, { ReactNode } from 'react'
 import { Analytics } from '@vercel/analytics/react'
+import Script from 'next/script'
 
 const Web3ReactNetworkProvider = dynamic(() => import('@/components/Web3NetworkProvider'), { ssr: false })
 
@@ -68,20 +70,14 @@ function App({ Component, pageProps }: AppProps) {
 					content='Lend and borrow synthetics with Bao Vaults and get diversified expsoure to crypto with automated yield bearing strategies using Bao Baskets.'
 				/>
 				<meta property='og:image' content='%PUBLIC_URL%/twitterCard.png' />
-				<script src='https://kit.fontawesome.com/f49c82b818.js' crossOrigin='anonymous' async />
 			</Head>
+			<Script src='https://kit.fontawesome.com/f49c82b818.js' strategy='afterInteractive' crossOrigin='anonymous' />
 			<Providers>
 				<DefaultSeo {...SEO} />
 				<TxPopup />
-				<div className='flex min-h-[100vh] flex-col justify-between'>
-					<Header />
-					<Page>
-						<Container>
-							<Component {...pageProps} />
-						</Container>
-					</Page>
-					<Footer />
-				</div>
+				<Layout>
+					<Component {...pageProps} />
+				</Layout>
 			</Providers>
 			<Analytics />
 		</>

@@ -1,56 +1,44 @@
 import { useQuery } from '@tanstack/react-query'
+import Config from '@/bao/lib/config'
+import { useBlockUpdater } from '@/hooks/base/useBlock'
+import { useTxReceiptUpdater } from '@/hooks/base/useTransactionProvider'
 
-interface DefiLlamaAprResponse {
-	data: {
-		[protocol: string]: {
-			apyBase?: number
-			apyReward?: number
-			apy?: number
-		}
-	}
+interface LlamaResponse {
+	apyBase: number
+	apyReward: number
 }
 
-type AssetAprs = {
-	[key: string]: number
-}
-
-export const useDefiLlamaApr = () => {
-	return useQuery<AssetAprs>(
-		['@/hooks/lend/useDefiLlamaApr'],
+export const useDefiLlamaApr = (marketName: string, assetAddress: string) => {
+	const { data: llamaData, refetch } = useQuery(
+		['@/hooks/lend/useDefiLlamaApr', { marketName, assetAddress }],
 		async () => {
-			try {
-				const response = await fetch('https://yields.llama.fi/pools')
-				const data: DefiLlamaAprResponse = await response.json()
+			const market = Config.vaults[marketName]
+			if (!market) throw new Error(`Market ${marketName} not found`)
 
-				// Map protocol IDs to our assets
-				const aprMap: AssetAprs = {
-					weETH: data.data['weETH-mainnet']?.apy || 0,
-					PTweETHJUN: data.data['pendle-weeth-jun']?.apy || 0,
-					PTweETHSEP: data.data['pendle-weeth-sep']?.apy || 0,
-					PTweETHDEC: data.data['pendle-weeth-dec']?.apy || 0,
-					BaoUSD: 0, // Add if available
-					BaoETH: 0, // Add if available
-				}
+			const asset = market.assets.find(a => Object.values(a.underlyingAddress).includes(assetAddress))
+			if (!asset?.llamaId) return null
 
-				return aprMap
-			} catch (error) {
-				console.error('Error fetching DeFi Llama APRs:', error)
-				// Return default values on error
-				return {
-					weETH: 0,
-					PTweETHJUN: 0,
-					PTweETHSEP: 0,
-					PTweETHDEC: 0,
-					BaoUSD: 0,
-					BaoETH: 0,
-				}
+			const response = await fetch(`https://yields.llama.fi/chart/${asset.llamaId}`)
+			if (!response.ok) return null
+
+			const data = await response.json()
+			if (!data?.data?.length) return null
+
+			const latestData = data.data[data.data.length - 1] as LlamaResponse
+			return {
+				apyBase: latestData.apyBase || 0,
+				apyReward: latestData.apyReward || 0,
 			}
 		},
 		{
-			refetchInterval: 5 * 60 * 1000, // Refetch every 5 minutes
-			staleTime: 5 * 60 * 1000,
-			retry: 3,
-			refetchOnWindowFocus: false,
+			enabled: !!marketName && !!assetAddress,
+			staleTime: 300000, // 5 minutes
+			cacheTime: 600000, // 10 minutes
 		},
 	)
+
+	useBlockUpdater(refetch, 100) // Update less frequently for external API
+	useTxReceiptUpdater(refetch)
+
+	return llamaData
 }

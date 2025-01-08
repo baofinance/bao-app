@@ -8,17 +8,21 @@ import MultiCall from '@/utils/multicall'
 import Config from '@/bao/lib/config'
 import { BigNumber } from 'ethers'
 import { useTxReceiptUpdater } from '@/hooks/base/useTransactionProvider'
+import { useBlockUpdater } from '@/hooks/base/useBlock'
 
-export const useTotalDebt = (marketName: string, assetAddresses?: string[]): Record<string, BigNumber> => {
+export const useTotalDebt = (marketName: string): { marketAddress: string; totalBorrows: BigNumber }[] => {
 	const bao = useBao()
 	const { account, library, chainId } = useWeb3React()
 
 	const enabled = !!bao && !!account && !!chainId && !!marketName
-	const { data: totalDebts, refetch } = useQuery(
-		['@/hooks/lend/useTotalDebts', providerKey(library, account, chainId), { enabled, marketName, assetAddresses }],
+	const { data: totalDebt, refetch } = useQuery(
+		['@/hooks/lend/useTotalDebt', providerKey(library, account, chainId), { enabled, marketName }],
 		async () => {
-			const addresses = assetAddresses || [Config.lendMarkets[marketName].marketAddresses[chainId]]
-			const contracts: Contract[] = addresses.map(address => Ctoken__factory.connect(address, library))
+			const market = Config.vaults[marketName]
+			if (!market) throw new Error(`Market ${marketName} not found`)
+
+			const tokens = market.assets.map(asset => asset.ctokenAddress[chainId])
+			const contracts: Contract[] = tokens.map(address => Ctoken__factory.connect(address, library))
 
 			const res = MultiCall.parseCallResults(
 				await bao.multicall.call(
@@ -26,30 +30,26 @@ export const useTotalDebt = (marketName: string, assetAddresses?: string[]): Rec
 						contracts.map(contract => ({
 							ref: contract.address,
 							contract,
-							calls: [{ method: 'symbol' }, { method: 'totalBorrows' }],
+							calls: [{ method: 'totalBorrows' }],
 						})),
 					),
 				),
 			)
 
-			return Object.keys(res).reduce(
-				(acc, address) => {
-					acc[address] = res[address][1].values[0]
-					return acc
-				},
-				{} as Record<string, BigNumber>,
-			)
+			return Object.keys(res).map(address => ({
+				marketAddress: address,
+				totalBorrows: res[address][0].values[0],
+			}))
 		},
 		{
 			enabled,
+			staleTime: 30000,
+			cacheTime: 60000,
 		},
 	)
 
-	const _refetch = () => {
-		if (enabled) refetch()
-	}
+	useBlockUpdater(refetch, 10)
+	useTxReceiptUpdater(refetch)
 
-	useTxReceiptUpdater(_refetch)
-
-	return totalDebts || {}
+	return totalDebt || []
 }

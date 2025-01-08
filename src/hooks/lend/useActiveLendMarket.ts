@@ -1,37 +1,48 @@
-import { Ctoken__factory, Erc20__factory } from '@/typechain/factories'
 import { useWeb3React } from '@web3-react/core'
-import { ActiveLendMarket, Asset } from '@/bao/lib/types'
-import { useCallback, useEffect, useState } from 'react'
+import { useQuery } from '@tanstack/react-query'
+import { providerKey } from '@/utils/index'
+import { Ctoken__factory, Cether__factory } from '@/typechain/factories'
+import Config from '@/bao/lib/config'
+import { Erc20__factory } from '@/typechain/factories/Erc20__factory'
+import { useBlockUpdater } from '@/hooks/base/useBlock'
+import { useTxReceiptUpdater } from '@/hooks/base/useTransactionProvider'
 
-export const useActiveLendMarket = (asset: Asset): ActiveLendMarket => {
-	const { library, account, chainId } = useWeb3React()
-	const [lendMarket, setLendMarket] = useState<ActiveLendMarket>(null)
+export const useActiveLendMarket = (marketName: string) => {
+	const { library, chainId } = useWeb3React()
 
-	const fetchLendMarket = useCallback(async () => {
-		if (!asset || !library || !chainId) return
+	const enabled = !!library && !!chainId && !!marketName
+	const { data: activeMarket, refetch } = useQuery(
+		['@/hooks/lend/useActiveLendMarket', providerKey(library, chainId?.toString()), { enabled, marketName }],
+		async () => {
+			const market = Config.vaults[marketName]
+			if (!market) throw new Error(`Market ${marketName} not found`)
 
-		const signerOrProvider = account ? library.getSigner() : library
+			return market.assets.map(asset => {
+				const ctokenAddress = asset.ctokenAddress[chainId]
+				const underlyingAddress = asset.underlyingAddress[chainId]
 
-		const marketAddress = asset.marketAddress?.[chainId]
-		const underlyingAddress = asset.underlyingAddress?.[chainId]
+				const ctokenContract =
+					underlyingAddress === 'ETH' ? Cether__factory.connect(ctokenAddress, library) : Ctoken__factory.connect(ctokenAddress, library)
 
-		if (!marketAddress || !underlyingAddress) {
-			return
-		}
-		const marketContract = Ctoken__factory.connect(marketAddress, signerOrProvider)
-		const underlyingContract = Erc20__factory.connect(underlyingAddress, signerOrProvider)
+				const underlyingContract = underlyingAddress === 'ETH' ? undefined : Erc20__factory.connect(underlyingAddress, library)
 
-		setLendMarket({
-			marketAddress,
-			marketContract,
-			underlyingAddress,
-			underlyingContract,
-		})
-	}, [asset, library, account, chainId])
+				return {
+					ctokenAddress,
+					ctokenContract,
+					underlyingAddress,
+					underlyingContract,
+				}
+			})
+		},
+		{
+			enabled,
+			staleTime: 30000,
+			cacheTime: 60000,
+		},
+	)
 
-	useEffect(() => {
-		fetchLendMarket()
-	}, [fetchLendMarket])
+	useBlockUpdater(refetch, 10)
+	useTxReceiptUpdater(refetch)
 
-	return lendMarket
+	return activeMarket
 }

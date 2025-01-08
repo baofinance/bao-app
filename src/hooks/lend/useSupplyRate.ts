@@ -1,63 +1,97 @@
-import useBao from '@/hooks/base/useBao'
 import { useWeb3React } from '@web3-react/core'
-import { useQuery } from '@tanstack/react-query'
-import { providerKey } from '@/utils/index'
-import { Contract } from '@ethersproject/contracts'
-import { Ctoken__factory } from '@/typechain/factories'
-import MultiCall from '@/utils/multicall'
-import Config from '@/bao/lib/config'
-import { BigNumber } from 'ethers'
-import { useTxReceiptUpdater } from '@/hooks/base/useTransactionProvider'
+import { useEffect, useState } from 'react'
+import { ethers } from 'ethers'
+import { formatUnits } from 'ethers/lib/utils'
+import { useDefiLlamaApy } from './useDefiLlamaApy'
 
-export const useSupplyRate = (marketName: string): Record<string, BigNumber> => {
-	const bao = useBao()
-	const { account, library, chainId } = useWeb3React()
+const CTOKEN_ABI = ['function supplyRatePerBlock() view returns (uint256)']
 
-	const enabled = !!bao && !!account && !!chainId && !!marketName
-	const { data: supplyRates, refetch } = useQuery(
-		['@/hooks/lend/useSupplyRate', providerKey(library, account, chainId), { enabled, marketName }],
-		async () => {
-			const assets = Config.lendMarkets[marketName].assets
-			const contracts: Contract[] = assets.map(asset => Ctoken__factory.connect(asset.marketAddress[chainId], library))
+// Ethereum block time is ~12.04 seconds
+const BLOCKS_PER_DAY = (24 * 60 * 60) / 12.04
+const DAYS_PER_YEAR = 365
+const BLOCKS_PER_YEAR = Math.floor(BLOCKS_PER_DAY * DAYS_PER_YEAR)
 
-			const res = MultiCall.parseCallResults(
-				await bao.multicall.call(
-					MultiCall.createCallContext(
-						contracts.map(contract => ({
-							ref: contract.address,
-							contract,
-							calls: [{ method: 'supplyRatePerBlock' }],
-						})),
-					),
-				),
-			)
+// Create a fallback provider
+const FALLBACK_PROVIDER = new ethers.providers.JsonRpcProvider(process.env.NEXT_PUBLIC_ALCHEMY_API_URL)
 
-			// Convert block rate to APR
-			// APR = Rate per block * blocks per day * days per year
-			const BLOCKS_PER_DAY = 7200 // ~12 seconds per block
-			const DAYS_PER_YEAR = 365
-			const SCALE = BigNumber.from(10).pow(18)
+export const useSupplyRate = (marketName: string, ctokenAddress: any, llamaId?: string) => {
+	console.log('useSupplyRate called with:', {
+		marketName,
+		ctokenAddress,
+		llamaId,
+	})
 
-			return Object.keys(res).reduce(
-				(acc, address) => {
-					const ratePerBlock = res[address][0].values[0]
-					const apr = ratePerBlock.mul(BLOCKS_PER_DAY).mul(DAYS_PER_YEAR).div(SCALE)
-					acc[address] = apr
-					return acc
-				},
-				{} as Record<string, BigNumber>,
-			)
-		},
-		{
-			enabled,
-		},
-	)
+	const { library, chainId, active } = useWeb3React()
+	const [supplyRate, setSupplyRate] = useState<string>('0')
+	const underlyingApy = useDefiLlamaApy(llamaId)
 
-	const _refetch = () => {
-		if (enabled) refetch()
+	console.log('useSupplyRate details:', {
+		marketName,
+		ctokenAddress,
+		llamaId,
+		underlyingApy,
+		chainId,
+		hasLibrary: !!library,
+		active,
+		supplyRate,
+	})
+
+	useEffect(() => {
+		let mounted = true
+
+		const fetchSupplyRate = async () => {
+			// Use fallback provider if web3 isn't connected
+			const provider = active ? library : FALLBACK_PROVIDER
+			const networkId = chainId || 1 // Default to mainnet
+
+			if (!ctokenAddress[networkId]) {
+				console.warn('Missing ctoken address for network:', networkId)
+				return
+			}
+
+			try {
+				const contract = new ethers.Contract(ctokenAddress[networkId], CTOKEN_ABI, provider)
+				const supplyRatePerBlock = await contract.supplyRatePerBlock()
+
+				// Convert to yearly rate
+				const ratePerBlock = Number(formatUnits(supplyRatePerBlock, 18))
+				const yearlyRate = ratePerBlock * BLOCKS_PER_YEAR * 100
+
+				console.log('Supply rate calculation:', {
+					supplyRatePerBlock: supplyRatePerBlock.toString(),
+					ratePerBlock,
+					yearlyRate,
+					BLOCKS_PER_YEAR,
+				})
+
+				if (mounted) {
+					setSupplyRate(yearlyRate.toFixed(4))
+				}
+			} catch (error) {
+				console.error('Error fetching supply rate:', {
+					error,
+					marketName,
+					ctokenAddress: ctokenAddress[networkId],
+					usingFallback: !active,
+				})
+				if (mounted) {
+					setSupplyRate('0')
+				}
+			}
+		}
+
+		fetchSupplyRate()
+
+		return () => {
+			mounted = false
+		}
+	}, [marketName, library, chainId, ctokenAddress, active])
+
+	const totalApy = Number(supplyRate) + (underlyingApy || 0)
+
+	return {
+		totalApy: totalApy.toFixed(4),
+		lendingApy: supplyRate,
+		underlyingApy: (underlyingApy || 0).toFixed(4),
 	}
-
-	useTxReceiptUpdater(_refetch)
-
-	return supplyRates || {}
 }

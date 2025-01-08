@@ -1,5 +1,5 @@
 import Config from '@/bao/lib/config'
-import { ActiveSupportedVault } from '@/bao/lib/types'
+import { ActiveVault, ActiveVaultAsset, VaultAsset } from '@/bao/lib/types'
 import useTransactionProvider from '@/hooks/base/useTransactionProvider'
 import { Cether__factory, Comptroller__factory, Ctoken__factory, Erc20__factory, VaultOracle__factory } from '@/typechain/factories'
 import type { Erc20, Cether, Ctoken } from '@/typechain/index'
@@ -32,37 +32,41 @@ const toApy = (rate: BigNumber): string => {
 	return apy.toFixed(18)
 }
 
-export const useVaultsContext = (): { [vaultName: string]: ActiveSupportedVault[] } | undefined => {
+export const useVaultsContext = (): { [vaultName: string]: ActiveVaultAsset[] } | undefined => {
 	const { library, account, chainId } = useWeb3React()
 	const { transactions } = useTransactionProvider()
-	const [vaults, setVaults] = useState<{ [vaultName: string]: ActiveSupportedVault[] }>({})
+	const [vaults, setVaults] = useState<{ [vaultName: string]: ActiveVaultAsset[] }>({})
 
 	const fetchVaults = useCallback(
 		async (vaultName: string) => {
 			if (!library || !chainId) return
 
+			const market = Config.vaults[vaultName]
+			if (!market) return
+
 			const signerOrProvider = account ? library.getSigner() : library
-			const _vaults = Config.vaults[vaultName].markets
-				.filter(vault => !vault.archived) // TODO- add in option to view archived vaults
-				.map(vault => {
-					const vaultAddress = vault.vaultAddresses[chainId]
-					const underlyingAddress = vault.underlyingAddresses[chainId]
-					let vaultContract: Cvault
+			const _vaults = market.assets
+				.filter(asset => asset.active)
+				.map(asset => {
+					const vaultAddress = asset.ctokenAddress[chainId]
+					const underlyingAddress = asset.underlyingAddress[chainId]
+					let ctokenContract: Cvault
 					if (underlyingAddress === 'ETH') {
-						vaultContract = Cether__factory.connect(vaultAddress, signerOrProvider)
+						ctokenContract = Cether__factory.connect(vaultAddress, signerOrProvider)
 					} else {
-						vaultContract = Ctoken__factory.connect(vaultAddress, signerOrProvider)
+						ctokenContract = Ctoken__factory.connect(vaultAddress, signerOrProvider)
 					}
 					let underlyingContract: Erc20 | undefined
 					if (underlyingAddress !== 'ETH') {
 						underlyingContract = Erc20__factory.connect(underlyingAddress, signerOrProvider)
 					}
-					return Object.assign({}, vault, {
+					return {
+						...asset,
 						vaultAddress,
-						vaultContract,
+						ctokenContract,
 						underlyingAddress,
 						underlyingContract,
-					})
+					}
 				})
 
 			const comptroller = Comptroller__factory.connect(Config.vaults[vaultName].comptroller, signerOrProvider)
@@ -173,7 +177,7 @@ export const useVaultsContext = (): { [vaultName: string]: ActiveSupportedVault[
 			const multicallResults: ContractCallResults = await multicall.call(multicallContext)
 
 			// Process results
-			const newVaults: ActiveSupportedVault[] = _vaults.map(vault => {
+			const newVaults: ActiveVaultAsset[] = _vaults.map(vault => {
 				const vaultResults = multicallResults.results[vault.vaultAddress].callsReturnContext
 				const underlyingSymbol =
 					vault.underlyingAddress === 'ETH'
@@ -207,11 +211,10 @@ export const useVaultsContext = (): { [vaultName: string]: ActiveSupportedVault[
 				const supplyApy = parseUnits(toApy(BigNumber.from(supplyRatePerBlock)))
 				const borrowApy = parseUnits(toApy(BigNumber.from(borrowRatePerBlock)))
 
-				const vaultConfig = vault
-
 				return {
-					symbol,
-					underlyingSymbol,
+					...vault,
+					ctokenContract: vault.ctokenContract,
+					underlyingContract: vault.underlyingContract,
 					supplyApy,
 					borrowApy,
 					liquidity: BigNumber.from(getCash),
@@ -225,7 +228,6 @@ export const useVaultsContext = (): { [vaultName: string]: ActiveSupportedVault[
 					liquidationIncentive: decimate(BigNumber.from(liquidationIncentiveMantissa).mul(10).sub(exponentiate(1))),
 					borrowRestricted: borrowRestrictedResult,
 					price: BigNumber.from(underlyingPrice),
-					...vaultConfig,
 				}
 			})
 
@@ -239,8 +241,10 @@ export const useVaultsContext = (): { [vaultName: string]: ActiveSupportedVault[
 
 	useEffect(() => {
 		if (!library || !chainId) return
-		fetchVaults('baoUSD')
-		fetchVaults('baoETH')
+		// Only fetch core markets
+		Object.entries(Config.vaults)
+			.filter(([_, market]) => market.type === 'core market')
+			.forEach(([name]) => fetchVaults(name))
 	}, [fetchVaults, library, chainId, transactions])
 
 	return vaults

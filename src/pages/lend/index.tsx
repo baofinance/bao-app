@@ -1,515 +1,589 @@
-import { FC, useState } from 'react'
-import Container from '@/components/Container'
+import { FC, useState, useMemo } from 'react'
+import { NextPage } from 'next'
 import Typography from '@/components/Typography'
-import { NextSeo } from 'next-seo'
-import { ListHeader } from '@/components/List'
-import Link from 'next/link'
 import Image from 'next/future/image'
-import Config from '@/bao/lib/config'
-import { LendMarket } from '@/bao/lib/types'
-import { useVaultsByType } from '@/hooks/vaults/useVaults'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons'
 import { useWeb3React } from '@web3-react/core'
-import Tooltipped from '@/components/Tooltipped'
-import { useSupplyRate } from '@/hooks/lend/useSupplyRate'
-import { useBorrowApy } from '@/hooks/lend/useBorrowApy'
-import { useTotalSupplies } from '@/hooks/lend/useTotalSupplies'
-import { useTotalDebt } from '@/hooks/lend/useTotalDebt'
-import { getDisplayBalance } from '@/utils/numberFormat'
-import { BigNumber } from 'ethers'
-import { useDefiLlamaApr } from '@/hooks/lend/useDefiLlamaApr'
-import { useExchangeRates } from '@/hooks/lend/useExchangeRate'
+import { useAccountBalances } from '@/hooks/lend/useAccountBalances'
+import { useMarketTotals } from '@/hooks/lend/useMarketTotals'
+import { Tooltip } from '@/components/Tooltip'
+import Loader from '@/components/Loader'
+import { useEffect } from 'react'
+import { Balance } from '@/bao/lib/types'
+import Config from '@/bao/lib/config'
+import { useSupplyRate, useBorrowRate, useCollateralFactor, usePrice, useTotalSupply, useTotalBorrow } from '@/hooks/lend'
+import { formatCompactNumber, formatCompactCurrency, formatCompactPercent } from '@/utils/formatNumbers'
+import SupplyList from './components/SupplyList'
 
-const formatNumber = (value: number | BigNumber, decimals = 2): string => {
-	if (BigNumber.isBigNumber(value)) {
-		return getDisplayBalance(value, 18, decimals)
-	}
-	return value.toFixed(decimals)
-}
-
-const CORE_MARKET_ASSETS = {
-	baoUSD: {
-		supply: [
-			{ symbol: 'WETH', name: 'WETH', displayName: 'Wrapped Ether' },
-			{ symbol: 'wstETH', name: 'wstETH', displayName: 'Wrapped stETH' },
-			{ symbol: 'rETH', name: 'rETH', displayName: 'Rocket Pool ETH' },
-		],
-		borrow: [{ symbol: 'baoUSD', name: 'baoUSD', displayName: 'BaoUSD' }],
-	},
-	baoETH: {
-		supply: [
-			{ symbol: 'WETH', name: 'WETH', displayName: 'Wrapped Ether' },
-			{ symbol: 'wstETH', name: 'wstETH', displayName: 'Wrapped stETH' },
-			{ symbol: 'rETH', name: 'rETH', displayName: 'Rocket Pool ETH' },
-		],
-		borrow: [{ symbol: 'baoETH', name: 'baoETH', displayName: 'BaoETH' }],
-	},
-} as const
-
-// Add type for market names to fix indexing error
-type CoreMarketName = keyof typeof CORE_MARKET_ASSETS
-
-const LendPage: FC = () => {
-	const { chainId } = useWeb3React()
-	const baoUSDVaults = useVaultsByType('baoUSD')
-	const baoETHVaults = useVaultsByType('baoETH')
-
-	return (
-		<Container className='flex flex-col gap-8'>
-			<NextSeo title='Lend' description='Markets to supply and borrow assets.' />
-
-			<Typography variant='hero' className='stroke'>
-				MARKETS
-			</Typography>
-
-			<div className='flex flex-col gap-4'>
-				{/* Vault Markets */}
-				<MarketListItem marketName='baoUSD' vaults={baoUSDVaults} />
-				<MarketListItem marketName='baoETH' vaults={baoETHVaults} />
-
-				{/* Lending Markets */}
-				<MarketListItem marketName='weETH' />
-				<MarketListItem marketName='USDe' />
-			</div>
-		</Container>
-	)
-}
-
-interface MarketListItemProps {
-	marketName: CoreMarketName | string
-	vaults?: any[] // Replace with proper vault type
-}
-
-interface CoreMarket {
+interface Asset {
 	name: string
-	assets: any[]
-	marketAddress?: never
+	icon: string
+	supply?: boolean
+	borrow?: boolean
+	active?: boolean
+	ctokenAddress: { [key: number]: string }
+	underlyingAddress: { [key: number]: string }
+	llamaId?: string
+	isPT?: boolean
+	underlyingDecimals: number
 }
 
-interface MarketStats {
-	totalSupplied: string
-	totalSuppliedUsd: string
-	supplyApy: string
-	maxLtv: string
-	totalBorrowed: string
-	totalBorrowedUsd: string
-	borrowApr: string
+interface MarketCardProps {
+	market: {
+		name: string
+		type: string
+		desc: string
+		active: boolean
+		assets: Asset[]
+	}
 }
 
-interface AssetStats {
-	totalSupplied: string
-	totalSuppliedUsd: string
-	supplyApy: string
-	maxLtv: string
-	totalBorrowed: string
-	totalBorrowedUsd: string
-	borrowApr: string
+interface AssetStatsBoxProps {
+	asset: {
+		name: string
+		icon: string
+		supply?: boolean
+		borrow?: boolean
+		active?: boolean
+		ctokenAddress: { [key: number]: string }
+		underlyingAddress: { [key: number]: string }
+		llamaId?: string
+		isPT?: boolean
+	}
+	marketName: string
 }
 
-const MarketListItem: FC<MarketListItemProps> = ({ marketName, vaults }) => {
-	const [isExpanded, setIsExpanded] = useState(false)
-	const { chainId } = useWeb3React()
-	const market = vaults ? ({ name: marketName, assets: vaults } as CoreMarket) : (Config.lendMarkets[marketName] as LendMarket)
-	const supplyRates = useSupplyRate(marketName)
-	const borrowApy = useBorrowApy(marketName)
-	const totalSupplies = useTotalSupplies(marketName)
-	const totalDebts = useTotalDebt(marketName)
-	const defiLlamaAprs = useDefiLlamaApr()
-	const exchangeRates = useExchangeRates(marketName)
+interface GroupedAsset {
+	icon: string
+	variants: string[]
+}
 
-	if (!market) return null
+interface AssetGroup {
+	[key: string]: GroupedAsset
+}
 
-	const isCore = vaults !== undefined
-	const isCoreMarket = (name: string): name is CoreMarketName => name === 'baoUSD' || name === 'baoETH'
+const AssetStatsBox: FC<AssetStatsBoxProps> = ({ asset, marketName }) => {
+	const { active: isWalletConnected } = useWeb3React()
+	const [hasError, setHasError] = useState(false)
 
-	// Use the type guard when accessing CORE_MARKET_ASSETS
-	const getCoreMarketAssets = () => {
-		if (isCore && isCoreMarket(marketName)) {
-			return CORE_MARKET_ASSETS[marketName]
+	// Call hooks only if wallet is connected
+	const supplyData = isWalletConnected ? useTotalSupply(marketName, asset.ctokenAddress) : null
+	const borrowData = isWalletConnected ? useTotalBorrow(marketName, asset.ctokenAddress) : null
+	const rawCollateralFactor = isWalletConnected ? useCollateralFactor(marketName, asset.ctokenAddress) : null
+	const rawBorrowRate = isWalletConnected ? useBorrowRate(marketName, asset.ctokenAddress) : null
+	const rateData = isWalletConnected ? useSupplyRate(marketName, asset.ctokenAddress) : null
+
+	// Extract values with defaults
+	const totalSupply = supplyData?.totalSupply || '0'
+	const totalSupplyUSD = supplyData?.totalSupplyUSD || '0'
+	const totalBorrow = borrowData?.totalBorrow || '0'
+	const totalBorrowUSD = borrowData?.totalBorrowUSD || '0'
+	const collateralFactor = rawCollateralFactor || '0'
+	const borrowRate = rawBorrowRate || '0'
+	const { totalApy = '0', lendingApy = '0', underlyingApy = '0' } = rateData || {}
+
+	// Error handling
+	useEffect(() => {
+		if (!supplyData || !borrowData || !rateData) {
+			setHasError(true)
 		}
-		return null
-	}
+	}, [supplyData, borrowData, rateData])
 
-	const coreAssets = getCoreMarketAssets()
+	// Format values
+	const formattedSupply = formatCompactNumber(Number(totalSupply))
+	const formattedSupplyUSD = formatCompactCurrency(Number(totalSupplyUSD))
+	const formattedBorrow = formatCompactNumber(Number(totalBorrow))
+	const formattedBorrowUSD = formatCompactCurrency(Number(totalBorrowUSD))
 
-	// Helper function to get stats for a specific asset
-	const getAssetStats = (asset: any): AssetStats => {
-		if (isCore) {
-			return {
-				totalSupplied: '0.00',
-				totalSuppliedUsd: '0.00',
-				supplyApy: '0.00',
-				maxLtv: asset.maxLtv?.toString() || '-',
-				totalBorrowed: '-',
-				totalBorrowedUsd: '-',
-				borrowApr: '-',
-			}
-		}
-
-		const marketAddr = (market as LendMarket).marketAddresses?.[chainId]
-		const assetSupply = totalSupplies?.find(supply => supply.address === asset.marketAddress[chainId])?.totalSupply || BigNumber.from(0)
-		const assetDebt = totalDebts[asset.marketAddress[chainId]] || BigNumber.from(0)
-		const supplyRate = supplyRates[asset.marketAddress[chainId]] || BigNumber.from(0)
-		const borrowRate = borrowApy[asset.marketAddress[chainId]?.toLowerCase()] || BigNumber.from(0)
-		const exchangeRate = exchangeRates[asset.marketAddress[chainId]] || BigNumber.from(0)
-		const underlyingApr = defiLlamaAprs.data?.[asset.name] ?? 0
-
-		// Calculate total APY including underlying yield
-		const totalSupplyApy = underlyingApr + parseFloat(getDisplayBalance(supplyRate, 18, 2))
-
-		// Calculate USD values using exchange rate
-		const totalSuppliedUsd = assetSupply.mul(exchangeRate).div(BigNumber.from(10).pow(18))
-		const totalBorrowedUsd = assetDebt.mul(exchangeRate).div(BigNumber.from(10).pow(18))
-
-		return {
-			totalSupplied: formatNumber(assetSupply),
-			totalSuppliedUsd: formatNumber(totalSuppliedUsd),
-			supplyApy: formatNumber(totalSupplyApy),
-			maxLtv: asset.maxLtv?.toString() || '-',
-			totalBorrowed: formatNumber(assetDebt),
-			totalBorrowedUsd: formatNumber(totalBorrowedUsd),
-			borrowApr: formatNumber(borrowRate),
-		}
-	}
-
-	// Update getMarketStats to use marketAddresses instead of marketAddress
-	const getMarketStats = (): MarketStats => {
-		if (isCore) {
-			return {
-				totalSupplied: '0.00',
-				totalSuppliedUsd: '0.00',
-				supplyApy: '0.00',
-				maxLtv: '-',
-				totalBorrowed: '-',
-				totalBorrowedUsd: '-',
-				borrowApr: '-',
-			}
-		}
-
-		const marketAddr = (market as LendMarket).marketAddresses?.[chainId]
-		const totalSupply = totalSupplies?.[0]?.totalSupply || BigNumber.from(0)
-		const totalDebt = totalDebts[marketAddr] || BigNumber.from(0)
-
-		return {
-			totalSupplied: getDisplayBalance(totalSupply),
-			totalSuppliedUsd: getDisplayBalance(totalSupply), // Add price calculation
-			supplyApy: getDisplayBalance(supplyRates[marketAddr] || BigNumber.from(0)),
-			maxLtv: '-',
-			totalBorrowed: getDisplayBalance(totalDebt),
-			totalBorrowedUsd: getDisplayBalance(totalDebt), // Add price calculation
-			borrowApr: getDisplayBalance(borrowApy[marketAddr?.toLowerCase()] || BigNumber.from(0)),
-		}
-	}
-
-	const stats = getMarketStats()
-
-	const coreMarketInfo = (
-		<div className='flex flex-col gap-2'>
-			<div>Core markets use the highest quality ETH and BTC based collateralized debt positions to back bao derivatives.</div>
-			<a
-				href='https://info.bao.finance/docs/core-markets'
-				target='_blank'
-				rel='noopener noreferrer'
-				className='text-baoRed hover:text-baoRed/80 underline'
-				onClick={e => e.stopPropagation()}
-			>
-				read more here
-			</a>
-		</div>
-	)
-
-	const insuredMarketInfo = (
-		<div className='flex flex-col gap-2'>
-			<div>Lend and borrow in isolated markets that are insured from bad debt by sbaoUSD and sbaoETH holders.</div>
-			<a
-				href='https://info.bao.finance/docs/insured-markets'
-				target='_blank'
-				rel='noopener noreferrer'
-				className='text-baoRed hover:text-baoRed/80 underline'
-				onClick={e => e.stopPropagation()}
-			>
-				read more here
-			</a>
-		</div>
-	)
-
-	// Add a helper function to get the correct icon path
-	const getIconPath = (symbol: string) => {
-		return `/images/tokens/${symbol}.png`
-	}
-
-	const renderExpandedView = () => {
-		if (isCore) {
-			// For core markets, show supply and borrow assets from our mapping
-			return (
-				<div className='mt-2 glassmorphic-card p-4'>
-					<div className='flex flex-col gap-4'>
-						{/* Table Headers */}
-						<div className='grid grid-cols-6 gap-4 px-4 py-2'>
-							<Typography variant='sm' className='text-baoWhite/60'>
-								Asset
-							</Typography>
-							<Typography variant='sm' className='text-baoWhite/60'>
-								Total Supplied
-							</Typography>
-							<Typography variant='sm' className='text-baoWhite/60'>
-								Supply APY
-							</Typography>
-							<Typography variant='sm' className='text-baoWhite/60'>
-								Max LTV
-							</Typography>
-							<Typography variant='sm' className='text-baoWhite/60'>
-								Total Borrowed
-							</Typography>
-							<Typography variant='sm' className='text-baoWhite/60'>
-								Borrow APR
-							</Typography>
-						</div>
-
-						{/* Supply Assets */}
-						{coreAssets?.supply.map(asset => (
-							<div key={asset.symbol} className='grid grid-cols-6 gap-4 px-4 py-2 glassmorphic-card'>
-								<div className='flex items-center gap-2'>
-									<Image src={`/images/tokens/${asset.symbol}.png`} alt={asset.name} width={28} height={28} />
-									<div className='flex flex-col'>
-										<Typography variant='lg' className='font-bakbak'>
-											{asset.name}
-										</Typography>
-										<span className='inline-block w-24 px-2 py-0.5 text-[9px] font-bakbak text-baoWhite/60 bg-baoblack border border-baoWhite/40 rounded text-center'>
-											Collateral Only
-										</span>
-									</div>
-								</div>
-								{/* Stats columns */}
-								<div className='flex flex-col justify-center'>
-									<Typography variant='lg'>0.00</Typography>
-									<Typography variant='sm' className='text-baoWhite/60'>
-										$0.00
-									</Typography>
-								</div>
-								<div className='flex items-center'>
-									<Typography variant='lg'>0.00%</Typography>
-								</div>
-								<div className='flex items-center'>
-									<Typography variant='lg'>-</Typography>
-								</div>
-								<div className='flex items-center'>
-									<Typography variant='lg'>-</Typography>
-								</div>
-								<div className='flex items-center'>
-									<Typography variant='lg'>-</Typography>
-								</div>
-							</div>
-						))}
-
-						{/* Borrow Asset */}
-						{coreAssets?.borrow.map(asset => (
-							<div key={asset.symbol} className='grid grid-cols-6 gap-4 px-4 py-2 glassmorphic-card'>
-								<div className='flex items-center gap-2'>
-									<Image src={`/images/tokens/${asset.symbol}.png`} alt={asset.name} width={28} height={28} />
-									<Typography variant='lg' className='font-bakbak'>
-										{asset.name}
-									</Typography>
-								</div>
-								{/* Stats columns */}
-								<div className='flex flex-col justify-center'>
-									<Typography variant='lg'>0.00</Typography>
-									<Typography variant='sm' className='text-baoWhite/60'>
-										$0.00
-									</Typography>
-								</div>
-								<div className='flex items-center'>
-									<Typography variant='lg'>0.00%</Typography>
-								</div>
-								<div className='flex items-center'>
-									<Typography variant='lg'>-</Typography>
-								</div>
-								<div className='flex flex-col justify-center'>
-									<Typography variant='lg'>0.00</Typography>
-									<Typography variant='sm' className='text-baoWhite/60'>
-										$0.00
-									</Typography>
-								</div>
-								<div className='flex items-center'>
-									<Typography variant='lg'>0.00%</Typography>
-								</div>
-							</div>
-						))}
-					</div>
-				</div>
-			)
-		}
-
-		// Non-core market expanded view
+	if (hasError) {
 		return (
-			<div className='mt-2 glassmorphic-card p-4'>
-				<div className='flex flex-col gap-4'>
-					{/* Table Headers */}
-					<div className='grid grid-cols-6 gap-4 px-4 py-2'>
-						<Typography variant='sm' className='text-baoWhite/60'>
-							Asset
-						</Typography>
-						<Typography variant='sm' className='text-baoWhite/60'>
-							Total Supplied
-						</Typography>
-						<Typography variant='sm' className='text-baoWhite/60'>
-							Supply APY
-						</Typography>
-						<Typography variant='sm' className='text-baoWhite/60'>
-							Max LTV
-						</Typography>
-						<Typography variant='sm' className='text-baoWhite/60'>
-							Total Borrowed
-						</Typography>
-						<Typography variant='sm' className='text-baoWhite/60'>
-							Borrow APR
-						</Typography>
-					</div>
-
-					{/* Asset Rows */}
-					{market.assets.map((asset: any) => {
-						const assetStats = getAssetStats(asset)
-						return (
-							<div key={asset.id || asset.mid} className='grid grid-cols-6 gap-4 px-4 py-2 glassmorphic-card'>
-								{/* Asset Column */}
-								<div className='flex items-center gap-2'>
-									<Image src={asset.icon} alt={asset.name} width={28} height={28} />
-									<div className='flex flex-col'>
-										<Typography variant='lg' className='font-bakbak'>
-											{asset.name}
-										</Typography>
-										{/* Show Collateral Only tag for any asset that's supply-only */}
-										{asset.supply && !asset.borrow && (
-											<span className='inline-block w-24 px-2 py-0.5 text-[9px] font-bakbak text-baoWhite/60 bg-baoblack border border-baoWhite/40 rounded text-center'>
-												Collateral Only
-											</span>
-										)}
-									</div>
-								</div>
-
-								{/* Stats Columns */}
-								<div className='flex flex-col justify-center'>
-									<Typography variant='lg'>{assetStats.totalSupplied}</Typography>
-									<Typography variant='sm' className='text-baoWhite/60'>
-										${assetStats.totalSuppliedUsd}
-									</Typography>
-								</div>
-								<div className='flex items-center'>
-									<Typography variant='lg'>{assetStats.supplyApy}%</Typography>
-								</div>
-								<div className='flex items-center'>
-									<Typography variant='lg'>{assetStats.maxLtv}</Typography>
-								</div>
-								<div className='flex flex-col justify-center'>
-									<Typography variant='lg'>{assetStats.totalBorrowed}</Typography>
-									<Typography variant='sm' className='text-baoWhite/60'>
-										${assetStats.totalBorrowedUsd}
-									</Typography>
-								</div>
-								<div className='flex items-center'>
-									<Typography variant='lg'>{assetStats.borrowApr}%</Typography>
-								</div>
+			<div className='glassmorphic-card p-4 mb-4'>
+				<div className='flex justify-between'>
+					<div className='flex-shrink-0 w-1/4'>
+						<div className='flex items-center gap-3'>
+							<div className='w-8 h-8'>
+								<Image src={asset.icon} alt={asset.name} width={32} height={32} />
 							</div>
-						)
-					})}
+							<div>
+								<Typography variant='lg' className='font-bakbak'>
+									{asset.name}
+								</Typography>
+								{asset.supply && !asset.borrow && (
+									<Typography variant='sm' className='text-baoWhite/60 border border-baoWhite/20 px-2 py-0.5 rounded text-xs'>
+										Collateral Only
+									</Typography>
+								)}
+							</div>
+						</div>
+					</div>
+					<div className='flex-grow grid grid-cols-5 gap-2 text-center'>
+						<Typography variant='lg'>-</Typography>
+						<Typography variant='lg'>-</Typography>
+						<Typography variant='lg'>-</Typography>
+						<Typography variant='lg'>-</Typography>
+						<Typography variant='lg'>-</Typography>
+					</div>
 				</div>
 			</div>
 		)
 	}
 
 	return (
-		<div className='flex flex-col'>
-			{/* Unexpanded View */}
-			<div className='w-full glassmorphic-card px-4 py-2'>
-				<div className='flex w-full items-center'>
-					<button onClick={() => setIsExpanded(!isExpanded)} className='flex flex-1 items-center'>
-						<div className='w-1/3 flex items-center gap-2'>
-							<Image src={`/images/tokens/${marketName}.png`} alt={marketName} width={36} height={36} />
-							<div className='flex flex-col items-start'>
-								<Typography variant='lg' className='font-bakbak'>
-									{market.name}
-								</Typography>
-								{isCore ? (
-									<Tooltipped content={coreMarketInfo} placement='bottom' interactive={true} delay={[0, 500]}>
-										<span className='px-2 py-0.5 text-[11px] font-bakbak text-black bg-baoWhite/80 rounded cursor-help'>Core Market</span>
-									</Tooltipped>
-								) : (
-									<Tooltipped content={insuredMarketInfo} placement='bottom' interactive={true} delay={[0, 500]}>
-										<span className='px-2 py-0.5 text-[11px] font-bakbak text-black bg-baoWhite/80 rounded cursor-help'>
-											Insured Lend Market
-										</span>
-									</Tooltipped>
-								)}
-							</div>
+		<div className='glassmorphic-card p-4 mb-4'>
+			<div className='flex justify-between'>
+				<div className='flex-shrink-0 w-1/4'>
+					<div className='flex items-center gap-3'>
+						<div className='w-8 h-8'>
+							<Image src={asset.icon} alt={asset.name} width={32} height={32} />
 						</div>
-						<div className='w-1/3 flex justify-center'>
-							{/* Supply Icons */}
-							<div className='flex flex-col items-center'>
-								<Typography variant='sm' className='mb-2 text-baoWhite/40 text-[10px] uppercase tracking-wider'>
-									Supply
+						<div>
+							<Typography variant='lg' className='font-bakbak'>
+								{asset.name}
+							</Typography>
+							{asset.supply && !asset.borrow && (
+								<Typography variant='sm' className='text-baoWhite/60 border border-baoWhite/20 px-2 py-0.5 rounded text-xs'>
+									Collateral Only
 								</Typography>
-								<div className='flex items-center'>
-									{isCore
-										? // Core market supply assets - ONLY show our defined supply assets
-											coreAssets?.supply
-												.filter(asset => ['WETH', 'wstETH', 'rETH'].includes(asset.symbol))
-												.map(asset => (
-													<Tooltipped key={asset.symbol} content={asset.displayName} placement='top'>
-														<div className='-ml-3 first:ml-0'>
-															<Image src={`/images/tokens/${asset.symbol}.png`} alt={asset.name} width={32} height={32} />
-														</div>
-													</Tooltipped>
-												))
-										: // Non-core market supply assets
-											market.assets
-												.filter(asset => asset.supply)
-												.map((asset: any) => (
-													<Tooltipped key={asset.id || asset.mid} content={asset.displayName} placement='top'>
-														<div className='-ml-3 first:ml-0'>
-															<Image src={asset.icon} alt={asset.name} width={32} height={32} />
-														</div>
-													</Tooltipped>
-												))}
+							)}
+						</div>
+					</div>
+				</div>
+				<div className='flex-grow grid grid-cols-5 gap-2 text-center'>
+					<div className='flex flex-col'>
+						<Typography variant='lg'>{totalSupply !== '0' ? formattedSupply : '-'}</Typography>
+						<Typography variant='sm' className='text-baoWhite/60'>
+							{formattedSupplyUSD}
+						</Typography>
+					</div>
+					<Tooltip
+						content={
+							<div className='p-2'>
+								<div className='flex flex-col gap-1'>
+									{asset.borrow && (
+										<div className='flex justify-between gap-4'>
+											<span>Lending</span>
+											<span>
+												{Number(lendingApy) === 0 ? '0%' : Number(lendingApy) < 0.01 ? '<0.01%' : formatCompactPercent(Number(lendingApy))}
+											</span>
+										</div>
+									)}
+									{Number(underlyingApy) > 0 && (
+										<div className='flex justify-between gap-4'>
+											<span>Base</span>
+											<span>{formatCompactPercent(Number(underlyingApy))}</span>
+										</div>
+									)}
 								</div>
 							</div>
-						</div>
-						<div className='w-1/3 flex justify-center'>
-							{/* Borrow Icons */}
-							<div className='flex flex-col items-center'>
-								<Typography variant='sm' className='mb-2 text-baoWhite/40 text-[10px] uppercase tracking-wider'>
-									Borrow
+						}
+					>
+						<Typography variant='lg'>
+							{asset.supply
+								? !asset.borrow && Number(underlyingApy) <= 0
+									? '-'
+									: Number(totalApy) === 0
+										? '0%'
+										: Number(totalApy) < 0.01
+											? '<0.01%'
+											: formatCompactPercent(Number(totalApy))
+								: '-'}
+						</Typography>
+					</Tooltip>
+					<Typography variant='lg'>{asset.supply ? formatCompactPercent(Number(collateralFactor)) : '-'}</Typography>
+					<div className='flex flex-col'>
+						{asset.borrow ? (
+							<>
+								<Typography variant='lg'>{totalBorrow !== '0' ? formattedBorrow : '-'}</Typography>
+								<Typography variant='sm' className='text-baoWhite/60'>
+									{formattedBorrowUSD}
 								</Typography>
-								<div className='flex items-center'>
-									{isCore
-										? // Core market borrow assets - only show borrow assets
-											coreAssets?.borrow.map(asset => (
-												<Tooltipped key={asset.symbol} content={asset.displayName} placement='top'>
-													<div className='-ml-3 first:ml-0'>
-														<Image src={`/images/tokens/${asset.symbol}.png`} alt={asset.name} width={32} height={32} />
-													</div>
-												</Tooltipped>
-											))
-										: // Non-core market borrow assets
-											market.assets
-												.filter(asset => asset.borrow)
-												.map((asset: any) => (
-													<Tooltipped key={asset.id || asset.mid} content={asset.displayName} placement='top'>
-														<div className='-ml-3 first:ml-0'>
-															<Image src={asset.icon} alt={asset.name} width={32} height={32} />
-														</div>
-													</Tooltipped>
-												))}
-								</div>
-							</div>
-						</div>
-					</button>
-					<Link href={vaults ? `/vaults/${marketName}` : `/lend/${marketName}`}>
-						<button className='glassmorphic-card px-4 py-2 font-bakbak hover:bg-baoRed'>Manage</button>
-					</Link>
+							</>
+						) : (
+							<Typography variant='lg'>-</Typography>
+						)}
+					</div>
+					<Typography variant='lg'>{asset.borrow ? formatCompactPercent(Number(borrowRate)) : '-'}</Typography>
+				</div>
+			</div>
+		</div>
+	)
+}
+
+const groupSimilarAssets = (assets: Array<Asset>): AssetGroup => {
+	return assets.reduce((acc: AssetGroup, asset) => {
+		// Check if it's a Pendle PT token by checking isPT flag
+		if (asset.isPT) {
+			// Use a single key for all PT tokens
+			const baseToken = 'PT'
+			if (!acc[baseToken]) {
+				acc[baseToken] = {
+					icon: asset.icon || '/images/tokens/pendle.png', // Fallback to pendle logo
+					variants: [],
+				}
+			}
+			// Only add to variants if not already included
+			if (!acc[baseToken].variants.includes(asset.name)) {
+				acc[baseToken].variants.push(asset.name)
+			}
+		} else {
+			// Regular token, use as is
+			if (!acc[asset.name]) {
+				acc[asset.name] = {
+					icon: asset.icon,
+					variants: [asset.name],
+				}
+			}
+		}
+		return acc
+	}, {})
+}
+
+interface AssetRowProps {
+	asset: {
+		name: string
+		icon: string
+		ctokenAddress: { [key: number]: string }
+		underlyingAddress: { [key: number]: string }
+		llamaId?: string
+		isPT?: boolean
+	}
+	marketName: string
+	supplyBalances: Balance[]
+}
+
+const AssetRow: FC<AssetRowProps> = ({ asset, marketName, supplyBalances }) => {
+	const { chainId = 1 } = useWeb3React()
+
+	// Get rates and factors
+	const supplyRate = useSupplyRate(marketName, asset.ctokenAddress, asset.llamaId)
+	const borrowRate = useBorrowRate(marketName, asset.ctokenAddress)
+	const collateralFactor = useCollateralFactor(marketName, asset.ctokenAddress)
+	const price = usePrice(marketName, asset.ctokenAddress)
+
+	// Find the balance for this asset
+	const assetBalance = supplyBalances.find(b => b.address === asset.underlyingAddress[chainId])
+
+	// Get supplied amount and USD value
+	const suppliedAmount = assetBalance?.balance || '0'
+	const suppliedUSD = assetBalance?.balanceUSD || '0'
+
+	// Get borrowed amount (if available)
+	const borrowedAmount = assetBalance?.borrowed || '0'
+	const borrowedUSD = Number(borrowedAmount) * Number(price)
+
+	return (
+		<div className='grid grid-cols-6 gap-4 py-4 border-b border-gray-800'>
+			{/* Asset Name/Logo */}
+			<div className='flex items-center gap-2'>
+				<Image src={asset.icon} alt={asset.name} height={32} width={32} className='rounded-full' />
+				<div>
+					<Typography variant='lg'>{asset.name}</Typography>
 				</div>
 			</div>
 
-			{/* New expanded view */}
-			{isExpanded && renderExpandedView()}
+			{/* Supplied Amount */}
+			<div>
+				<Typography variant='lg'>{formatCompactNumber(Number(suppliedAmount))}</Typography>
+				<Typography variant='sm' className='text-gray-400'>
+					${formatCompactNumber(Number(suppliedUSD))}
+				</Typography>
+			</div>
+
+			{/* Supply APY */}
+			<div>
+				<Typography variant='lg'>{Number(supplyRate).toFixed(2)}%</Typography>
+				{asset.llamaId && (
+					<Typography variant='sm' className='text-gray-400'>
+						+{Number(supplyRate.underlyingApy).toFixed(2)}% underlying
+					</Typography>
+				)}
+			</div>
+
+			{/* Max LTV */}
+			<div>
+				<Typography variant='lg'>{collateralFactor ? Math.round(Number(collateralFactor) * 100) + '%' : <Loader />}</Typography>
+			</div>
+
+			{/* Borrowed Amount */}
+			<div>
+				<Typography variant='lg'>{formatCompactNumber(Number(borrowedAmount))}</Typography>
+				<Typography variant='sm' className='text-gray-400'>
+					${formatCompactNumber(borrowedUSD)}
+				</Typography>
+			</div>
+
+			{/* Borrow APR */}
+			<div>
+				<Typography variant='lg'>{Number(borrowRate).toFixed(2)}%</Typography>
+			</div>
+		</div>
+	)
+}
+
+const MarketCard: FC<MarketCardProps> = ({ market }) => {
+	const [isExpanded, setIsExpanded] = useState(false)
+	const [showArchived, setShowArchived] = useState(false)
+	const { chainId = 1 } = useWeb3React()
+	const { data: supplyBalances } = useAccountBalances()
+
+	const visibleAssets = useMemo(() => {
+		return market.assets.filter(asset => showArchived || asset.active !== false)
+	}, [market.assets, showArchived])
+
+	const { totalSuppliedUSD = '0', totalBorrowedUSD = '0' } = useMarketTotals(market.name) || {}
+
+	// Handler for manage button click
+	const handleManageClick = (e: React.MouseEvent) => {
+		e.stopPropagation() // Prevent event from bubbling to header
+		setIsExpanded(!isExpanded)
+	}
+
+	return (
+		<div className='rounded-lg border border-gray-800'>
+			<div className='w-full px-6 py-4 flex items-center cursor-pointer hover:bg-baoRed/5' onClick={() => setIsExpanded(!isExpanded)}>
+				{/* Market Name - 1/6 */}
+				<div className='w-1/6'>
+					<Typography variant='lg' className='font-bakbak'>
+						{market.name}
+					</Typography>
+				</div>
+
+				{/* Supply Tokens - 1/6 */}
+				<div className='w-1/6'>
+					<Typography variant='xs' className='text-gray-400 mb-1'>
+						Supply Assets
+					</Typography>
+					<div className='flex -space-x-2'>
+						{visibleAssets
+							.filter(asset => asset.supply)
+							.map(asset => (
+								<Tooltip key={asset.name} content={asset.name}>
+									<div>
+										<Image
+											src={asset.icon}
+											alt={asset.name}
+											className='inline-block rounded-full ring-2 ring-black'
+											height={24}
+											width={24}
+										/>
+									</div>
+								</Tooltip>
+							))}
+					</div>
+				</div>
+
+				{/* Borrow Tokens - 1/6 */}
+				<div className='w-1/6'>
+					<Typography variant='xs' className='text-gray-400 mb-1'>
+						Borrow Assets
+					</Typography>
+					<div className='flex -space-x-2'>
+						{visibleAssets
+							.filter(asset => asset.borrow)
+							.map(asset => (
+								<Tooltip key={asset.name} content={asset.name}>
+									<div>
+										<Image
+											src={asset.icon}
+											alt={asset.name}
+											className='inline-block rounded-full ring-2 ring-black'
+											height={24}
+											width={24}
+										/>
+									</div>
+								</Tooltip>
+							))}
+					</div>
+				</div>
+
+				{/* Total Supplied - 1/6 */}
+				<div className='w-1/6'>
+					<Typography variant='xs' className='text-gray-400 mb-1'>
+						Total Supplied
+					</Typography>
+					<Typography variant='lg'>{formatCompactCurrency(Number(totalSuppliedUSD))}</Typography>
+				</div>
+
+				{/* Total Borrowed - 1/6 */}
+				<div className='w-1/6'>
+					<Typography variant='xs' className='text-gray-400 mb-1'>
+						Total Borrowed
+					</Typography>
+					<Typography variant='lg'>{formatCompactCurrency(Number(totalBorrowedUSD))}</Typography>
+				</div>
+
+				{/* Manage & Expand - 1/6 */}
+				<div className='w-1/6 flex justify-end gap-4'>
+					<button className='px-4 py-2 rounded-lg bg-baoRed/10 hover:bg-baoRed/20' onClick={handleManageClick}>
+						<Typography variant='sm'>Manage</Typography>
+					</button>
+					<button
+						onClick={e => {
+							e.stopPropagation()
+							setIsExpanded(!isExpanded)
+						}}
+						className='flex items-center'
+					>
+						<FontAwesomeIcon icon={isExpanded ? faChevronUp : faChevronDown} className='h-4 w-4 text-gray-400' />
+					</button>
+				</div>
+			</div>
+
+			{isExpanded && (
+				<div className='mt-4'>
+					{/* Archive Toggle Switch */}
+					<div className='px-6 pb-4 flex items-center gap-2'>
+						<div className='relative inline-flex cursor-pointer' onClick={() => setShowArchived(!showArchived)}>
+							<input type='checkbox' className='sr-only' checked={showArchived} onChange={() => setShowArchived(!showArchived)} />
+							<div
+								className={`w-11 h-6 rounded-full transition-colors duration-200 ease-in-out ${showArchived ? 'bg-baoRed' : 'bg-gray-600'}`}
+							>
+								<div
+									className={`w-5 h-5 rounded-full bg-white transition-transform duration-200 ease-in-out transform ${
+										showArchived ? 'translate-x-6' : 'translate-x-1'
+									} my-0.5`}
+								/>
+							</div>
+						</div>
+						<Typography variant='sm' className='text-gray-400'>
+							Show Archived Assets
+						</Typography>
+					</div>
+
+					<SupplyList
+						marketName={market.name}
+						supplyBalances={supplyBalances || []}
+						totalSupply={totalSuppliedUSD}
+						market={{ ...market, assets: visibleAssets }}
+					/>
+				</div>
+			)}
+		</div>
+	)
+}
+
+const Markets: FC = () => {
+	const markets = Object.entries(Config.vaults).map(([name, market]) => {
+		console.log('Processing market:', name, {
+			marketType: market.type,
+			assetCount: market.assets.length,
+		})
+
+		const mappedAssets = market.assets.map(asset => {
+			// Add debug logging for each asset
+			console.log('Processing asset:', {
+				marketName: name,
+				assetName: asset.name,
+				originalLlamaId: asset.llamaId,
+				configLlamaIds: Config.llamaIds,
+			})
+
+			// Get llamaId with case-insensitive matching
+			let llamaId = asset.llamaId // Keep any directly defined llamaIds
+			if (!llamaId) {
+				const assetName = asset.name.toLowerCase().trim()
+				console.log('Checking asset name:', assetName)
+
+				if (assetName === 'wsteth') {
+					llamaId = Config.llamaIds.wstETH
+				} else if (assetName === 'reth') {
+					llamaId = Config.llamaIds.rETH
+				} else if (assetName === 'weeth') {
+					llamaId = 'ether-fi-staked-eth'
+				} else if (assetName === 'susde') {
+					llamaId = 'ethena-susde'
+				}
+			}
+
+			// Log the final mapping result
+			console.log('Asset mapping result:', {
+				marketName: name,
+				assetName: asset.name,
+				finalLlamaId: llamaId,
+			})
+
+			return {
+				...asset,
+				llamaId,
+				ctokenAddress: {
+					[Config.networkId]:
+						asset.ctokenAddress?.[Config.networkId] || (typeof asset.ctokenAddress === 'string' ? asset.ctokenAddress : ''),
+				},
+				underlyingAddress: {
+					[Config.networkId]:
+						asset.underlyingAddress?.[Config.networkId] || (typeof asset.underlyingAddress === 'string' ? asset.underlyingAddress : ''),
+				},
+			}
+		})
+
+		return {
+			name,
+			type: market.type,
+			desc: market.desc,
+			active: market.active,
+			assets: mappedAssets,
+		}
+	})
+
+	// Log the final mapped markets
+	console.log(
+		'Final mapped markets:',
+		markets.map(m => ({
+			name: m.name,
+			assetCount: m.assets.length,
+			assets: m.assets.map(a => ({
+				name: a.name,
+				llamaId: a.llamaId,
+			})),
+		})),
+	)
+
+	const sortedMarkets = markets.sort((a, b) => {
+		if (a.type === 'core market' && b.type !== 'core market') return -1
+		if (a.type !== 'core market' && b.type === 'core market') return 1
+		return a.name.localeCompare(b.name)
+	})
+
+	return (
+		<div className='flex flex-col gap-8'>
+			{sortedMarkets.map(market => {
+				console.log('Passing market to MarketCard:', {
+					name: market.name,
+					assets: market.assets.map(a => ({
+						name: a.name,
+						llamaId: a.llamaId,
+					})),
+				})
+				return <MarketCard key={market.name} market={market} />
+			})}
+		</div>
+	)
+}
+
+const LendPage: NextPage = () => {
+	// First, get the dependencies for our hooks
+	const { marketName, ctokenAddress } = useMemo(
+		() => ({
+			marketName: '',
+			ctokenAddress: {},
+		}),
+		[],
+	)
+
+	// Call hooks unconditionally at the top level
+	const totalSupply = useTotalSupply(marketName, ctokenAddress)
+	const totalBorrow = useTotalBorrow(marketName, ctokenAddress)
+	const collateralFactor = useCollateralFactor(marketName, ctokenAddress)
+	const borrowRate = useBorrowRate(marketName, ctokenAddress)
+	const supplyRate = useSupplyRate(marketName, ctokenAddress)
+
+	return (
+		<div className='w-[1024px] mx-auto px-4 py-8'>
+			<Typography variant='h1' className='mb-8'>
+				Lending Markets
+			</Typography>
+			<Markets />
 		</div>
 	)
 }

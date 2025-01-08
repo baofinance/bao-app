@@ -18,7 +18,10 @@ export const useTotalSupplies = (marketName: string): TotalSupply[] => {
 	const { data: totalSupplies, refetch } = useQuery(
 		['@/hooks/lend/useTotalSupplies', providerKey(library, account, chainId), { enabled, marketName }],
 		async () => {
-			const tokens = Config.lendMarkets[marketName].assets.map(asset => asset.marketAddress[chainId])
+			const market = Config.vaults[marketName]
+			if (!market) throw new Error(`Market ${marketName} not found`)
+
+			const tokens = market.assets.map(asset => asset.ctokenAddress[chainId])
 			const contracts: Contract[] = tokens.map(address => Ctoken__factory.connect(address, library))
 
 			const res = MultiCall.parseCallResults(
@@ -34,9 +37,9 @@ export const useTotalSupplies = (marketName: string): TotalSupply[] => {
 			)
 
 			return Object.keys(res).map(address => {
-				const asset = Config.lendMarkets[marketName].assets.find(
-					asset => asset.marketAddress[chainId].toLowerCase() === address.toLowerCase(),
-				)
+				const asset = market.assets.find(asset => asset.ctokenAddress[chainId].toLowerCase() === address.toLowerCase())
+				if (!asset) throw new Error(`Asset not found for address ${address}`)
+
 				const decimals = asset.underlyingDecimals
 
 				const totalSupply = res[address][1].values[0]
@@ -44,7 +47,7 @@ export const useTotalSupplies = (marketName: string): TotalSupply[] => {
 				const tokenDecimals = res[address][3].values[0]
 
 				// Calculate total supply in underlying tokens
-				const totalSupplyUnderlying = totalSupply.mul(exchangeRate).div(BigNumber.from(10).pow(18)) // Exchange rate is scaled by 1e18
+				const totalSupplyUnderlying = totalSupply.mul(exchangeRate).div(BigNumber.from(10).pow(18))
 
 				return {
 					address,

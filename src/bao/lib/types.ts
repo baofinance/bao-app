@@ -88,38 +88,40 @@ export interface SupportedBasket {
 	ovenContract?: Oven
 }
 
-export interface SupportedVault {
-	vid: number
-	archived?: boolean
-	vaultAddresses: {
-		[network: number]: string
-	}
-	underlyingAddresses: {
-		[network: number]: string
-	}
-	isSynth: boolean
-	isBasket: boolean
-	symbol: string
+export interface VaultAsset {
+	id: number
+	active: boolean
+	name: string
 	icon: string
-	coingeckoId: string
+	ctokenAddress: Record<number, string>
+	underlyingAddress: Record<number, string>
 	underlyingDecimals: number
+	supply: boolean
+	borrow: boolean
+	isSynth?: boolean
+	isBasket?: boolean
+	group?: string
 	underlyingSymbol?: string
-	supplyApy?: BigNumber
-	borrowApy?: BigNumber
-	rewardApy?: BigNumber
-	liquidity?: BigNumber
-	collateralFactor?: BigNumber
-	imfFactor?: BigNumber
-	reserveFactor?: BigNumber
-	totalBorrows?: BigNumber
-	totalReserves?: BigNumber
-	supplied?: BigNumber
-	borrowable?: boolean
-	liquidationIncentive?: BigNumber
-	borrowRestricted?: boolean
-	price?: BigNumber
 	desc?: string
 	minimumBorrow?: number
+	coingeckoId?: string
+	llamaId?: string
+}
+
+export interface Vault {
+	id: number
+	type: 'core market' | 'insured lend market'
+	active: boolean
+	name: string
+	desc: string
+	comptroller: string
+	oracle: string
+	stabilizer?: string
+	assets: VaultAsset[]
+}
+
+export interface VaultConfig {
+	[vaultName: string]: Vault
 }
 
 export interface ActiveSupportedBackstop extends SupportedBackstop {
@@ -158,11 +160,27 @@ export interface ActiveSupportedBasket extends SupportedBasket {
 	ovenContract: Oven
 }
 
-export interface ActiveSupportedVault extends SupportedVault {
-	vaultAddress: string
-	vaultContract: Cether | Ctoken
-	underlyingAddress: string
+export interface ActiveVaultAsset extends VaultAsset {
+	ctokenContract: Cether | Ctoken
 	underlyingContract?: Erc20
+	supplyApy?: BigNumber
+	borrowApy?: BigNumber
+	rewardApy?: BigNumber
+	liquidity?: BigNumber
+	collateralFactor?: BigNumber
+	imfFactor?: BigNumber
+	reserveFactor?: BigNumber
+	totalBorrows?: BigNumber
+	totalReserves?: BigNumber
+	supplied?: BigNumber
+	borrowable?: boolean
+	liquidationIncentive?: BigNumber
+	borrowRestricted?: boolean
+	price?: BigNumber
+}
+
+export interface ActiveVault extends Vault {
+	assets: ActiveVaultAsset[]
 }
 
 export interface RpcConfig {
@@ -205,22 +223,9 @@ export interface Config {
 	subgraphs: SubgraphConfig
 	backstops: SupportedBackstop[]
 	baskets: SupportedBasket[]
-	vaults: {
-		[vaultName: string]: {
-			vid: number
-			comptroller: string
-			oracle: string
-			ballast: string
-			stabilizer: string
-			markets: SupportedVault[]
-		}
-	}
+	vaults: VaultConfig
 	gauges: SupportedGauge[]
 	swapTokens: SwapToken[]
-	assets: Asset[]
-	lendMarkets: {
-		[market: string]: LendMarket
-	}
 }
 
 export interface SwapToken {
@@ -274,23 +279,77 @@ export interface Asset {
 	id: number
 	active: boolean
 	marketAddress: {
-		[network: number]: string
+		[key: number]: string
 	}
 	underlyingAddress: {
-		[network: number]: string
+		[key: number]: string
 	}
 	underlyingDecimals: number
 	name: string
 	icon: string
 	supply: boolean
 	borrow: boolean
+	llamaId?: string
+	group?: string
+	isPT?: boolean
+	coingeckoId?: string
+}
+
+export interface Market {
+	id: number
+	active: boolean
+	name: string
+	desc?: string
+	comptroller: string
+	oracle: string
+	marketAddresses: {
+		[key: number]: string
+	}
+	underlyingAddresses: {
+		[key: number]: string
+	}
+	assets: Asset[]
+}
+
+export interface Config {
+	networkId: number
+	defaultRpc: {
+		chainId: string
+		rpcUrls: string[]
+		blockExplorerUrls: string[]
+		chainName: string
+		nativeCurrency: {
+			name: string
+			symbol: string
+			decimals: number
+		}
+	}
+	addressMap: {
+		[key: string]: string
+	}
+	llamaIds: {
+		[key: string]: string
+	}
+	contracts: {
+		[key: string]: {
+			[key: number]: {
+				address: string
+			}
+		}
+	}
+	markets: {
+		[key: string]: Market
+	}
 }
 
 export type Balance = {
 	address: string
 	symbol: string
-	balance: BigNumber
+	balance: string
+	balanceUSD: string
 	decimals: number
+	supply?: boolean
+	borrow?: boolean
 }
 
 export type TotalSupply = {

@@ -24,10 +24,14 @@ const Tooltipped: React.FC<TooltippedProps> = ({ children, content, placement, c
 			offset={10}
 			interactive={interactive}
 			delay={delay}
-			className={classNames(
-				'z-[9999] max-w-xs rounded border border-baoWhite border-opacity-20 bg-baoBlack px-2 py-1 text-center',
-				className,
-			)}
+			className={classNames('z-[9999] max-w-xs rounded-lg backdrop-blur-sm bg-baoBlack/80 px-3 py-2 text-center shadow-lg', className)}
+			animate={{
+				mount: { scale: 1, y: 0 },
+				unmount: { scale: 0.9, y: -4 },
+			}}
+			arrow={{
+				className: 'bg-baoBlack/80 w-2 h-2 backdrop-blur-sm',
+			}}
 		>
 			{children || (
 				<span>

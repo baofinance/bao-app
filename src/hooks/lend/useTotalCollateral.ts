@@ -20,7 +20,10 @@ export const useTotalCollateral = (marketName: string): BigNumber => {
 	const { data: totalCollateral, refetch } = useQuery(
 		['@/hooks/lend/useTotalCollateral', providerKey(library, account, chainId), { enabled, prices, marketName }],
 		async () => {
-			const addresses = Config.lendMarkets[marketName].assets.map(asset => asset.marketAddress[chainId])
+			const market = Config.vaults[marketName]
+			if (!market) throw new Error(`Market ${marketName} not found`)
+
+			const addresses = market.assets.map(asset => asset.ctokenAddress[chainId])
 			const contracts: Contract[] = addresses.map(address => Ctoken__factory.connect(address, library))
 
 			const res = MultiCall.parseCallResults(
@@ -42,7 +45,8 @@ export const useTotalCollateral = (marketName: string): BigNumber => {
 
 			let totalCollateral = BigNumber.from(0)
 			Object.keys(res).map(
-				address => (totalCollateral = totalCollateral.add(decimate(res[address][1].values[0].mul(BigNumber.from(prices[address]))))),
+				address =>
+					(totalCollateral = totalCollateral.add(decimate(res[address][1].values[0].mul(BigNumber.from(prices[address.toLowerCase()]))))),
 			)
 
 			return totalCollateral
@@ -58,5 +62,5 @@ export const useTotalCollateral = (marketName: string): BigNumber => {
 
 	useTxReceiptUpdater(_refetch)
 
-	return totalCollateral
+	return totalCollateral || BigNumber.from(0)
 }

@@ -6,6 +6,7 @@ import { VaultOracle__factory } from '@/typechain/factories'
 import Config from '@/bao/lib/config'
 import { BigNumber } from 'ethers'
 import { useTxReceiptUpdater } from '@/hooks/base/useTransactionProvider'
+import { useBlockUpdater } from '@/hooks/base/useBlock'
 
 export const useOraclePrice = (marketName: string, assetAddresses?: string[]): Record<string, BigNumber> => {
 	const bao = useBao()
@@ -16,15 +17,18 @@ export const useOraclePrice = (marketName: string, assetAddresses?: string[]): R
 	const { data: prices, refetch } = useQuery(
 		['@/hooks/lend/useOraclePrice', providerKey(library, account, chainId), { enabled, marketName, assetAddresses }],
 		async () => {
-			const oracle = VaultOracle__factory.connect(Config.lendMarkets[marketName].oracle, signerOrProvider)
-			const addresses = assetAddresses || [Config.lendMarkets[marketName].marketAddresses[chainId]]
+			const market = Config.vaults[marketName]
+			if (!market) throw new Error(`Market ${marketName} not found`)
+
+			const oracle = VaultOracle__factory.connect(market.oracle, signerOrProvider)
+			const addresses = assetAddresses || market.assets.map(asset => asset.ctokenAddress[chainId])
 
 			const pricePromises = addresses.map(address => oracle.callStatic.getUnderlyingPrice(address))
 			const prices = await Promise.all(pricePromises)
 
 			return addresses.reduce(
 				(acc, address, index) => {
-					acc[address] = prices[index]
+					acc[address.toLowerCase()] = prices[index]
 					return acc
 				},
 				{} as Record<string, BigNumber>,
@@ -32,14 +36,13 @@ export const useOraclePrice = (marketName: string, assetAddresses?: string[]): R
 		},
 		{
 			enabled,
+			staleTime: 30000,
+			cacheTime: 60000,
 		},
 	)
 
-	const _refetch = () => {
-		if (enabled) refetch()
-	}
-
-	useTxReceiptUpdater(_refetch)
+	useBlockUpdater(refetch, 10)
+	useTxReceiptUpdater(refetch)
 
 	return prices || {}
 }

@@ -1,5 +1,7 @@
+const withMT = require('@material-tailwind/react/utils/withMT')
+
 /** @type {import('tailwindcss').Config} */
-module.exports = {
+module.exports = withMT({
 	content: ['./src/**/*.{js,ts,jsx,tsx}'],
 	theme: {
 		fontFamily: {
@@ -48,23 +50,13 @@ module.exports = {
 			},
 			keyframes: {
 				slideIn: {
-					'0%': {
-						transform: 'translateX(0)',
-					},
-					'100%': {
-						transform: 'translateX(-100%)',
-					},
+					'0%': { transform: 'translateX(0)' },
+					'100%': { transform: 'translateX(-100%)' },
 				},
 				rainbowLight: {
-					'0%': {
-						backgroundPosition: '0% 50%',
-					},
-					'50%': {
-						backgroundPosition: '100% 50%',
-					},
-					'100%': {
-						backgroundPosition: '0% 50%',
-					},
+					'0%': { backgroundPosition: '0% 50%' },
+					'50%': { backgroundPosition: '100% 50%' },
+					'100%': { backgroundPosition: '0% 50%' },
 				},
 			},
 			animation: {
@@ -75,7 +67,27 @@ module.exports = {
 				'3xl': '1600px',
 			},
 		},
-		plugins: [require('@tailwindcss/forms')],
-		corePlugins: {},
 	},
-}
+	plugins: [require('@tailwindcss/forms')],
+	components: {
+		Tooltip: {
+			defaultProps: {
+				className: 'bg-baoBlack',
+			},
+			styles: {
+				base: {
+					bg: 'bg-baoBlack',
+					color: 'text-baoWhite',
+					borderRadius: 'rounded',
+					padding: 'px-2 py-1',
+				},
+				arrow: {
+					base: {
+						bg: 'bg-baoBlack',
+						size: 'w-1.5 h-1.5',
+					},
+				},
+			},
+		},
+	},
+})

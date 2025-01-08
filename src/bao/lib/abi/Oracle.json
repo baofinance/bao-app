@@ -1,0 +1,4 @@
+[
+	"function getUnderlyingPrice(address cToken) external view returns (uint256)",
+	"function price(string memory symbol) external view returns (uint256)"
+]

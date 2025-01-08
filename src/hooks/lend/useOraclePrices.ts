@@ -7,6 +7,8 @@ import Config from '@/bao/lib/config'
 import { BigNumber } from 'ethers'
 import { useTxReceiptUpdater } from '@/hooks/base/useTransactionProvider'
 import MultiCall from '@/utils/multicall'
+import { Vault } from '@/bao/lib/types'
+import { useBlockUpdater } from '@/hooks/base/useBlock'
 
 interface CallReturnContext {
 	reference: string
@@ -30,8 +32,11 @@ export const useOraclePrices = (marketName: string, assetAddresses?: string[]): 
 	const { data: prices, refetch } = useQuery(
 		['@/hooks/lend/useOraclePrices', providerKey(library, account, chainId), { enabled, marketName, assetAddresses }],
 		async () => {
-			const oracle = VaultOracle__factory.connect(Config.lendMarkets[marketName].oracle, signerOrProvider)
-			const addresses = assetAddresses || Config.lendMarkets[marketName].assets.map(asset => asset.marketAddress[chainId])
+			const market = Config.vaults[marketName]
+			if (!market) throw new Error(`Market ${marketName} not found`)
+
+			const oracle = VaultOracle__factory.connect(market.oracle, signerOrProvider)
+			const addresses = assetAddresses || market.assets.map(asset => asset.ctokenAddress[chainId])
 
 			const multicallContext = MultiCall.createCallContext([
 				{
@@ -48,7 +53,7 @@ export const useOraclePrices = (marketName: string, assetAddresses?: string[]): 
 
 			return addresses.reduce(
 				(acc, address, index) => {
-					acc[address] = multicallResults.results[oracle.address].callsReturnContext[index].returnValues[0]
+					acc[address.toLowerCase()] = multicallResults.results[oracle.address].callsReturnContext[index].returnValues[0]
 					return acc
 				},
 				{} as Record<string, BigNumber>,
@@ -56,14 +61,13 @@ export const useOraclePrices = (marketName: string, assetAddresses?: string[]): 
 		},
 		{
 			enabled,
+			staleTime: 30000,
+			cacheTime: 60000,
 		},
 	)
 
-	const _refetch = () => {
-		if (enabled) refetch()
-	}
-
-	useTxReceiptUpdater(_refetch)
+	useBlockUpdater(refetch, 10)
+	useTxReceiptUpdater(refetch)
 
 	return prices || {}
 }
