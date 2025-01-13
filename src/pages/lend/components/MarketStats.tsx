@@ -30,8 +30,8 @@ const MarketStats: React.FC<MarketStatsProps> = ({
 	const borrowRate = chainId && asset.underlyingAddress[chainId] ? borrowRates[asset.underlyingAddress[chainId]] : 0
 
 	return (
-		<div className='flex justify-between items-center p-4 border-b border-gray-800'>
-			<div className='flex items-center gap-2 w-1/6'>
+		<div className='grid grid-cols-6 gap-4 px-4 py-2 hover:bg-gray-900/50'>
+			<div className='flex items-center gap-2'>
 				<img src={asset.icon} alt={asset.name} className='w-8 h-8' />
 				<div>
 					<div className='font-semibold'>{asset.name}</div>
@@ -39,16 +39,16 @@ const MarketStats: React.FC<MarketStatsProps> = ({
 				</div>
 			</div>
 
-			<div className='w-1/6'>
+			<div>
 				<div>{formatTokenAmount(totalSupplied, 6)}</div>
 				<div className='text-sm text-gray-400'>{formatUSD(totalSuppliedUSD)}</div>
 			</div>
 
-			<div className='w-1/6'>{supplyRateData ? formatPercent(supplyRateData.totalApy) : '-'}</div>
+			<div className='text-center'>{supplyRateData ? formatPercent(supplyRateData.totalApy) : '-'}</div>
 
-			<div className='w-1/6'>{maxLTV ? formatPercent(maxLTV) : '-'}</div>
+			<div className='text-center'>{maxLTV ? formatPercent(maxLTV) : '-'}</div>
 
-			<div className='w-1/6'>
+			<div>
 				{totalBorrowed ? (
 					<>
 						<div>{formatTokenAmount(totalBorrowed, 6)}</div>
@@ -59,7 +59,7 @@ const MarketStats: React.FC<MarketStatsProps> = ({
 				)}
 			</div>
 
-			<div className='w-1/6'>{borrowRate ? formatPercent(borrowRate) : '-'}</div>
+			<div className='text-center'>{borrowRate ? formatPercent(borrowRate) : '-'}</div>
 		</div>
 	)
 }
