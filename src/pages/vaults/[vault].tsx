@@ -21,7 +21,7 @@ import PositionList from './components/PositionsCard'
 
 export async function getStaticPaths() {
 	return {
-		paths: [{ params: { vault: 'baoUSD' } }, { params: { vault: 'baoETH' } }],
+		paths: [{ params: { vault: 'baoUSD' } }, { params: { vault: 'baoETH' } }, { params: { vault: 'baoBTC' } }],
 		fallback: false, // can also be true or 'blocking'
 	}
 }
@@ -133,15 +133,19 @@ const Vault: NextPage<{
 												Total Collateral
 											</Typography>
 											<Typography variant='h3' className='inline-block font-bakbak leading-5'>
-												${getDisplayBalance(decimate(totalCollateral), synth.underlyingDecimals)}
+												{totalCollateral && !totalCollateral.isZero()
+													? `${getDisplayBalance(totalDebt.div(decimate(totalCollateral)).mul(100))}%`
+													: '0%'}
 											</Typography>
 										</div>
 										<div className='col-span-1 break-words text-left'>
-											<Typography variant='sm' className='font-bakbak text-baoRed text-left'>
+											<Typography variant='sm' className='font-bakbak text-baoRed'>
 												Utilization
 											</Typography>
 											<Typography variant='h3' className='inline-block font-bakbak leading-5'>
-												{getDisplayBalance(totalDebt.div(decimate(totalCollateral)).mul(100))}%
+												{totalCollateral && !totalCollateral.isZero() // Check if totalCollateral is valid
+													? `${getDisplayBalance(totalDebt.div(decimate(totalCollateral)).mul(100))}%` // Perform division if safe
+													: '0%'}
 											</Typography>
 										</div>
 										<div className='col-span-1 break-words text-left'>

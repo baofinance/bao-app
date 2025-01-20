@@ -241,6 +241,7 @@ export const useVaultsContext = (): { [vaultName: string]: ActiveSupportedVault[
 		if (!library || !chainId) return
 		fetchVaults('baoUSD')
 		fetchVaults('baoETH')
+		fetchVaults('baoBTC')
 	}, [fetchVaults, library, chainId, transactions])
 
 	return vaults

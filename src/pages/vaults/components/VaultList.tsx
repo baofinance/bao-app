@@ -40,6 +40,7 @@ export const VaultList: React.FC = () => {
 				{loading && <PageLoader block />}
 				<VaultListItem vaultName={'baoUSD'} />
 				<VaultListItem vaultName={'baoETH'} />
+				<VaultListItem vaultName={'baoBTC'} />
 			</div>
 		</>
 	)

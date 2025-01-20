@@ -394,6 +394,87 @@ export default {
 				},
 			],
 		},
+		baoBTC: {
+			vid: 3,
+			comptroller: '0x6424B42258F1382Ba0c32cE88cdF0786E4b10c6A',
+			oracle: '0xCF5a0A5C5894a32d258A456C0e5b7B1c79486537',
+			stabilizer: '0x93C825F8B1F420fB07412Bc4E588b59f4f340384',
+			markets: [
+				{
+					mid: 34,
+					symbol: 'bdETH',
+					vaultAddresses: {
+						1: '0xB62bD0E408830A87DF1a9dd141a5ccC5323789C1',
+					},
+					underlyingAddresses: {
+						1: 'ETH',
+					},
+					icon: 'ETH.png',
+					coingeckoId: 'weth',
+					underlyingDecimals: 18,
+					archived: false,
+				},
+				{
+					mid: 31,
+					symbol: 'bdbaoBTC',
+					vaultAddresses: {
+						1: '0xC2A343177BFD49d1cFf9C84B848917f5d771BD73',
+					},
+					underlyingAddresses: {
+						1: '0x22d76E6e1D9aB4072522C1bC60C85a0d5626cA2D',
+					},
+					isSynth: true,
+					icon: 'baoBTC.png',
+					coingeckoId: 'btc',
+					underlyingSymbol: 'baoBTC',
+					underlyingDecimals: 18,
+					desc: 'Synthetic BTC',
+					minimumBorrow: 1,
+				},
+				{
+					mid: 32,
+					symbol: 'bdWSTETH',
+					archived: false,
+					vaultAddresses: {
+						1: '0x0F02021B9BAeCe9025Ff4DBc461be52A9FAf7668',
+					},
+					underlyingAddresses: {
+						1: '0x7f39c581f595b53c5cb19bd0b3f8da6c935e2ca0',
+					},
+					icon: 'wstETH.png',
+					coingeckoId: 'wrapped-steth',
+					underlyingDecimals: 18,
+				},
+				{
+					mid: 33,
+					symbol: 'bdrETH',
+					archived: false,
+					vaultAddresses: {
+						1: '0x5dDfA8db90476D258dDE4967ab73b9FEcC4Ba572',
+					},
+					underlyingAddresses: {
+						1: '0xae78736Cd615f374D3085123A210448E74Fc6393',
+					},
+					icon: 'rETH.png',
+					coingeckoId: 'rocket-pool-eth',
+					underlyingDecimals: 18,
+				},
+				{
+					mid: 35,
+					symbol: 'bdbaotBTC',
+					archived: false,
+					vaultAddresses: {
+						1: '0x25B81E2e0255094DCcdd720a03f46B7782AffA6B',
+					},
+					underlyingAddresses: {
+						1: '0x18084fbA666a33d37592fA2633fD49a74DD93a88',
+					},
+					icon: 'tBTC.png',
+					coingeckoId: 'tbtc',
+					underlyingDecimals: 18,
+				},
+			],
+		},
 	},
 	gauges: [
 		{
