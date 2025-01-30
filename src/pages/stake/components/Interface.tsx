@@ -136,7 +136,7 @@ export const Interface = () => {
 					</Typography>
 					<Image
 						className='z-10 inline-block select-none'
-						src={`/images/tokens/${selectedOption}.png`}
+						src={`/images/tokens/${selectedOption}-pink.svg`}
 						alt={selectedOption}
 						width={16}
 						height={16}
@@ -157,7 +157,7 @@ export const Interface = () => {
 												<div className='mr-2 inline-block'>
 													<Image
 														className='z-10 inline-block select-none'
-														src={`/images/tokens/${selectedOption}.png`}
+														src={`/images/tokens/${selectedOption}-pink.svg`}
 														alt={`baoUSD`}
 														width={20}
 														height={20}
@@ -202,7 +202,7 @@ export const Interface = () => {
 											<div className='flex place-items-center'>
 												<Image
 													className='z-10 inline-block select-none'
-													src={`/images/tokens/${synth}.png`}
+													src={`/images/tokens/${synth}-pink.svg`}
 													alt={synth}
 													width={24}
 													height={24}
@@ -303,7 +303,7 @@ export const Interface = () => {
 							</Typography>
 							<Image
 								className='inline-block select-none'
-								src={`/images/tokens/${selectedOption}.png`}
+								src={`/images/tokens/${selectedOption}-pink.svg`}
 								alt={selectedOption}
 								width={16}
 								height={16}

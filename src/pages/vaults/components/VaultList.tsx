@@ -65,7 +65,7 @@ export const VaultListItem: React.FC<VaultListProps> = ({ vaultName }: VaultList
 					<div className='flex w-full flex-row'>
 						<div className='flex w-full'>
 							<div className='my-auto'>
-								<Image src={`/images/tokens/${vaultName}.png`} alt={vaultName} className={`inline-block`} height={32} width={32} />
+								<Image src={`/images/tokens/${vaultName}-pink.svg`} alt={vaultName} className={`inline-block`} height={32} width={32} />
 								<span className='inline-block text-left align-middle'>
 									<Typography variant='lg' className='ml-2 font-bakbak'>
 										{vaultName}
