@@ -12,7 +12,7 @@ import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 
 const MarketPage: NextPage = () => {
 	const router = useRouter()
-	const { market: marketName } = router.query
+	const { market: marketName, asset, mode } = router.query
 	const market = marketName ? Config.vaults[marketName as string] : null
 	const supplyBalances = useAccountBalances(marketName as string)
 
@@ -24,6 +24,38 @@ const MarketPage: NextPage = () => {
 		)
 	}
 
+	// If we're in manage mode, show the management interface
+	if (mode === 'manage' && asset) {
+		return (
+			<div className='container mx-auto px-4 py-8'>
+				<div className='mb-8'>
+					<div
+						onClick={() => router.push(`/lend/${marketName}`)}
+						className='flex items-center space-x-2 text-baoWhite/60 hover:text-baoWhite cursor-pointer'
+					>
+						<FontAwesomeIcon icon={faArrowLeft} className='w-4 h-4' />
+						<Typography variant='sm'>Back to Market</Typography>
+					</div>
+				</div>
+
+				<div className='flex items-center space-x-4 mb-8'>
+					<div className='w-16 h-16 rounded-full bg-baoBlack/60 border border-baoWhite/10 overflow-hidden'>
+						<Image src={`/images/tokens/${marketName}.png`} alt={market.name} width={64} height={64} />
+					</div>
+					<div>
+						<Typography variant='h1'>Manage {asset} Position</Typography>
+						<Typography variant='lg' className='text-baoWhite/60'>
+							{market.desc}
+						</Typography>
+					</div>
+				</div>
+
+				<div className='flex flex-col gap-8'>{/* Management components will go here */}</div>
+			</div>
+		)
+	}
+
+	// Otherwise show the normal market view
 	return (
 		<div className='container mx-auto px-4 py-8'>
 			<div className='mb-8'>

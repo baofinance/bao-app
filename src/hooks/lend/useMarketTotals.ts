@@ -3,83 +3,96 @@ import { useTotalSupplies } from './useTotalSupplies'
 import { useWeb3React } from '@web3-react/core'
 import type { Asset } from '@/bao/lib/types'
 import { formatUnits } from 'ethers/lib/utils'
+import Config from '@/bao/lib/config'
+import { useTokenPrices } from '@/hooks/useTokenPrices'
+import { useTotalDebt } from './useTotalDebt'
 
-// Create separate hooks for each index
-const useAssetData = (asset: Asset | null) => {
-	const { chainId } = useWeb3React()
-	const supplies = useTotalSupplies(asset?.name || '')
+const calculateAssetData = (asset: Asset, chainId: number, supplies: any[], marketName: string) => {
+	if (!asset || !chainId) {
+		console.log('Missing asset or chainId:', { asset, chainId })
+		return { name: '', supply: 0, borrow: 0, price: 1 }
+	}
 
-	// Debug supplies data
-	console.log('useAssetData supplies:', {
-		marketName: asset?.name,
-		chainId,
-		supplies: supplies.map(s => ({
-			address: s.address,
-			totalSupply: s.totalSupply.toString(),
-			decimals: s.decimals,
-		})),
+	console.log('Address matching:', {
+		assetAddress: asset.ctokenAddress[chainId].toLowerCase(),
+		availableAddresses: supplies.map(s => s.address.toLowerCase()),
 	})
 
-	return useMemo(() => {
-		if (!asset || !chainId) {
-			console.log('Missing asset or chainId:', { asset, chainId })
-			return { name: '', supply: 0, borrow: 0, price: 0 }
-		}
+	const supplyData = supplies.find(s => s.address.toLowerCase() === asset.ctokenAddress[chainId].toLowerCase())
 
-		// Debug address matching
-		console.log('Address matching:', {
-			assetAddress: asset.ctokenAddress[chainId].toLowerCase(),
-			availableAddresses: supplies.map(s => s.address.toLowerCase()),
-		})
+	if (!supplyData) {
+		console.log('No supply data found for asset:', asset.name)
+		return { name: '', supply: 0, borrow: 0, price: 1 }
+	}
 
-		const supplyData = supplies.find(s => s.address.toLowerCase() === asset.ctokenAddress[chainId].toLowerCase())
+	const supply = Number(formatUnits(supplyData.totalSupply, supplyData.decimals))
 
-		if (!supplyData) {
-			console.log('No supply data found for asset:', asset.name)
-			return { name: '', supply: 0, borrow: 0, price: 0 }
-		}
+	console.log('Asset data calculated:', {
+		name: asset.name,
+		rawSupply: supplyData.totalSupply.toString(),
+		decimals: supplyData.decimals,
+		formattedSupply: supply,
+	})
 
-		const supply = Number(formatUnits(supplyData.totalSupply, supplyData.decimals))
-
-		// Debug final values
-		console.log('Asset data calculated:', {
-			name: asset.name,
-			rawSupply: supplyData.totalSupply.toString(),
-			decimals: supplyData.decimals,
-			formattedSupply: supply,
-		})
-
-		return {
-			name: asset.name,
-			supply,
-			borrow: 0, // TODO: Add borrow data using similar pattern
-			price: 0, // TODO: Add price data using similar pattern
-		}
-	}, [asset, chainId, supplies])
+	return {
+		name: asset.name,
+		supply,
+		borrow: 0,
+		price: 1,
+	}
 }
 
-export const useMarketTotals = (assets: Asset[]) => {
-	// Ensure assets is an array and validate its contents
-	const assetArray = Array.isArray(assets) ? assets.filter(a => a && a.name && a.ctokenAddress) : []
-
-	// Create fixed array of hooks
-	const hook0 = useAssetData(assetArray[0] || null)
-	const hook1 = useAssetData(assetArray[1] || null)
-	const hook2 = useAssetData(assetArray[2] || null)
-	const hook3 = useAssetData(assetArray[3] || null)
-	const hook4 = useAssetData(assetArray[4] || null)
+export const useMarketTotals = (marketName: string) => {
+	const { chainId } = useWeb3React()
+	const market = marketName ? Config.vaults[marketName] : null
+	const supplies = useTotalSupplies(marketName)
+	const totalDebt = useTotalDebt(marketName)
+	const tokenPrices = useTokenPrices()
 
 	return useMemo(() => {
-		const hooks = [hook0, hook1, hook2, hook3, hook4]
+		if (!market?.assets || !chainId) {
+			console.log('No market data or chainId:', { marketName, chainId })
+			return []
+		}
 
-		return assetArray.map((asset, i) => {
-			const hookData = hooks[i] || { name: '', supply: 0, borrow: 0, price: 0 }
+		console.log('useMarketTotals data:', {
+			marketName,
+			chainId,
+			supplies: supplies.map(s => ({
+				address: s.address,
+				totalSupply: s.totalSupply.toString(),
+				decimals: s.decimals,
+			})),
+			totalDebt: totalDebt.map(d => ({
+				address: d.marketAddress,
+				totalBorrows: d.totalBorrows.toString(),
+			})),
+		})
+
+		return market.assets.map(asset => {
+			const supplyData = supplies.find(s => s.address.toLowerCase() === asset.ctokenAddress[chainId].toLowerCase())
+			const debtData = totalDebt.find(d => d.marketAddress.toLowerCase() === asset.ctokenAddress[chainId].toLowerCase())
+
+			const supply = supplyData ? Number(formatUnits(supplyData.totalSupply, supplyData.decimals)) : 0
+			const borrow = debtData ? Number(formatUnits(debtData.totalBorrows, asset.underlyingDecimals)) : 0
+			const price = tokenPrices[asset.underlyingAddress[chainId].toLowerCase()] || 0
+
+			console.log('Market total calculation:', {
+				asset: asset.name,
+				ctokenAddress: asset.ctokenAddress[chainId],
+				underlyingAddress: asset.underlyingAddress[chainId],
+				supply,
+				borrow,
+				price,
+				tokenPrices,
+			})
+
 			return {
-				name: asset.name,
-				supply: hookData.supply,
-				borrow: hookData.borrow,
-				price: hookData.price,
+				asset,
+				supply,
+				borrow,
+				price,
 			}
 		})
-	}, [assetArray, hook0, hook1, hook2, hook3, hook4])
+	}, [market, chainId, marketName, supplies, totalDebt, tokenPrices])
 }

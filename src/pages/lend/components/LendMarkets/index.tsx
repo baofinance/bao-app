@@ -19,6 +19,7 @@ const Market: FC<MarketProps> = ({ market }) => {
 	const [isExpanded, setIsExpanded] = useState(false)
 	const marketTotals = useMarketTotals(market.assets)
 
+	// Convert marketTotals array to object format expected by MarketList
 	const totalsMap = marketTotals.reduce(
 		(acc, total) => ({
 			...acc,
@@ -27,7 +28,7 @@ const Market: FC<MarketProps> = ({ market }) => {
 				totalSuppliedUSD: total.supply * (total.price || 0),
 				totalBorrowed: total.borrow,
 				totalBorrowedUSD: total.borrow * (total.price || 0),
-				maxLTV: 0,
+				maxLTV: 0, // TODO: Get from useCollateralFactor
 			},
 		}),
 		{},
@@ -35,7 +36,7 @@ const Market: FC<MarketProps> = ({ market }) => {
 
 	return (
 		<div className='rounded-lg border border-gray-800'>
-			{/* Market Header */}
+			{/* Market Header - Always visible */}
 			<div className='flex justify-between items-center p-4 cursor-pointer' onClick={() => setIsExpanded(!isExpanded)}>
 				<div>
 					<h2 className='text-xl font-semibold'>{market.name}</h2>
@@ -44,12 +45,8 @@ const Market: FC<MarketProps> = ({ market }) => {
 				<FontAwesomeIcon icon={isExpanded ? faChevronUp : faChevronDown} className='text-gray-400' />
 			</div>
 
-			{/* Expanded View - Remove any additional borders */}
-			{isExpanded && (
-				<div className='border-t border-gray-800'>
-					<MarketList marketName={market.name} assets={market.assets} marketTotals={totalsMap} />
-				</div>
-			)}
+			{/* Expanded View */}
+			{isExpanded && <MarketList marketName={market.name} assets={market.assets} marketTotals={totalsMap} />}
 		</div>
 	)
 }

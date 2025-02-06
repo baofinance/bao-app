@@ -64,8 +64,8 @@ export const BorrowListItem: React.FC<BorrowListItemProps> = ({ asset, marketNam
 
 	return (
 		<>
-			<button
-				className='w-full px-4 py-2 duration-300 hover:border-baoRed hover:bg-baoRed hover:bg-opacity-20'
+			<div
+				className='w-full px-4 py-2 duration-300 hover:border-baoRed hover:bg-baoRed hover:bg-opacity-20 cursor-pointer'
 				onClick={() => setShowBorrowModal(!showBorrowModal)}
 			>
 				<div className='flex w-full flex-row'>
@@ -84,7 +84,7 @@ export const BorrowListItem: React.FC<BorrowListItemProps> = ({ asset, marketNam
 
 					<div className='mx-auto my-0 flex w-full flex-auto items-end justify-end text-right'>Borrow</div>
 				</div>
-			</button>
+			</div>
 
 			<Modal isOpen={showBorrowModal} onDismiss={() => setShowBorrowModal(false)}>
 				Borrow

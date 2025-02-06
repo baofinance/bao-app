@@ -12,6 +12,7 @@ interface MarketStatsProps {
 	totalBorrowed: number
 	totalBorrowedUSD: number
 	maxLTV?: number
+	onManage: () => void
 }
 
 const MarketStats: React.FC<MarketStatsProps> = ({
@@ -21,16 +22,16 @@ const MarketStats: React.FC<MarketStatsProps> = ({
 	totalBorrowed,
 	totalBorrowedUSD,
 	maxLTV = 90,
+	onManage,
 }) => {
 	const { chainId } = useWeb3React()
 	const supplyRateData = useSupplyRate(asset.name, asset.ctokenAddress, asset.llamaId)
 	const borrowRates = useBorrowApy(asset.name)
 
-	// Get the borrow rate for this specific asset
 	const borrowRate = chainId && asset.underlyingAddress[chainId] ? borrowRates[asset.underlyingAddress[chainId]] : 0
 
 	return (
-		<div className='grid grid-cols-6 gap-4 px-4 py-2 hover:bg-gray-900/50'>
+		<div className='grid grid-cols-7 gap-4 px-4 py-2 hover:bg-gray-900/50'>
 			<div className='flex items-center gap-2'>
 				<img src={asset.icon} alt={asset.name} className='w-8 h-8' />
 				<div>
@@ -60,6 +61,19 @@ const MarketStats: React.FC<MarketStatsProps> = ({
 			</div>
 
 			<div className='text-center'>{borrowRate ? formatPercent(borrowRate) : '-'}</div>
+
+			<div className='flex items-center justify-center' onClick={e => e.stopPropagation()}>
+				<button
+					onClick={e => {
+						e.preventDefault()
+						e.stopPropagation()
+						onManage()
+					}}
+					className='px-4 py-2 bg-baoRed hover:bg-baoRed/80 text-white rounded-lg z-10 relative'
+				>
+					Manage
+				</button>
+			</div>
 		</div>
 	)
 }

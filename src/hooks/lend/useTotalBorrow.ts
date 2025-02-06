@@ -1,51 +1,50 @@
 import { useWeb3React } from '@web3-react/core'
-import { useEffect, useState } from 'react'
-import { ethers } from 'ethers'
-import Config from '@/bao/lib/config'
-import { formatUnits } from 'ethers/lib/utils'
+import { useState, useEffect } from 'react'
+import { Contract } from 'ethers'
 
-const CTOKEN_ABI = ['function totalBorrows() view returns (uint256)']
-
-export const useTotalBorrow = (marketName: string, ctokenAddress?: { [key: number]: string }) => {
+export const useTotalBorrow = (marketName: string, ctokenAddresses: { [key: number]: string }[]) => {
 	const { library, chainId } = useWeb3React()
-	const [totalBorrow, setTotalBorrow] = useState<string>('0')
+	const [totalBorrows, setTotalBorrows] = useState<{ [key: string]: string }>({})
 
 	useEffect(() => {
 		let mounted = true
 
-		const fetchTotalBorrow = async () => {
-			if (!library || !chainId || !ctokenAddress || !ctokenAddress[chainId]) {
-				console.log('Missing required data in useTotalBorrow:', {
-					hasLibrary: !!library,
-					chainId,
-					hasCtokenAddress: !!ctokenAddress,
-					ctokenAddressForChain: ctokenAddress?.[chainId],
-				})
-				return
+		const fetchTotalBorrows = async () => {
+			if (!chainId || !library || !ctokenAddresses.length) return
+
+			const newBorrows: { [key: string]: string } = {}
+
+			for (const addressMap of ctokenAddresses) {
+				const address = addressMap[chainId]
+				if (!address) continue
+
+				try {
+					const contract = new Contract(address, ['function totalBorrows() view returns (uint256)'], library)
+					const totalBorrow = await contract.totalBorrows()
+					if (mounted) {
+						newBorrows[address.toLowerCase()] = totalBorrow.toString()
+					}
+				} catch (error) {
+					console.error('Error fetching total borrows:', error)
+					if (mounted) {
+						newBorrows[address.toLowerCase()] = '0'
+					}
+				}
 			}
 
-			try {
-				const signer = library.getSigner()
-				const contract = new ethers.Contract(ctokenAddress[chainId], CTOKEN_ABI, signer)
-				const totalBorrowsRaw = await contract.totalBorrows()
-
-				if (mounted) {
-					setTotalBorrow(formatUnits(totalBorrowsRaw, 18))
-				}
-			} catch (error) {
-				console.error('Error fetching total borrow:', error)
-				if (mounted) {
-					setTotalBorrow('0')
-				}
+			if (mounted) {
+				setTotalBorrows(newBorrows)
 			}
 		}
 
-		fetchTotalBorrow()
+		fetchTotalBorrows()
 
 		return () => {
 			mounted = false
 		}
-	}, [library, chainId, ctokenAddress, marketName])
+	}, [chainId, library, ctokenAddresses])
 
-	return totalBorrow
+	return totalBorrows
 }
+
+export default useTotalBorrow

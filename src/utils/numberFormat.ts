@@ -69,3 +69,13 @@ export const isBigNumberish = (val: BigNumberish | BN): boolean => {
 export const fromDecimal = (n: number | string): BigNumber => {
 	return parseUnits(new BN(n).toFixed(18))
 }
+
+export const formatPercent = (value: BigNumberish | BN | number): string => {
+	if (typeof value === 'number') {
+		return value.toFixed(2)
+	}
+	const n = new BN(value.toString())
+	if (n.isZero()) return '0'
+	if (n.lt(0.01) && !n.isZero()) return '<0.01'
+	return n.toFixed(2)
+}

@@ -342,14 +342,21 @@ export interface Config {
 	}
 }
 
-export type Balance = {
+export interface WalletBalance {
+	balance: string
+	decimals: number
+}
+
+export interface Balance {
 	address: string
 	symbol: string
 	balance: string
+	exchangeRate: string
+	borrowBalance: string
 	balanceUSD: string
 	decimals: number
-	supply?: boolean
-	borrow?: boolean
+	supply: boolean
+	borrow: boolean
 }
 
 export type TotalSupply = {

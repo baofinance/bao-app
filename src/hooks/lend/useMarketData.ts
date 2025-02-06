@@ -1,187 +1,47 @@
 import { useEffect, useState, useCallback } from 'react'
 import { useWeb3React } from '@web3-react/core'
 import { ethers } from 'ethers'
-import { Config } from '@/bao/lib/config'
-import CERC20_ABI from '@/bao/lib/abi/CERC20.json'
+import Config from '@/bao/lib/config'
+import { Market } from '@/bao/lib/types'
+import { useDefiLlamaApy } from './useDefiLlamaApy'
 
-// Helper function to create contract instance
-const getContract = (address: string, library: any) => {
-	if (!library || !address) return null
-	try {
-		return new ethers.Contract(address, CERC20_ABI, library)
-	} catch (error) {
-		console.error('Failed to create contract:', error)
-		return null
-	}
+const BASIC_TOKEN_ABI = [
+	'function decimals() view returns (uint8)',
+	'function underlying() view returns (address)',
+	'function supplyRatePerBlock() view returns (uint256)',
+	'function borrowRatePerBlock() view returns (uint256)',
+	'function collateralFactorMantissa() view returns (uint256)',
+	'function exchangeRateCurrent() view returns (uint256)',
+	'function totalSupply() view returns (uint256)',
+	'function totalBorrows() view returns (uint256)',
+]
+
+interface MarketData {
+	supplyRate: string
+	borrowRate: string
+	collateralFactor: string
+	price: string
+	totalSupply: { totalSupply: string; totalSupplyUSD: string }
+	totalBorrow: { totalBorrow: string; totalBorrowUSD: string }
 }
 
-// Supply Rate Hook
-export const useSupplyRate = (marketName: string, ctokenAddress: { [key: number]: string }) => {
-	const { library } = useWeb3React()
-	const [rate, setRate] = useState<string>('0')
-
-	useEffect(() => {
-		const fetchRate = async () => {
-			try {
-				const address = ctokenAddress[Config.networkId]
-				const contract = getContract(address, library)
-				if (!contract) return
-
-				const rate = await contract.supplyRatePerBlock()
-				setRate(rate.toString())
-			} catch (error) {
-				console.error(`Error fetching supply rate for ${marketName}:`, error)
-			}
-		}
-
-		if (library && ctokenAddress[Config.networkId]) {
-			fetchRate()
-		}
-	}, [library, ctokenAddress, marketName])
-
-	return rate
-}
-
-// Borrow Rate Hook
-export const useBorrowRate = (marketName: string, ctokenAddress: { [key: number]: string }) => {
-	const [rate, setRate] = useState<string>('0')
-
-	useEffect(() => {
-		const fetchRate = async () => {
-			const result = await contractCall(ctokenAddress[Config.networkId], 'borrowRatePerBlock')
-			setRate(result || '0')
-		}
-
-		fetchRate()
-	}, [ctokenAddress])
-
-	return rate
-}
-
-// Collateral Factor Hook
-export const useCollateralFactor = (marketName: string, ctokenAddress: { [key: number]: string }) => {
-	const [factor, setFactor] = useState<string>('0')
-
-	useEffect(() => {
-		const fetchFactor = async () => {
-			const result = await contractCall(ctokenAddress[Config.networkId], 'collateralFactorMantissa')
-			setFactor(result || '0')
-		}
-
-		fetchFactor()
-	}, [ctokenAddress])
-
-	return factor
-}
-
-// Price Hook
-export const usePrice = (marketName: string, ctokenAddress: { [key: number]: string }) => {
-	const { library } = useWeb3React()
-	const [price, setPrice] = useState<string>('0')
-
-	useEffect(() => {
-		const fetchPrice = async () => {
-			try {
-				const address = ctokenAddress[Config.networkId]
-				const contract = getContract(address, library)
-				if (!contract) return
-
-				const exchangeRate = await contract.exchangeRateCurrent()
-				setPrice(exchangeRate.toString())
-			} catch (error) {
-				console.error(`Error fetching price for ${marketName}:`, error)
-			}
-		}
-
-		if (library && ctokenAddress[Config.networkId]) {
-			fetchPrice()
-		}
-	}, [library, ctokenAddress, marketName])
-
-	return price
-}
-
-// Total Supply Hook
-export const useTotalSupply = (marketName: string, ctokenAddress: { [key: number]: string }) => {
-	const { library } = useWeb3React()
-	const [supply, setSupply] = useState<{ totalSupply: string; totalSupplyUSD: string }>({
-		totalSupply: '0',
-		totalSupplyUSD: '0',
-	})
-
-	useEffect(() => {
-		const fetchSupply = async () => {
-			try {
-				const address = ctokenAddress[Config.networkId]
-				const contract = getContract(address, library)
-				if (!contract) return
-
-				const totalSupply = await contract.totalSupply()
-				const exchangeRate = await contract.exchangeRateCurrent()
-
-				// Convert to proper units
-				const adjustedSupply = totalSupply.mul(exchangeRate).div(ethers.constants.WeiPerEther)
-
-				setSupply({
-					totalSupply: adjustedSupply.toString(),
-					totalSupplyUSD: '0', // Calculate USD value if needed
-				})
-			} catch (error) {
-				console.error(`Error fetching supply for ${marketName}:`, error)
-			}
-		}
-
-		if (library && ctokenAddress[Config.networkId]) {
-			fetchSupply()
-		}
-	}, [library, ctokenAddress, marketName])
-
-	return supply
-}
-
-// Total Borrow Hook
-export const useTotalBorrow = (marketName: string, ctokenAddress: { [key: number]: string }) => {
-	const { library } = useWeb3React()
-	const [borrow, setBorrow] = useState<{ totalBorrow: string; totalBorrowUSD: string }>({
-		totalBorrow: '0',
-		totalBorrowUSD: '0',
-	})
-
-	useEffect(() => {
-		const fetchBorrow = async () => {
-			try {
-				const address = ctokenAddress[Config.networkId]
-				const contract = getContract(address, library)
-				if (!contract) return
-
-				const totalBorrows = await contract.totalBorrows()
-
-				setBorrow({
-					totalBorrow: totalBorrows.toString(),
-					totalBorrowUSD: '0', // Calculate USD value if needed
-				})
-			} catch (error) {
-				console.error(`Error fetching borrows for ${marketName}:`, error)
-			}
-		}
-
-		if (library && ctokenAddress[Config.networkId]) {
-			fetchBorrow()
-		}
-	}, [library, ctokenAddress, marketName])
-
-	return borrow
-}
-
-export const useMarketData = () => {
+export const useMarketData = (marketName: string, ctokenAddress: { [key: number]: string }): MarketData => {
 	const { library, account } = useWeb3React()
+	const [data, setData] = useState<MarketData>({
+		supplyRate: '0',
+		borrowRate: '0',
+		collateralFactor: '0',
+		price: '0',
+		totalSupply: { totalSupply: '0', totalSupplyUSD: '0' },
+		totalBorrow: { totalBorrow: '0', totalBorrowUSD: '0' },
+	})
 
 	const contractCall = useCallback(
 		async (contractAddress: string, method: string, args: any[] = []) => {
 			if (!library || !account) return null
 
 			try {
-				const contract = new ethers.Contract(contractAddress, [], library)
+				const contract = new ethers.Contract(contractAddress, BASIC_TOKEN_ABI, library)
 				const result = await contract[method](...args)
 				return result
 			} catch (error) {
@@ -192,5 +52,93 @@ export const useMarketData = () => {
 		[library, account],
 	)
 
-	return { contractCall }
+	useEffect(() => {
+		const fetchData = async () => {
+			if (!library || !account || !ctokenAddress[Config.networkId]) return
+
+			try {
+				const [supplyRate, borrowRate, collateralFactor] = await Promise.all([
+					contractCall(ctokenAddress[Config.networkId], 'supplyRatePerBlock'),
+					contractCall(ctokenAddress[Config.networkId], 'borrowRatePerBlock'),
+					contractCall(ctokenAddress[Config.networkId], 'collateralFactorMantissa'),
+				])
+
+				const [exchangeRate, totalSupply, totalBorrow] = await Promise.all([
+					contractCall(ctokenAddress[Config.networkId], 'exchangeRateCurrent'),
+					contractCall(ctokenAddress[Config.networkId], 'totalSupply'),
+					contractCall(ctokenAddress[Config.networkId], 'totalBorrows'),
+				])
+
+				setData({
+					supplyRate: supplyRate?.toString() || '0',
+					borrowRate: borrowRate?.toString() || '0',
+					collateralFactor: collateralFactor?.toString() || '0',
+					price: exchangeRate?.toString() || '0',
+					totalSupply: {
+						totalSupply: totalSupply?.toString() || '0',
+						totalSupplyUSD: '0',
+					},
+					totalBorrow: {
+						totalBorrow: totalBorrow?.toString() || '0',
+						totalBorrowUSD: '0',
+					},
+				})
+			} catch (error) {
+				console.error('Error fetching market data:', error)
+			}
+		}
+
+		fetchData()
+	}, [library, account, ctokenAddress, marketName, contractCall])
+
+	return data
+}
+
+// Supply Rate Hook
+export const useSupplyRate = (
+	marketName: string,
+	ctokenAddress?: { [key: number]: string },
+	llamaId?: string,
+): { totalApy: string; lendingApy: string; underlyingApy: string } | null => {
+	const marketData = useMarketData(marketName, ctokenAddress || {})
+	const underlyingApy = useDefiLlamaApy(llamaId)
+
+	if (!marketData?.supplyRate) return null
+
+	const totalApy = Number(marketData.supplyRate) + (underlyingApy || 0)
+	return {
+		totalApy: totalApy.toFixed(4),
+		lendingApy: marketData.supplyRate,
+		underlyingApy: (underlyingApy || 0).toFixed(4),
+	}
+}
+
+// Borrow Rate Hook
+export const useBorrowRate = (marketName: string, ctokenAddress: { [key: number]: string }): string => {
+	const marketData = useMarketData(marketName, ctokenAddress)
+	return marketData.borrowRate
+}
+
+// Collateral Factor Hook
+export const useCollateralFactor = (marketName: string, ctokenAddress: { [key: number]: string }): string => {
+	const marketData = useMarketData(marketName, ctokenAddress)
+	return marketData.collateralFactor
+}
+
+// Price Hook
+export const usePrice = (marketName: string, ctokenAddress: { [key: number]: string }): string => {
+	const marketData = useMarketData(marketName, ctokenAddress)
+	return marketData.price
+}
+
+// Total Supply Hook
+export const useTotalSupply = (marketName: string, ctokenAddress: { [key: number]: string }) => {
+	const marketData = useMarketData(marketName, ctokenAddress)
+	return marketData.totalSupply
+}
+
+// Total Borrow Hook
+export const useTotalBorrow = (marketName: string, ctokenAddress: { [key: number]: string }) => {
+	const marketData = useMarketData(marketName, ctokenAddress)
+	return marketData.totalBorrow
 }

@@ -1,4 +1,4 @@
-import { FC, useEffect, useMemo, useState } from 'react'
+import { FC, useEffect, useMemo, useState, useCallback } from 'react'
 import Modal from '@/components/Modal'
 import Typography from '@/components/Typography'
 import { useWeb3React } from '@web3-react/core'
@@ -35,6 +35,17 @@ const SupplyModal: FC<SupplyModalProps> = ({ isOpen, onDismiss, marketName, asse
 	const activeMarket = useActiveLendMarket(marketName)
 	const supplyApys = useSupplyApy(marketName)
 
+	// Reset state when modal closes
+	useEffect(() => {
+		if (!isOpen) {
+			setVal('')
+			setError('')
+			setLoading(false)
+			setApproving(false)
+		}
+	}, [isOpen])
+
+	// Memoize contracts to prevent unnecessary re-renders
 	const ctokenContract = useMemo(() => {
 		if (!activeMarket || !asset) return null
 		return activeMarket.find(m => m.ctokenAddress.toLowerCase() === asset.ctokenAddress[chainId].toLowerCase())?.ctokenContract
@@ -59,23 +70,65 @@ const SupplyModal: FC<SupplyModalProps> = ({ isOpen, onDismiss, marketName, asse
 		checkAllowance()
 	}, [underlyingContract, account, ctokenContract])
 
+	// Memoize handlers to prevent unnecessary re-renders
+	const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+		const value = e.target.value
+		// Only allow numbers and decimals
+		if (value === '' || /^\d*\.?\d*$/.test(value)) {
+			setVal(value)
+		}
+	}, [])
+
+	const handleMaxClick = useCallback(() => {
+		const maxValue = getDisplayBalance(maxSupply, asset.underlyingDecimals)
+		setVal(maxValue)
+	}, [maxSupply, asset.underlyingDecimals])
+
+	// Debounced validation
 	useEffect(() => {
-		if (!val) {
-			setError('')
-			return
+		if (!isOpen) return // Don't validate if modal is closed
+
+		const validateInput = () => {
+			if (!val) {
+				setError('')
+				return
+			}
+
+			try {
+				const amount = parseUnits(val, asset.underlyingDecimals)
+				if (amount.gt(maxSupply)) {
+					setError('Amount exceeds balance')
+				} else {
+					setError('')
+				}
+			} catch (e) {
+				setError('Invalid amount')
+			}
 		}
 
+		const timeoutId = setTimeout(validateInput, 300)
+		return () => clearTimeout(timeoutId)
+	}, [val, asset.underlyingDecimals, maxSupply, isOpen])
+
+	// Memoize approval check
+	const needsApproval = useMemo(() => {
+		if (asset.underlyingAddress[chainId] === 'ETH') return false
+		if (!val) return false
 		try {
 			const amount = parseUnits(val, asset.underlyingDecimals)
-			if (amount.gt(maxSupply)) {
-				setError('Amount exceeds balance')
-			} else {
-				setError('')
-			}
+			return amount.gt(allowance)
 		} catch (e) {
-			setError('Invalid amount')
+			return false
 		}
-	}, [val, asset, maxSupply])
+	}, [val, asset.underlyingAddress, chainId, asset.underlyingDecimals, allowance])
+
+	const handleDismiss = useCallback(() => {
+		setVal('')
+		setError('')
+		setLoading(false)
+		setApproving(false)
+		onDismiss()
+	}, [onDismiss])
 
 	const handleApprove = async () => {
 		if (!underlyingContract || !ctokenContract) return
@@ -126,19 +179,9 @@ const SupplyModal: FC<SupplyModalProps> = ({ isOpen, onDismiss, marketName, asse
 		}
 	}
 
-	const needsApproval = useMemo(() => {
-		if (asset.underlyingAddress[chainId] === 'ETH') return false
-		try {
-			const amount = parseUnits(val || '0', asset.underlyingDecimals)
-			return amount.gt(allowance)
-		} catch (e) {
-			return false
-		}
-	}, [val, asset, chainId, allowance])
-
 	return (
-		<Modal isOpen={isOpen} onDismiss={onDismiss}>
-			<div className='p-4'>
+		<Modal isOpen={isOpen} onDismiss={handleDismiss}>
+			<div className='p-4' onClick={e => e.stopPropagation()}>
 				<Typography variant='lg' className='mb-4 text-center font-bakbak'>
 					Supply {asset.name}
 				</Typography>
@@ -164,16 +207,26 @@ const SupplyModal: FC<SupplyModalProps> = ({ isOpen, onDismiss, marketName, asse
 						<Typography variant='sm' className='text-baoWhite/60'>
 							Available
 						</Typography>
-						<Typography variant='sm' className='text-baoWhite/60'>
-							{getDisplayBalance(maxSupply, asset.underlyingDecimals)}
-						</Typography>
+						<div className='flex items-center space-x-2'>
+							<Typography variant='sm' className='text-baoWhite/60'>
+								{getDisplayBalance(maxSupply, asset.underlyingDecimals)}
+							</Typography>
+							<button type='button' onClick={handleMaxClick} className='text-sm text-baoRed hover:text-baoRed/80'>
+								MAX
+							</button>
+						</div>
 					</div>
 					<input
-						type='number'
+						type='text'
+						inputMode='decimal'
 						value={val}
-						onChange={e => setVal(e.target.value)}
-						placeholder='Enter amount'
+						onChange={handleInputChange}
+						placeholder='0.0'
 						className='w-full p-2 rounded bg-baoBlack/40 border border-baoWhite/10 text-white'
+						autoComplete='off'
+						pattern='^[0-9]*[.,]?[0-9]*$'
+						spellCheck='false'
+						autoCorrect='off'
 					/>
 					{error && (
 						<Typography variant='sm' className='text-baoRed mt-1'>

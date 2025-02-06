@@ -1,5 +1,6 @@
 import { FC, useState, useMemo } from 'react'
 import { NextPage } from 'next'
+import { useRouter } from 'next/router'
 import Typography from '@/components/Typography'
 import Image from 'next/future/image'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -326,6 +327,7 @@ const MarketCard: FC<MarketCardProps> = ({ market }) => {
 	const [showArchived, setShowArchived] = useState(false)
 	const { chainId = 1 } = useWeb3React()
 	const { data: supplyBalances } = useAccountBalances()
+	const router = useRouter()
 
 	const visibleAssets = useMemo(() => {
 		return market.assets.filter(asset => showArchived || asset.active !== false)
@@ -336,7 +338,9 @@ const MarketCard: FC<MarketCardProps> = ({ market }) => {
 	// Handler for manage button click
 	const handleManageClick = (e: React.MouseEvent) => {
 		e.stopPropagation() // Prevent event from bubbling to header
-		setIsExpanded(!isExpanded)
+		router.push({
+			pathname: `/lend/${market.name}/positions`,
+		})
 	}
 
 	return (

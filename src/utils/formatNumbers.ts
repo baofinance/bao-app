@@ -139,16 +139,23 @@ export function formatCurrency(value: number | string | undefined, decimals = 2,
  * @param num The number to format
  * @returns Formatted compact string
  */
-export const formatCompactNumber = (num: number): string => {
+export const formatCompactNumber = (num: number) => {
+	if (!num || isNaN(num)) return '0'
+
+	// Handle small non-zero numbers
+	if (num > 0 && num < 0.01) {
+		return '<0.01'
+	}
+
 	const absNum = Math.abs(num)
 	if (absNum >= 1e9) {
-		return (num / 1e9).toFixed(2) + 'B'
+		return (num / 1e9).toFixed(2) + 'b'
 	}
 	if (absNum >= 1e6) {
-		return (num / 1e6).toFixed(2) + 'M'
+		return (num / 1e6).toFixed(2) + 'm'
 	}
 	if (absNum >= 1e3) {
-		return (num / 1e3).toFixed(2) + 'K'
+		return (num / 1e3).toFixed(2) + 'k'
 	}
 	return num.toFixed(2)
 }
@@ -158,8 +165,25 @@ export const formatCompactNumber = (num: number): string => {
  * @param num The number to format
  * @returns Formatted compact currency string
  */
-export const formatCompactCurrency = (num: number): string => {
-	return '$' + formatCompactNumber(num)
+export const formatCompactCurrency = (num: number) => {
+	if (!num || isNaN(num)) return '$0'
+
+	// Handle small non-zero numbers
+	if (num > 0 && num < 0.01) {
+		return '<$0.01'
+	}
+
+	const absNum = Math.abs(num)
+	if (absNum >= 1e9) {
+		return '$' + (num / 1e9).toFixed(2) + 'b'
+	}
+	if (absNum >= 1e6) {
+		return '$' + (num / 1e6).toFixed(2) + 'm'
+	}
+	if (absNum >= 1e3) {
+		return '$' + (num / 1e3).toFixed(2) + 'k'
+	}
+	return '$' + num.toFixed(2)
 }
 
 /**

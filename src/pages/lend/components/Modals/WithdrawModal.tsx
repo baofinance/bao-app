@@ -1,4 +1,4 @@
-import { FC, useEffect, useMemo, useState } from 'react'
+import { FC, useEffect, useMemo, useState, useCallback } from 'react'
 import Modal from '@/components/Modal'
 import Typography from '@/components/Typography'
 import { useWeb3React } from '@web3-react/core'
@@ -29,6 +29,16 @@ const WithdrawModal: FC<WithdrawModalProps> = ({ isOpen, onDismiss, marketName, 
 	const activeMarket = useActiveLendMarket(marketName)
 	const supplyApys = useSupplyApy(marketName)
 
+	// Reset state when modal closes
+	useEffect(() => {
+		if (!isOpen) {
+			setVal('')
+			setError('')
+			setLoading(false)
+		}
+	}, [isOpen])
+
+	// Memoize contracts to prevent unnecessary re-renders
 	const ctokenContract = useMemo(() => {
 		if (!activeMarket || !asset) return null
 		return activeMarket.find(m => m.ctokenAddress.toLowerCase() === asset.ctokenAddress[chainId].toLowerCase())?.ctokenContract
@@ -39,23 +49,52 @@ const WithdrawModal: FC<WithdrawModalProps> = ({ isOpen, onDismiss, marketName, 
 		return supplyApys[asset.underlyingAddress[chainId]]
 	}, [supplyApys, asset, chainId])
 
+	// Memoize handlers to prevent unnecessary re-renders
+	const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+		const value = e.target.value
+		// Only allow numbers and decimals
+		if (value === '' || /^\d*\.?\d*$/.test(value)) {
+			setVal(value)
+		}
+	}, [])
+
+	const handleMaxClick = useCallback(() => {
+		const maxValue = getDisplayBalance(maxWithdraw, asset.underlyingDecimals)
+		setVal(maxValue)
+	}, [maxWithdraw, asset.underlyingDecimals])
+
+	// Debounced validation
 	useEffect(() => {
-		if (!val) {
-			setError('')
-			return
+		if (!isOpen) return // Don't validate if modal is closed
+
+		const validateInput = () => {
+			if (!val) {
+				setError('')
+				return
+			}
+
+			try {
+				const amount = parseUnits(val, asset.underlyingDecimals)
+				if (amount.gt(maxWithdraw)) {
+					setError('Amount exceeds available balance')
+				} else {
+					setError('')
+				}
+			} catch (e) {
+				setError('Invalid amount')
+			}
 		}
 
-		try {
-			const amount = parseUnits(val, asset.underlyingDecimals)
-			if (amount.gt(maxWithdraw)) {
-				setError('Amount exceeds available balance')
-			} else {
-				setError('')
-			}
-		} catch (e) {
-			setError('Invalid amount')
-		}
-	}, [val, asset, maxWithdraw])
+		const timeoutId = setTimeout(validateInput, 300)
+		return () => clearTimeout(timeoutId)
+	}, [val, asset.underlyingDecimals, maxWithdraw, isOpen])
+
+	const handleDismiss = useCallback(() => {
+		setVal('')
+		setError('')
+		setLoading(false)
+		onDismiss()
+	}, [onDismiss])
 
 	const handleWithdraw = async () => {
 		if (!account || !ctokenContract || error) return
@@ -75,8 +114,8 @@ const WithdrawModal: FC<WithdrawModalProps> = ({ isOpen, onDismiss, marketName, 
 	}
 
 	return (
-		<Modal isOpen={isOpen} onDismiss={onDismiss}>
-			<div className='p-4'>
+		<Modal isOpen={isOpen} onDismiss={handleDismiss}>
+			<div className='p-4' onClick={e => e.stopPropagation()}>
 				<Typography variant='lg' className='mb-4 text-center font-bakbak'>
 					Withdraw {asset.name}
 				</Typography>
@@ -102,16 +141,26 @@ const WithdrawModal: FC<WithdrawModalProps> = ({ isOpen, onDismiss, marketName, 
 						<Typography variant='sm' className='text-baoWhite/60'>
 							Available
 						</Typography>
-						<Typography variant='sm' className='text-baoWhite/60'>
-							{getDisplayBalance(maxWithdraw, asset.underlyingDecimals)}
-						</Typography>
+						<div className='flex items-center space-x-2'>
+							<Typography variant='sm' className='text-baoWhite/60'>
+								{getDisplayBalance(maxWithdraw, asset.underlyingDecimals)}
+							</Typography>
+							<button type='button' onClick={handleMaxClick} className='text-sm text-baoRed hover:text-baoRed/80'>
+								MAX
+							</button>
+						</div>
 					</div>
 					<input
-						type='number'
+						type='text'
+						inputMode='decimal'
 						value={val}
-						onChange={e => setVal(e.target.value)}
-						placeholder='Enter amount'
+						onChange={handleInputChange}
+						placeholder='0.0'
 						className='w-full p-2 rounded bg-baoBlack/40 border border-baoWhite/10 text-white'
+						autoComplete='off'
+						pattern='^[0-9]*[.,]?[0-9]*$'
+						spellCheck='false'
+						autoCorrect='off'
 					/>
 					{error && (
 						<Typography variant='sm' className='text-baoRed mt-1'>
