@@ -236,7 +236,7 @@ export default {
 					icon: 'bSTBL.png',
 					coingeckoId: 'dai',
 					underlyingDecimals: 18,
-					archived: true,
+					archived: false,
 				},
 				{
 					mid: 2,

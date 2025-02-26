@@ -134,8 +134,8 @@ const Vault: NextPage<{
 											</Typography>
 											<Typography variant='h3' className='inline-block font-bakbak leading-5'>
 												{totalCollateral && !totalCollateral.isZero()
-													? `${getDisplayBalance(totalDebt.div(decimate(totalCollateral)).mul(100))}%`
-													: '0%'}
+													? `$${getDisplayBalance(decimate(totalCollateral), synth.underlyingDecimals)}`
+													: '$0'}
 											</Typography>
 										</div>
 										<div className='col-span-1 break-words text-left'>
