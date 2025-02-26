@@ -25,7 +25,7 @@ const Nav: FC<NavLinkProps> = ({ href, exact }) => {
 		['3', 'EARN', '/earn'],
 		['4', 'VEBAO', '/vebao'],
 		['5', 'LEND', '/lend'],
-	]
+	].filter(item => item[1] !== 'STAKE' && item[1] !== 'LEND')	
 
 	return (
 		<>

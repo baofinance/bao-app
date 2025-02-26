@@ -59,7 +59,7 @@ const Vault: NextPage<{
 		[mintVal],
 	)
 
-	const _vaults = useVaults(vaultName)
+	const _vaults = useVaults(vaultName, true) // Ensure archived vaults are included
 	const accountBalances = useAccountBalances(vaultName)
 	const accountVaults = useAccountVaults(vaultName)
 	const accountLiquidity = useAccountLiquidity(vaultName)
