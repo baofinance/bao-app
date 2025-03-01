@@ -27,6 +27,8 @@ const tooltipStyles = {
 	color: 'white',
 }
 
+const TooltipWithBoundsComponent = TooltipWithBounds as unknown as React.FC<any>
+
 // util
 const formatDate = (date: any) => {
 	const options = {
@@ -175,11 +177,9 @@ export default withTooltip<AreaProps, TooltipData>(
 					)}
 				</svg>
 				{tooltipData && (
-					<div>
-						<TooltipWithBounds key={Math.random()} top={tooltipTop - 12} left={tooltipLeft + 12} style={tooltipStyles}>
-							{`$${getDisplayBalance(BigNumber.from(getValue(tooltipData)), 0)} ${formatDate(getDate(tooltipData))}`}
-						</TooltipWithBounds>
-					</div>
+					<TooltipWithBoundsComponent key={Math.random()} top={tooltipTop - 12} left={tooltipLeft + 12} style={tooltipStyles}>
+						{`$${getDisplayBalance(BigNumber.from(getValue(tooltipData)), 0)} ${formatDate(getDate(tooltipData))}`}
+					</TooltipWithBoundsComponent>
 				)}
 			</div>
 		)
