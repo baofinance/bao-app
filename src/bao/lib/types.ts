@@ -34,6 +34,13 @@ export interface SupportedBackstop {
 	icon: string
 }
 
+export interface SupportedStakedSynth {
+	stid: number
+	stakedSynthAddresses: {
+		[network: number]: string
+	}
+}
+
 export interface SupportedGauge {
 	gid: number
 	name: string
@@ -124,6 +131,15 @@ export interface ActiveSupportedBackstop extends SupportedBackstop {
 	tokenContract?: Erc20
 }
 
+export interface ActiveSupportedStakedSynth extends SupportedStakedSynth {
+	backstopAddress: string
+	vaultAddress: string
+	tokenAddress: string
+	backstopContract: Bamm
+	vaultContract: Ctoken
+	tokenContract?: Erc20
+}
+
 export interface ActiveSupportedGauge extends SupportedGauge {
 	gaugeAddress: string
 	poolAddress: string
@@ -201,6 +217,10 @@ export interface Config {
 	}
 	gauges: SupportedGauge[]
 	swapTokens: SwapToken[]
+	assets: Asset[]
+	lendMarkets: {
+		[market: string]: LendMarket
+	}
 }
 
 export interface SwapToken {
@@ -224,4 +244,57 @@ export interface SwapToken {
 			icon: string
 		},
 	]
+}
+
+export interface LendMarket {
+	id: number
+	active: boolean
+	comptroller: string
+	oracle: string
+	name: string
+	desc: string
+	marketAddresses: {
+		[network: number]: string
+	}
+	underlyingAddresses: {
+		[network: number]: string
+	}
+	assets: Asset[]
+}
+
+export interface ActiveLendMarket {
+	marketAddress: string
+	marketContract: Cether | Ctoken
+	underlyingAddress: string
+	underlyingContract?: Erc20
+}
+
+export interface Asset {
+	id: number
+	active: boolean
+	marketAddress: {
+		[network: number]: string
+	}
+	underlyingAddress: {
+		[network: number]: string
+	}
+	underlyingDecimals: number
+	name: string
+	icon: string
+	supply: boolean
+	borrow: boolean
+}
+
+export type Balance = {
+	address: string
+	symbol: string
+	balance: BigNumber
+	decimals: number
+}
+
+export type TotalSupply = {
+	address: string
+	symbol: string
+	totalSupply: BigNumber
+	decimals: number
 }

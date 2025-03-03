@@ -40,6 +40,7 @@ export const VaultList: React.FC = () => {
 				{loading && <PageLoader block />}
 				<VaultListItem vaultName={'baoUSD'} />
 				<VaultListItem vaultName={'baoETH'} />
+				<VaultListItem vaultName={'baoBTC'} />
 			</div>
 		</>
 	)
@@ -60,14 +61,11 @@ export const VaultListItem: React.FC<VaultListProps> = ({ vaultName }: VaultList
 	return (
 		synth && (
 			<Link href={account ? `/vaults/${vaultName}` : `#`} key={vaultName}>
-				<button
-					className='glassmorphic-card w-full px-4 py-2 duration-300 hover:border-baoRed hover:bg-baoRed hover:bg-opacity-20'
-					disabled={!account}
-				>
+				<button className='glassmorphic-card w-full px-4 py-2 duration-300 hover:border-baoRed hover:bg-baoRed hover:bg-opacity-20'>
 					<div className='flex w-full flex-row'>
 						<div className='flex w-full'>
 							<div className='my-auto'>
-								<Image src={`/images/tokens/${vaultName}.png`} alt={vaultName} className={`inline-block`} height={32} width={32} />
+								<Image src={`/images/tokens/${vaultName}-pink.svg`} alt={vaultName} className={`inline-block`} height={32} width={32} />
 								<span className='inline-block text-left align-middle'>
 									<Typography variant='lg' className='ml-2 font-bakbak'>
 										{vaultName}

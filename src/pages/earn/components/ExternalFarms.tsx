@@ -40,7 +40,13 @@ const ExternalFarms: React.FC = () => {
 						<div className='flex basis-1/4 lg:basis-2/5'>
 							<div className='mx-0 my-auto inline-block h-full items-center'>
 								<div className='mr-2 hidden lg:inline-block'>
-									<Image className='z-10 inline-block select-none' src='/images/tokens/baoUSD.png' alt='baoUSD' width={24} height={24} />
+									<Image
+										className='z-10 inline-block select-none'
+										src='/images/tokens/baoUSD-pink.svg'
+										alt='baoUSD'
+										width={24}
+										height={24}
+									/>
 									<Image className='z-20 -ml-2 inline-block select-none' src='/images/tokens/LUSD.png' alt='LUSD' width={24} height={24} />
 								</div>
 								<span className='inline-block text-left align-middle'>
@@ -86,7 +92,13 @@ const ExternalFarms: React.FC = () => {
 						<div className='flex basis-1/4 lg:basis-2/5'>
 							<div className='mx-0 my-auto inline-block h-full items-center'>
 								<div className='mr-2 hidden lg:inline-block'>
-									<Image className='z-10 inline-block select-none' src='/images/tokens/baoETH.png' alt='baoETH' width={24} height={24} />
+									<Image
+										className='z-10 inline-block select-none'
+										src='/images/tokens/baoETH-pink.svg'
+										alt='baoETH'
+										width={24}
+										height={24}
+									/>
 									<Image className='z-20 -ml-2 inline-block select-none' src='/images/tokens/ETH.png' alt='ETH' width={24} height={24} />
 								</div>
 								<span className='inline-block text-left align-middle'>
@@ -132,7 +144,13 @@ const ExternalFarms: React.FC = () => {
 						<div className='flex basis-1/4 lg:basis-2/5'>
 							<div className='mx-0 my-auto inline-block h-full items-center'>
 								<div className='mr-2 hidden lg:inline-block'>
-									<Image className='z-10 inline-block select-none' src='/images/tokens/baoUSD.png' alt='baoUSD' width={24} height={24} />
+									<Image
+										className='z-10 inline-block select-none'
+										src='/images/tokens/baoUSD-pink.svg'
+										alt='baoUSD'
+										width={24}
+										height={24}
+									/>
 									<Image className='z-20 -ml-2 inline-block select-none' src='/images/tokens/LUSD.png' alt='LUSD' width={24} height={24} />
 									<Image className='z-20 -ml-2 inline-block select-none' src='/images/tokens/BAO.png' alt='BAO' width={24} height={24} />
 								</div>
@@ -179,7 +197,13 @@ const ExternalFarms: React.FC = () => {
 						<div className='flex basis-1/4 lg:basis-2/5'>
 							<div className='mx-0 my-auto inline-block h-full items-center'>
 								<div className='mr-2 hidden lg:inline-block'>
-									<Image className='z-10 inline-block select-none' src='/images/tokens/baoETH.png' alt='baoETH' width={24} height={24} />
+									<Image
+										className='z-10 inline-block select-none'
+										src='/images/tokens/baoETH-pink.svg'
+										alt='baoETH'
+										width={24}
+										height={24}
+									/>
 									<Image className='z-20 -ml-2 inline-block select-none' src='/images/tokens/ETH.png' alt='ETH' width={24} height={24} />
 									<Image className='z-20 -ml-2 inline-block select-none' src='/images/tokens/BAO.png' alt='BAO' width={24} height={24} />
 								</div>
@@ -226,7 +250,13 @@ const ExternalFarms: React.FC = () => {
 						<div className='flex basis-1/4 lg:basis-2/5'>
 							<div className='mx-0 my-auto inline-block h-full items-center'>
 								<div className='mr-2 hidden lg:inline-block'>
-									<Image className='z-10 inline-block select-none' src='/images/tokens/baoUSD.png' alt='baoUSD' width={24} height={24} />
+									<Image
+										className='z-10 inline-block select-none'
+										src='/images/tokens/baoUSD-pink.svg'
+										alt='baoUSD'
+										width={24}
+										height={24}
+									/>
 									<Image className='z-20 -ml-2 inline-block select-none' src='/images/tokens/SDAI.png' alt='sDAI' width={24} height={24} />
 								</div>
 								<span className='inline-block text-left align-middle'>
@@ -272,7 +302,13 @@ const ExternalFarms: React.FC = () => {
 						<div className='flex basis-1/4 lg:basis-2/5'>
 							<div className='mx-0 my-auto inline-block h-full items-center'>
 								<div className='mr-2 hidden lg:inline-block'>
-									<Image className='z-10 inline-block select-none' src='/images/tokens/baoETH.png' alt='baoETH' width={24} height={24} />
+									<Image
+										className='z-10 inline-block select-none'
+										src='/images/tokens/baoETH-pink.svg'
+										alt='baoETH'
+										width={24}
+										height={24}
+									/>
 									<Image
 										className='z-20 -ml-2 inline-block select-none'
 										src='/images/tokens/wstETH.png'
@@ -324,7 +360,13 @@ const ExternalFarms: React.FC = () => {
 						<div className='flex basis-1/4 lg:basis-2/5'>
 							<div className='mx-0 my-auto inline-block h-full items-center'>
 								<div className='mr-2 hidden lg:inline-block'>
-									<Image className='z-10 inline-block select-none' src='/images/tokens/baoETH.png' alt='baoETH' width={24} height={24} />
+									<Image
+										className='z-10 inline-block select-none'
+										src='/images/tokens/baoETH-pink.svg'
+										alt='baoETH'
+										width={24}
+										height={24}
+									/>
 									<Image className='z-20 -ml-2 inline-block select-none' src='/images/tokens/rETH.png' alt='rETH' width={24} height={24} />
 								</div>
 								<span className='inline-block text-left align-middle'>
@@ -370,7 +412,13 @@ const ExternalFarms: React.FC = () => {
 						<div className='flex basis-1/4 lg:basis-2/5'>
 							<div className='mx-0 my-auto inline-block h-full items-center'>
 								<div className='mr-2 hidden lg:inline-block'>
-									<Image className='z-10 inline-block select-none' src='/images/tokens/baoUSD.png' alt='baoETH' width={24} height={24} />
+									<Image
+										className='z-10 inline-block select-none'
+										src='/images/tokens/baoUSD-pink.svg'
+										alt='baoETH'
+										width={24}
+										height={24}
+									/>
 									<Image
 										className='z-20 -ml-2 inline-block select-none'
 										src='/images/tokens/sUSDe.png'
@@ -409,6 +457,58 @@ const ExternalFarms: React.FC = () => {
 						<div className='mx-auto my-0 flex basis-1/4 flex-col items-end justify-center text-right lg:basis-1/5'>
 							<Typography variant='base' className='ml-2 inline-block font-bakbak'>
 								${getDisplayBalance(baoUsdsUSDePool ? baoUsdsUSDePool.tvl : 0, 0)}
+							</Typography>
+						</div>
+					</div>
+				</a>
+
+				<a
+					className='glassmorphic-card w-full px-4 py-2 duration-300 hover:cursor-pointer hover:border-baoRed hover:bg-baoRed hover:bg-opacity-20'
+					href='https://balancer.fi/pools/ethereum/v3/0xb22bd670c6e57c5fb486914dc478ae668507ddc8'
+				>
+					<div className='flex w-full flex-row'>
+						<div className='flex basis-1/4 lg:basis-2/5'>
+							<div className='mx-0 my-auto inline-block h-full items-center'>
+								<div className='mr-2 hidden lg:inline-block'>
+									<Image
+										className='z-10 inline-block select-none'
+										src='/images/tokens/baoBTC-pink.svg'
+										alt='baoETH'
+										width={24}
+										height={24}
+									/>
+									<Image className='z-20 -ml-2 inline-block select-none' src='/images/tokens/tBTC.png' alt='sUSDe' width={24} height={24} />
+								</div>
+								<span className='inline-block text-left align-middle'>
+									<Typography variant='base' className='font-bakbak'>
+										baoBTC-tBTC
+									</Typography>
+								</span>
+							</div>
+						</div>
+
+						<div className='mx-auto my-0 flex basis-1/4 items-center justify-center lg:basis-1/5'>
+							<div className='mx-0 my-auto inline-block h-full items-center'>
+								<div className='mr-2 hidden lg:inline-block'>
+									<Image src={`/images/platforms/Balancer.png`} height={24} width={24} alt='Balancer' className='mr-1 hidden lg:inline' />
+								</div>
+								<span className='inline-block text-left align-middle'>
+									<Typography variant='base' className='font-bakbak'>
+										Balancer
+									</Typography>
+								</span>
+							</div>
+						</div>
+
+						<div className='mx-auto my-0 flex basis-1/4 items-center justify-center lg:basis-1/5'>
+							<Typography variant='base' className={`ml-2 inline-block font-bakbak`}>
+								Pending rewards
+							</Typography>
+						</div>
+
+						<div className='mx-auto my-0 flex basis-1/4 flex-col items-end justify-center text-right lg:basis-1/5'>
+							<Typography variant='base' className='ml-2 inline-block font-bakbak'>
+								Low TVL
 							</Typography>
 						</div>
 					</div>

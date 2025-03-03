@@ -37,6 +37,7 @@ export default {
 		//BasePools
 		baoUSDLUSD: '0x08cC92fEdc1cE2D8525176a63FcfF404450f2998',
 		baoETHETH: '0x3B9Fb87F7d081CEDdb1289258FA5660d955317b6',
+		sBaoSynth: '0x69378e2142BE773C86c78320EAc929770d3d740E',
 	},
 	llamaIds: {
 		wstETH: '747c1d2a-c668-4682-b9f9-296708a3dd90',
@@ -162,6 +163,14 @@ export default {
 			1: 'https://data.aura.finance/graphql',
 		},
 	},
+	stakedSynths: {
+		sbaoUSD: {
+			1: '0x0000000000000000000000000000000000000000',
+		},
+		sbaoETH: {
+			1: '0x0000000000000000000000000000000000000000',
+		},
+	},
 	vaults: {
 		baoUSD: {
 			vid: 1,
@@ -193,7 +202,7 @@ export default {
 						1: '0x7945b0A6674b175695e5d1D08aE1e6F13744Abb0',
 					},
 					isSynth: true,
-					icon: 'baoUSD.png',
+					icon: 'baoUSD-pink.svg',
 					coingeckoId: 'dai',
 					underlyingSymbol: 'baoUSD',
 					underlyingDecimals: 18,
@@ -303,7 +312,7 @@ export default {
 						1: '0xf4edfad26EE0D23B69CA93112eccE52704E0006f',
 					},
 					isSynth: true,
-					icon: 'baoETH.png',
+					icon: 'baoETH-pink.svg',
 					coingeckoId: 'dai',
 					underlyingSymbol: 'baoETH',
 					underlyingDecimals: 18,
@@ -381,6 +390,87 @@ export default {
 					},
 					icon: 'rETH.png',
 					coingeckoId: 'rocket-pool-eth',
+					underlyingDecimals: 18,
+				},
+			],
+		},
+		baoBTC: {
+			vid: 3,
+			comptroller: '0x6424B42258F1382Ba0c32cE88cdF0786E4b10c6A',
+			oracle: '0xCF5a0A5C5894a32d258A456C0e5b7B1c79486537',
+			stabilizer: '0x93C825F8B1F420fB07412Bc4E588b59f4f340384',
+			markets: [
+				{
+					mid: 34,
+					symbol: 'bdETH',
+					vaultAddresses: {
+						1: '0xB62bD0E408830A87DF1a9dd141a5ccC5323789C1',
+					},
+					underlyingAddresses: {
+						1: 'ETH',
+					},
+					icon: 'ETH.png',
+					coingeckoId: 'weth',
+					underlyingDecimals: 18,
+					archived: false,
+				},
+				{
+					mid: 31,
+					symbol: 'bdbaoBTC',
+					vaultAddresses: {
+						1: '0xC2A343177BFD49d1cFf9C84B848917f5d771BD73',
+					},
+					underlyingAddresses: {
+						1: '0x22d76E6e1D9aB4072522C1bC60C85a0d5626cA2D',
+					},
+					isSynth: true,
+					icon: 'baoBTC-pink.svg',
+					coingeckoId: 'btc',
+					underlyingSymbol: 'baoBTC',
+					underlyingDecimals: 18,
+					desc: 'Synthetic BTC',
+					minimumBorrow: 0.05,
+				},
+				{
+					mid: 32,
+					symbol: 'bdWSTETH',
+					archived: false,
+					vaultAddresses: {
+						1: '0x0F02021B9BAeCe9025Ff4DBc461be52A9FAf7668',
+					},
+					underlyingAddresses: {
+						1: '0x7f39c581f595b53c5cb19bd0b3f8da6c935e2ca0',
+					},
+					icon: 'wstETH.png',
+					coingeckoId: 'wrapped-steth',
+					underlyingDecimals: 18,
+				},
+				{
+					mid: 33,
+					symbol: 'bdrETH',
+					archived: false,
+					vaultAddresses: {
+						1: '0x5dDfA8db90476D258dDE4967ab73b9FEcC4Ba572',
+					},
+					underlyingAddresses: {
+						1: '0xae78736Cd615f374D3085123A210448E74Fc6393',
+					},
+					icon: 'rETH.png',
+					coingeckoId: 'rocket-pool-eth',
+					underlyingDecimals: 18,
+				},
+				{
+					mid: 35,
+					symbol: 'bdbaotBTC',
+					archived: false,
+					vaultAddresses: {
+						1: '0x25B81E2e0255094DCcdd720a03f46B7782AffA6B',
+					},
+					underlyingAddresses: {
+						1: '0x18084fbA666a33d37592fA2633fD49a74DD93a88',
+					},
+					icon: 'tBTC.png',
+					coingeckoId: 'tbtc',
 					underlyingDecimals: 18,
 				},
 			],
@@ -770,7 +860,7 @@ export default {
 				},
 			],
 			name: 'baoETH',
-			icon: '/images/tokens/baoETH.png',
+			icon: '/images/tokens/baoETH-pink.svg',
 			platforms: [
 				{
 					pid: 1,
@@ -794,7 +884,7 @@ export default {
 				},
 			],
 			name: 'baoUSD',
-			icon: '/images/tokens/baoUSD.png',
+			icon: '/images/tokens/baoUSD-pink.svg',
 			platforms: [
 				{
 					pid: 1,
@@ -806,4 +896,218 @@ export default {
 			],
 		},
 	],
+	lendMarkets: {
+		weETH: {
+			id: 1,
+			active: true,
+			name: 'weETH',
+			desc: 'Wrapped eETH',
+			comptroller: '0xf55044bb140DD3Eeb7372bd722C323c87d8AE798',
+			oracle: '0xc7D8b6b170E0FCf4182fa29b47F35F48C402bF0F',
+			marketAddresses: {
+				1: '0x353A07b25c84a522356aF2D9a7c0d7FF481733e9',
+			},
+			underlyingAddresses: {
+				1: '0xCd5fE23C85820F7B72D0926FC9b05b43E359b7ee',
+			},
+			assets: [
+				{
+					id: 1,
+					active: true,
+					marketAddress: {
+						1: '0x353A07b25c84a522356aF2D9a7c0d7FF481733e9',
+					},
+					underlyingAddress: {
+						1: '0xCd5fE23C85820F7B72D0926FC9b05b43E359b7ee',
+					},
+					underlyingDecimals: 18,
+					name: 'weETH',
+					icon: '/images/tokens/weETH.png',
+					supply: true,
+					borrow: false,
+				},
+				{
+					id: 2,
+					active: true,
+					marketAddress: {
+						1: '0x085c35278fDC840b9Ca74AAB226bA8E2f95C446F',
+					},
+					underlyingAddress: {
+						1: '0x7945b0A6674b175695e5d1D08aE1e6F13744Abb0',
+					},
+					underlyingDecimals: 18,
+					name: 'BaoUSD',
+					icon: '/images/tokens/baoUSD-pink.svg',
+					supply: true,
+					borrow: true,
+				},
+				{
+					id: 3,
+					active: true,
+					marketAddress: {
+						1: '0xdC39e6365AA75D762729513004c956D1475bED20',
+					},
+					underlyingAddress: {
+						1: '0xf4edfad26EE0D23B69CA93112eccE52704E0006f',
+					},
+					underlyingDecimals: 18,
+					name: 'BaoETH',
+					icon: '/images/tokens/baoETH-pink.svg',
+					supply: true,
+					borrow: true,
+				},
+				{
+					id: 4,
+					active: true,
+					marketAddress: {
+						1: '0x357FE927DC3Ee1be7ba1423bc5485BC8CD066040',
+					},
+					underlyingAddress: {
+						1: '0xc69Ad9baB1dEE23F4605a82b3354F8E40d1E5966',
+					},
+					underlyingDecimals: 18,
+					name: 'PTweETHJUN',
+					icon: '/images/tokens/weETH.png',
+					supply: true,
+					borrow: false,
+				},
+				{
+					id: 5,
+					active: true,
+					marketAddress: {
+						1: '0x0930B04032E52daBC2324533c015bc27Ad5B35B7',
+					},
+					underlyingAddress: {
+						1: '0x1c085195437738d73d75DC64bC5A3E098b7f93b1',
+					},
+					underlyingDecimals: 18,
+					name: 'PTweETHSEP',
+					icon: '/images/tokens/weETH.png',
+					supply: true,
+					borrow: false,
+				},
+				{
+					id: 6,
+					active: true,
+					marketAddress: {
+						1: '0x672bf1cdE0F352296fA759BefF392997C809cd8a',
+					},
+					underlyingAddress: {
+						1: '0x6ee2b5E19ECBa773a352E5B21415Dc419A700d1d',
+					},
+					underlyingDecimals: 18,
+					name: 'PTweETHDEC',
+					icon: '/images/tokens/weETH.png',
+					supply: true,
+					borrow: false,
+				},
+			],
+		},
+		USDe: {
+			id: 1,
+			active: true,
+			name: 'USDe',
+			desc: 'Ethena USDe',
+			comptroller: '0x46396230c61776A384c1c00c04A9784c4a2F5d8F',
+			oracle: '0xba2fdeb1d483acbdb196b39473e7af90268afa67',
+			marketAddresses: {
+				1: '0x680358d70b34a00f2d661bb4f95E1C14E5Dae93F',
+			},
+			underlyingAddresses: {
+				1: '0x4c9EDD5852cd905f086C759E8383e09bff1E68B3',
+			},
+			assets: [
+				{
+					id: 1,
+					active: true,
+					marketAddress: {
+						1: '0x680358d70b34a00f2d661bb4f95E1C14E5Dae93F',
+					},
+					underlyingAddress: {
+						1: '0x4c9EDD5852cd905f086C759E8383e09bff1E68B3',
+					},
+					underlyingDecimals: 18,
+					name: 'USDe',
+					icon: '/images/tokens/USDe.png',
+					supply: true,
+					borrow: false,
+				},
+				{
+					id: 2,
+					active: true,
+					marketAddress: {
+						1: '0xe606AE6d6394a977a8B0926557BF9D291051f989',
+					},
+					underlyingAddress: {
+						1: '0x7945b0A6674b175695e5d1D08aE1e6F13744Abb0',
+					},
+					underlyingDecimals: 18,
+					name: 'BaoUSD',
+					icon: '/images/tokens/baoUSD-pink.svg',
+					supply: true,
+					borrow: true,
+				},
+				{
+					id: 3,
+					active: true,
+					marketAddress: {
+						1: '0xDe10BEd5236B786cAA18Ca39FFa5de1b904a8a94',
+					},
+					underlyingAddress: {
+						1: '0xf4edfad26EE0D23B69CA93112eccE52704E0006f',
+					},
+					underlyingDecimals: 18,
+					name: 'BaoETH',
+					icon: '/images/tokens/baoETH-pink.svg',
+					supply: true,
+					borrow: true,
+				},
+				{
+					id: 4,
+					active: true,
+					marketAddress: {
+						1: '0xD011778057AA740BB3703Ad4d78b3c79a1aED1cb',
+					},
+					underlyingAddress: {
+						1: '0x9D39A5DE30e57443BfF2A8307A4256c8797A3497',
+					},
+					underlyingDecimals: 18,
+					name: 'sUSDe',
+					icon: '/images/tokens/sUSDe.png',
+					supply: true,
+					borrow: false,
+				},
+				{
+					id: 5,
+					active: true,
+					marketAddress: {
+						1: '0x3d881b3C7B690f05E672cD0F8fCbC0aE3A7292CF',
+					},
+					underlyingAddress: {
+						1: '0xa0021EF8970104c2d008F38D92f115ad56a9B8e1',
+					},
+					underlyingDecimals: 18,
+					name: 'PTUSDeJUL',
+					icon: '/images/tokens/USDe.png',
+					supply: true,
+					borrow: false,
+				},
+				{
+					id: 6,
+					active: true,
+					marketAddress: {
+						1: '0x4cd395CB5edF33b44E73257ee614413f95d1a6cD',
+					},
+					underlyingAddress: {
+						1: '0x6c9f097e044506712B58EAC670c9a5fd4BCceF13',
+					},
+					underlyingDecimals: 18,
+					name: 'PTsUSDeSEP',
+					icon: '/images/tokens/sUSDe.png',
+					supply: true,
+					borrow: false,
+				},
+			],
+		},
+	},
 } as unknown as Config

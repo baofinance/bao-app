@@ -38,12 +38,13 @@ export const useVaultsContext = (): { [vaultName: string]: ActiveSupportedVault[
 	const [vaults, setVaults] = useState<{ [vaultName: string]: ActiveSupportedVault[] }>({})
 
 	const fetchVaults = useCallback(
-		async (vaultName: string) => {
+		async (vaultName: string, includeArchived = false) => {
+			// Add an option to include archived vaults
 			if (!library || !chainId) return
 
 			const signerOrProvider = account ? library.getSigner() : library
 			const _vaults = Config.vaults[vaultName].markets
-				.filter(vault => !vault.archived) // TODO- add in option to view archived vaults
+				.filter(vault => includeArchived || !vault.archived) // Conditionally filter
 				.map(vault => {
 					const vaultAddress = vault.vaultAddresses[chainId]
 					const underlyingAddress = vault.underlyingAddresses[chainId]
@@ -239,8 +240,9 @@ export const useVaultsContext = (): { [vaultName: string]: ActiveSupportedVault[
 
 	useEffect(() => {
 		if (!library || !chainId) return
-		fetchVaults('baoUSD')
-		fetchVaults('baoETH')
+		fetchVaults('baoUSD', true) // Include archived vaults
+		fetchVaults('baoETH', true)
+		fetchVaults('baoBTC', true)
 	}, [fetchVaults, library, chainId, transactions])
 
 	return vaults

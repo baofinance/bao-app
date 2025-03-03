@@ -9,11 +9,12 @@ import { useQuery } from '@tanstack/react-query'
 import { useWeb3React } from '@web3-react/core'
 import { useContext } from 'react'
 
-export const useVaults = (vaultName: string): ActiveSupportedVault[] | undefined => {
-	const { vaults }: VaultsContext = useContext(Context)
-	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-	//@ts-ignore
-	return vaults[vaultName]
+export const useVaults = (vaultName: string, includeArchived = false): ActiveSupportedVault[] | undefined => {
+	const { vaults } = useContext(Context) as VaultsContext
+
+	if (!vaults || !(vaultName in vaults)) return undefined // Safer check
+
+	return includeArchived ? vaults[vaultName] : vaults[vaultName].filter(vault => !vault.archived)
 }
 
 export const useAccountVaults = (vaultName: string): ActiveSupportedVault[] | undefined => {

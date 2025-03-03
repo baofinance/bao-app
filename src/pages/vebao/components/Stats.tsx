@@ -52,7 +52,7 @@ const LockStats = ({ lockInfo, timestamp }: StatsProps) => {
 							<Typography variant='lg' className='ml-2 inline font-bakbak'>
 								${claimableFees ? getDisplayBalance(claimableFees) : 0}
 							</Typography>
-							<Image src='/images/tokens/baoUSD.png' alt='BAO' width={16} height={16} className='ml-1 mr-2 inline' />
+							<Image src='/images/tokens/baoUSD-pink.svg' alt='BAO' width={16} height={16} className='ml-1 mr-2 inline' />
 						</div>
 
 						<Button

@@ -104,7 +104,7 @@
     "@visx/scale": "^3.3.0",
     "@visx/shape": "^3.3.0",
     "@visx/text": "^3.3.0",
-    "@visx/tooltip": "^3.3.0",
+    "@visx/tooltip": "^3.12.0",
     "@visx/visx": "^3.3.0",
     "@walletconnect/ethereum-provider": "^2.9.0",
     "@walletconnect/modal": "^2.5.9",

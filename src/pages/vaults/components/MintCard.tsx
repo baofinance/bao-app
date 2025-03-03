@@ -97,7 +97,7 @@ export const MintCard = ({
 											<div className='inline-block lg:mr-2'>
 												<Image
 													className='z-10 inline-block select-none'
-													src={synth && `/images/tokens/${synth.underlyingSymbol}.png`}
+													src={synth && `/images/tokens/${synth.underlyingSymbol}-pink.svg`}
 													alt={synth && synth.underlyingSymbol}
 													width={isDesktop ? 24 : 32}
 													height={isDesktop ? 24 : 32}
@@ -185,7 +185,7 @@ export const MintCard = ({
 											</Typography>
 											<Image
 												className={(synth.minimumBorrow && 'hidden', 'z-10 ml-1 inline-block select-none')}
-												src={synth && `/images/tokens/${synth.underlyingSymbol}.png`}
+												src={synth && `/images/tokens/${synth.underlyingSymbol}-pink.svg`}
 												alt={synth && synth.underlyingSymbol}
 												width={16}
 												height={16}
@@ -202,7 +202,7 @@ export const MintCard = ({
 											</Typography>
 											<Image
 												className='z-10 ml-1 inline-block select-none'
-												src={synth && `/images/tokens/${synth.underlyingSymbol}.png`}
+												src={synth && `/images/tokens/${synth.underlyingSymbol}-pink.svg`}
 												alt={synth && synth.underlyingSymbol}
 												width={16}
 												height={16}
@@ -219,7 +219,7 @@ export const MintCard = ({
 											</Typography>
 											<Image
 												className='z-10 m-auto ml-1 inline-block select-none align-middle'
-												src={synth && `/images/tokens/${synth.underlyingSymbol}.png`}
+												src={synth && `/images/tokens/${synth.underlyingSymbol}-pink.svg`}
 												alt={synth && synth.underlyingSymbol}
 												width={16}
 												height={16}
