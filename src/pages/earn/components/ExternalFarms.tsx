@@ -14,6 +14,7 @@ const ExternalFarms: React.FC = () => {
 	const baoEthwstEthPool = useAuraPool('217')
 	const baoEthrEthPool = useAuraPool('219')
 	const baoUsdsUSDePool = useAuraPool('224')
+	const baoBtctBTCPool = useAuraPool('250')
 
 	return (
 		<>
@@ -490,11 +491,11 @@ const ExternalFarms: React.FC = () => {
 						<div className='mx-auto my-0 flex basis-1/4 items-center justify-center lg:basis-1/5'>
 							<div className='mx-0 my-auto inline-block h-full items-center'>
 								<div className='mr-2 hidden lg:inline-block'>
-									<Image src={`/images/platforms/Balancer.png`} height={24} width={24} alt='Balancer' className='mr-1 hidden lg:inline' />
+									<Image src={`/images/platforms/Aura.webp`} height={24} width={24} alt='Balancer' className='mr-1 hidden lg:inline' />
 								</div>
 								<span className='inline-block text-left align-middle'>
 									<Typography variant='base' className='font-bakbak'>
-										Balancer
+										Aura
 									</Typography>
 								</span>
 							</div>
@@ -502,13 +503,13 @@ const ExternalFarms: React.FC = () => {
 
 						<div className='mx-auto my-0 flex basis-1/4 items-center justify-center lg:basis-1/5'>
 							<Typography variant='base' className={`ml-2 inline-block font-bakbak`}>
-								Pending rewards
+								{getDisplayBalance(baoBtctBTCPool ? baoBtctBTCPool.apr : 0, 0)}%
 							</Typography>
 						</div>
 
 						<div className='mx-auto my-0 flex basis-1/4 flex-col items-end justify-center text-right lg:basis-1/5'>
 							<Typography variant='base' className='ml-2 inline-block font-bakbak'>
-								Low TVL
+								${getDisplayBalance(baoBtctBTCPool ? baoBtctBTCPool.tvl : 0, 0)}
 							</Typography>
 						</div>
 					</div>
