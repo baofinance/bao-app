@@ -465,7 +465,7 @@ const ExternalFarms: React.FC = () => {
 
 				<a
 					className='glassmorphic-card w-full px-4 py-2 duration-300 hover:cursor-pointer hover:border-baoRed hover:bg-baoRed hover:bg-opacity-20'
-					href='https://balancer.fi/pools/ethereum/v3/0xb22bd670c6e57c5fb486914dc478ae668507ddc8'
+					href='https://app.aura.finance/#/1/pool/250'
 				>
 					<div className='flex w-full flex-row'>
 						<div className='flex basis-1/4 lg:basis-2/5'>
