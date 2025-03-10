@@ -143,15 +143,12 @@ export const MintCard = ({
 											console.error('Mint/Borrow transaction failed', err)
 										}
 									}}
-									//disabled={
-									//	!val || // Disable if no value is entered
-									//	parseFloat(val) <= 0 || // Disable if the entered value is <= 0
-									//	parseUnits(val, synth.underlyingDecimals).gt(max()) || // Disable if the entered value exceeds the max borrowable amount
-									//	// Temporary minting/borrowing limits
-									//	(borrowed.lt(parseUnits(vaultName === 'baoUSD' ? '100' : '2')) &&
-									//		parseUnits(val, synth.underlyingDecimals).lt(parseUnits(vaultName === 'baoUSD' ? '100' : '2')))
-									//}
-									disabled={false}
+									disabled={
+										!val || // Disable if no value is entered
+										parseFloat(val) <= 0 || // Disable if the entered value is <= 0
+										parseUnits(val, synth.underlyingDecimals).gt(max()) || // Disable if the entered value exceeds the max borrowable amount
+										parseUnits(val, synth.underlyingDecimals).lt(parseUnits(synth.minimumBorrow.toString(), synth.underlyingDecimals)) // Ensure entered amount is at least the minimum borrow amount
+									}
 									className={!isDesktop ? '!h-10 !px-2 !text-sm' : ''}
 								>
 									Borrow
