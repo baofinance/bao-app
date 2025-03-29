@@ -1,7 +1,8 @@
 import { ActiveSupportedGauge } from '@/bao/lib/types'
-import { PageLoader } from '@/components/Loader'
+import { Icon } from '@/components/Icon'
+import Tooltipped from '@/components/Tooltipped'
 import Typography from '@/components/Typography'
-import usePrice from '@/hooks/base/usePrice'
+import { useBaoPrice } from '@/hooks/base/useBaoPrice'
 import useGaugeInfo from '@/hooks/earn/useGaugeInfo'
 import useGaugeTVL from '@/hooks/earn/useGaugeTVL'
 import useGauges from '@/hooks/earn/useGauges'
@@ -16,10 +17,8 @@ import { formatUnits } from 'ethers/lib/utils'
 import Image from 'next/future/image'
 import React, { useMemo, useState } from 'react'
 import { isDesktop } from 'react-device-detect'
-import GaugeModal from './Modals'
-import Tooltipped from '@/components/Tooltipped'
 import ReactSwitch from 'react-switch'
-import { Icon } from '@/components/Icon'
+import GaugeModal from './Modals'
 
 const GaugeList: React.FC = () => {
 	const gauges = useGauges()
@@ -80,7 +79,7 @@ const GaugeListItem: React.FC<GaugeListItemProps> = ({ gauge }) => {
 	const { account } = useWeb3React()
 	const [showGaugeModal, setShowGaugeModal] = useState(false)
 	const { currentWeight } = useRelativeWeight(gauge.gaugeAddress)
-	const baoPrice = usePrice('bao-finance-v2')
+	const baoPrice = useBaoPrice()
 
 	const mintable = useMintable()
 	const { gaugeTVL, depositAmount } = useGaugeTVL(gauge)

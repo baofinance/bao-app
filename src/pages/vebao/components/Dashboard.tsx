@@ -4,8 +4,8 @@ import Input from '@/components/Input'
 import { PendingTransaction } from '@/components/Loader/Loader'
 import Tooltipped from '@/components/Tooltipped'
 import Typography from '@/components/Typography'
+import { useBaoPrice } from '@/hooks/base/useBaoPrice'
 import useContract from '@/hooks/base/useContract'
-import usePrice from '@/hooks/base/usePrice'
 import useTransactionHandler from '@/hooks/base/useTransactionHandler'
 import useGaugeInfo from '@/hooks/earn/useGaugeInfo'
 import useGaugeTVL from '@/hooks/earn/useGaugeTVL'
@@ -72,7 +72,7 @@ export const Dashboard = () => {
 	const tvl = gaugeTVL ? parseFloat(formatUnits(gaugeTVL)) : 0
 	const votingPowerAllocated = useVotingPowerAllocated()
 
-	const baoPrice = usePrice('bao-finance-v2')
+	const baoPrice = useBaoPrice()
 	const mintable = useMintable()
 	const { currentWeight, futureWeight } = useRelativeWeight(gauge.gaugeAddress)
 	const rewardsValue = baoPrice ? baoPrice.mul(mintable) : BigNumber.from(0)
@@ -522,19 +522,9 @@ export const Dashboard = () => {
 								value={weeks}
 								onChange={onCalcSliderChange}
 								className='mt-6'
-								handleStyle={{
-									backgroundColor: '#e21a53',
-									borderColor: '#e21a53',
-									boxShadow: 'none',
-									opacity: 1,
-								}}
-								trackStyle={{
-									backgroundColor: '#e21a53',
-									borderColor: '#e21a53',
-								}}
-								railStyle={{
-									backgroundColor: '#faf2e340',
-								}}
+								handleStyle={{ backgroundColor: '#e21a53', borderColor: '#e21a53', boxShadow: 'none', opacity: 1 }}
+								trackStyle={{ backgroundColor: '#e21a53', borderColor: '#e21a53' }}
+								railStyle={{ backgroundColor: '#faf2e340' }}
 							/>
 						</div>
 					</div>

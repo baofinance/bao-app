@@ -8,30 +8,21 @@ import { exponentiate } from '@/utils/numberFormat'
 import { useQuery } from '@tanstack/react-query'
 import { useWeb3React } from '@web3-react/core'
 import { BigNumber } from 'ethers'
-import { parseUnits } from 'ethers/lib/utils'
 import useBao from '../base/useBao'
+import { parseUnits } from 'ethers/lib/utils'
 
-type VaultPrices = {
-	prices: {
-		[key: string]: BigNumber
-	}
-}
+type VaultPrices = { prices: { [key: string]: BigNumber } }
 
-export const usePrice = (coingeckoId: string) => {
-	const url = `https://bao-price-api.herokuapp.com/api/price?id=${coingeckoId}`
+export const usePrice = () => {
+	const url = `https://coins.llama.fi/prices/current/ethereum:0xce391315b414d4c7555956120461d21808a69f3a?searchWidth=4h
+`
 
 	const { data: price } = useQuery(
 		['@/hooks/vaults/usePrice'],
 		async () => {
 			const res = await (await fetch(url)).json()
 
-			return Object.keys(res).reduce(
-				(prev, cur) => ({
-					...prev,
-					price: parseUnits(res.price[cur].usd.toString()),
-				}),
-				{},
-			)
+			return Object.keys(res).reduce((prev, cur) => ({ ...prev, price: parseUnits(res.coins[cur].price.toString()) }), {})
 		},
 		{
 			retry: true,
@@ -47,39 +38,6 @@ export const usePrice = (coingeckoId: string) => {
 
 	return price
 }
-
-export const usePrices = (vaultName: string) => {
-	const coingeckoIds: any = Object.values(Config.vaults[vaultName].markets).map(({ coingeckoId }) => coingeckoId)
-	const url = `https://bao-price-api.herokuapp.com/api/price?id=${coingeckoIds.join(',')}`
-
-	const { data: prices } = useQuery(
-		['@/hooks/vaults/usePrices'],
-		async () => {
-			const res = await (await fetch(url)).json()
-
-			return Object.keys(res).reduce(
-				(prev, cur) => ({
-					...prev,
-					[coingeckoIds[cur].toLowerCase()]: parseUnits(res.price[cur].usd.toString()),
-				}),
-				{},
-			)
-		},
-		{
-			retry: true,
-			retryDelay: 1000 * 60,
-			staleTime: 1000 * 60 * 60,
-			cacheTime: 1000 * 60 * 120,
-			refetchOnReconnect: true,
-			refetchInterval: 1000 * 60 * 5,
-			keepPreviousData: true,
-			placeholderData: BigNumber.from(0),
-		},
-	)
-
-	return prices
-}
-
 export const useVaultPrices = (vaultName: string): VaultPrices => {
 	const bao = useBao()
 	const { chainId } = useWeb3React()
@@ -95,25 +53,16 @@ export const useVaultPrices = (vaultName: string): VaultPrices => {
 				{
 					ref: 'VaultOracle',
 					contract: oracle,
-					calls: tokens.map(token => ({
-						ref: token,
-						method: 'getUnderlyingPrice',
-						params: [token],
-					})),
+					calls: tokens.map(token => ({ ref: token, method: 'getUnderlyingPrice', params: [token] })),
 				},
 			])
 			const data = MultiCall.parseCallResults(await bao.multicall.call(multiCallContext))
 			return data['VaultOracle'].reduce(
-				(_prices: { [key: string]: { usd: number } }, result: any) => ({
-					..._prices,
-					[result.ref]: exponentiate(result.values[0]),
-				}),
+				(_prices: { [key: string]: { usd: number } }, result: any) => ({ ..._prices, [result.ref]: exponentiate(result.values[0]) }),
 				{},
 			)
 		},
-		{
-			enabled,
-		},
+		{ enabled },
 	)
 
 	const _refetch = () => {
@@ -122,7 +71,5 @@ export const useVaultPrices = (vaultName: string): VaultPrices => {
 	useBlockUpdater(_refetch, 10)
 	useTxReceiptUpdater(_refetch)
 
-	return {
-		prices,
-	}
+	return { prices }
 }

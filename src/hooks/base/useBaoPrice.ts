@@ -3,16 +3,16 @@ import { useQuery } from '@tanstack/react-query'
 
 // INFO: add to this to support new tokens
 
-export const usePrice = (defiLlamaId: string) => {
-	const { data: price } = useQuery(
+export const useBaoPrice = () => {
+	const { data: baoPrice } = useQuery(
 		['@/hooks/base/usePrice'],
 		async () => {
-			const req = await fetch(`https://coins.llama.fi/prices/current/${defiLlamaId}`)
+			const req = await fetch(`https://coins.llama.fi/prices/current/ethereum:0xce391315b414d4c7555956120461d21808a69f3a?searchWidth=4h`)
 			const res = await req.json()
 
-			const coinKey = defiLlamaId
+			const coinKey = 'ethereum:0xce391315b414d4c7555956120461d21808a69f3a'
 			if (!res.coins || !res.coins[coinKey]) {
-				throw new Error(`Can't get ${defiLlamaId} price.`)
+				throw new Error("Can't get BAO price.")
 			}
 
 			return fromDecimal(res.coins[coinKey].price)
@@ -28,7 +28,7 @@ export const usePrice = (defiLlamaId: string) => {
 		},
 	)
 
-	return price
+	return baoPrice
 }
 
-export default usePrice
+export default useBaoPrice
