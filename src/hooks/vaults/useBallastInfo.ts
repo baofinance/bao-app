@@ -19,9 +19,10 @@ const useBallastInfo = (vaultName: string) => {
 	const weth = useContract<Weth>('Weth', Config.contracts.Weth[chainId].address)
 
 	const enabled = !!bao && !!library && !!ballast && !!lusd
-	const { data: ballastInfo, refetch } = useQuery(
-		['@/hooks/ballast/useBallastInfo', providerKey(library, account, chainId), { enabled }],
-		async () => {
+	const { data: ballastInfo, refetch } = useQuery({
+		queryKey: ['@/hooks/ballast/useBallastInfo', providerKey(library, account, chainId), { enabled }],
+
+		queryFn: async () => {
 			const ballastQueries = Multicall.createCallContext([
 				{
 					ref: 'Ballast',
@@ -51,10 +52,9 @@ const useBallastInfo = (vaultName: string) => {
 				},
 			}
 		},
-		{
-			enabled,
-		},
-	)
+
+		enabled,
+	})
 
 	const _refetch = () => {
 		if (enabled) refetch()

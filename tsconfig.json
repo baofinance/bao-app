@@ -27,7 +27,8 @@
       "@/utils/*": ["src/utils/*"],
       "@/typechain/*": ["src/typechain/*"],
     },
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+    "useUnknownInCatchVariables": true
   },
   "include": [
     "next-env.d.ts",

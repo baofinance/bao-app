@@ -13,18 +13,18 @@ export const useOraclePrice = (marketName: string): BigNumber => {
 	const signerOrProvider = account ? library.getSigner() : library
 
 	const enabled = !!bao && !!account && !!chainId && !!marketName
-	const { data: price, refetch } = useQuery(
-		['@/hooks/lend/useOraclePrice', providerKey(library, account, chainId), { enabled, marketName }],
-		async () => {
+	const { data: price, refetch } = useQuery({
+		queryKey: ['@/hooks/lend/useOraclePrice', providerKey(library, account, chainId), { enabled, marketName }],
+
+		queryFn: async () => {
 			const oracle = VaultOracle__factory.connect(Config.lendMarkets[marketName].oracle, signerOrProvider)
 			const address = Config.lendMarkets[marketName].marketAddresses[chainId]
 
 			return await oracle.callStatic.getUnderlyingPrice(address)
 		},
-		{
-			enabled,
-		},
-	)
+
+		enabled,
+	})
 
 	const _refetch = () => {
 		if (enabled) refetch()

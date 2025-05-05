@@ -32,8 +32,8 @@ export const useAccountLiquidity = (vaultName: string): AccountLiquidity => {
 	const comptroller = useContract<Comptroller>('Comptroller', Config.vaults[vaultName].comptroller)
 
 	const enabled = !!comptroller && !!account && !!vaults && !!supplyBalances && !!borrowBalances && !!exchangeRates && !!oraclePrices
-	const { data: accountLiquidity, refetch } = useQuery(
-		[
+	const { data: accountLiquidity, refetch } = useQuery({
+		queryKey: [
 			'@/hooks/vaults/useAccountLiquidity',
 			providerKey(library, account, chainId),
 			{
@@ -45,7 +45,8 @@ export const useAccountLiquidity = (vaultName: string): AccountLiquidity => {
 				vaultName,
 			},
 		],
-		async () => {
+
+		queryFn: async () => {
 			const compAccountLiqudity = await comptroller.getAccountLiquidity(account)
 
 			const prices: { [key: string]: BigNumber } = {}
@@ -90,16 +91,16 @@ export const useAccountLiquidity = (vaultName: string): AccountLiquidity => {
 				usdBorrowable: compAccountLiqudity[1],
 			}
 		},
-		{
-			enabled,
-			placeholderData: {
-				netApy: BigNumber.from(0),
-				usdSupply: BigNumber.from(0),
-				usdBorrow: BigNumber.from(0),
-				usdBorrowable: BigNumber.from(0),
-			},
+
+		enabled,
+
+		placeholderData: {
+			netApy: BigNumber.from(0),
+			usdSupply: BigNumber.from(0),
+			usdBorrow: BigNumber.from(0),
+			usdBorrowable: BigNumber.from(0),
 		},
-	)
+	})
 
 	const _refetch = async () => {
 		if (enabled) refetch()

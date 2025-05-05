@@ -21,9 +21,10 @@ const useBalancerPoolInfo = (swapToken: SwapToken): BalancerPoolInfo => {
 	const { library, account, chainId } = useWeb3React()
 
 	const enabled = !!bao && !!library && !!swapToken
-	const { data: poolTokenInfo, refetch } = useQuery(
-		['@/hooks/swap/useBalancerPoolInfo', providerKey(library, account, chainId), { enabled, id: swapToken.id }],
-		async () => {
+	const { data: poolTokenInfo, refetch } = useQuery({
+		queryKey: ['@/hooks/swap/useBalancerPoolInfo', providerKey(library, account, chainId), { enabled, id: swapToken.id }],
+
+		queryFn: async () => {
 			const balancerVault = BalancerVault__factory.connect(Config.contracts.BalancerVault[chainId].address, library)
 
 			const contracts: any[] = []
@@ -50,10 +51,9 @@ const useBalancerPoolInfo = (swapToken: SwapToken): BalancerPoolInfo => {
 				tokenBalance: balance,
 			}
 		},
-		{
-			enabled,
-		},
-	)
+
+		enabled,
+	})
 
 	const _refetch = () => {
 		if (enabled) refetch()

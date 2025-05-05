@@ -13,9 +13,10 @@ export const useAccountBalances = (marketName: string): Balance[] => {
 	const bao = useBao()
 	const { account, library, chainId } = useWeb3React()
 	const enabled = !!bao && !!account && !!chainId && !!marketName
-	const { data: balances, refetch } = useQuery(
-		['@/hooks/lend/useAccountBalance', providerKey(library, account, chainId), { enabled, marketName }],
-		async () => {
+	const { data: balances, refetch } = useQuery({
+		queryKey: ['@/hooks/lend/useAccountBalance', providerKey(library, account, chainId), { enabled, marketName }],
+
+		queryFn: async () => {
 			const tokens = Config.lendMarkets[marketName].assets.map(asset => asset.underlyingAddress[chainId])
 			const contracts: Contract[] = tokens.filter(address => address !== 'ETH').map(address => Erc20__factory.connect(address, library))
 
@@ -42,10 +43,9 @@ export const useAccountBalances = (marketName: string): Balance[] => {
 				return { address, symbol, balance, decimals }
 			})
 		},
-		{
-			enabled,
-		},
-	)
+
+		enabled,
+	})
 
 	const _refetch = () => {
 		if (enabled) refetch()

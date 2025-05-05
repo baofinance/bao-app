@@ -29,13 +29,14 @@ export const useAccountLiquidity = (marketName: string, supplyBalances: Balance[
 
 	const enabled =
 		!!comptroller && !!account && !!market && !!supplyBalances && !!borrowBalances && !!exchangeRates && !!price && !!supplyRate
-	const { data: accountLiquidity, refetch } = useQuery(
-		[
+	const { data: accountLiquidity, refetch } = useQuery({
+		queryKey: [
 			'@/hooks/vaults/useAccountLiquidity',
 			providerKey(library, account, chainId),
 			{ enabled, supplyBalances, borrowBalances, exchangeRates, price, marketName },
 		],
-		async () => {
+
+		queryFn: async () => {
 			const compAccountLiquidity = await comptroller.getAccountLiquidity(account)
 
 			const calculateSupply = () => {
@@ -77,16 +78,16 @@ export const useAccountLiquidity = (marketName: string, supplyBalances: Balance[
 				borrowable: BigNumber.from(compAccountLiquidity[1]),
 			}
 		},
-		{
-			enabled,
-			placeholderData: {
-				netApy: BigNumber.from(0),
-				supply: BigNumber.from(0),
-				borrow: BigNumber.from(0),
-				borrowable: BigNumber.from(0),
-			},
+
+		enabled,
+
+		placeholderData: {
+			netApy: BigNumber.from(0),
+			supply: BigNumber.from(0),
+			borrow: BigNumber.from(0),
+			borrowable: BigNumber.from(0),
 		},
-	)
+	})
 
 	const _refetch = () => {
 		if (enabled) refetch()

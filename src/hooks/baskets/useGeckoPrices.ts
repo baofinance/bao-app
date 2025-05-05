@@ -17,9 +17,10 @@ const useGeckoPrices = (): Prices => {
 
 	const enabled = !!library && !!baskets
 	const nids = baskets.map(b => b.nid)
-	const { data: prices, refetch } = useQuery(
-		['@/hooks/baskets/useGeckoPrices', providerKey(library, account, chainId), { enabled, nids }],
-		async () => {
+	const { data: prices, refetch } = useQuery({
+		queryKey: ['@/hooks/baskets/useGeckoPrices', providerKey(library, account, chainId), { enabled, nids }],
+
+		queryFn: async () => {
 			// Create array of contract addresses to query in DefiLlama format
 			const contractAddresses = baskets.reduce((prev, basket) => {
 				// Get all the addresses from the cgIds object
@@ -52,8 +53,11 @@ const useGeckoPrices = (): Prices => {
 				return { ...prev, [originalAddress]: parseUnits(res.coins[cur].price.toString()) }
 			}, {} as Prices)
 		},
-		{ enabled, staleTime: 1000 * 60 * 60, cacheTime: 1000 * 60 * 120, refetchOnReconnect: true },
-	)
+
+		enabled,
+		staleTime: 1000 * 60 * 60,
+		refetchOnReconnect: true,
+	})
 
 	const _refetch = () => {
 		if (enabled) refetch()

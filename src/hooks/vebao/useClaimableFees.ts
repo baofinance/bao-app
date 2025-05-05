@@ -11,16 +11,16 @@ const useClaimableFees = () => {
 	const feeDistributor = useContract<FeeDistributor>('FeeDistributor')
 	const enabled = !!feeDistributor && !!account
 
-	const { data: claimableFees, refetch } = useQuery(
-		['@/hooks/vebao/useClaimableFees', providerKey(library, account, chainId), { enabled }],
-		async () => {
+	const { data: claimableFees, refetch } = useQuery({
+		queryKey: ['@/hooks/vebao/useClaimableFees', providerKey(library, account, chainId), { enabled }],
+
+		queryFn: async () => {
 			const _claimableFees = await feeDistributor.callStatic['claim(address)'](account)
 			return _claimableFees
 		},
-		{
-			enabled,
-		},
-	)
+
+		enabled,
+	})
 
 	const _refetch = () => {
 		if (enabled) refetch()

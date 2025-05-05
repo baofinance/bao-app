@@ -21,9 +21,10 @@ const useEpochTime = (): RewardsInfo => {
 	const token = useContract<Baov2>('Baov2', Config.contracts.Baov2[chainId].address)
 
 	const enabled = !!bao && !!library && !!token
-	const { data: epochTime, refetch } = useQuery(
-		['@/hooks/vebao/useEpochTime', providerKey(library, account, chainId), { enabled }],
-		async () => {
+	const { data: epochTime, refetch } = useQuery({
+		queryKey: ['@/hooks/vebao/useEpochTime', providerKey(library, account, chainId), { enabled }],
+
+		queryFn: async () => {
 			const query = Multicall.createCallContext([
 				{
 					contract: token,
@@ -46,10 +47,9 @@ const useEpochTime = (): RewardsInfo => {
 				future: res[1].values[0],
 			}
 		},
-		{
-			enabled,
-		},
-	)
+
+		enabled,
+	})
 
 	const _refetch = () => {
 		if (enabled) refetch()

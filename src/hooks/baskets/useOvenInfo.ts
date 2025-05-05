@@ -20,9 +20,10 @@ const useOvenInfo = (basket: ActiveSupportedBasket): OvenInfo => {
 	const { library, account, chainId } = useWeb3React()
 
 	const enabled = !!bao && !!account && !!basket
-	const { data: ovenInfo, refetch } = useQuery(
-		['@/hooks/baskets/useOvenInfo', providerKey(library, account, chainId), { enabled, nid: basket.nid }],
-		async () => {
+	const { data: ovenInfo, refetch } = useQuery({
+		queryKey: ['@/hooks/baskets/useOvenInfo', providerKey(library, account, chainId), { enabled, nid: basket.nid }],
+
+		queryFn: async () => {
 			const balance = await library.getBalance(basket.ovenAddress)
 
 			const query = Multicall.createCallContext([
@@ -41,10 +42,9 @@ const useOvenInfo = (basket: ActiveSupportedBasket): OvenInfo => {
 				cap: res[2].values[0],
 			}
 		},
-		{
-			enabled,
-		},
-	)
+
+		enabled,
+	})
 
 	const _refetch = () => {
 		if (enabled) refetch()

@@ -15,19 +15,23 @@ import { providerKey } from '@/utils/index'
 export const useBlock = (): number => {
 	const { library, account, chainId } = useWeb3React()
 
-	const { data: block, refetch } = useQuery(
-		['@/hooks/base/useBlockNumber', providerKey(library, account, chainId)],
-		async () => {
+	const { data: block, refetch } = useQuery({
+		queryKey: ['@/hooks/base/useBlockNumber', providerKey(library, account, chainId)],
+
+		queryFn: async () => {
 			const nextBlockNumber = await library?.getBlockNumber()
 			return nextBlockNumber
 		},
-		{
-			enabled: false,
-			staleTime: 0, // manual override
-			cacheTime: 1000 * 60 * 10, // one minute
-			refetchOnReconnect: true,
-		},
-	)
+
+		enabled: false,
+
+		// manual override
+		staleTime: 0,
+
+		// one minute
+
+		refetchOnReconnect: true,
+	})
 
 	useEffect(() => {
 		if (library) {

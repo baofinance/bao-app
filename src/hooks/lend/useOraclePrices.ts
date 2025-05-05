@@ -14,9 +14,10 @@ export const useOraclePrices = (marketName: string): { [p: string]: BigNumber } 
 	const { account, library, chainId } = useWeb3React()
 	const signerOrProvider = account ? library.getSigner() : library
 	const enabled = !!bao && !!account && !!chainId && !!marketName
-	const { data: prices, refetch } = useQuery(
-		['@/hooks/lend/useOraclePrices', providerKey(library, account, chainId), { enabled, marketName }],
-		async () => {
+	const { data: prices, refetch } = useQuery({
+		queryKey: ['@/hooks/lend/useOraclePrices', providerKey(library, account, chainId), { enabled, marketName }],
+
+		queryFn: async () => {
 			if (!enabled) return null
 
 			const oracle = VaultOracle__factory.connect(Config.lendMarkets[marketName].oracle, signerOrProvider)
@@ -44,10 +45,8 @@ export const useOraclePrices = (marketName: string): { [p: string]: BigNumber } 
 			)
 		},
 
-		{
-			enabled,
-		},
-	)
+		enabled,
+	})
 
 	const _refetch = () => {
 		if (enabled) refetch()

@@ -17,9 +17,10 @@ export const useTotalCollateral = (marketName: string): BigNumber => {
 	const prices = useOraclePrices(marketName)
 
 	const enabled = !!bao && !!account && !!chainId && !!prices && !!marketName
-	const { data: totalCollateral, refetch } = useQuery(
-		['@/hooks/lend/useTotalCollateral', providerKey(library, account, chainId), { enabled, prices, marketName }],
-		async () => {
+	const { data: totalCollateral, refetch } = useQuery({
+		queryKey: ['@/hooks/lend/useTotalCollateral', providerKey(library, account, chainId), { enabled, prices, marketName }],
+
+		queryFn: async () => {
 			const addresses = Config.lendMarkets[marketName].assets.map(asset => asset.marketAddress[chainId])
 			const contracts: Contract[] = addresses.map(address => Ctoken__factory.connect(address, library))
 
@@ -47,10 +48,9 @@ export const useTotalCollateral = (marketName: string): BigNumber => {
 
 			return totalCollateral
 		},
-		{
-			enabled,
-		},
-	)
+
+		enabled,
+	})
 
 	const _refetch = () => {
 		if (enabled) refetch()

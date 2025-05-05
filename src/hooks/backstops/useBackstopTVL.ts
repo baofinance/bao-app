@@ -15,9 +15,10 @@ export const useBackstopTVL = (backstop: ActiveSupportedBackstop) => {
 	// Use the new Chainlink Oracle hook to get ETH price
 	const { price: ethPrice, loading: ethPriceLoading } = useChainlinkOracle('ETH')
 
-	const { data: tvlData, refetch } = useQuery(
-		['@/hooks/gauges/useBackstopTVL', providerKey(library), { enabled, pid: backstop.pid }],
-		async () => {
+	const { data: tvlData, refetch } = useQuery({
+		queryKey: ['@/hooks/gauges/useBackstopTVL', providerKey(library), { enabled, pid: backstop.pid }],
+
+		queryFn: async () => {
 			if (!ethPrice) {
 				return { tvl: 0 }
 			}
@@ -30,8 +31,10 @@ export const useBackstopTVL = (backstop: ActiveSupportedBackstop) => {
 			console.log(tvl)
 			return { tvl }
 		},
-		{ enabled: !!ethPrice && enabled, placeholderData: { tvl: 0 } },
-	)
+
+		enabled: !!ethPrice && enabled,
+		placeholderData: { tvl: 0 },
+	})
 
 	useEffect(() => {
 		if (ethPrice && !ethPriceLoading) {

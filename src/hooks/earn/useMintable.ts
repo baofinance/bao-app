@@ -15,17 +15,17 @@ const useMintable = () => {
 	const token = useContract<Baov2>('Baov2', Config.contracts.Baov2[chainId].address)
 
 	const enabled = !!epochTime && !!epochTime.start && !!epochTime.future && !!token
-	const { data: mintable, refetch } = useQuery(
-		['@/hooks/gauges/useMintable', providerKey(library), { enabled, epochTime }],
-		async () => {
+	const { data: mintable, refetch } = useQuery({
+		queryKey: ['@/hooks/gauges/useMintable', providerKey(library), { enabled, epochTime }],
+
+		queryFn: async () => {
 			const _mintable = await token.mintable_in_timeframe(epochTime.start, epochTime.future)
 			return _mintable
 		},
-		{
-			enabled,
-			placeholderData: BigNumber.from(0),
-		},
-	)
+
+		enabled,
+		placeholderData: BigNumber.from(0),
+	})
 
 	const _refetch = () => {
 		if (enabled) refetch()

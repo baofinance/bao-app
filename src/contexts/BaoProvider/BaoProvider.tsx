@@ -37,18 +37,17 @@ const BaoProvider: React.FC<PropsWithChildren<BaoProviderProps>> = ({ children }
 		}
 	}, [activate, active, triedEager, error])
 
-	const { data: bao } = useQuery(
-		['@/contexts/BaoProvider/bao', providerKey(library, account, chainId)],
-		async () => {
+	const { data: bao } = useQuery({
+		queryKey: ['@/contexts/BaoProvider/bao', providerKey(library, account, chainId)],
+
+		queryFn: async () => {
 			return new Bao(library)
 		},
-		{
-			enabled: !!library && active && !!chainId,
-			staleTime: Infinity,
-			cacheTime: Infinity,
-			networkMode: 'always',
-		},
-	)
+
+		enabled: !!library && active && !!chainId,
+		staleTime: Infinity,
+		networkMode: 'always',
+	})
 
 	// Wait for a valid baolib and web3 library with chain connection
 	if (bao && library && chainId) {

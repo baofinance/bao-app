@@ -14,9 +14,10 @@ export const useSupplyRate = (marketName: string): BigNumber => {
 	const market = Config.lendMarkets[marketName]
 
 	const enabled = !!market && !!bao && !!account
-	const { data: supplyRate } = useQuery(
-		['@/hooks/lend/supplyRate', providerKey(library, account, chainId), { enabled, marketName }],
-		async () => {
+	const { data: supplyRate } = useQuery({
+		queryKey: ['@/hooks/lend/supplyRate', providerKey(library, account, chainId), { enabled, marketName }],
+
+		queryFn: async () => {
 			const address = market.marketAddresses[chainId]
 			const contracts: Contract[] = [Ctoken__factory.connect(address, library)]
 			const multiCallContext = MultiCall.createCallContext(
@@ -30,10 +31,9 @@ export const useSupplyRate = (marketName: string): BigNumber => {
 
 			return res[address][0].values[0]
 		},
-		{
-			enabled,
-		},
-	)
+
+		enabled,
+	})
 
 	return supplyRate
 }

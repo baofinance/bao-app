@@ -12,22 +12,23 @@ const useRelativeWeight = (gaugeAddress: string) => {
 	const gaugeController = useContract<GaugeController>('GaugeController')
 
 	const enabled = !!library && !!gaugeController
-	const { data: weight, refetch } = useQuery(
-		['@/hooks/gauges/useRelativeWeight', providerKey(library, account, chainId), { enabled, gaugeAddress }],
-		async () => {
+	const { data: weight, refetch } = useQuery({
+		queryKey: ['@/hooks/gauges/useRelativeWeight', providerKey(library, account, chainId), { enabled, gaugeAddress }],
+
+		queryFn: async () => {
 			const block = await library.getBlock()
 			const currentWeight = await gaugeController['gauge_relative_weight(address,uint256)'](gaugeAddress, block.timestamp)
 			const futureWeight = await gaugeController['gauge_relative_weight(address,uint256)'](gaugeAddress, block.timestamp + 604800)
 			return { currentWeight, futureWeight }
 		},
-		{
-			enabled,
-			placeholderData: {
-				currentWeight: BigNumber.from(0),
-				futureWeight: BigNumber.from(0),
-			},
+
+		enabled,
+
+		placeholderData: {
+			currentWeight: BigNumber.from(0),
+			futureWeight: BigNumber.from(0),
 		},
-	)
+	})
 
 	const _refetch = () => {
 		if (enabled) refetch()

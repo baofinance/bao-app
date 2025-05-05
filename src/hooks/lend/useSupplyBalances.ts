@@ -14,9 +14,10 @@ export const useSupplyBalances = (marketName: string): Balance[] => {
 	const { account, library, chainId } = useWeb3React()
 
 	const enabled = !!bao && !!account && !!chainId && !!marketName
-	const { data: balances, refetch } = useQuery(
-		['@/hooks/lend/useSupplyBalances', providerKey(library, account, chainId), { enabled, marketName }],
-		async () => {
+	const { data: balances, refetch } = useQuery({
+		queryKey: ['@/hooks/lend/useSupplyBalances', providerKey(library, account, chainId), { enabled, marketName }],
+
+		queryFn: async () => {
 			const contracts: Contract[] = Config.lendMarkets[marketName].assets
 				.map(asset => asset.marketAddress[chainId])
 				.map(address => Ctoken__factory.connect(address, library))
@@ -48,10 +49,9 @@ export const useSupplyBalances = (marketName: string): Balance[] => {
 				}
 			})
 		},
-		{
-			enabled,
-		},
-	)
+
+		enabled,
+	})
 
 	const _refetch = () => {
 		if (enabled) refetch()

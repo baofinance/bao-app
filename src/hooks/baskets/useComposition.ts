@@ -46,9 +46,10 @@ const useComposition = (basket: ActiveSupportedBasket): Array<BasketComponent> =
 	const lidoAPY = useLlama(Config.llamaIds.wstETH)
 	const rocketAPY = useLlama(Config.llamaIds.rETH)
 
-	const { data: composition, refetch } = useQuery(
-		['@/hooks/baskets/useComposition', providerKey(library, account, chainId), { enabled, nid: basket && basket.nid }],
-		async () => {
+	const { data: composition, refetch } = useQuery({
+		queryKey: ['@/hooks/baskets/useComposition', providerKey(library, account, chainId), { enabled, nid: basket && basket.nid }],
+
+		queryFn: async () => {
 			const tokenComposition: string[] = await basketContract.getTokens()
 			const tokensQuery = MultiCall.createCallContext(
 				tokenComposition
@@ -154,10 +155,9 @@ const useComposition = (basket: ActiveSupportedBasket): Array<BasketComponent> =
 
 			return _comp
 		},
-		{
-			enabled,
-		},
-	)
+
+		enabled,
+	})
 
 	const _refetch = () => {
 		if (enabled) refetch()

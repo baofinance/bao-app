@@ -66,17 +66,17 @@ const Actions = ({ baoBalance, lockInfo }: ActionProps) => {
 	}
 
 	const enabledTimestamp = !!library
-	const { data: timestamp, refetch: refetchTimestamp } = useQuery(
-		['library.getBlock().timestamp'],
-		async () => {
+	const { data: timestamp, refetch: refetchTimestamp } = useQuery({
+		queryKey: ['library.getBlock().timestamp'],
+
+		queryFn: async () => {
 			const block = await library.getBlock()
 			return block.timestamp
 		},
-		{
-			enabled: enabledTimestamp,
-			placeholderData: 0,
-		},
-	)
+
+		enabled: enabledTimestamp,
+		placeholderData: 0,
+	})
 	const _refetchTimestamp = () => {
 		if (enabledTimestamp) refetchTimestamp()
 	}

@@ -23,9 +23,10 @@ export const useBorrowApy = (marketName: string): BigNumber => {
 	const { account, library, chainId } = useWeb3React()
 
 	const enabled = !!bao && !!account && !!chainId && !!marketName
-	const { data: borrowApy, refetch } = useQuery(
-		['@/hooks/lend/useBorrowApy', providerKey(library, account, chainId), { enabled, marketName }],
-		async () => {
+	const { data: borrowApy, refetch } = useQuery({
+		queryKey: ['@/hooks/lend/useBorrowApy', providerKey(library, account, chainId), { enabled, marketName }],
+
+		queryFn: async () => {
 			const address = Config.lendMarkets[marketName].marketAddresses[chainId]
 			const contracts: Contract[] = [Ctoken__factory.connect(address, library)]
 
@@ -48,10 +49,9 @@ export const useBorrowApy = (marketName: string): BigNumber => {
 
 			return parseUnits(toApy(res[address][1].values[0]).toString())
 		},
-		{
-			enabled,
-		},
-	)
+
+		enabled,
+	})
 
 	const _refetch = () => {
 		if (enabled) refetch()

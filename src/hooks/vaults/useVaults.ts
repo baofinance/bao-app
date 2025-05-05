@@ -23,17 +23,17 @@ export const useAccountVaults = (vaultName: string): ActiveSupportedVault[] | un
 
 	const enabled = vaults?.length > 0 && !!library
 	const vids = vaults?.map(vault => vault.vid)
-	const { data: accountVaults, refetch } = useQuery(
-		['@/hooks/vaults/useAccountVaults', providerKey(library, account, chainId), { enabled, vids, vaultName }],
-		async () => {
+	const { data: accountVaults, refetch } = useQuery({
+		queryKey: ['@/hooks/vaults/useAccountVaults', providerKey(library, account, chainId), { enabled, vids, vaultName }],
+
+		queryFn: async () => {
 			const comptroller = Comptroller__factory.connect(Config.vaults[vaultName].comptroller, library)
 			const _accountVaults = await comptroller.getAssetsIn(account)
 			return _accountVaults.map((address: string) => vaults.find(({ vaultAddress }) => vaultAddress === address))
 		},
-		{
-			enabled,
-		},
-	)
+
+		enabled,
+	})
 
 	const _refetch = () => {
 		if (enabled) refetch()

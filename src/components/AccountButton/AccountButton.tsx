@@ -11,6 +11,7 @@ import Loader from '../Loader'
 import WalletProviderModal from '../WalletProviderModal'
 import { default as UDResolution } from '@unstoppabledomains/resolution'
 import Config from '@/bao/lib/config'
+import { ConnectButton } from '@rainbow-me/rainbowkit'
 
 const udResolution = new UDResolution()
 async function udReverseAddress(address: string): Promise<string> {
@@ -66,24 +67,10 @@ const AccountButton: React.FC<AccountButtonProps> = () => {
 	return (
 		<>
 			{!account ? (
-				<Button onClick={() => setShowWalletProviderModal(true)} size='sm'>
-					Connect <FontAwesomeIcon icon={faLink} className='ml-1' />
-				</Button>
+				<ConnectButton />
 			) : (
 				<>
-					<Button onClick={() => setShowAccountModal(true)} size='sm'>
-						<div className='items-center'>
-							{displayId}
-							{pendingTxs > 0 && (
-								<>
-									<FontAwesomeIcon icon={faAngleDoubleRight} className='mx-2 mt-1 text-baoRed' />
-									<Loader />
-									<span className='ml-2'>{pendingTxs}</span>
-									<FontAwesomeIcon icon={faReceipt} className='mx-2 mt-1 text-baoRed' />
-								</>
-							)}
-						</div>
-					</Button>
+					<ConnectButton />
 					{/* <div className='hidden lg:block'>
 						<Listbox value={selectedAsset} onChange={setSelectedAsset}>
 							{({ open }) => (

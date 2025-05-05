@@ -18,9 +18,10 @@ const useContract = <T = Contract>(contractName: string, address?: string): T =>
 		data: contract,
 		//refetch,
 		//status,
-	} = useQuery(
-		['@/hooks/base/useContract', providerKey(library, account, chainId), { contractName, address }],
-		async () => {
+	} = useQuery({
+		queryKey: ['@/hooks/base/useContract', providerKey(library, account, chainId), { contractName, address }],
+
+		queryFn: async () => {
 			if (address === 'ETH') return null
 			let contractAddr
 			try {
@@ -33,13 +34,11 @@ const useContract = <T = Contract>(contractName: string, address?: string): T =>
 			const _contract: T = factory.connect(contractAddr, providerOrSigner)
 			return _contract
 		},
-		{
-			enabled: !!library && !!chainId && address !== null,
-			staleTime: Infinity,
-			cacheTime: Infinity,
-			networkMode: 'always',
-		},
-	)
+
+		enabled: !!library && !!chainId && address !== null,
+		staleTime: Infinity,
+		networkMode: 'always',
+	})
 
 	return contract as T
 }

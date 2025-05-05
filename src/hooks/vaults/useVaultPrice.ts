@@ -15,18 +15,18 @@ export const useVaultPrice = (address: string, vaultName: string) => {
 
 	const enabled = !!bao && !!oracle && !!chainId
 
-	const { data: price, refetch } = useQuery(
-		['@/hooks/vaults/useVaultPrice', { enabled }],
-		async () => {
+	const { data: price, refetch } = useQuery({
+		queryKey: ['@/hooks/vaults/useVaultPrice', { enabled }],
+
+		queryFn: async () => {
 			const _price = await oracle.getUnderlyingPrice(address)
 
 			return _price
 		},
-		{
-			enabled,
-			placeholderData: BigNumber.from(0),
-		},
-	)
+
+		enabled,
+		placeholderData: BigNumber.from(0),
+	})
 
 	const _refetch = () => {
 		if (enabled) refetch()

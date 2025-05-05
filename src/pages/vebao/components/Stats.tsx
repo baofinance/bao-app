@@ -148,16 +148,16 @@ export const ProtocolStats = ({ veInfo, baoPrice }: StatsProps) => {
 	const avgLock = veInfo ? Math.round(ratio * 4 * 100) / 100 : 0
 
 	const enabled = !!library
-	const { data: timestamp, refetch } = useQuery(
-		['block timestamp', providerKey(library, account, chainId)],
-		async () => {
+	const { data: timestamp, refetch } = useQuery({
+		queryKey: ['block timestamp', providerKey(library, account, chainId)],
+
+		queryFn: async () => {
 			const block = await library.getBlock()
 			return block.timestamp as BigNumber
 		},
-		{
-			enabled,
-		},
-	)
+
+		enabled,
+	})
 
 	const _refetch = () => {
 		if (enabled) refetch()

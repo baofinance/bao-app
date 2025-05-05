@@ -14,18 +14,18 @@ const useBasketInfo = (basket: ActiveSupportedBasket): BasketInfo => {
 	const { library, account, chainId } = useWeb3React()
 
 	const enabled = !!library && !!basket && !!basket.basketContract
-	const { data: basketInfo, refetch } = useQuery(
-		['@/hooks/baskets/useBasketInfo', providerKey(library, account, chainId), { enabled, nid: basket.nid }],
-		async () => {
+	const { data: basketInfo, refetch } = useQuery({
+		queryKey: ['@/hooks/baskets/useBasketInfo', providerKey(library, account, chainId), { enabled, nid: basket.nid }],
+
+		queryFn: async () => {
 			const supply = await basket.basketContract.totalSupply()
 			return {
 				totalSupply: supply,
 			}
 		},
-		{
-			enabled,
-		},
-	)
+
+		enabled,
+	})
 
 	const _refetch = () => {
 		if (enabled) refetch()

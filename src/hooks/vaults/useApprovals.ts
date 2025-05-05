@@ -19,9 +19,10 @@ export const useApprovals = (vaultName: string): Approvals => {
 	const vaults = useVaults(vaultName)
 
 	const enabled = !!bao && !!vaults && !!account
-	const { data: approvals, refetch } = useQuery(
-		['@/hooks/vaults/useApprovals', providerKey(library, account, chainId), { enabled }],
-		async () => {
+	const { data: approvals, refetch } = useQuery({
+		queryKey: ['@/hooks/vaults/useApprovals', providerKey(library, account, chainId), { enabled }],
+
+		queryFn: async () => {
 			const multicallContext = MultiCall.createCallContext(
 				vaults
 					.map(
@@ -49,10 +50,9 @@ export const useApprovals = (vaultName: string): Approvals => {
 				{},
 			)
 		},
-		{
-			enabled,
-		},
-	)
+
+		enabled,
+	})
 
 	const _refetch = () => {
 		if (enabled) refetch()

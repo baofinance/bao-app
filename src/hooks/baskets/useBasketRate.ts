@@ -28,9 +28,10 @@ const useBasketRates = (basket: ActiveSupportedBasket): BasketRates => {
 	const wethOracle = useContract<Chainoracle>('Chainoracle', Config.contracts.wethPrice[chainId].address)
 
 	const enabled = !!bao && !!library && !!recipe && !!wethOracle
-	const { data: rates, refetch } = useQuery(
-		['@/hooks/baskets/useBasketRates', providerKey(library, account, chainId), { enabled, nid: basket.nid }],
-		async () => {
+	const { data: rates, refetch } = useQuery({
+		queryKey: ['@/hooks/baskets/useBasketRates', providerKey(library, account, chainId), { enabled, nid: basket.nid }],
+
+		queryFn: async () => {
 			const wethPrice = await getOraclePrice(bao, wethOracle)
 			const params = [basket.address, ethers.utils.parseEther('1')]
 			const query = Multicall.createCallContext([
@@ -71,10 +72,9 @@ const useBasketRates = (basket: ActiveSupportedBasket): BasketRates => {
 				usd: recipeVersion === 2 ? decimate(wethPrice.mul(res[1].values[0]).mul(100)) : decimate(wethPrice.mul(res[1].values[0]).mul(100)),
 			}
 		},
-		{
-			enabled,
-		},
-	)
+
+		enabled,
+	})
 
 	const _refetch = () => {
 		if (enabled) refetch()

@@ -21,9 +21,10 @@ export const useExchangeRates = (vaultName: string): ExchangeRates => {
 
 	const enabled = vaults?.length > 0 && !!bao && !!account
 	const mids = vaults?.map(vault => vault.vid)
-	const { data: exchangeRates, refetch } = useQuery(
-		['@/hooks/vaults/useExchangeRates', providerKey(library, account, chainId), { enabled, mids, vaultName }],
-		async () => {
+	const { data: exchangeRates, refetch } = useQuery({
+		queryKey: ['@/hooks/vaults/useExchangeRates', providerKey(library, account, chainId), { enabled, mids, vaultName }],
+
+		queryFn: async () => {
 			const tokenContracts = vaults?.map((vault: ActiveSupportedVault) => vault.vaultContract)
 			const multiCallContext = MultiCall.createCallContext(
 				tokenContracts.map(tokenContract => ({
@@ -42,10 +43,9 @@ export const useExchangeRates = (vaultName: string): ExchangeRates => {
 				{},
 			)
 		},
-		{
-			enabled,
-		},
-	)
+
+		enabled,
+	})
 
 	const _refetch = () => {
 		if (enabled) refetch()

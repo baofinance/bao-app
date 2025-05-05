@@ -14,9 +14,10 @@ export const useTotalDebt = (marketName: string): BigNumber => {
 	const { account, library, chainId } = useWeb3React()
 
 	const enabled = !!bao && !!account && !!chainId && !!marketName
-	const { data: totalDebt, refetch } = useQuery(
-		['@/hooks/lend/useTotalDebts', providerKey(library, account, chainId), { enabled, marketName }],
-		async () => {
+	const { data: totalDebt, refetch } = useQuery({
+		queryKey: ['@/hooks/lend/useTotalDebts', providerKey(library, account, chainId), { enabled, marketName }],
+
+		queryFn: async () => {
 			const address = Config.lendMarkets[marketName].marketAddresses[chainId]
 			const contracts: Contract[] = [Ctoken__factory.connect(address, library)]
 
@@ -38,10 +39,9 @@ export const useTotalDebt = (marketName: string): BigNumber => {
 			)
 			return res[address][1].values[0]
 		},
-		{
-			enabled,
-		},
-	)
+
+		enabled,
+	})
 
 	const _refetch = () => {
 		if (enabled) refetch()

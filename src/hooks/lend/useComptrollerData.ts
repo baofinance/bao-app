@@ -13,9 +13,10 @@ export const useComptrollerData = (marketName: string): ComptrollerData[] => {
 	const { account, library, chainId } = useWeb3React()
 	const signerOrProvider = account ? library.getSigner() : library
 	const enabled = !!bao && !!account && !!chainId
-	const { data: comptrollerData } = useQuery(
-		['@/hooks/lend/useComptrollerData', providerKey(library, account, chainId), { enabled }],
-		async () => {
+	const { data: comptrollerData } = useQuery({
+		queryKey: ['@/hooks/lend/useComptrollerData', providerKey(library, account, chainId), { enabled }],
+
+		queryFn: async () => {
 			if (!enabled) return null
 
 			const multicall = new Multicall({ ethersProvider: library, tryAggregate: true })
@@ -41,10 +42,8 @@ export const useComptrollerData = (marketName: string): ComptrollerData[] => {
 			}))
 		},
 
-		{
-			enabled,
-		},
-	)
+		enabled,
+	})
 
 	return comptrollerData
 }

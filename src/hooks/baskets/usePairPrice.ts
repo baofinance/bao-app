@@ -17,9 +17,10 @@ const usePairPrice = (basket: ActiveSupportedBasket) => {
 	const wethOracle = useContract<Chainoracle>('Chainoracle', Config.contracts.wethPrice[chainId].address)
 
 	const enabled = !!bao && !!library && !!basket && !!lpContract && !!wethOracle
-	const { data: pairPrice, refetch } = useQuery(
-		['@/hooks/baskets/usePairPrice', providerKey(library, account, chainId), { enabled, nid: basket.nid }],
-		async () => {
+	const { data: pairPrice, refetch } = useQuery({
+		queryKey: ['@/hooks/baskets/usePairPrice', providerKey(library, account, chainId), { enabled, nid: basket.nid }],
+
+		queryFn: async () => {
 			const wethPrice = await getOraclePrice(bao, wethOracle)
 			const reserves = await lpContract.getReserves()
 
@@ -27,10 +28,9 @@ const usePairPrice = (basket: ActiveSupportedBasket) => {
 			const _price = wethPrice.mul(reserves[0].div(reserves[1]))
 			return _price
 		},
-		{
-			enabled,
-		},
-	)
+
+		enabled,
+	})
 
 	const _refetch = () => {
 		if (enabled) refetch()

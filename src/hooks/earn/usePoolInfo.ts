@@ -25,9 +25,10 @@ const usePoolInfo = (gauge: ActiveSupportedGauge): PoolInfoTypes => {
 
 	const enabled = !!bao && !!library && !!gauge
 
-	const { data: poolInfo, refetch } = useQuery(
-		['@/hooks/gauges/usePoolInfo', providerKey(library, account, chainId), { enabled, gid: gauge.gid }],
-		async () => {
+	const { data: poolInfo, refetch } = useQuery({
+		queryKey: ['@/hooks/gauges/usePoolInfo', providerKey(library, account, chainId), { enabled, gid: gauge.gid }],
+
+		queryFn: async () => {
 			const poolAddress = gauge.poolAddresses[chainId]
 			const poolInfoAddress = gauge.poolInfoAddresses[chainId]
 			const gaugeType = gauge.type.toLowerCase()
@@ -167,10 +168,9 @@ const usePoolInfo = (gauge: ActiveSupportedGauge): PoolInfoTypes => {
 
 			return result
 		},
-		{
-			enabled,
-		},
-	)
+
+		enabled,
+	})
 
 	const _refetch = () => {
 		if (enabled) refetch()

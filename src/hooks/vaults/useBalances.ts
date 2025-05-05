@@ -23,9 +23,10 @@ export const useAccountBalances = (vaultName: string): Balance[] => {
 	const { account, library, chainId } = useWeb3React()
 
 	const enabled = !!bao && !!account && !!chainId
-	const { data: balances, refetch } = useQuery(
-		['@/hooks/vaults/useAccountBalances', providerKey(library, account, chainId), { enabled, vaultName }],
-		async () => {
+	const { data: balances, refetch } = useQuery({
+		queryKey: ['@/hooks/vaults/useAccountBalances', providerKey(library, account, chainId), { enabled, vaultName }],
+
+		queryFn: async () => {
 			const tokens = Config.vaults[vaultName].markets.map(vault => vault.underlyingAddresses[chainId])
 			const contracts: Contract[] = tokens.filter(address => address !== 'ETH').map(address => Erc20__factory.connect(address, library))
 
@@ -53,10 +54,9 @@ export const useAccountBalances = (vaultName: string): Balance[] => {
 				return { address, symbol, balance, decimals }
 			})
 		},
-		{
-			enabled,
-		},
-	)
+
+		enabled,
+	})
 
 	const _refetch = () => {
 		if (enabled) refetch()
@@ -72,9 +72,10 @@ export const useSupplyBalances = (vaultName: string): Balance[] => {
 	const { account, library, chainId } = useWeb3React()
 
 	const enabled = !!bao && !!account && !!chainId
-	const { data: balances, refetch } = useQuery(
-		['@/hooks/vaults/useSupplyBalances', providerKey(library, account, chainId), { enabled, vaultName }],
-		async () => {
+	const { data: balances, refetch } = useQuery({
+		queryKey: ['@/hooks/vaults/useSupplyBalances', providerKey(library, account, chainId), { enabled, vaultName }],
+
+		queryFn: async () => {
 			const tokens = Config.vaults[vaultName].markets.map(vault => vault.vaultAddresses[chainId])
 			const contracts: Contract[] = tokens.map(address => Ctoken__factory.connect(address, library))
 
@@ -100,10 +101,9 @@ export const useSupplyBalances = (vaultName: string): Balance[] => {
 				}
 			})
 		},
-		{
-			enabled,
-		},
-	)
+
+		enabled,
+	})
 
 	const _refetch = () => {
 		if (enabled) refetch()
@@ -119,9 +119,10 @@ export const useBorrowBalances = (vaultName: string): Balance[] => {
 	const { account, library, chainId } = useWeb3React()
 
 	const enabled = !!bao && !!account && !!chainId
-	const { data: balances, refetch } = useQuery(
-		['@/hooks/vaults/useBorrowBalances', providerKey(library, account, chainId), { enabled, vaultName }],
-		async () => {
+	const { data: balances, refetch } = useQuery({
+		queryKey: ['@/hooks/vaults/useBorrowBalances', providerKey(library, account, chainId), { enabled, vaultName }],
+
+		queryFn: async () => {
 			const tokens = Config.vaults[vaultName].markets.map(vault => vault.vaultAddresses[chainId])
 			const contracts: Contract[] = tokens.map(address => Ctoken__factory.connect(address, library))
 
@@ -147,10 +148,9 @@ export const useBorrowBalances = (vaultName: string): Balance[] => {
 				}
 			})
 		},
-		{
-			enabled,
-		},
-	)
+
+		enabled,
+	})
 
 	const _refetch = () => {
 		if (enabled) refetch()

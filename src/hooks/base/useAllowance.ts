@@ -11,16 +11,16 @@ const useAllowance = (tokenAddress: string, spenderAddress: string) => {
 	const contract = useContract<Erc20>('Erc20', tokenAddress)
 
 	const enabled = !!account && !!contract
-	const { data: allowance, refetch } = useQuery(
-		['@/hooks/base/useAllowance', providerKey(library, account, chainId), contract?.address, spenderAddress],
-		async () => {
+	const { data: allowance, refetch } = useQuery({
+		queryKey: ['@/hooks/base/useAllowance', providerKey(library, account, chainId), contract?.address, spenderAddress],
+
+		queryFn: async () => {
 			const _allowance = await contract.allowance(account, spenderAddress)
 			return _allowance
 		},
-		{
-			enabled,
-		},
-	)
+
+		enabled,
+	})
 
 	const _refetch = () => {
 		if (enabled) refetch()

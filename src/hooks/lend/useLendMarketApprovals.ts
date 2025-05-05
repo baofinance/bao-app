@@ -19,9 +19,10 @@ export const useLendMarketApprovals = (lendMarket: ActiveLendMarket): LendMarket
 	const { library, account, chainId } = useWeb3React()
 
 	const enabled = !!bao && !!lendMarket && !!account
-	const { data: approvals, refetch } = useQuery(
-		['@/hooks/lend/useLendMarketApprovals', providerKey(library, account, chainId), { enabled }],
-		async () => {
+	const { data: approvals, refetch } = useQuery({
+		queryKey: ['@/hooks/lend/useLendMarketApprovals', providerKey(library, account, chainId), { enabled }],
+
+		queryFn: async () => {
 			const contracts: Contract[] = [lendMarket.underlyingContract]
 
 			const res = MultiCall.parseCallResults(
@@ -53,10 +54,9 @@ export const useLendMarketApprovals = (lendMarket: ActiveLendMarket): LendMarket
 				{},
 			)
 		},
-		{
-			enabled,
-		},
-	)
+
+		enabled,
+	})
 
 	const _refetch = useCallback(() => {
 		if (enabled) refetch()

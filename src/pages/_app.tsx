@@ -10,10 +10,8 @@ import BaoProvider from '@/contexts/BaoProvider'
 import TransactionProvider from '@/contexts/Transactions'
 import VaultsProvider from '@/contexts/Vaults'
 import '@/styles/globals.css'
-import queryClient from '@/utils/queryClient'
 import { Web3Provider } from '@ethersproject/providers'
 import '@fortawesome/fontawesome-svg-core/styles.css'
-import { QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { Web3ReactProvider } from '@web3-react/core'
 import { DefaultSeo } from 'next-seo'
@@ -22,6 +20,13 @@ import dynamic from 'next/dynamic'
 import Head from 'next/head'
 import React, { ReactNode } from 'react'
 import { Analytics } from '@vercel/analytics/react'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { WagmiProvider } from 'wagmi'
+import { darkTheme, RainbowKitProvider } from '@rainbow-me/rainbowkit'
+import { config as wagmiConfig } from '@/bao/lib/wagmi'
+import { baoWalletConnectTheme } from '@/styles/themes/walletConnect/bao'
+
+const queryClient = new QueryClient()
 
 function getLibrary(provider: any): Web3Provider {
 	const library = new Web3Provider(provider)
@@ -88,20 +93,24 @@ function App({ Component, pageProps }: AppProps) {
 
 const Providers: React.FC<ProvidersProps> = ({ children }: ProvidersProps) => {
 	return (
-		<QueryClientProvider client={queryClient}>
-			<Web3ReactProvider getLibrary={getLibrary}>
-				<Web3ReactNetworkProvider getLibrary={getLibrary}>
-					<Web3ReactManager>
-						<BaoProvider>
-							<TransactionProvider>
-								<VaultsProvider>{children}</VaultsProvider>
-							</TransactionProvider>
-						</BaoProvider>
-					</Web3ReactManager>
-				</Web3ReactNetworkProvider>
-			</Web3ReactProvider>
-			<ReactQueryDevtools initialIsOpen={false} />
-		</QueryClientProvider>
+		<WagmiProvider config={wagmiConfig}>
+			<QueryClientProvider client={queryClient}>
+				<RainbowKitProvider theme={baoWalletConnectTheme}>
+					<Web3ReactProvider getLibrary={getLibrary}>
+						<Web3ReactNetworkProvider getLibrary={getLibrary}>
+							<Web3ReactManager>
+								<BaoProvider>
+									<TransactionProvider>
+										<VaultsProvider>{children}</VaultsProvider>
+									</TransactionProvider>
+								</BaoProvider>
+							</Web3ReactManager>
+						</Web3ReactNetworkProvider>
+					</Web3ReactProvider>
+					<ReactQueryDevtools initialIsOpen={false} />
+				</RainbowKitProvider>
+			</QueryClientProvider>
+		</WagmiProvider>
 	)
 }
 

@@ -11,16 +11,16 @@ export const useNextDistribution = () => {
 	const feeDistributor = useContract<FeeDistributor>('FeeDistributor')
 
 	const enabled = !!library && !!feeDistributor
-	const { data: nextDistribution, refetch } = useQuery(
-		['@/hooks/vebao/useNextDistribution', providerKey(library, account, chainId), { enabled }],
-		async () => {
+	const { data: nextDistribution, refetch } = useQuery({
+		queryKey: ['@/hooks/vebao/useNextDistribution', providerKey(library, account, chainId), { enabled }],
+
+		queryFn: async () => {
 			const _nextDistribution = await feeDistributor.last_token_time()
 			return _nextDistribution
 		},
-		{
-			enabled,
-		},
-	)
+
+		enabled,
+	})
 
 	const _refetch = () => {
 		if (enabled) refetch()

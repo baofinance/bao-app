@@ -21,9 +21,10 @@ const useDistributionInfo = (): DistributionInfo => {
 	const distribution = useContract<BaoDistribution>('BaoDistribution')
 
 	const enabled = !!account && !!distribution
-	const { data: distributionInfo, refetch } = useQuery(
-		['@/hooks/distribution/useAccountDistribution', providerKey(library, account, chainId), { enabled }],
-		async () => {
+	const { data: distributionInfo, refetch } = useQuery({
+		queryKey: ['@/hooks/distribution/useAccountDistribution', providerKey(library, account, chainId), { enabled }],
+
+		queryFn: async () => {
 			const { dateStarted, dateEnded, lastClaim, amountOwedTotal } = await distribution.distributions(account)
 			const timeStarted = dateStarted.mul(1000).toNumber()
 			const block = await library.getBlock()
@@ -39,17 +40,17 @@ const useDistributionInfo = (): DistributionInfo => {
 				curve,
 			}
 		},
-		{
-			enabled,
-			placeholderData: {
-				dateStarted: BigNumber.from(0),
-				dateEnded: BigNumber.from(0),
-				lastClaim: BigNumber.from(0),
-				amountOwedTotal: BigNumber.from(0),
-				curve: BigNumber.from(0),
-			},
+
+		enabled,
+
+		placeholderData: {
+			dateStarted: BigNumber.from(0),
+			dateEnded: BigNumber.from(0),
+			lastClaim: BigNumber.from(0),
+			amountOwedTotal: BigNumber.from(0),
+			curve: BigNumber.from(0),
 		},
-	)
+	})
 
 	const _refetch = () => {
 		if (enabled) refetch()

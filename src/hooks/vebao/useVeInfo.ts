@@ -22,9 +22,10 @@ const useVeInfo = (): VeInfo => {
 
 	// FIXME: let us get the totalSupply and supply without needing an account.
 	const enabled = !!bao && !!votingEscrow
-	const { data: veInfo, refetch } = useQuery(
-		['@/hooks/vebao/useVeInfo', providerKey(library), { enabled }],
-		async () => {
+	const { data: veInfo, refetch } = useQuery({
+		queryKey: ['@/hooks/vebao/useVeInfo', providerKey(library), { enabled }],
+
+		queryFn: async () => {
 			const query = Multicall.createCallContext([
 				{
 					contract: votingEscrow,
@@ -47,10 +48,9 @@ const useVeInfo = (): VeInfo => {
 				totalSupply: res[1].values[0],
 			}
 		},
-		{
-			enabled,
-		},
-	)
+
+		enabled,
+	})
 
 	const _refetch = () => {
 		if (enabled) refetch()

@@ -18,16 +18,16 @@ const Lock: React.FC = () => {
 	const baoBalance = useTokenBalance(Config.contracts.Baov2[chainId].address)
 
 	const enabled = !!library
-	const { data: blockTimestamp, refetch } = useQuery(
-		['block timestamp', providerKey(library, account, chainId)],
-		async () => {
+	const { data: blockTimestamp, refetch } = useQuery({
+		queryKey: ['block timestamp', providerKey(library, account, chainId)],
+
+		queryFn: async () => {
 			const block = await library.getBlock()
 			return block.timestamp as BigNumber
 		},
-		{
-			enabled,
-		},
-	)
+
+		enabled,
+	})
 
 	const _refetch = () => {
 		if (enabled) refetch()

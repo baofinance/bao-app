@@ -38,16 +38,16 @@ export const MintCard = ({
 	/* eslint-disable-next-line @typescript-eslint/no-unused-vars */
 	const { pendingTx, txHash, handleTx } = useTransactionHandler()
 
-	const { data: maxMintable } = useQuery(
-		['@/hooks/base/useTokenBalance', providerKey(library, account, chainId)],
-		async () => {
+	const { data: maxMintable } = useQuery({
+		queryKey: ['@/hooks/base/useTokenBalance', providerKey(library, account, chainId)],
+
+		queryFn: async () => {
 			const _maxMintable = await synth.underlyingContract.balanceOf(synth.vaultAddress)
 			return _maxMintable
 		},
-		{
-			placeholderData: BigNumber.from(0),
-		},
-	)
+
+		placeholderData: BigNumber.from(0),
+	})
 
 	const borrowed = useMemo(
 		() => synth && borrowBalances && borrowBalances.find(balance => balance.address === synth.vaultAddress).balance,

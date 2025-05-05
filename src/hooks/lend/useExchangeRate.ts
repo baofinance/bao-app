@@ -23,9 +23,10 @@ export const useExchangeRates = (marketName: string): ExchangeRates => {
 	const market = Config.lendMarkets[marketName]
 
 	const enabled = !!market && !!bao && !!account
-	const { data: exchangeRates } = useQuery(
-		['@/hooks/lend/useExchangeRates', providerKey(library, account, chainId), { enabled, marketName }],
-		async () => {
+	const { data: exchangeRates } = useQuery({
+		queryKey: ['@/hooks/lend/useExchangeRates', providerKey(library, account, chainId), { enabled, marketName }],
+
+		queryFn: async () => {
 			const contracts: Contract[] = [Ctoken__factory.connect(market.marketAddresses[chainId], library)]
 			const multiCallContext = MultiCall.createCallContext(
 				contracts.map(contract => ({
@@ -44,10 +45,9 @@ export const useExchangeRates = (marketName: string): ExchangeRates => {
 				{},
 			)
 		},
-		{
-			enabled,
-		},
-	)
+
+		enabled,
+	})
 
 	return {
 		exchangeRates,

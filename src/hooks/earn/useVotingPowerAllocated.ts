@@ -12,18 +12,18 @@ const useVotingPowerAllocated = () => {
 	const gaugeController = useContract<GaugeController>('GaugeController')
 
 	const enabled = !!library && !!gaugeController
-	const { data: votingPower, refetch } = useQuery(
-		['@/hooks/gauges/useVotingPowerAllocated', providerKey(library, account, chainId), { enabled }],
-		async () => {
+	const { data: votingPower, refetch } = useQuery({
+		queryKey: ['@/hooks/gauges/useVotingPowerAllocated', providerKey(library, account, chainId), { enabled }],
+
+		queryFn: async () => {
 			const _votingPower = await gaugeController.vote_user_power(account)
 			return _votingPower
 		},
-		{
-			enabled,
-			refetchOnReconnect: true,
-			placeholderData: BigNumber.from(0),
-		},
-	)
+
+		enabled,
+		refetchOnReconnect: true,
+		placeholderData: BigNumber.from(0),
+	})
 
 	const _refetch = () => {
 		if (enabled) refetch()

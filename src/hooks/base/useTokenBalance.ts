@@ -11,16 +11,16 @@ import type { Erc20 } from '@/typechain/index'
 export const useEthBalance = () => {
 	const { library, chainId, account } = useWeb3React<Web3Provider>()
 	const enabled = !!library && !!chainId && !!account
-	const { data: balance, refetch } = useQuery(
-		['@/hooks/base/useEthBalance', providerKey(library, account, chainId), { enabled }],
-		async () => {
+	const { data: balance, refetch } = useQuery({
+		queryKey: ['@/hooks/base/useEthBalance', providerKey(library, account, chainId), { enabled }],
+
+		queryFn: async () => {
 			return await library.getBalance(account)
 		},
-		{
-			enabled,
-			placeholderData: BigNumber.from(0),
-		},
-	)
+
+		enabled,
+		placeholderData: BigNumber.from(0),
+	})
 
 	const _refetch = () => {
 		if (enabled) refetch()
@@ -35,17 +35,17 @@ const useTokenBalance = (tokenAddress: string) => {
 	const { library, chainId, account } = useWeb3React<Web3Provider>()
 	const contract = useContract<Erc20>('Erc20', tokenAddress)
 	const enabled = !!chainId && !!account && !!contract
-	const { data: balance, refetch } = useQuery(
-		['@/hooks/base/useTokenBalance', providerKey(library, account, chainId), { enabled, tokenAddress }],
-		async () => {
+	const { data: balance, refetch } = useQuery({
+		queryKey: ['@/hooks/base/useTokenBalance', providerKey(library, account, chainId), { enabled, tokenAddress }],
+
+		queryFn: async () => {
 			const _balance = await contract.balanceOf(account)
 			return _balance
 		},
-		{
-			enabled,
-			placeholderData: BigNumber.from(0),
-		},
-	)
+
+		enabled,
+		placeholderData: BigNumber.from(0),
+	})
 
 	const _refetch = () => {
 		if (enabled) refetch()

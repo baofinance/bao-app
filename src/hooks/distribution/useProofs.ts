@@ -5,9 +5,10 @@ const useProofs = () => {
 	const { account } = useWeb3React()
 
 	const enabled = !!account
-	const { data: merkleLeaf } = useQuery(
-		['@/hooks/distribution/useProofs', { enabled, account }],
-		async () => {
+	const { data: merkleLeaf } = useQuery({
+		queryKey: ['@/hooks/distribution/useProofs', { enabled, account }],
+
+		queryFn: async () => {
 			const leafResponse = await fetch(`https://bao-dist-api.herokuapp.com/${account.toLowerCase()}`)
 			if (leafResponse.status !== 200) {
 				const { error } = await leafResponse.json()
@@ -16,13 +17,11 @@ const useProofs = () => {
 			const leaf = await leafResponse.json()
 			return leaf
 		},
-		{
-			enabled,
-			retry: false,
-			staleTime: Infinity,
-			cacheTime: Infinity,
-		},
-	)
+
+		enabled,
+		retry: false,
+		staleTime: Infinity,
+	})
 
 	return merkleLeaf
 }

@@ -142,9 +142,10 @@ const useGaugeTVL = (gauge: ActiveSupportedGauge) => {
 	])
 
 	const enabled = !!gauge && !!library && !!bao && !!poolTVL
-	const { data: tvlData, refetch } = useQuery(
-		['@/hooks/gauges/useGaugeTVL', providerKey(library), { enabled, gid: gauge.gid, poolTVL }],
-		async () => {
+	const { data: tvlData, refetch } = useQuery({
+		queryKey: ['@/hooks/gauges/useGaugeTVL', providerKey(library), { enabled, gid: gauge.gid, poolTVL }],
+
+		queryFn: async () => {
 			const curveLpContract = CurveLp__factory.connect(gauge.lpAddress, library)
 			const uniLpContract = Uni_v2_lp__factory.connect(gauge.lpAddress, library)
 			const saddleLpContract = SaddleLp__factory.connect(gauge.lpAddress, library)
@@ -193,8 +194,10 @@ const useGaugeTVL = (gauge: ActiveSupportedGauge) => {
 
 			return { gaugeTVL, depositAmount }
 		},
-		{ enabled, placeholderData: { gaugeTVL: BigNumber.from(0), depositAmount: BigNumber.from(0) } },
-	)
+
+		enabled,
+		placeholderData: { gaugeTVL: BigNumber.from(0), depositAmount: BigNumber.from(0) },
+	})
 
 	const _refetch = () => {
 		if (enabled) refetch()
