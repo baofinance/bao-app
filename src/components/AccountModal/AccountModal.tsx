@@ -18,7 +18,7 @@ import { FC, useCallback, useEffect, useState } from 'react'
 import { isDesktop } from 'react-device-detect'
 import Tooltipped from '../Tooltipped'
 import { PendingTransaction } from '../Loader/Loader'
-import { useAccount } from "wagmi"
+import { useAccount } from 'wagmi'
 
 interface AccountModalProps {
 	show: boolean
