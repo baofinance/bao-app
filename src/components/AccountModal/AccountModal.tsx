@@ -18,6 +18,7 @@ import { FC, useCallback, useEffect, useState } from 'react'
 import { isDesktop } from 'react-device-detect'
 import Tooltipped from '../Tooltipped'
 import { PendingTransaction } from '../Loader/Loader'
+import { useAccount } from "wagmi"
 
 interface AccountModalProps {
 	show: boolean
@@ -27,6 +28,8 @@ interface AccountModalProps {
 const AccountModal: FC<AccountModalProps> = ({ show, onHide }) => {
 	const { account, chainId, deactivate } = useWeb3React()
 	const lockInfo = useLockInfo()
+
+	const { address } = useAccount()
 
 	const handleSignOutClick = useCallback(() => {
 		onHide()
@@ -137,10 +140,9 @@ const AccountModal: FC<AccountModalProps> = ({ show, onHide }) => {
 				<Button
 					fullWidth
 					className='w-full'
-					href={`${Config.defaultRpc.blockExplorerUrls[0]}/address/${account}`}
+					href={`${Config.defaultRpc.blockExplorerUrls[0]}/address/${address}`}
 					text='View on Explorer'
 				/>
-				<Button fullWidth onClick={handleSignOutClick} text='Sign out' />
 			</Modal.Actions>
 		</Modal>
 	)
