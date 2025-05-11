@@ -128,6 +128,12 @@ export default {
 				address: '0x885D90A424f87D362C9369C0F3d9A2d28AF495F4',
 			},
 		},
+		// Token clain
+		BaoTokenClaim: {
+			1: {
+				address: '0x',
+			},
+		},
 		Swapper: {
 			1: {
 				address: '0x235b30088E66d2D28F137b422B9349fBa51E0248',
