@@ -8,6 +8,11 @@ import keccak256 from 'keccak256'
 import { MerkleTree } from 'merkletreejs'
 import rawSnapshot from '../../../data/snapshot_bao_normalized.json'
 import { utils, Contract } from 'ethers'
+import Card from '@/components/Card'
+import { Transition } from '@headlessui/react'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faAngleUp, faCircleInfo } from '@fortawesome/free-solid-svg-icons'
+import baoIcon from '@/assets/icons/bao.png' // Adjust the path accordingly
 
 const DEBUG_MERKLE = true
 
@@ -20,15 +25,14 @@ const Claim: React.FC = () => {
 	const [error, setError] = useState<string | null>(null)
 	const [claimWindowActive, setClaimWindowActive] = useState(false)
 	const [contractHasBalance, setContractHasBalance] = useState(true)
+	const [showInfo, setShowInfo] = useState(false)
 
-	// Precompute tree (static)
 	const tree = useMemo(() => {
 		const lowerSnapshot = (rawSnapshot as string[]).map(addr => addr.toLowerCase())
 		const leaves = lowerSnapshot.map(addr => utils.solidityKeccak256(['address'], [addr]))
 		return new MerkleTree(leaves, keccak256, { sortPairs: true })
 	}, [])
 
-	// Compute leaf/proof
 	const { isEligible, proof, paddedProof, leaf } = useMemo(() => {
 		if (!account) return { isEligible: false, proof: null, paddedProof: [], leaf: null }
 
@@ -42,7 +46,6 @@ const Claim: React.FC = () => {
 		return { isEligible: true, proof, paddedProof, leaf }
 	}, [account, tree])
 
-	// Encode calldata
 	const calldata = useMemo(() => {
 		if (!distribution || paddedProof.length === 0) return null
 		try {
@@ -52,26 +55,16 @@ const Claim: React.FC = () => {
 		}
 	}, [distribution, paddedProof])
 
-	// Check if already claimed
 	useEffect(() => {
 		if (!distribution || !account) return
-
-		const checkClaimStatus = async () => {
-			try {
-				const [alreadyClaimed] = await distribution.functions.hasClaimed(account)
-				setClaimed(alreadyClaimed)
-			} catch (err) {
-				console.error('Error checking claim status:', err)
-			}
-		}
-
-		checkClaimStatus()
+		distribution.functions
+			.hasClaimed(account)
+			.then(([alreadyClaimed]) => setClaimed(alreadyClaimed))
+			.catch(err => console.error('Error checking claim status:', err))
 	}, [distribution, account])
 
-	// Check if there is enough to claim and if the claimwindow is active
 	useEffect(() => {
 		if (!distribution || !account) return
-
 		const checkWindowAndBalance = async () => {
 			try {
 				const [start, end, balanceRaw] = await Promise.all([
@@ -82,7 +75,6 @@ const Claim: React.FC = () => {
 						return erc20.balanceOf(distribution.address)
 					}),
 				])
-
 				const now = Math.floor(Date.now() / 1000)
 				setClaimWindowActive(now >= start.toNumber() && now <= end.toNumber())
 				setContractHasBalance(balanceRaw.gte(utils.parseUnits('10581', 18)))
@@ -92,28 +84,20 @@ const Claim: React.FC = () => {
 				setContractHasBalance(false)
 			}
 		}
-
 		checkWindowAndBalance()
 	}, [distribution, account])
 
-	// Debug: confirm contract deployed
 	useEffect(() => {
 		if (!distribution) return
 		distribution.provider.getCode(distribution.address).then(code => {
 			console.log('📦 Bytecode at address:', code)
-			if (code === '0x') {
-				console.warn('⚠️ No contract deployed at this address on the current network!')
-			}
 		})
 	}, [distribution])
 
-	const extractError = (err: any): string => {
-		return err?.data?.message || err?.error?.message || err?.message || 'Transaction failed'
-	}
+	const extractError = (err: any): string => err?.data?.message || err?.error?.message || err?.message || 'Transaction failed'
 
 	const handleClaim = async () => {
 		if (!distribution || !account || paddedProof.length === 0) return
-
 		try {
 			setLoading(true)
 			const calldata = distribution.interface.encodeFunctionData('claim', [paddedProof])
@@ -133,79 +117,105 @@ const Claim: React.FC = () => {
 		}
 	}
 
-	if (!distribution || !distribution.address || distribution.address === '0x') {
+	// UI Logic branches
+	if (!distribution?.address || distribution.address === '0x') {
 		return (
-			<div className='flex flex-col items-center text-center'>
-				<Typography variant='xl' className='font-bakbak text-red'>
-					The token claim contract is not yet deployed.
-				</Typography>
-			</div>
+			<Typography variant='xl' className='text-red text-center font-bakbak'>
+				The token claim contract is not yet deployed.
+			</Typography>
 		)
 	}
 
 	if (!account) {
-		return (
-			<div className='flex flex-col items-center text-center'>
-				<Typography className='mt-2 leading-normal text-baoWhite'>Connect your wallet to check airdrop eligibility.</Typography>
-			</div>
-		)
+		return <Typography className='text-center mt-4 text-baoWhite'>Connect your wallet to check airdrop eligibility.</Typography>
 	}
 
 	if (!isEligible) {
 		return (
-			<div className='flex flex-col items-center text-center'>
-				<Typography variant='xl' className='font-bakbak text-red'>
-					You are not eligible for the token claim.
-				</Typography>
-			</div>
+			<Typography variant='xl' className='text-red text-center font-bakbak'>
+				You are not eligible for the token claim.
+			</Typography>
 		)
 	}
 
 	if (claimed) {
-		return (
-			<div className='flex flex-col items-center text-center'>
-				<Typography className='mt-2 leading-normal text-baoWhite'>You have successfully claimed your tokens!</Typography>
-			</div>
-		)
+		return <Typography className='text-center mt-4 text-baoWhite'>You have successfully claimed your tokens!</Typography>
 	}
 
 	if (!contractHasBalance) {
 		return (
-			<div className='flex flex-col items-center text-center'>
-				<Typography variant='xl' className='font-bakbak text-red'>
-					Claiming unavailable: not enough tokens remain in the contract.
-				</Typography>
-			</div>
+			<Typography variant='xl' className='text-red text-center font-bakbak'>
+				Claiming unavailable: not enough tokens remain in the contract.
+			</Typography>
 		)
 	}
 
 	if (!claimWindowActive) {
 		return (
-			<div className='flex flex-col items-center text-center'>
-				<Typography variant='xl' className='font-bakbak text-yellow-400'>
-					Claim window is not currently active.
-				</Typography>
-			</div>
+			<Typography variant='xl' className='text-yellow-400 text-center font-bakbak'>
+				Claim window is not currently active.
+			</Typography>
 		)
 	}
 
+	// Main claim UI
 	return (
-		<div className='flex flex-col items-center text-center'>
-			<Typography className='mt-2 leading-normal text-baoWhite'>
-				You are eligible to claim <strong>10581</strong> BAOv2 tokens.
-			</Typography>
+		<>
+			{/* Claim row styled exactly like a vault row in Supply */}
+			<div className='flex w-full justify-between place-items-center gap-5 glassmorphic-card p-2'>
+				{/* Left: Token card styled like DepositCard */}
+				<div className='text-baoWhite flex overflow-hidden rounded-2xl border border-baoWhite/20 bg-baoBlack shadow-lg shadow-baoBlack ring-1 ring-black ring-opacity-5 select-none px-2 py-3 text-sm'>
+					<div className='mx-0 my-auto flex h-full justify-center items-center gap-4 w-[200px]'>
+						<div className='col-span-3'>
+							<img className='z-10 inline-block select-none' src='/images/icons/icon-32.png' alt='BAO' width={24} height={24} />
+							<span className='ml-2 inline-block text-left align-middle'>
+								<Typography variant='lg' className='font-bakbak'>
+									BAO
+								</Typography>
+							</span>
+						</div>
+					</div>
+				</div>
 
-			<div className='mt-6'>
-				<Button
-					onClick={handleClaim}
-					disabled={loading || claimed || !isEligible || !account || !distribution || !claimWindowActive || !contractHasBalance}
-				>
-					{claimed ? 'Already Claimed' : loading ? 'Claiming...' : 'Claim Tokens'}
-				</Button>
+				{/* Middle: Claim status message */}
+				<div className='flex-1 flex items-center justify-center h-10'>
+					<Typography className='text-sm text-baoWhite text-center'>
+						You are eligible to claim <strong>10581</strong> BAOv2 tokens.
+					</Typography>
+				</div>
+
+				{/* Right: Buttons aligned like in DepositCard */}
+				<div className='m-auto mr-2 flex space-x-2'>
+					<Button
+						onClick={handleClaim}
+						className='!h-12 !px-4 !text-sm'
+						disabled={loading || claimed || !isEligible || !account || !distribution || !claimWindowActive || !contractHasBalance}
+					>
+						{claimed ? 'Already Claimed' : loading ? 'Claiming...' : 'Claim Tokens'}
+					</Button>
+					<Button className='!p-3' onClick={() => setShowInfo(prev => !prev)}>
+						<FontAwesomeIcon icon={showInfo ? faAngleUp : faCircleInfo} width={24} height={24} />
+					</Button>
+				</div>
 			</div>
 
-			{DEBUG_MERKLE && (
-				<div className='mt-4 text-left text-xs text-baoWhite w-full max-w-lg break-all'>
+			{/* Expanded Debug Info section */}
+			<Transition
+				show={showInfo}
+				enter='transition-opacity duration-200'
+				enterFrom='opacity-0'
+				enterTo='opacity-100'
+				leave='transition-opacity duration-100'
+				leaveFrom='opacity-100'
+				leaveTo='opacity-0'
+			>
+				<div className='flex p-2 mt-5 space-x-3'>
+					<Typography variant='xl' className='text-left font-bakbak text-baoWhite/60'>
+						Debug Info
+					</Typography>
+				</div>
+
+				<div className='mt-2 text-xs text-baoWhite space-y-2 break-all px-2'>
 					<div>
 						<strong>📍 Account:</strong> {account}
 					</div>
@@ -217,23 +227,24 @@ const Claim: React.FC = () => {
 					</div>
 					<div>
 						<strong>🧾 Merkle Proof:</strong>
-						<ul className='list-disc ml-6 mt-1'>{proof?.map((p, i) => <li key={i}>{p}</li>)}</ul>
+						<ul className='list-disc ml-6'>{proof?.map((p, i) => <li key={i}>{p}</li>)}</ul>
 					</div>
 					{calldata && (
-						<div className='mt-4'>
+						<div>
 							<strong>📦 Raw Calldata:</strong>
-							<div className='mt-1 break-all'>{calldata}</div>
+							<div>{calldata}</div>
 						</div>
 					)}
 				</div>
-			)}
+			</Transition>
 
+			{/* Optional error message */}
 			{error && (
-				<Typography variant='xl' className='font-bakbak text-red mt-2'>
+				<Typography variant='xl' className='font-bakbak text-red mt-4'>
 					{error}
 				</Typography>
 			)}
-		</div>
+		</>
 	)
 }
 
