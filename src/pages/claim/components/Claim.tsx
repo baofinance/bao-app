@@ -8,7 +8,6 @@ import keccak256 from 'keccak256'
 import { MerkleTree } from 'merkletreejs'
 import rawSnapshot from '../../../data/snapshot_bao_normalized.json'
 import { utils, Contract } from 'ethers'
-import Card from '@/components/Card'
 import { Transition } from '@headlessui/react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faAngleUp, faCircleInfo } from '@fortawesome/free-solid-svg-icons'
@@ -122,7 +121,11 @@ const Claim: React.FC = () => {
 	}
 
 	if (!account) {
-		return <Typography variant='xl' className='text-center text-baoWhite font-bakbak'>Connect your wallet to check airdrop eligibility.</Typography>
+		return (
+			<Typography variant='xl' className='text-center text-baoWhite font-bakbak'>
+				Connect your wallet to check airdrop eligibility.
+			</Typography>
+		)
 	}
 
 	if (!isEligible) {
@@ -134,7 +137,11 @@ const Claim: React.FC = () => {
 	}
 
 	if (claimed) {
-		return <Typography variant='xl' className='text-center text-green font-bakbak'>You have successfully claimed your tokens!</Typography>
+		return (
+			<Typography variant='xl' className='text-center text-green font-bakbak'>
+				You have successfully claimed your tokens!
+			</Typography>
+		)
 	}
 
 	if (!contractHasBalance) {
