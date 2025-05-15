@@ -12,7 +12,7 @@ import Card from '@/components/Card'
 import { Transition } from '@headlessui/react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faAngleUp, faCircleInfo } from '@fortawesome/free-solid-svg-icons'
-import baoIcon from '@/assets/icons/bao.png' // Adjust the path accordingly
+import useTransactionHandler from '@/hooks/base/useTransactionHandler'
 
 const DEBUG_MERKLE = true
 
@@ -20,7 +20,8 @@ const Claim: React.FC = () => {
 	const { account } = useWeb3React()
 	const distribution = useContract<BaoClaim>('BaoClaim')
 
-	const [loading, setLoading] = useState(false)
+	const { handleTx, pendingTx, txSuccess, txHash } = useTransactionHandler()
+
 	const [claimed, setClaimed] = useState(false)
 	const [error, setError] = useState<string | null>(null)
 	const [claimWindowActive, setClaimWindowActive] = useState(false)
@@ -50,7 +51,8 @@ const Claim: React.FC = () => {
 		if (!distribution || paddedProof.length === 0) return null
 		try {
 			return distribution.interface.encodeFunctionData('claim', [paddedProof])
-		} catch {
+		} catch (e) {
+			console.error('Error generating calldata:', e)
 			return null
 		}
 	}, [distribution, paddedProof])
@@ -87,37 +89,30 @@ const Claim: React.FC = () => {
 		checkWindowAndBalance()
 	}, [distribution, account])
 
-	useEffect(() => {
-		if (!distribution) return
-		distribution.provider.getCode(distribution.address).then(code => {
-			console.log('📦 Bytecode at address:', code)
-		})
-	}, [distribution])
-
-	const extractError = (err: any): string => err?.data?.message || err?.error?.message || err?.message || 'Transaction failed'
-
 	const handleClaim = async () => {
 		if (!distribution || !account || paddedProof.length === 0) return
+
+		setError(null)
+
 		try {
-			setLoading(true)
 			const calldata = distribution.interface.encodeFunctionData('claim', [paddedProof])
 			const signer = distribution.signer
-			const tx = await signer.sendTransaction({
+
+			const txPromise = signer.sendTransaction({
 				to: distribution.address,
 				data: calldata,
-				gasLimit: 300_000,
+				gasLimit: 100_000,
 			})
-			await tx.wait()
-			setClaimed(true)
+
+			await handleTx(txPromise, 'Claim BAOv2 tokens', () => {
+				setClaimed(true)
+			})
 		} catch (err: any) {
-			console.error('❌ Claim via raw calldata failed:', err)
-			setError(extractError(err))
-		} finally {
-			setLoading(false)
+			const parsed = err?.context || err?.message || 'Transaction failed'
+			setError(parsed)
 		}
 	}
 
-	// UI Logic branches
 	if (!distribution?.address || distribution.address === '0x') {
 		return (
 			<Typography variant='xl' className='text-red text-center font-bakbak'>
@@ -127,7 +122,7 @@ const Claim: React.FC = () => {
 	}
 
 	if (!account) {
-		return <Typography className='text-center mt-4 text-baoWhite'>Connect your wallet to check airdrop eligibility.</Typography>
+		return <Typography variant='xl' className='text-center text-baoWhite font-bakbak'>Connect your wallet to check airdrop eligibility.</Typography>
 	}
 
 	if (!isEligible) {
@@ -139,7 +134,7 @@ const Claim: React.FC = () => {
 	}
 
 	if (claimed) {
-		return <Typography className='text-center mt-4 text-baoWhite'>You have successfully claimed your tokens!</Typography>
+		return <Typography variant='xl' className='text-center text-green font-bakbak'>You have successfully claimed your tokens!</Typography>
 	}
 
 	if (!contractHasBalance) {
@@ -158,9 +153,12 @@ const Claim: React.FC = () => {
 		)
 	}
 
-	// Main claim UI
 	return (
 		<>
+			<Typography variant='xl' className='text-left font-bakbak pl-2 mb-1'>
+				Claim
+			</Typography>
+
 			{/* Claim row styled exactly like a vault row in Supply */}
 			<div className='flex w-full justify-between place-items-center gap-5 glassmorphic-card p-2'>
 				{/* Left: Token card styled like DepositCard */}
@@ -177,21 +175,19 @@ const Claim: React.FC = () => {
 					</div>
 				</div>
 
-				{/* Middle: Claim status message */}
 				<div className='flex-1 flex items-center justify-center h-10'>
 					<Typography className='text-sm text-baoWhite text-center'>
 						You are eligible to claim <strong>10581</strong> BAOv2 tokens.
 					</Typography>
 				</div>
 
-				{/* Right: Buttons aligned like in DepositCard */}
 				<div className='m-auto mr-2 flex space-x-2'>
 					<Button
 						onClick={handleClaim}
 						className='!h-12 !px-4 !text-sm'
-						disabled={loading || claimed || !isEligible || !account || !distribution || !claimWindowActive || !contractHasBalance}
+						disabled={!!pendingTx || claimed || !isEligible || !account || !distribution || !claimWindowActive || !contractHasBalance}
 					>
-						{claimed ? 'Already Claimed' : loading ? 'Claiming...' : 'Claim Tokens'}
+						{claimed ? 'Already Claimed' : pendingTx ? 'Claiming...' : 'Claim Tokens'}
 					</Button>
 					<Button className='!p-3' onClick={() => setShowInfo(prev => !prev)}>
 						<FontAwesomeIcon icon={showInfo ? faAngleUp : faCircleInfo} width={24} height={24} />
@@ -199,7 +195,6 @@ const Claim: React.FC = () => {
 				</div>
 			</div>
 
-			{/* Expanded Debug Info section */}
 			<Transition
 				show={showInfo}
 				enter='transition-opacity duration-200'
@@ -238,7 +233,19 @@ const Claim: React.FC = () => {
 				</div>
 			</Transition>
 
-			{/* Optional error message */}
+			{txSuccess && (
+				<div className='mt-4'>
+					<Typography className='text-green-500 text-sm text-center'>Transaction confirmed!</Typography>
+					{txHash && (
+						<Typography className='text-center text-sm'>
+							<a href={`https://etherscan.io/tx/${txHash}`} target='_blank' rel='noopener noreferrer' className='text-blue-400 underline'>
+								View on Etherscan
+							</a>
+						</Typography>
+					)}
+				</div>
+			)}
+
 			{error && (
 				<Typography variant='xl' className='font-bakbak text-red mt-4'>
 					{error}
