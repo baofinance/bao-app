@@ -100,7 +100,7 @@ const Claim: React.FC = () => {
 			const txPromise = signer.sendTransaction({
 				to: distribution.address,
 				data: calldata,
-				gasLimit: 100_000,
+				gasLimit: 300_000,
 			})
 
 			await handleTx(txPromise, 'Claim BAOv2 tokens', () => {
