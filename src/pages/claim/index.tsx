@@ -16,8 +16,7 @@ const ClaimPage: React.FC = () => {
 					<div className='flex gap-2'>
 						<Icon icon='lightbulb' className='m-0 h-6 w-6 flex-none' />
 						<Typography className='m-0 pr-1 text-base font-light tracking-tight lg:mb-4'>
-							Claim your BAOv2 tokens for locking veBao. If you are eligible, you can claim your
-							BAOv2 tokens here.
+							Claim your BAOv2 tokens for locking veBao. If you are eligible, you can claim your BAOv2 tokens here.
 						</Typography>
 					</div>
 				</div>
