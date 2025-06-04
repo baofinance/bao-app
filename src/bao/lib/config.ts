@@ -131,7 +131,7 @@ export default {
 		// Token clain
 		BaoClaim: {
 			1: {
-				address: '0x79f149a94b5b26f0b18077e7a628cf9d899f488e',
+				address: '0x14c128A14B00855Eb561d1f9da342962fafBfdCc',
 			},
 		},
 		Swapper: {
