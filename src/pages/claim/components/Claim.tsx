@@ -6,7 +6,7 @@ import type { BaoClaim } from '@/typechain/BaoClaim'
 import { useState, useMemo, useEffect } from 'react'
 import keccak256 from 'keccak256'
 import { MerkleTree } from 'merkletreejs'
-import rawSnapshot from '../../../data/snapshot_bao_normalized.json'
+import rawSnapshot from '../../../data/snapshot_vebao_normalized.json'
 import { utils, Contract } from 'ethers'
 import { Transition } from '@headlessui/react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -184,7 +184,7 @@ const Claim: React.FC = () => {
 
 				<div className='flex-1 flex items-center justify-center h-10'>
 					<Typography className='text-sm text-baoWhite text-center'>
-						You are eligible to claim <strong>10581</strong> BAOv2 tokens.
+						You are eligible to claim <strong>29197</strong> BAOv2 tokens.
 					</Typography>
 				</div>
 
