@@ -1,5 +1,3 @@
-'use client'
-
 import { useWeb3React } from '@web3-react/core'
 import { useEffect, useMemo, useState } from 'react'
 import { Contract, BigNumber, utils } from 'ethers'
