@@ -1,3 +1,5 @@
+'use client'
+
 import { useWeb3React } from '@web3-react/core'
 import { useEffect, useMemo, useState } from 'react'
 import { Contract, BigNumber, utils } from 'ethers'
@@ -8,13 +10,13 @@ import Typography from '@/components/Typography'
 import useTransactionHandler from '@/hooks/base/useTransactionHandler'
 import keccak256 from 'keccak256'
 import { MerkleTree } from 'merkletreejs'
-import rawSnapshot from '../../../data/snapshot_vebao_test.json'
-import discountDataRaw from '../../../data/discounts.json'
+import rawSnapshot from '../../../data/ido_addresses.json'
+import discountDataRaw from '../../../data/ido_snapshot_normalized.json'
 
 type DiscountEntry = {
 	raw: string
 	rounded: number
-	protocol: 'veFXN' | 'veBao'
+	protocol: 'veFXN' | 'veBao' | 'veBAO' // allow flexibility in protocol casing
 }
 
 const discountData = discountDataRaw as Record<string, DiscountEntry>
@@ -106,11 +108,12 @@ const DepositBox = () => {
 
 		const { rounded, protocol } = entry
 		let computed = 0
+		const normalizedProtocol = protocol.toLowerCase()
 
-		if (protocol === 'veFXN') computed = rounded * 150
-		else if (protocol === 'veBao') computed = rounded * 0.25
+		if (normalizedProtocol === 'vefxn') computed = rounded * 150
+		else if (normalizedProtocol === 'vebao') computed = rounded * 0.25
 
-		setDiscount(computed) // STEAM tokens
+		setDiscount(computed)
 	}, [account])
 
 	const handleApprove = async () => {
@@ -211,7 +214,7 @@ const DepositBox = () => {
 					<div className='flex justify-between'>
 						<span className='opacity-70'>You are using:</span>
 						<span>
-							{parseFloat(amount).toFixed(2)} USDC ({((parseFloat(amount) / (discount * 0.08)) * 100).toFixed(2)}%)
+							{parseFloat(amount).toFixed(2)} USDC ({discount > 0 ? ((parseFloat(amount) / (discount * 0.08)) * 100).toFixed(2) : '—'}%)
 						</span>
 					</div>
 				</div>

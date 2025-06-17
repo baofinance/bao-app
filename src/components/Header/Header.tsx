@@ -110,7 +110,7 @@ const Header: FC = () => {
 														<MobileNavLink href='/vebao'>VEBAO</MobileNavLink>
 														{/* <MobileNavLink href='/lend'>LEND</MobileNavLink> */}
 														<MobileNavLink href='/distribution'>DISTRIBUTION</MobileNavLink>
-														<MobileNavLink href='/claim'>CLAIM</MobileNavLink>
+														{/* MobileNavLink href='/claim'>CLAIM</MobileNavLink */}
 														<MobileNavLink href='/ido'>IDO</MobileNavLink>
 													</div>
 												</Popover.Panel>
