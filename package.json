@@ -153,5 +153,6 @@
     "typechain": "8.1.1",
     "typescript": "4.7.4",
     "web3-react": "^5.0.5"
-  }
+  },
+  "packageManager": "yarn@1.22.22+sha1.ac34549e6aa8e7ead463a7407e1c7390f61a6610"
 }

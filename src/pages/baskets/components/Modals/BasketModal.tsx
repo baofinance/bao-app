@@ -14,6 +14,7 @@ import useTokenBalance, { useEthBalance } from '@/hooks/base/useTokenBalance'
 import useTransactionHandler from '@/hooks/base/useTransactionHandler'
 import useBasketRates from '@/hooks/baskets/useBasketRate'
 import type { Dai, SimpleUniRecipe } from '@/typechain/index'
+import { Dai__factory } from '@/typechain/factories'
 import { decimate, getDisplayBalance } from '@/utils/numberFormat'
 import { faEthereum } from '@fortawesome/free-brands-svg-icons'
 import { faExternalLink, faExternalLinkAlt, faSync } from '@fortawesome/free-solid-svg-icons'
@@ -22,6 +23,9 @@ import { BigNumber, ethers } from 'ethers'
 import { formatUnits, parseUnits } from 'ethers/lib/utils'
 import Image from 'next/future/image'
 import React, { useMemo, useState } from 'react'
+import { useWeb3React } from '@web3-react/core'
+import { getChainProvider } from '@/utils/getChainProvider'
+import { switchNetwork } from '@/utils/switchNetwork'
 
 type ModalProps = {
 	basket: ActiveSupportedBasket
@@ -42,12 +46,27 @@ const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal 
 	const [mintOption, setMintOption] = useState<MintOption>(basket.symbol === 'bstbl' ? MintOption.DAI : MintOption.ETH)
 
 	const { handleTx, pendingTx, txHash } = useTransactionHandler()
+	const { chainId, library, account } = useWeb3React()
 	const rates = useBasketRates(basket)
 
-	const recipe = useContract<SimpleUniRecipe>('SimpleUniRecipe', basket.recipeAddress)
-	const dai = useContract<Dai>('Dai')
+	// Determine which chain this basket is on
+	const basketChainId = useMemo(() => {
+		return Object.keys(basket.basketAddresses).map(Number)[0]
+	}, [basket])
 
-	// Get DAI approval
+	// Use basket's recipe contract (already connected to correct chain)
+	const recipe = basket.recipeContract
+
+	// Connect DAI contract to basket's chain
+	const dai = useMemo(() => {
+		const daiAddress = Config.addressMap.DAI
+		if (!daiAddress) return null
+		const provider = getChainProvider(basketChainId)
+		const signerOrProvider = account && basketChainId === chainId ? library?.getSigner() : provider
+		return Dai__factory.connect(daiAddress, signerOrProvider)
+	}, [basketChainId, chainId, library, account])
+
+	// Get DAI approval - need to use the correct chain's DAI address
 	const daiAllowance = useAllowance(Config.addressMap.DAI, basket.recipeAddress)
 
 	// Get Basket & DAI balances
@@ -57,7 +76,24 @@ const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal 
 
 	const swapLink = basket && basket.swap
 
+	// Check if user is on the correct chain for this basket
+	const isOnCorrectChain = basketChainId === chainId
+
+	const handleSwitchNetwork = async () => {
+		try {
+			await switchNetwork(basketChainId)
+		} catch (error: any) {
+			console.error('Failed to switch network:', error)
+			// Optionally show an error message to the user
+		}
+	}
+
 	const handleOperation = () => {
+		// Don't allow transactions if not on correct chain
+		if (!isOnCorrectChain || !recipe || !dai) {
+			return
+		}
+
 		let tx
 
 		switch (operation) {
@@ -91,6 +127,10 @@ const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal 
 		if (pendingTx !== false) {
 			return true
 		}
+		// Disable if user is not on the correct chain
+		if (!isOnCorrectChain) {
+			return true
+		}
 		if (operation === 'MINT') {
 			const _val = val && parseUnits(val)
 			const daiOrEth = mintOption === MintOption.DAI ? daiBalance : ethBalance
@@ -110,7 +150,7 @@ const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal 
 			)
 		}
 		return false
-	}, [pendingTx, operation, mintOption, daiAllowance, val, daiBalance, ethBalance, basketBalance])
+	}, [pendingTx, operation, mintOption, daiAllowance, val, daiBalance, ethBalance, basketBalance, isOnCorrectChain])
 
 	const hide = () => {
 		hideModal()
@@ -287,7 +327,12 @@ const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal 
 				</Modal.Body>
 				<Modal.Actions>
 					{pendingTx ? (
-						<a href={`https://etherscan.io/tx/${txHash}`} target='_blank' aria-label='View Transaction on Etherscan' rel='noreferrer'>
+						<a
+							href={`${basketChainId === 137 ? 'https://polygonscan.com' : 'https://etherscan.io'}/tx/${txHash}`}
+							target='_blank'
+							aria-label={`View Transaction on ${basketChainId === 137 ? 'Polygonscan' : 'Etherscan'}`}
+							rel='noreferrer'
+						>
 							<Button fullWidth className='!rounded-full'>
 								<PendingTransaction /> Pending Transaction
 								<FontAwesomeIcon icon={faExternalLink} className='ml-2 text-baoRed' />
@@ -296,21 +341,23 @@ const BasketModal: React.FC<ModalProps> = ({ basket, operation, show, hideModal 
 					) : (
 						<Button
 							fullWidth
-							disabled={isButtonDisabled || (mintOption === MintOption.DAI && daiBalance.lte(0)) || val === '0'}
-							onClick={handleOperation}
+							disabled={!isOnCorrectChain ? false : isButtonDisabled || (mintOption === MintOption.DAI && daiBalance.lte(0)) || val === '0'}
+							onClick={!isOnCorrectChain ? handleSwitchNetwork : handleOperation}
 						>
-							{operation === 'MINT' &&
-							mintOption === MintOption.DAI &&
-							daiAllowance &&
-							(daiAllowance.eq(0) || daiAllowance.lt(parseUnits(val)))
-								? 'Approve DAI'
-								: !val
-									? 'Enter a Value'
-									: isButtonDisabled
-										? 'Invalid Input'
-										: operation === 'MINT'
-											? `Mint ${(secondaryVal && getDisplayBalance(secondaryVal, 0)) || 0} ${basket.symbol}`
-											: `Redeem ${(val && getDisplayBalance(val, 0)) || 0} ${basket.symbol}`}
+							{!isOnCorrectChain
+								? `Switch to ${basketChainId === 137 ? 'Polygon' : 'Ethereum'} Network`
+								: operation === 'MINT' &&
+									  mintOption === MintOption.DAI &&
+									  daiAllowance &&
+									  (daiAllowance.eq(0) || daiAllowance.lt(parseUnits(val)))
+									? 'Approve DAI'
+									: !val
+										? 'Enter a Value'
+										: isButtonDisabled
+											? 'Invalid Input'
+											: operation === 'MINT'
+												? `Mint ${(secondaryVal && getDisplayBalance(secondaryVal, 0)) || 0} ${basket.symbol}`
+												: `Redeem ${(val && getDisplayBalance(val, 0)) || 0} ${basket.symbol}`}
 						</Button>
 					)}
 				</Modal.Actions>

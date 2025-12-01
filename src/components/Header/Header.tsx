@@ -6,7 +6,9 @@ import { Menu, Popover, Transition } from '@headlessui/react'
 import classNames from 'classnames'
 import { AnimatePresence, motion } from 'framer-motion'
 import Link from 'next/link'
+import Image from 'next/future/image'
 import { FC, Fragment, ReactNode } from 'react'
+import { useWeb3React } from '@web3-react/core'
 import AccountButton from '../AccountButton'
 import Container from '../Container'
 import Nav from '../Nav'
@@ -39,6 +41,11 @@ const MobileNavLink: FC<MobileNavLinkProps> = ({ href, children, target, ...prop
 }
 
 const Header: FC = () => {
+	const { chainId } = useWeb3React()
+
+	// On Polygon (137), only show Baskets. On Ethereum (1) or undefined, show all
+	const isPolygon = chainId === 137
+
 	return (
 		<header>
 			<nav>
@@ -55,6 +62,19 @@ const Header: FC = () => {
 						<div className='hidden gap-6 lg:flex mr-2'>
 							<Nav />
 						</div>
+						{chainId && (
+							<div className='hidden lg:flex items-center mr-2'>
+								<div className='flex items-center justify-center w-8 h-8 rounded-full bg-baoWhite/10'>
+									{chainId === 137 ? (
+										<Image src='/images/tokens/MATIC.png' alt='Polygon' width={20} height={20} />
+									) : chainId === 1 ? (
+										<Image src='/images/tokens/ETH.png' alt='Ethereum' width={20} height={20} />
+									) : (
+										<span className='text-baoWhite font-bakbak text-xs'>{chainId}</span>
+									)}
+								</div>
+							</div>
+						)}
 						<AccountButton />
 						<Popover className='block lg:hidden'>
 							{({ open }) => (
@@ -103,14 +123,34 @@ const Header: FC = () => {
 													className='absolute inset-x-0 top-0 z-0 origin-top rounded-b-2xl bg-baoBlack px-6 pb-6 pt-32 shadow-2xl shadow-gray-900/20'
 												>
 													<div className='space-y-4'>
-														<MobileNavLink href='/vaults'>VAULTS</MobileNavLink>
-														{/* <MobileNavLink href='/stake'>STAKE</MobileNavLink> */}
-														<MobileNavLink href='/swap'>SWAP</MobileNavLink>
-														<MobileNavLink href='/earn'>EARN</MobileNavLink>
-														<MobileNavLink href='/vebao'>VEBAO</MobileNavLink>
-														{/* <MobileNavLink href='/lend'>LEND</MobileNavLink> */}
-														<MobileNavLink href='/distribution'>DISTRIBUTION</MobileNavLink>
-														<MobileNavLink href='/claim'>CLAIM</MobileNavLink>
+														{chainId && (
+															<div className='flex items-center justify-center pb-2'>
+																<div className='flex items-center justify-center w-10 h-10 rounded-full bg-baoWhite/10'>
+																	{chainId === 137 ? (
+																		<Image src='/images/tokens/MATIC.png' alt='Polygon' width={24} height={24} />
+																	) : chainId === 1 ? (
+																		<Image src='/images/tokens/ETH.png' alt='Ethereum' width={24} height={24} />
+																	) : (
+																		<span className='text-baoWhite font-bakbak text-xs'>{chainId}</span>
+																	)}
+																</div>
+															</div>
+														)}
+														{isPolygon ? (
+															<MobileNavLink href='/baskets'>BASKETS</MobileNavLink>
+														) : (
+															<>
+																<MobileNavLink href='/vaults'>VAULTS</MobileNavLink>
+																{/* <MobileNavLink href='/stake'>STAKE</MobileNavLink> */}
+																<MobileNavLink href='/swap'>SWAP</MobileNavLink>
+																<MobileNavLink href='/earn'>EARN</MobileNavLink>
+																<MobileNavLink href='/vebao'>VEBAO</MobileNavLink>
+																{/* <MobileNavLink href='/lend'>LEND</MobileNavLink> */}
+																<MobileNavLink href='/distribution'>DISTRIBUTION</MobileNavLink>
+																<MobileNavLink href='/claim'>CLAIM</MobileNavLink>
+																<MobileNavLink href='/baskets'>BASKETS</MobileNavLink>
+															</>
+														)}
 													</div>
 												</Popover.Panel>
 											</>
@@ -267,34 +307,38 @@ const Header: FC = () => {
 												</a>
 											)}
 										</Menu.Item>
-										<Menu.Item>
-											{({ active }) => (
-												<Link
-													href='/backstops'
-													aria-label='Backstops'
-													className={classNames(
-														active ? 'text-baoRed' : 'text-baoWhite',
-														'flex flex-1 flex-row items-center justify-between gap-4 px-4 py-2 text-sm',
+										{!isPolygon && (
+											<>
+												<Menu.Item>
+													{({ active }) => (
+														<Link
+															href='/backstops'
+															aria-label='Backstops'
+															className={classNames(
+																active ? 'text-baoRed' : 'text-baoWhite',
+																'flex flex-1 flex-row items-center justify-between gap-4 px-4 py-2 text-sm',
+															)}
+														>
+															Backstops <FontAwesomeIcon icon={faCircleArrowRight} />
+														</Link>
 													)}
-												>
-													Backstops <FontAwesomeIcon icon={faCircleArrowRight} />
-												</Link>
-											)}
-										</Menu.Item>
-										<Menu.Item>
-											{({ active }) => (
-												<Link
-													href='/ballast'
-													aria-label='Ballast'
-													className={classNames(
-														active ? 'text-baoRed' : 'text-baoWhite',
-														'flex flex-1 flex-row items-center justify-between gap-4 px-4 py-2 text-sm',
+												</Menu.Item>
+												<Menu.Item>
+													{({ active }) => (
+														<Link
+															href='/ballast'
+															aria-label='Ballast'
+															className={classNames(
+																active ? 'text-baoRed' : 'text-baoWhite',
+																'flex flex-1 flex-row items-center justify-between gap-4 px-4 py-2 text-sm',
+															)}
+														>
+															Ballast <FontAwesomeIcon icon={faCircleArrowRight} />
+														</Link>
 													)}
-												>
-													Ballast <FontAwesomeIcon icon={faCircleArrowRight} />
-												</Link>
-											)}
-										</Menu.Item>
+												</Menu.Item>
+											</>
+										)}
 										<Menu.Item>
 											{({ active }) => (
 												<Link

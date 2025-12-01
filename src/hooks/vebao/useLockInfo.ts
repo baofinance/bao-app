@@ -16,13 +16,17 @@ export type LockInfo = {
 	lockEnd: BigNumber
 }
 
-const useLockInfo = (): LockInfo => {
+const useLockInfo = (): LockInfo | undefined => {
 	const bao = useBao()
 	const { library, account, chainId } = useWeb3React()
-	const votingEscrow = useContract<VotingEscrow>('VotingEscrow', Config.contracts.votingEscrow[chainId].address)
+	const votingEscrowContract = chainId && Config.contracts.votingEscrow?.[chainId]
+	const votingEscrow = useContract<VotingEscrow>(
+		'VotingEscrow',
+		votingEscrowContract?.address || (chainId === 1 ? Config.contracts.votingEscrow[1]?.address : undefined),
+	)
 
 	// FIXME: let us get the totalSupply and supply without needing an account.
-	const enabled = !!bao && !!account && !!votingEscrow
+	const enabled = !!bao && !!account && !!votingEscrow && !!votingEscrowContract
 	const { data: lockInfo, refetch } = useQuery(
 		['@/hooks/vebao/useLockInfo', providerKey(library, account, chainId), { enabled }],
 		async () => {

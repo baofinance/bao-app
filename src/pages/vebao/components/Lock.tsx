@@ -15,7 +15,10 @@ import LockStats from './Stats'
 const Lock: React.FC = () => {
 	const { library, account, chainId } = useWeb3React()
 	const lockInfo = useLockInfo()
-	const baoBalance = useTokenBalance(Config.contracts.Baov2[chainId].address)
+	const baoContract = chainId && Config.contracts.Baov2?.[chainId]
+	const baoBalance = useTokenBalance(
+		baoContract?.address || (chainId === 1 ? Config.contracts.Baov2[1]?.address : '0x0000000000000000000000000000000000000000'),
+	)
 
 	const enabled = !!library
 	const { data: blockTimestamp, refetch } = useQuery(

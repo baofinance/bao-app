@@ -42,9 +42,18 @@ export const useVaultsContext = (): { [vaultName: string]: ActiveSupportedVault[
 			// Add an option to include archived vaults
 			if (!library || !chainId) return
 
+			// Check if vault config exists
+			if (!Config.vaults[vaultName]) return
+
 			const signerOrProvider = account ? library.getSigner() : library
 			const _vaults = Config.vaults[vaultName].markets
 				.filter(vault => includeArchived || !vault.archived) // Conditionally filter
+				.filter(vault => {
+					// Only include vaults that have addresses for the current chain
+					const vaultAddress = vault.vaultAddresses?.[chainId]
+					const underlyingAddress = vault.underlyingAddresses?.[chainId]
+					return !!vaultAddress && !!underlyingAddress
+				})
 				.map(vault => {
 					const vaultAddress = vault.vaultAddresses[chainId]
 					const underlyingAddress = vault.underlyingAddresses[chainId]
@@ -65,6 +74,15 @@ export const useVaultsContext = (): { [vaultName: string]: ActiveSupportedVault[
 						underlyingContract,
 					})
 				})
+
+			// If no valid vaults for this chain, return early
+			if (_vaults.length === 0) {
+				setVaults(ms => ({
+					...ms,
+					[vaultName]: [],
+				}))
+				return
+			}
 
 			const comptroller = Comptroller__factory.connect(Config.vaults[vaultName].comptroller, signerOrProvider)
 			const oracle = VaultOracle__factory.connect(Config.vaults[vaultName].oracle, signerOrProvider)
