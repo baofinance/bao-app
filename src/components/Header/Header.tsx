@@ -12,6 +12,7 @@ import { useWeb3React } from '@web3-react/core'
 import AccountButton from '../AccountButton'
 import Container from '../Container'
 import Nav from '../Nav'
+import { switchNetwork } from '@/utils/switchNetwork'
 
 export interface IconProps {
 	color?: string
@@ -63,8 +64,8 @@ const Header: FC = () => {
 							<Nav />
 						</div>
 						{chainId && (
-							<div className='hidden lg:flex items-center mr-2'>
-								<div className='flex items-center justify-center w-8 h-8 rounded-full bg-baoWhite/10'>
+							<Menu as='div' className='relative hidden lg:inline-block mr-2'>
+								<Menu.Button className='flex items-center justify-center w-8 h-8 rounded-full bg-baoWhite/10 hover:bg-baoWhite/20 transition-colors'>
 									{chainId === 137 ? (
 										<Image src='/images/tokens/MATIC.png' alt='Polygon' width={20} height={20} />
 									) : chainId === 1 ? (
@@ -72,8 +73,54 @@ const Header: FC = () => {
 									) : (
 										<span className='text-baoWhite font-bakbak text-xs'>{chainId}</span>
 									)}
-								</div>
-							</div>
+								</Menu.Button>
+								<Transition
+									as={Fragment}
+									enter='transition ease-out duration-100'
+									enterFrom='transform opacity-0 scale-95'
+									enterTo='transform opacity-100 scale-100'
+									leave='transition ease-in duration-75'
+									leaveFrom='transform opacity-100 scale-100'
+									leaveTo='transform opacity-0 scale-95'
+								>
+								<Menu.Items className='absolute left-0 mt-2 w-fit min-w-[120px] origin-top-left glassmorphic-card ring-1 ring-baoBlack ring-opacity-5 focus:outline-none'>
+									<div className='py-1'>
+										{chainId === 1 && (
+											<Menu.Item>
+												{({ active }) => (
+													<button
+														onClick={() => switchNetwork(137)}
+														className={classNames(
+															active ? 'text-baoRed' : 'text-baoWhite',
+															'flex flex-row items-center gap-3 px-4 py-2 text-sm text-left font-bakbak whitespace-nowrap w-full',
+														)}
+													>
+														<Image src='/images/tokens/MATIC.png' alt='Polygon' width={20} height={20} />
+														<span>Polygon</span>
+													</button>
+												)}
+											</Menu.Item>
+										)}
+										{chainId === 137 && (
+											<Menu.Item>
+												{({ active }) => (
+													<button
+														onClick={() => switchNetwork(1)}
+														className={classNames(
+															active ? 'text-baoRed' : 'text-baoWhite',
+															'flex flex-row items-center gap-3 px-4 py-2 text-sm text-left font-bakbak whitespace-nowrap w-full',
+														)}
+													>
+														<Image src='/images/tokens/ETH.png' alt='Ethereum' width={20} height={20} />
+														<span>Ethereum</span>
+													</button>
+												)}
+											</Menu.Item>
+										)}
+									</div>
+								</Menu.Items>
+								</Transition>
+							</Menu>
 						)}
 						<AccountButton />
 						<Popover className='block lg:hidden'>
@@ -124,8 +171,8 @@ const Header: FC = () => {
 												>
 													<div className='space-y-4'>
 														{chainId && (
-															<div className='flex items-center justify-center pb-2'>
-																<div className='flex items-center justify-center w-10 h-10 rounded-full bg-baoWhite/10'>
+															<Menu as='div' className='relative flex items-center justify-center pb-2'>
+																<Menu.Button className='flex items-center justify-center w-10 h-10 rounded-full bg-baoWhite/10 hover:bg-baoWhite/20 transition-colors'>
 																	{chainId === 137 ? (
 																		<Image src='/images/tokens/MATIC.png' alt='Polygon' width={24} height={24} />
 																	) : chainId === 1 ? (
@@ -133,8 +180,54 @@ const Header: FC = () => {
 																	) : (
 																		<span className='text-baoWhite font-bakbak text-xs'>{chainId}</span>
 																	)}
-																</div>
-															</div>
+																</Menu.Button>
+																<Transition
+																	as={Fragment}
+																	enter='transition ease-out duration-100'
+																	enterFrom='transform opacity-0 scale-95'
+																	enterTo='transform opacity-100 scale-100'
+																	leave='transition ease-in duration-75'
+																	leaveFrom='transform opacity-100 scale-100'
+																	leaveTo='transform opacity-0 scale-95'
+																>
+																	<Menu.Items className='absolute top-full mt-2 w-fit min-w-[120px] origin-top glassmorphic-card ring-1 ring-baoBlack ring-opacity-5 focus:outline-none z-50'>
+																		<div className='py-1'>
+																			{chainId === 1 && (
+																				<Menu.Item>
+																					{({ active }) => (
+																						<button
+																							onClick={() => switchNetwork(137)}
+																							className={classNames(
+																								active ? 'text-baoRed' : 'text-baoWhite',
+																								'flex flex-row items-center gap-3 px-4 py-2 text-sm text-left font-bakbak whitespace-nowrap w-full',
+																							)}
+																						>
+																							<Image src='/images/tokens/MATIC.png' alt='Polygon' width={20} height={20} />
+																							<span>Polygon</span>
+																						</button>
+																					)}
+																				</Menu.Item>
+																			)}
+																			{chainId === 137 && (
+																				<Menu.Item>
+																					{({ active }) => (
+																						<button
+																							onClick={() => switchNetwork(1)}
+																							className={classNames(
+																								active ? 'text-baoRed' : 'text-baoWhite',
+																								'flex flex-row items-center gap-3 px-4 py-2 text-sm text-left font-bakbak whitespace-nowrap w-full',
+																							)}
+																						>
+																							<Image src='/images/tokens/ETH.png' alt='Ethereum' width={20} height={20} />
+																							<span>Ethereum</span>
+																						</button>
+																					)}
+																				</Menu.Item>
+																			)}
+																		</div>
+																	</Menu.Items>
+																</Transition>
+															</Menu>
 														)}
 														{isPolygon ? (
 															<MobileNavLink href='/baskets'>BASKETS</MobileNavLink>
