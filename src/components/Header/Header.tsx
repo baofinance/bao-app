@@ -83,42 +83,42 @@ const Header: FC = () => {
 									leaveFrom='transform opacity-100 scale-100'
 									leaveTo='transform opacity-0 scale-95'
 								>
-								<Menu.Items className='absolute left-0 mt-2 w-fit min-w-[120px] origin-top-left glassmorphic-card ring-1 ring-baoBlack ring-opacity-5 focus:outline-none'>
-									<div className='py-1'>
-										{chainId === 1 && (
-											<Menu.Item>
-												{({ active }) => (
-													<button
-														onClick={() => switchNetwork(137)}
-														className={classNames(
-															active ? 'text-baoRed' : 'text-baoWhite',
-															'flex flex-row items-center gap-3 px-4 py-2 text-sm text-left font-bakbak whitespace-nowrap w-full',
-														)}
-													>
-														<Image src='/images/tokens/MATIC.png' alt='Polygon' width={20} height={20} />
-														<span>Polygon</span>
-													</button>
-												)}
-											</Menu.Item>
-										)}
-										{chainId === 137 && (
-											<Menu.Item>
-												{({ active }) => (
-													<button
-														onClick={() => switchNetwork(1)}
-														className={classNames(
-															active ? 'text-baoRed' : 'text-baoWhite',
-															'flex flex-row items-center gap-3 px-4 py-2 text-sm text-left font-bakbak whitespace-nowrap w-full',
-														)}
-													>
-														<Image src='/images/tokens/ETH.png' alt='Ethereum' width={20} height={20} />
-														<span>Ethereum</span>
-													</button>
-												)}
-											</Menu.Item>
-										)}
-									</div>
-								</Menu.Items>
+									<Menu.Items className='absolute left-0 mt-2 w-fit min-w-[120px] origin-top-left glassmorphic-card ring-1 ring-baoBlack ring-opacity-5 focus:outline-none'>
+										<div className='py-1'>
+											{chainId === 1 && (
+												<Menu.Item>
+													{({ active }) => (
+														<button
+															onClick={() => switchNetwork(137)}
+															className={classNames(
+																active ? 'text-baoRed' : 'text-baoWhite',
+																'flex flex-row items-center gap-3 px-4 py-2 text-sm text-left font-bakbak whitespace-nowrap w-full',
+															)}
+														>
+															<Image src='/images/tokens/MATIC.png' alt='Polygon' width={20} height={20} />
+															<span>Polygon</span>
+														</button>
+													)}
+												</Menu.Item>
+											)}
+											{chainId === 137 && (
+												<Menu.Item>
+													{({ active }) => (
+														<button
+															onClick={() => switchNetwork(1)}
+															className={classNames(
+																active ? 'text-baoRed' : 'text-baoWhite',
+																'flex flex-row items-center gap-3 px-4 py-2 text-sm text-left font-bakbak whitespace-nowrap w-full',
+															)}
+														>
+															<Image src='/images/tokens/ETH.png' alt='Ethereum' width={20} height={20} />
+															<span>Ethereum</span>
+														</button>
+													)}
+												</Menu.Item>
+											)}
+										</div>
+									</Menu.Items>
 								</Transition>
 							</Menu>
 						)}
