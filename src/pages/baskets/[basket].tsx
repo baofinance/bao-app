@@ -14,10 +14,16 @@ import Link from 'next/link'
 import { useMemo } from 'react'
 import Loader from '../../components/Loader'
 import BasketButtons from './components/BasketButtons'
+import Config from '@/bao/lib/config'
 
 export async function getStaticPaths() {
+	// Generate paths for all baskets from config
+	const paths = Config.baskets.map(basket => ({
+		params: { basket: basket.symbol },
+	}))
+
 	return {
-		paths: [{ params: { basket: 'bSTBL' } }, { params: { basket: 'nDEFI' } }],
+		paths,
 		fallback: false, // can also be true or 'blocking'
 	}
 }
