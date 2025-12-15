@@ -2,16 +2,18 @@ import Config from '@/bao/lib/config'
 import { ActiveSupportedBasket } from '@/bao/lib/types'
 import { getOraclePrice } from '@/bao/utils'
 import { useBlockUpdater } from '@/hooks/base/useBlock'
-import useContract from '@/hooks/base/useContract'
 import { useTxReceiptUpdater } from '@/hooks/base/useTransactionProvider'
 import type { Chainoracle, Recipe, Recipev2 } from '@/typechain/index'
+import { Recipe__factory, Recipev2__factory, Chainoracle__factory } from '@/typechain/factories'
 import { providerKey } from '@/utils/index'
 import Multicall from '@/utils/multicall'
 import { decimate } from '@/utils/numberFormat'
 import { useQuery } from '@tanstack/react-query'
 import { useWeb3React } from '@web3-react/core'
 import { BigNumber, ethers } from 'ethers'
-import useBao from '../base/useBao'
+import { Bao } from '@/bao/Bao'
+import { getChainProvider } from '@/utils/getChainProvider'
+import { useMemo } from 'react'
 
 export type BasketRates = {
 	eth: BigNumber
@@ -20,16 +22,42 @@ export type BasketRates = {
 }
 
 const useBasketRates = (basket: ActiveSupportedBasket): BasketRates => {
-	const bao = useBao()
 	const { library, account, chainId } = useWeb3React()
-	const recipe = useContract<Recipe>('Recipe', basket.recipeAddress)
-	const recipev2 = useContract<Recipev2>('Recipev2', basket.recipeAddress)
-	const recipeVersion = basket.recipeVersion
-	const wethOracle = useContract<Chainoracle>('Chainoracle', Config.contracts.wethPrice[chainId].address)
 
-	const enabled = !!bao && !!library && !!recipe && !!wethOracle
+	// Determine which chain this basket is on
+	const basketChainId = useMemo(() => {
+		return Object.keys(basket.basketAddresses).map(Number)[0]
+	}, [basket])
+
+	// Get provider for the basket's chain
+	const basketProvider = useMemo(() => getChainProvider(basketChainId), [basketChainId])
+
+	// Create Bao instance for the basket's chain
+	const bao = useMemo(() => {
+		return new Bao(basketProvider)
+	}, [basketProvider])
+
+	// Connect contracts using the basket's chain provider
+	const recipe = useMemo(() => {
+		return Recipe__factory.connect(basket.recipeAddress, basketProvider)
+	}, [basket.recipeAddress, basketProvider])
+
+	const recipev2 = useMemo(() => {
+		return Recipev2__factory.connect(basket.recipeAddress, basketProvider)
+	}, [basket.recipeAddress, basketProvider])
+
+	const recipeVersion = basket.recipeVersion
+
+	// Get oracle for the basket's chain (fallback to chainId 1 if not available)
+	const wethOracleAddress = Config.contracts.wethPrice[basketChainId]?.address || Config.contracts.wethPrice[1]?.address
+	const wethOracle = useMemo(() => {
+		if (!wethOracleAddress) return null
+		return Chainoracle__factory.connect(wethOracleAddress, basketProvider)
+	}, [wethOracleAddress, basketProvider])
+
+	const enabled = !!bao && !!basketProvider && !!recipe && !!wethOracle
 	const { data: rates, refetch } = useQuery(
-		['@/hooks/baskets/useBasketRates', providerKey(library, account, chainId), { enabled, nid: basket.nid }],
+		['@/hooks/baskets/useBasketRates', basketChainId, { enabled, nid: basket.nid }],
 		async () => {
 			const wethPrice = await getOraclePrice(bao, wethOracle)
 			const params = [basket.address, ethers.utils.parseEther('1')]

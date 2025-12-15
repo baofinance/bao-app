@@ -30,11 +30,11 @@ const AccountButton: React.FC<AccountButtonProps> = () => {
 
 	const [selectedAsset, setSelectedAsset] = useState('ETH')
 	const ethBalance = useEthBalance()
-	const baoBalance = useTokenBalance(Config.contracts.Baov2[chainId].address)
-	const assets = [
-		['0', 'ETH', ethBalance.toString()],
-		['1', 'BAO', baoBalance.toString()],
-	]
+	const baoContract = chainId && Config.contracts.Baov2?.[chainId]
+	// Only fetch BAO balance if the contract exists for this chain, otherwise use Ethereum address as fallback
+	const baoAddress = baoContract?.address || (chainId === 1 ? Config.contracts.Baov2[1]?.address : undefined)
+	const baoBalance = useTokenBalance(baoAddress || '0x0000000000000000000000000000000000000000')
+	const assets = [['0', 'ETH', ethBalance.toString()], ...(baoContract ? [['1', 'BAO', baoBalance.toString()]] : [])]
 	const asset = assets.length ? assets.find(asset => asset[1] === selectedAsset) : assets.find(asset => asset[1] === 'ETH')
 
 	useEffect(() => {

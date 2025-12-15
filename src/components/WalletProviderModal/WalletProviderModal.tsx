@@ -50,21 +50,8 @@ const WalletProviderModal: FC<WalletProviderModalProps> = ({ show, onHide }) => 
 		}
 	}, [account, active, onHide, show])
 
-	if (window.ethereum && window.ethereum.chainId !== Config.defaultRpc.chainId) {
-		window.ethereum
-			.request({
-				method: 'wallet_switchEthereumChain',
-				params: [{ chainId: Config.defaultRpc.chainId }],
-			})
-			.catch((error: any) => {
-				if (error.code === 4902) {
-					window.ethereum.request({
-						method: 'wallet_addEthereumChain',
-						params: [Config.defaultRpc],
-					})
-				}
-			})
-	}
+	// Removed automatic network switching - app is now multichain
+	// Users can switch networks manually via the basket modals
 
 	return (
 		<Modal isOpen={show} onDismiss={onHide}>

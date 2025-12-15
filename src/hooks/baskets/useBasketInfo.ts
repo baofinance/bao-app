@@ -1,21 +1,27 @@
-import { useWeb3React } from '@web3-react/core'
 import { BigNumber } from 'ethers'
 import { ActiveSupportedBasket } from '../../bao/lib/types'
-import { providerKey } from '@/utils/index'
 import { useQuery } from '@tanstack/react-query'
 import { useTxReceiptUpdater } from '@/hooks/base/useTransactionProvider'
 import { useBlockUpdater } from '@/hooks/base/useBlock'
+import { useMemo } from 'react'
+import { getChainProvider } from '@/utils/getChainProvider'
 
 export type BasketInfo = {
 	totalSupply: BigNumber
 }
 
 const useBasketInfo = (basket: ActiveSupportedBasket): BasketInfo => {
-	const { library, account, chainId } = useWeb3React()
+	// Determine which chain this basket is on
+	const basketChainId = useMemo(() => {
+		return Object.keys(basket.basketAddresses).map(Number)[0]
+	}, [basket])
 
-	const enabled = !!library && !!basket && !!basket.basketContract
+	// Get provider for the basket's chain
+	const basketProvider = useMemo(() => getChainProvider(basketChainId), [basketChainId])
+
+	const enabled = !!basketProvider && !!basket && !!basket.basketContract
 	const { data: basketInfo, refetch } = useQuery(
-		['@/hooks/baskets/useBasketInfo', providerKey(library, account, chainId), { enabled, nid: basket.nid }],
+		['@/hooks/baskets/useBasketInfo', basketChainId, { enabled, nid: basket.nid }],
 		async () => {
 			const supply = await basket.basketContract.totalSupply()
 			return {

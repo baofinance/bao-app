@@ -1,37 +1,100 @@
 import { ListHeader } from '@/components/List'
 import Loader from '@/components/Loader'
-import Tooltipped from '@/components/Tooltipped'
 import Typography from '@/components/Typography'
-import useBasketRates from '@/hooks/baskets/useBasketRate'
-import useComposition from '@/hooks/baskets/useComposition'
+import useBasketInfo from '@/hooks/baskets/useBasketInfo'
 import { getDisplayBalance } from '@/utils/numberFormat'
 import Image from 'next/future/image'
 import Link from 'next/link'
-import React from 'react'
+import React, { useMemo } from 'react'
+import { useWeb3React } from '@web3-react/core'
 
 import { isDesktop } from 'react-device-detect'
 import { ActiveSupportedBasket } from '../../../bao/lib/types'
 
 const BasketList: React.FC<BasketListProps> = ({ baskets }) => {
+	const { chainId } = useWeb3React()
+
+	const ethereumBaskets = useMemo(() => {
+		if (!baskets) return []
+		return baskets.filter(basket => {
+			const basketChainId = Object.keys(basket.basketAddresses).map(Number)[0]
+			return basketChainId === 1 // chainId 1 = Ethereum
+		})
+	}, [baskets])
+
+	const polygonBaskets = useMemo(() => {
+		if (!baskets) return []
+		return baskets.filter(basket => {
+			const basketChainId = Object.keys(basket.basketAddresses).map(Number)[0]
+			return basketChainId === 137 // chainId 137 = Polygon
+		})
+	}, [baskets])
+
 	return (
 		<>
-			<ListHeader headers={isDesktop ? ['Basket Name', 'Underlying Assets', 'Cost to Mint'] : ['Name', 'Assets', 'Cost']} />
-			<div className='flex flex-col gap-4'>{baskets && baskets.map(basket => <BasketListItem basket={basket} key={basket.nid} />)}</div>
+			{/* Ethereum Section */}
+			<div className='mb-4'>
+				<div className='mb-2 flex items-center gap-2'>
+					<Image src='/images/tokens/ETH.png' alt='Ethereum' width={24} height={24} className='inline-block' />
+					<Typography variant='h3' className='font-bakbak'>
+						Ethereum
+					</Typography>
+				</div>
+				<ListHeader headers={isDesktop ? ['Basket Name', 'Supply'] : ['Name', 'Supply']} />
+				<div className='flex flex-col gap-4'>
+					{ethereumBaskets.length > 0 ? (
+						ethereumBaskets.map(basket => <BasketListItem basket={basket} key={basket.nid} />)
+					) : (
+						<div className='glassmorphic-card px-4 py-8 text-center'>
+							<Typography variant='sm' className='text-baoWhite/60'>
+								No baskets available
+							</Typography>
+						</div>
+					)}
+				</div>
+			</div>
+
+			{/* Polygon Section */}
+			<div className='mb-4'>
+				<div className='mb-2 flex items-center gap-2'>
+					<Image src='/images/tokens/MATIC.png' alt='Polygon' width={24} height={24} className='inline-block' />
+					<Typography variant='h3' className='font-bakbak'>
+						Polygon
+					</Typography>
+				</div>
+				<ListHeader headers={isDesktop ? ['Basket Name', 'Supply'] : ['Name', 'Supply']} />
+				<div className='flex flex-col gap-4'>
+					{polygonBaskets.length > 0 ? (
+						polygonBaskets.map(basket => <BasketListItem basket={basket} key={basket.nid} />)
+					) : (
+						<div className='glassmorphic-card px-4 py-8 text-center'>
+							<Typography variant='sm' className='text-baoWhite/60'>
+								No baskets available
+							</Typography>
+						</div>
+					)}
+				</div>
+			</div>
 		</>
 	)
 }
 
 const BasketListItem: React.FC<BasketListItemProps> = ({ basket }) => {
-	const composition = useComposition(basket)
-	const rates = useBasketRates(basket)
+	const info = useBasketInfo(basket)
 
 	return (
 		<Link href={`/baskets/${basket.symbol}`} key={basket.nid}>
-			<button className='glassmorphic-card w-full px-4 py-2 duration-300 hover:border-baoRed hover:bg-baoRed hover:bg-opacity-20'>
+			<div className='glassmorphic-card w-full px-4 py-2 duration-300 hover:border-baoRed hover:bg-baoRed hover:bg-opacity-20 cursor-pointer'>
 				<div className='flex w-full flex-row'>
 					<div className='flex w-full'>
 						<div className='my-auto flex place-items-center'>
-							<Image src={`/images/tokens/${basket.symbol}.png`} alt={basket.symbol} className={`inline-block`} height={32} width={32} />
+							<Image
+								src={basket.icon.startsWith('/') ? basket.icon : `/images/tokens/${basket.icon}`}
+								alt={basket.symbol}
+								className={`inline-block`}
+								height={32}
+								width={32}
+							/>
 							<span className='inline-block text-left align-middle'>
 								<Typography variant='lg' className='ml-2 font-bakbak'>
 									{basket.symbol}
@@ -43,33 +106,11 @@ const BasketListItem: React.FC<BasketListItemProps> = ({ basket }) => {
 						</div>
 					</div>
 
-					<div className='mx-auto my-0 flex w-full items-center justify-center'>
-						{composition ? (
-							composition.map((component: any) => {
-								return (
-									<Tooltipped content={component.symbol} key={component.symbol} placement='bottom'>
-										<span className={`-ml-2 inline-block select-none duration-200 first:ml-0`}>
-											<Image
-												src={`/images/tokens/${component.symbol}.png`}
-												alt={component.symbol}
-												height={32}
-												width={32}
-												className='rounded-full'
-											/>
-										</span>
-									</Tooltipped>
-								)
-							})
-						) : (
-							<Loader />
-						)}
-					</div>
-
 					<div className='mx-auto my-0 flex w-full flex-col items-end justify-center text-right'>
 						<span className='inline-block'>
-							{rates ? (
+							{info ? (
 								<>
-									<Typography className='m-0 font-bakbak text-lg leading-5'>${getDisplayBalance(rates.usd)}</Typography>
+									<Typography className='m-0 font-bakbak text-lg leading-5'>{getDisplayBalance(info.totalSupply)}</Typography>
 								</>
 							) : (
 								<Loader />
@@ -77,7 +118,7 @@ const BasketListItem: React.FC<BasketListItemProps> = ({ basket }) => {
 						</span>
 					</div>
 				</div>
-			</button>
+			</div>
 		</Link>
 	)
 }

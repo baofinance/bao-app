@@ -2,6 +2,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { FC, useState } from 'react'
+import { useWeb3React } from '@web3-react/core'
 
 interface NavLinkProps {
 	href?: string
@@ -11,6 +12,7 @@ interface NavLinkProps {
 
 const Nav: FC<NavLinkProps> = ({ href, exact }) => {
 	const { pathname } = useRouter()
+	const { chainId } = useWeb3React()
 	const isActive = exact ? pathname === href : pathname.startsWith(href)
 	const [hoveredIndex, setHoveredIndex] = useState(null)
 
@@ -18,7 +20,7 @@ const Nav: FC<NavLinkProps> = ({ href, exact }) => {
 	// 	className += 'active'
 	// }
 
-	const navigation = [
+	const allNavigation = [
 		['0', 'BORROW', '/vaults'],
 		['1', 'STAKE', '/stake'],
 		['2', 'SWAP', '/swap'],
@@ -27,7 +29,14 @@ const Nav: FC<NavLinkProps> = ({ href, exact }) => {
 		['5', 'LEND', '/lend'],
 		['6', 'DISTRIBUTION', '/distribution'],
 		['7', 'CLAIM', '/claim'],
-	].filter(item => item[1] !== 'STAKE' && item[1] !== 'LEND')
+		['8', 'BASKETS', '/baskets'],
+	]
+
+	// On Polygon (137), only show Baskets. On Ethereum (1) or undefined, show all except STAKE and LEND
+	const navigation =
+		chainId === 137
+			? allNavigation.filter(item => item[1] === 'BASKETS')
+			: allNavigation.filter(item => item[1] !== 'STAKE' && item[1] !== 'LEND')
 
 	return (
 		<>

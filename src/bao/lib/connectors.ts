@@ -3,7 +3,7 @@ import { InjectedConnector } from '@web3-react/injected-connector'
 import { NetworkConnector } from '@web3-react/network-connector'
 import { WalletLinkConnector } from '@web3-react/walletlink-connector'
 
-const supportedChainIds = [1]
+const supportedChainIds = [1, 137]
 
 // export const network = new NetworkConnector({
 //   defaultChainId: 1,
@@ -14,6 +14,7 @@ let network: NetworkConnector
 
 const RPC_URLS: { [chainId: number]: string } = {
 	1: process.env.NEXT_PUBLIC_ALCHEMY_API_URL,
+	137: process.env.NEXT_PUBLIC_ALCHEMY_POLY_API_URL,
 }
 
 export const getNetworkConnector = (): NetworkConnector => {
@@ -34,7 +35,7 @@ export const injected = new InjectedConnector({
 export const walletConnect = new WalletConnectV2Connector({
 	projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECTID,
 	rpcMap: RPC_URLS,
-	chains: [1],
+	chains: [1, 137],
 	showQrModal: true,
 	// Decentraland's RPCs don't support the `test` method used for the ping.
 	disableProviderPing: true,

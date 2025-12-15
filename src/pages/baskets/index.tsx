@@ -1,4 +1,3 @@
-import Button from '@/components/Button'
 import Typography from '@/components/Typography'
 import useBaskets from '@/hooks/baskets/useBaskets'
 import { NextSeo } from 'next-seo'
@@ -17,25 +16,22 @@ const Baskets: React.FC = () => {
 					<Typography variant='hero' className='stroke'>
 						Baskets
 					</Typography>
-					<div className='mt-4 flex gap-2'>
-						<Icon icon='lightbulb' className='m-0 h-6 w-6 flex-none' />
-						<Typography className='m-0 pr-1 text-base font-light tracking-tight lg:mb-4'>
-							Curated collections of tokens, powered by automated strategies, provide optimal yield opportunities and exposure to various
-							sectors.
-						</Typography>
-					</div>
-					<div className='flex lg:block mr-auto'>
-						<a
-							className='mr-auto'
-							href='https://info.bao.finance/docs/franchises/bao-baskets-soft-synths'
-							target='_blank'
-							rel='noopener noreferrer'
-						>
-							<Button className='!rounded-full border border-baoRed hover:bg-baoRed'>Learn More</Button>
-						</a>
-					</div>
 				</div>
 				<div className='lg:col-span-3'>
+					<div className='mb-6 rounded-3xl bg-baoWhite/5 p-8 border border-baoRed/30'>
+						<div className='flex gap-4'>
+							<Icon icon='warning' className='m-0 h-12 w-12 flex-none text-baoRed' />
+							<div className='flex flex-col gap-3'>
+								<Typography className='m-0 text-xl font-light tracking-tight'>
+									As the baskets and nests are being sunsetted we will be disabling them by end of year 2025.
+								</Typography>
+								<Typography className='m-0 text-xl font-light tracking-tight'>
+									After that the basket and nest token price will be snapshotted and you will be able to burn and claim TIDE tokens at
+									community sale price.
+								</Typography>
+							</div>
+						</div>
+					</div>
 					<BasketList baskets={baskets} />
 				</div>
 			</div>

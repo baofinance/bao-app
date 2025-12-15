@@ -5,7 +5,7 @@ const Home: React.FC = () => {
 	const router = useRouter()
 
 	useEffect(() => {
-		router.push('/earn')
+		router.push('/baskets')
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
 

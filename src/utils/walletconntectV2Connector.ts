@@ -10,6 +10,7 @@ interface ConnectorUpdate {
 
 const RPC_URLS: { [chainId: number]: string } = {
 	1: process.env.NEXT_PUBLIC_ALCHEMY_API_URL,
+	137: process.env.NEXT_PUBLIC_ALCHEMY_POLY_API_URL,
 }
 
 export class WalletConnectV2Connector extends AbstractConnector {
@@ -32,7 +33,7 @@ export class WalletConnectV2Connector extends AbstractConnector {
 			return module.default.init({
 				projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECTID,
 				rpcMap: RPC_URLS,
-				chains: [1],
+				chains: [1, 137],
 				showQrModal: true,
 				// Decentraland's RPCs don't support the `test` method used for the ping.
 				disableProviderPing: true,
