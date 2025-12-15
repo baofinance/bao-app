@@ -3,25 +3,17 @@ import { providerKey } from '@/utils/index'
 import { useQuery } from '@tanstack/react-query'
 import { useWeb3React } from '@web3-react/core'
 import { useBlockUpdater } from '../base/useBlock'
-import usePrice from '../base/usePrice'
 import { useTxReceiptUpdater } from '../base/useTransactionProvider'
 import { formatUnits } from 'ethers/lib/utils'
-
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
+import useChainlinkOracle from '../base/useChainlinkOracle'
 
 export const useBackstopTVL = (backstop: ActiveSupportedBackstop) => {
 	const { library } = useWeb3React()
 	const enabled = !!backstop && !!library
-	const [ethPrice, setEthPrice] = useState(null)
 
-	const _ethPrice = usePrice('ethereum')
-
-	useEffect(() => {
-		const fetchPrice = async () => {
-			setEthPrice(_ethPrice)
-		}
-		fetchPrice()
-	}, [_ethPrice])
+	// Use the new Chainlink Oracle hook to get ETH price
+	const { price: ethPrice, loading: ethPriceLoading } = useChainlinkOracle('ETH')
 
 	const { data: tvlData, refetch } = useQuery(
 		['@/hooks/gauges/useBackstopTVL', providerKey(library), { enabled, pid: backstop.pid }],
@@ -38,19 +30,14 @@ export const useBackstopTVL = (backstop: ActiveSupportedBackstop) => {
 			console.log(tvl)
 			return { tvl }
 		},
-		{
-			enabled: !!ethPrice && enabled,
-			placeholderData: {
-				tvl: 0,
-			},
-		},
+		{ enabled: !!ethPrice && enabled, placeholderData: { tvl: 0 } },
 	)
 
 	useEffect(() => {
-		if (ethPrice) {
+		if (ethPrice && !ethPriceLoading) {
 			refetch()
 		}
-	}, [ethPrice, refetch])
+	}, [ethPrice, ethPriceLoading, refetch])
 
 	const _refetch = () => {
 		if (enabled) refetch()

@@ -1,7 +1,7 @@
 import Config from '@/bao/lib/config'
 import Button from '@/components/Button'
 import Typography from '@/components/Typography'
-import usePrice from '@/hooks/base/usePrice'
+import usePrice, { useBaoPrice } from '@/hooks/base/useBaoPrice'
 import useTokenBalance from '@/hooks/base/useTokenBalance'
 import useLockInfo from '@/hooks/vebao/useLockInfo'
 import useVeInfo from '@/hooks/vebao/useVeInfo'
