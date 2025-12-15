@@ -217,7 +217,7 @@ export default {
 				{
 					mid: 3,
 					symbol: 'bdUSDC',
-					archived: true,
+					archived: false,
 					vaultAddresses: {
 						1: '0x7749f9f3206A49d4c47b60db05716409dC3A4149',
 					},
@@ -241,12 +241,12 @@ export default {
 					icon: 'bSTBL.png',
 					coingeckoId: 'dai',
 					underlyingDecimals: 18,
-					archived: true,
+					archived: false,
 				},
 				{
 					mid: 2,
 					symbol: 'bdETH',
-					archived: true,
+					archived: false,
 					vaultAddresses: {
 						1: '0xe7a52262C1934951207c5fc7A944A82D283C83e5',
 					},
@@ -337,7 +337,7 @@ export default {
 					coingeckoId: 'weth',
 					underlyingDecimals: 18,
 					isBasket: true,
-					archived: true,
+					archived: false,
 				},
 				{
 					mid: 3,
@@ -349,7 +349,7 @@ export default {
 						1: '0x5ee08f40b637417bcC9d2C51B62F4820ec9cF5D8',
 					},
 					icon: 'bSTBL.png',
-					archived: true,
+					archived: false,
 					coingeckoId: 'dai',
 					underlyingDecimals: 18,
 					isBasket: true,
@@ -364,7 +364,7 @@ export default {
 						1: '0x5ee08f40b637417bcC9d2C51B62F4820ec9cF5D8',
 					},
 					icon: 'bSTBL.png',
-					archived: true,
+					archived: false,
 					coingeckoId: 'dai',
 					underlyingDecimals: 18,
 					isBasket: true,
