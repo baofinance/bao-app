@@ -1,7 +1,6 @@
 import Config from '@/bao/lib/config'
-import Button from '@/components/Button'
 import Typography from '@/components/Typography'
-import usePrice, { useBaoPrice } from '@/hooks/base/useBaoPrice'
+import { useBaoPrice } from '@/hooks/base/useBaoPrice'
 import useTokenBalance from '@/hooks/base/useTokenBalance'
 import useLockInfo from '@/hooks/vebao/useLockInfo'
 import useVeInfo from '@/hooks/vebao/useVeInfo'
@@ -20,7 +19,7 @@ const VeBAO: React.FC = () => {
 	const baoBalance = useTokenBalance(
 		baoContract?.address || (chainId === 1 ? Config.contracts.Baov2[1]?.address : '0x0000000000000000000000000000000000000000'),
 	)
-	const baoPrice = usePrice('bao-finance-v2')
+	const baoPrice = useBaoPrice()
 
 	return (
 		<>
