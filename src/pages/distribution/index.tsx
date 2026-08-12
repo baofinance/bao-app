@@ -1,10 +1,16 @@
+import { NavButtons } from '@/components/Button'
 import { Icon } from '@/components/Icon'
 import Typography from '@/components/Typography'
 import { NextSeo } from 'next-seo'
-import React from 'react'
+import React, { useState } from 'react'
+import LiquidSwap from './components/LiquidSwap'
 import Locked from './components/Locked'
 
+const tabs = ['Liquid BAO', 'Locked BAO']
+
 const Distribution: React.FC = () => {
+	const [tab, setTab] = useState(tabs[0])
+
 	return (
 		<>
 			<NextSeo title='Distribution' description='Migrate your BAOv1 to BAOv2!' />
@@ -25,10 +31,13 @@ const Distribution: React.FC = () => {
 						Migration Portal
 					</Typography>
 					<Typography variant='base' className='pb-2 text-center leading-5 m-0 pr-1 font-light tracking-tight lg:mb-4'>
-						Use this tool to lock and migrate your BAOv1 holdings to the new version
+						Swap liquid BAOv1 for BAOv2, or lock and migrate your BAOv1 holdings
 					</Typography>
+					<div className='mx-auto mb-8 max-w-md'>
+						<NavButtons options={tabs} active={tab} onClick={setTab} />
+					</div>
 
-					<Locked />
+					{tab === 'Liquid BAO' ? <LiquidSwap /> : <Locked />}
 				</div>
 			</div>
 		</>
